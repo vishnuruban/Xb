@@ -14,6 +14,12 @@ public class Category {
         this.id = id;
         this.categoryName = categoryName;
         this.categoryImage = categoryImage;
+    }
+
+    public Category(String categoryName, String categoryImage) {
+
+        this.categoryName = categoryName;
+        this.categoryImage = categoryImage;
 
     }
 
