@@ -8,7 +8,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import java.util.List;
+
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.Category;
+import in.net.maitri.xb.db.DbHandler;
 
 public class AddItemCategory extends AppCompatActivity {
 
@@ -20,13 +24,15 @@ public class AddItemCategory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item_category);
 
-        if (true) {
+        List<Category> getAllCategories = new DbHandler(AddItemCategory.this).getAllcategorys();
+
+        if (getAllCategories.size() == 0) {
              findViewById(R.id.no_category).setVisibility(View.VISIBLE);
         } else {
             RecyclerView categoryView = (RecyclerView) findViewById(R.id.category_view);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
             categoryView.setLayoutManager(linearLayoutManager);
-            mCategoryAdapter = new CategoryAdapter(AddItemCategory.this);
+            mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, getAllCategories);
             categoryView.setAdapter(mCategoryAdapter);
 
         }
@@ -37,10 +43,24 @@ public class AddItemCategory extends AppCompatActivity {
                 addCategory();
             }
         });
+
+        FloatingActionButton addItemBtn = (FloatingActionButton) findViewById(R.id.add_item_button);
+        addItemBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addItem();
+            }
+        });
     }
 
     private void addCategory(){
         DialogFragment newFragment = new AddCategory();
+        newFragment.setCancelable(false);
+        newFragment.show(getSupportFragmentManager(), "");
+    }
+
+    private void addItem(){
+        DialogFragment newFragment = new AddItem();
         newFragment.setCancelable(false);
         newFragment.show(getSupportFragmentManager(), "");
     }

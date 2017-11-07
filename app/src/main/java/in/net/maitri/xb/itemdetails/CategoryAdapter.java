@@ -8,15 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.Category;
 
 
 class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
 
     private Context mContext;
+    private List<Category> mAllCategories;
 
-    CategoryAdapter(Context context){
+    CategoryAdapter(Context context, List<Category> getAllCategories){
         mContext = context;
+        mAllCategories = getAllCategories;
     }
 
 
@@ -36,18 +41,22 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
     @Override
     public CategoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_category_view, parent, false);
+                .inflate(R.layout.category_view, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(CategoryAdapter.MyViewHolder holder, int position) {
+        Category categoryDetails = mAllCategories.get(position);
+
+        holder.categoryName.setText(categoryDetails.getCategoryName());
+        String imagePath = categoryDetails.getCategoryImage();
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mAllCategories.size();
     }
 }

@@ -36,6 +36,7 @@ public class AddItem extends DialogFragment {
         View view =  inflater.inflate(R.layout.add_category, container, false);
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
+
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +45,7 @@ public class AddItem extends DialogFragment {
                 dismiss();
             }
         });
+
         Button browseImage = (Button) view.findViewById(R.id.browse_image);
         browseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,12 +53,25 @@ public class AddItem extends DialogFragment {
                 selectImage();
             }
         });
+
         final EditText categoryName = (EditText) view.findViewById(R.id.category_name);
+        final EditText itemName = (EditText) view.findViewById(R.id.item_name);
+        final EditText costPrice = (EditText) view.findViewById(R.id.cp);
+        final EditText sellingPrice = (EditText) view.findViewById(R.id.sp);
+        final EditText uom = (EditText) view.findViewById(R.id.uom);
+        final EditText hsnCode = (EditText) view.findViewById(R.id.hsn_code);
+        final EditText gst = (EditText) view.findViewById(R.id.gst);
+
         Button addDetails = (Button) view.findViewById(R.id.add_details);
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (categoryName.getText().toString().isEmpty()){
+                if (categoryName.getText().toString().isEmpty() || itemName.getText().toString().isEmpty()
+                        || costPrice.getText().toString().isEmpty()
+                        || sellingPrice.getText().toString().isEmpty()
+                        || uom.getText().toString().isEmpty()
+                        || gst.getText().toString().isEmpty()
+                        || hsnCode.getText().toString().isEmpty()){
                     Toast.makeText(getActivity(),"Category name can't be empty.", Toast.LENGTH_SHORT).show();
                 }else{
                     addCategory();
@@ -79,7 +94,6 @@ public class AddItem extends DialogFragment {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-
     }
 
     @Override
