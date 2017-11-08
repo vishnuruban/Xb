@@ -25,17 +25,20 @@ public class AddItemCategory extends AppCompatActivity {
         setContentView(R.layout.activity_add_item_category);
 
         List<Category> getAllCategories = new DbHandler(AddItemCategory.this).getAllcategorys();
-
+        final RecyclerView categoryView = (RecyclerView) findViewById(R.id.category_view);
         if (getAllCategories.size() == 0) {
              findViewById(R.id.no_category).setVisibility(View.VISIBLE);
         } else {
-            RecyclerView categoryView = (RecyclerView) findViewById(R.id.category_view);
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
             categoryView.setLayoutManager(linearLayoutManager);
             mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, getAllCategories);
             categoryView.setAdapter(mCategoryAdapter);
 
         }
+
+
+
         final FloatingActionButton addCategoryBtn = (FloatingActionButton) findViewById(R.id.add_category);
         addCategoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override

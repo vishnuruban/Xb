@@ -38,27 +38,28 @@ import in.net.maitri.xb.db.DbHandler;
 
 public class AddCategory extends DialogFragment {
 
-    public static final int PICK_IMAGE = 1;
     private ImageView mItemImage;
-    String path="";
-    DbHandler dbHandler;
+    private String mImagePath;
+    private DbHandler dbHandler;
+    private Bitmap mSelectedImage;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.add_category, container, false);
+        View view = inflater.inflate(R.layout.add_category, container, false);
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              dismiss();
+                dismiss();
             }
         });
         Button browseImage = (Button) view.findViewById(R.id.browse_image);
         browseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onPickImage(view);
+                onPickImage();
             }
         });
         final EditText categoryName = (EditText) view.findViewById(R.id.category_name);
@@ -66,11 +67,12 @@ public class AddCategory extends DialogFragment {
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String mCatName =categoryName.getText().toString();
-                if (mCatName.isEmpty()){
-                    Toast.makeText(getActivity(),"Category name can't be empty.", Toast.LENGTH_SHORT).show();
-                }else{
-                    addCategory(mCatName,path);
+                String mCatName = categoryName.getText().toString();
+                if (mCatName.isEmpty()) {
+                    Toast.makeText(getActivity(), "Category name can't be empty.", Toast.LENGTH_SHORT).show();
+                } else {
+                    copyImage();
+                    addCategory(mCatName, mImagePath);
                 }
             }
         });
@@ -86,87 +88,54 @@ public class AddCategory extends DialogFragment {
         return dialog;
     }
 
-    private void selectImage(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-       /* if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK ) {
-            Uri selectedImageUri = data.getData();
-             Log.d("uri", String.valueOf(selectedImageUri));
-            String path = selectedImageUri.getPath();
-             Log.d("path", path);
-            Bitmap bitmap = null;
-            try {
-                   bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),selectedImageUri);
-            } catch (IOException e) {
-                   e.printStackTrace();
-            }
-            mItemImage.setImageBitmap(bitmap);
-              Uri selectedImageUri = data.getData();
-        Log.d("uri", String.valueOf(selectedImageUri));
-        path = selectedImageUri.getPath();
-        Log.d("path", path);
-        }*/
 
-        Bitmap bitmap = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
-        mItemImage.setImageBitmap(bitmap);
+        mSelectedImage = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
+        mItemImage.setImageBitmap(mSelectedImage);
+    }
+
+    private void addCategory(String catName, String imgPath) {
+        Category category = new Category(catName, imgPath);
+        dbHandler.addCategory(category);
+        dismiss();
+    }
+
+    public void onPickImage() {
+        ImagePicker.pickImage(this, "Select your image:");
+    }
+
+    private void copyImage(){
         File file = createFile();
         if (file != null) {
             FileOutputStream fout;
             try {
                 fout = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 70, fout);
+                mSelectedImage.compress(Bitmap.CompressFormat.PNG, 70, fout);
                 fout.flush();
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            Uri uri=Uri.fromFile(file);
-            path = uri.getPath();
-            Log.d("path", path);
+            mImagePath = String.valueOf(file);
+            Log.d("path", mImagePath);
         }
     }
 
-    private void addCategory(String catName,String imgPath){
-        Category category = new Category(catName,imgPath);
-        dbHandler.addCategory(category);
-        dismiss();
-    }
-
-
-
-    public void onPickImage(View view) {
-        // Click on image button
-        ImagePicker.pickImage(this, "Select your image:");
-    }
-
-
-
-
-
-
     private File createFile() {
-     //   String root = Environment.getExternalStorageDirectory().toString();
 
-    //    File myDir = new File(Environment.getExternalStorageDirectory() + "/Xb/" + "Images");
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String name = "Xb_"+timeStamp + ".jpg";
+        String name = "Xb_" + timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
-     File
-             myDir = new File(root + "/Xb");
-            if (!myDir.exists()) {
-                myDir.mkdirs();
-            }
-            myDir = new File(myDir, name);
+        File myDir = new File(root + "/Xb");
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+        myDir = new File(myDir, name);
 
-       return  myDir;
+        return myDir;
 
-}}
+    }
+}
 
 
 
