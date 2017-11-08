@@ -57,7 +57,6 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
          Log.i("Image Path",imagePath);
 
         File imgFile = new File(imagePath);
-
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             holder.categoryImage.setImageBitmap(myBitmap);
