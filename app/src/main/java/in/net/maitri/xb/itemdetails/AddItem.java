@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.mvc.imagepicker.ImagePicker;
+
 import java.io.IOException;
 
 import in.net.maitri.xb.R;
@@ -96,9 +98,11 @@ public class AddItem extends DialogFragment {
         getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_IMAGE) {
+
             Uri selectedImageUri = data.getData();
             Log.d("uri", String.valueOf(selectedImageUri));
             String path = selectedImageUri.getPath();
@@ -111,6 +115,7 @@ public class AddItem extends DialogFragment {
             }
             mItemImage.setImageBitmap(bitmap);
         }
+
     }
 
     private void addCategory(){
