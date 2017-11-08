@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,22 +24,30 @@ import android.widget.Toast;
 
 import com.mvc.imagepicker.ImagePicker;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.DbHandler;
+import in.net.maitri.xb.db.Item;
 
 public class AddItem extends DialogFragment {
 
     public static final int PICK_IMAGE = 1;
     private ImageView mItemImage;
-
+    String path="";
+    DbHandler dbHandler;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.add_category, container, false);
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
-
+          dbHandler = new DbHandler(getActivity());
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
@@ -52,7 +61,8 @@ public class AddItem extends DialogFragment {
         browseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectImage();
+
+                onPickImage(view);
             }
         });
 
@@ -68,15 +78,25 @@ public class AddItem extends DialogFragment {
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (categoryName.getText().toString().isEmpty() || itemName.getText().toString().isEmpty()
-                        || costPrice.getText().toString().isEmpty()
-                        || sellingPrice.getText().toString().isEmpty()
-                        || uom.getText().toString().isEmpty()
-                        || gst.getText().toString().isEmpty()
-                        || hsnCode.getText().toString().isEmpty()){
+
+                String catName = categoryName.getText().toString();
+                String iteName =itemName.getText().toString();
+                String cp= costPrice.getText().toString();
+                String sp = sellingPrice.getText().toString();
+                String uoM =  uom.getText().toString();
+                String gsT = gst.getText().toString();
+                String hsn = hsnCode.getText().toString();
+
+
+                if (catName.isEmpty() || iteName.isEmpty()
+                        || cp.isEmpty()
+                        || sp.isEmpty()
+                        || uoM.isEmpty()
+                        || gsT.isEmpty()
+                        || hsn.isEmpty()){
                     Toast.makeText(getActivity(),"Category name can't be empty.", Toast.LENGTH_SHORT).show();
                 }else{
-                    addCategory();
+                    addItem(iteName,uoM,Float.valueOf(cp),Float.valueOf(sp),hsn,Float.valueOf(gsT),Integer.valueOf(catName));
                 }
             }
         });
@@ -91,17 +111,12 @@ public class AddItem extends DialogFragment {
         return dialog;
     }
 
-    private void selectImage(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        getActivity().startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
-    }
+
 
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICK_IMAGE) {
+     /*   if (requestCode == PICK_IMAGE) {
 
             Uri selectedImageUri = data.getData();
             Log.d("uri", String.valueOf(selectedImageUri));
@@ -114,11 +129,62 @@ public class AddItem extends DialogFragment {
                 e.printStackTrace();
             }
             mItemImage.setImageBitmap(bitmap);
+        }*/
+
+        Bitmap bitmap = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
+        mItemImage.setImageBitmap(bitmap);
+        File file = createFile();
+        if (file != null) {
+            FileOutputStream fout;
+            try {
+                fout = new FileOutputStream(file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 70, fout);
+                fout.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Uri uri=Uri.fromFile(file);
+            path = uri.getPath();
+            Log.d("path", path);
         }
+
+
+
 
     }
 
-    private void addCategory(){
+
+    public void onPickImage(View view) {
+        // Click on image button
+        ImagePicker.pickImage(this, "Select your image:");
+    }
+
+
+
+
+
+
+    private File createFile() {
+        //   String root = Environment.getExternalStorageDirectory().toString();
+
+        //    File myDir = new File(Environment.getExternalStorageDirectory() + "/Xb/" + "Images");
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String name = "Xb_Img"+timeStamp + ".jpg";
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root + "/Xb");
+        if (!myDir.exists()) {
+            myDir.mkdirs();
+        }
+        myDir = new File(myDir, name);
+        return  myDir;
+    }
+
+
+
+    private void addItem(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode, float itemGST, int categoryId){
+
+        Item item = new Item(itemName,itemUOM,itemCP,itemSP,itemHSNcode,itemGST,categoryId,path);
+        dbHandler.addItem(item);
         dismiss();
     }
 
