@@ -1,15 +1,12 @@
 package in.net.maitri.xb.itemdetails;
 
-import android.app.Activity;
 import android.app.Dialog;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -27,7 +24,6 @@ import com.mvc.imagepicker.ImagePicker;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -42,6 +38,13 @@ public class AddCategory extends DialogFragment {
     private String mImagePath;
     private DbHandler dbHandler;
     private Bitmap mSelectedImage;
+    private AddItemCategory mAddItemCategory;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mAddItemCategory = (AddItemCategory) context;
+    }
 
     @Nullable
     @Override
@@ -73,6 +76,8 @@ public class AddCategory extends DialogFragment {
                 } else {
                     copyImage();
                     addCategory(mCatName, mImagePath);
+                   // mAddItemCategory.updateCategoryAdapter();
+
                 }
             }
         });
