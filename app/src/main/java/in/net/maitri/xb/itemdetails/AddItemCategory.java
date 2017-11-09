@@ -84,8 +84,7 @@ public class AddItemCategory extends AppCompatActivity {
                 String categoryName = category.getCategoryName();
                 mSelectedCategory.setText(categoryName);
                 int categoryId = category.getId();
-                SharedPreferences sharedPreferences = PreferenceManager
-                        .getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("catName", categoryName);
                 editor.putInt("catId", categoryId);
