@@ -148,9 +148,6 @@ public class AddItem extends DialogFragment {
             Log.d("path", path);
         }
 
-
-
-
     }
 
 
