@@ -2,11 +2,14 @@ package in.net.maitri.xb.itemdetails;
 
 import android.app.Dialog;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -37,17 +40,31 @@ import in.net.maitri.xb.db.Item;
 
 public class AddItem extends DialogFragment {
 
-    public static final int PICK_IMAGE = 1;
+    private String mImagePath;
     private ImageView mItemImage;
-    String path="";
-    DbHandler dbHandler;
+    private DbHandler dbHandler;
+    private Bitmap mSelectedImage;
+    private AddItemCategory mAddItemCategory;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mAddItemCategory = (AddItemCategory) context;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.add_category, container, false);
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
-          dbHandler = new DbHandler(getActivity());
+
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(getContext());
+        String selectedCategoryName = sharedPreferences.getString("catName", "");
+        final int selectedCatgoryId = sharedPreferences.getInt("catId", 0);
+
+        dbHandler = new DbHandler(getActivity());
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
@@ -67,6 +84,9 @@ public class AddItem extends DialogFragment {
         });
 
         final EditText categoryName = (EditText) view.findViewById(R.id.category_name);
+        categoryName.setText(selectedCategoryName);
+        categoryName.setEnabled(false
+        );
         final EditText itemName = (EditText) view.findViewById(R.id.item_name);
         final EditText costPrice = (EditText) view.findViewById(R.id.cp);
         final EditText sellingPrice = (EditText) view.findViewById(R.id.sp);
@@ -94,9 +114,11 @@ public class AddItem extends DialogFragment {
                         || uoM.isEmpty()
                         || gsT.isEmpty()
                         || hsn.isEmpty()){
-                    Toast.makeText(getActivity(),"Category name can't be empty.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"Enter all the fields.", Toast.LENGTH_SHORT).show();
                 }else{
-                    addItem(iteName,uoM,Float.valueOf(cp),Float.valueOf(sp),hsn,Float.valueOf(gsT),Integer.valueOf(catName));
+                    copyImage();
+                    addItem(iteName,uoM,Float.valueOf(cp),Float.valueOf(sp),hsn,Float.valueOf(gsT),selectedCatgoryId);
+                    mAddItemCategory.updateItem(selectedCatgoryId);
                 }
             }
         });
@@ -111,63 +133,35 @@ public class AddItem extends DialogFragment {
         return dialog;
     }
 
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-     /*   if (requestCode == PICK_IMAGE) {
-
-            Uri selectedImageUri = data.getData();
-            Log.d("uri", String.valueOf(selectedImageUri));
-            String path = selectedImageUri.getPath();
-            Log.d("path", path);
-            Bitmap bitmap = null;
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(),selectedImageUri);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mItemImage.setImageBitmap(bitmap);
-        }*/
-
-        Bitmap bitmap = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
-        mItemImage.setImageBitmap(bitmap);
-        File file = createFile();
-        if (file != null) {
-            FileOutputStream fout;
-            try {
-                fout = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 70, fout);
-                fout.flush();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            Uri uri=Uri.fromFile(file);
-            path = uri.getPath();
-            Log.d("path", path);
-        }
-
-
-
-
+        mSelectedImage = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
+        mItemImage.setImageBitmap(mSelectedImage);
     }
-
 
     public void onPickImage(View view) {
         // Click on image button
         ImagePicker.pickImage(this, "Select your image:");
     }
 
-
-
-
+    private void copyImage(){
+        File file = createFile();
+        if (file != null) {
+            FileOutputStream fout;
+            try {
+                fout = new FileOutputStream(file);
+                mSelectedImage.compress(Bitmap.CompressFormat.PNG, 70, fout);
+                fout.flush();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mImagePath = String.valueOf(file);
+            Log.d("path", mImagePath);
+        }
+    }
 
 
     private File createFile() {
-        //   String root = Environment.getExternalStorageDirectory().toString();
-
-        //    File myDir = new File(Environment.getExternalStorageDirectory() + "/Xb/" + "Images");
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String name = "Xb_Img"+timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
@@ -179,11 +173,8 @@ public class AddItem extends DialogFragment {
         return  myDir;
     }
 
-
-
     private void addItem(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode, float itemGST, int categoryId){
-
-        Item item = new Item(itemName,itemUOM,itemCP,itemSP,itemHSNcode,itemGST,categoryId,path);
+        Item item = new Item(itemName,itemUOM,itemCP,itemSP,itemHSNcode,itemGST,categoryId,mImagePath);
         dbHandler.addItem(item);
         dismiss();
     }

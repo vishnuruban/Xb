@@ -76,8 +76,7 @@ public class AddCategory extends DialogFragment {
                 } else {
                     copyImage();
                     addCategory(mCatName, mImagePath);
-                   // mAddItemCategory.updateCategoryAdapter();
-
+                    mAddItemCategory.updateCategoryAdapter();
                 }
             }
         });
@@ -95,7 +94,6 @@ public class AddCategory extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         mSelectedImage = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
         mItemImage.setImageBitmap(mSelectedImage);
     }
@@ -127,7 +125,6 @@ public class AddCategory extends DialogFragment {
     }
 
     private File createFile() {
-
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String name = "Xb_" + timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
@@ -136,9 +133,7 @@ public class AddCategory extends DialogFragment {
             myDir.mkdirs();
         }
         myDir = new File(myDir, name);
-
         return myDir;
-
     }
 }
 

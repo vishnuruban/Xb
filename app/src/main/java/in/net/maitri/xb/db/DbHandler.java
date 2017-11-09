@@ -10,9 +10,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by SYSRAJ4 on 06/11/2017.
- */
 
 public class DbHandler extends SQLiteOpenHelper {
 
@@ -54,6 +51,9 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_ITEM_GST = "item_gst";
     private static final String KEY_CATE_ID = "category_id";
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
+
+    private List<Item> itemList = new ArrayList<Item>();
+    private List<Category> categoryList = new ArrayList<Category>();
 
 
     // Creating Tables
@@ -122,7 +122,8 @@ public class DbHandler extends SQLiteOpenHelper {
 
     // Getting All categorys
     public List<Category> getAllcategorys() {
-        List<Category> categoryList = new ArrayList<Category>();
+        categoryList.clear();
+
         // Select All Query
         String selectQuery = "SELECT  * FROM " + CATEGORY_TABLE_NAME;
 
@@ -230,9 +231,9 @@ public class DbHandler extends SQLiteOpenHelper {
 
     // Getting All item
     public List<Item> getAllitems( int categoryId) {
-        List<Item> itemList = new ArrayList<Item>();
+        itemList.clear();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE KEY_CATE_ID = " + categoryId;
+        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " = "+  categoryId;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);

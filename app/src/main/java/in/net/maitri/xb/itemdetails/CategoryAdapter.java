@@ -33,16 +33,13 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView categoryImage, categoryEdit;
+        ImageView categoryImage;
         TextView categoryName;
-        LinearLayout categoryTouch;
 
          MyViewHolder(View itemView) {
             super(itemView);
              categoryImage = (ImageView) itemView.findViewById(R.id.category_img);
              categoryName = (TextView) itemView.findViewById(R.id.category_name);
-             categoryEdit = (ImageView) itemView.findViewById(R.id.category_edit);
-             categoryTouch = (LinearLayout) itemView.findViewById(R.id.category_touch);
          }
     }
 
@@ -66,14 +63,6 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             holder.categoryImage.setImageBitmap(myBitmap);
         }
-
-        holder.categoryTouch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
     }
 
     @Override
