@@ -229,10 +229,10 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
     // Getting All item
-    public List<Item> getAllitems() {
+    public List<Item> getAllitems( int categoryId) {
         List<Item> itemList = new ArrayList<Item>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME;
+        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE KEY_CATE_ID = " + categoryId;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);

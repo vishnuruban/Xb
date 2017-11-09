@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.io.File;
@@ -33,11 +35,14 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
 
         ImageView categoryImage, categoryEdit;
         TextView categoryName;
+        LinearLayout categoryTouch;
+
          MyViewHolder(View itemView) {
             super(itemView);
              categoryImage = (ImageView) itemView.findViewById(R.id.category_img);
              categoryName = (TextView) itemView.findViewById(R.id.category_name);
              categoryEdit = (ImageView) itemView.findViewById(R.id.category_edit);
+             categoryTouch = (LinearLayout) itemView.findViewById(R.id.category_touch);
          }
     }
 
@@ -61,6 +66,13 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             holder.categoryImage.setImageBitmap(myBitmap);
         }
+
+        holder.categoryTouch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
     }
 
