@@ -61,7 +61,6 @@ public class AddItemCategory extends AppCompatActivity {
                 view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 Toast.makeText(getApplicationContext(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onLongClick(View view, int position) {
 
