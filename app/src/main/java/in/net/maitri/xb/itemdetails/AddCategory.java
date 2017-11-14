@@ -18,6 +18,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mvc.imagepicker.ImagePicker;
@@ -50,6 +51,10 @@ public class AddCategory extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.add_category, container, false);
+
+        TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
+        dialogHeader.setText("Add Category");
+
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {

@@ -22,7 +22,6 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
 
 
-
     // Category Table Columns names
     private static final String KEY_CAT_ID = "id";
     private static final String KEY_CAT_NAME = "category_name";
@@ -30,11 +29,9 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_CAT_CREATED_AT = "category_createdAt";
 
 
-
     public DbHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
-
 
 
     // item table name
@@ -61,8 +58,8 @@ public class DbHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + CATEGORY_TABLE_NAME + "("
                 + KEY_CAT_ID + " INTEGER PRIMARY KEY," + KEY_CAT_NAME + " TEXT,"
-                + KEY_CAT_IMAGE_PATH + " TEXT" + KEY_CAT_CREATED_AT+" DATETIME DEFAULT CURRENT_TIMESTAMP"+")";
-        db.execSQL(CREATE_CATEGORY_TABLE );
+                + KEY_CAT_IMAGE_PATH + " TEXT" + KEY_CAT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_CATEGORY_TABLE);
 
 
         String CREATE_ITEM_TABLE = "CREATE TABLE " + ITEM_TABLE_NAME + "("
@@ -71,9 +68,9 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_ITEM_CP + " FLOAT,"
                 + KEY_ITEM_SP + " FLOAT,"
                 + KEY_ITEM_HSN + " TEXT,"
-                + KEY_ITEM_GST+ " FLOAT,"
-                + KEY_CATE_ID+ " INTEGER,"
-                + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT+" DATETIME DEFAULT CURRENT_TIMESTAMP"+")";
+                + KEY_ITEM_GST + " FLOAT,"
+                + KEY_CATE_ID + " INTEGER,"
+                + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_ITEM_TABLE);
     }
 
@@ -89,14 +86,12 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-
-    public void addCategory(Category category)
-    {
+    public void addCategory(Category category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(KEY_CAT_NAME,category.getCategoryName());
-        cv.put(KEY_CAT_IMAGE_PATH,category.getCategoryImage());
-        db.insert(CATEGORY_TABLE_NAME,null,cv);
+        cv.put(KEY_CAT_NAME, category.getCategoryName());
+        cv.put(KEY_CAT_IMAGE_PATH, category.getCategoryImage());
+        db.insert(CATEGORY_TABLE_NAME, null, cv);
         db.close();
     }
 
@@ -105,9 +100,9 @@ public class DbHandler extends SQLiteOpenHelper {
     public Category getcategory(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(CATEGORY_TABLE_NAME, new String[] { KEY_CAT_ID,
-                        KEY_CAT_NAME, KEY_CAT_IMAGE_PATH }, KEY_CAT_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
+        Cursor cursor = db.query(CATEGORY_TABLE_NAME, new String[]{KEY_CAT_ID,
+                        KEY_CAT_NAME, KEY_CAT_IMAGE_PATH}, KEY_CAT_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null, null);
         if (cursor != null)
             cursor.moveToFirst();
 
@@ -116,8 +111,6 @@ public class DbHandler extends SQLiteOpenHelper {
         // return category
         return category;
     }
-
-
 
 
     // Getting All categorys
@@ -156,14 +149,14 @@ public class DbHandler extends SQLiteOpenHelper {
 
         // updating row
         return db.update(CATEGORY_TABLE_NAME, values, KEY_CAT_ID + " = ?",
-                new String[] { String.valueOf(category.getId()) });
+                new String[]{String.valueOf(category.getId())});
     }
 
     // Deleting single category
-    public void deletecategory(Category category) {
+    public void deletecategory(int categoryId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(CATEGORY_TABLE_NAME, KEY_CAT_ID + " = ?",
-                new String[] { String.valueOf(category.getId()) });
+                new String[]{String.valueOf(categoryId)});
         db.close();
     }
 
@@ -180,26 +173,20 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-
-
-
-
-    public void addItem(Item item)
-    {
+    public void addItem(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(KEY_ITEM_NAME,item.getItemName());
-        cv.put(KEY_IMAGE_PATH,item.getItemImage());
-        cv.put(KEY_ITEM_UOM,item.getItemUOM());
-        cv.put(KEY_ITEM_CP,item.getItemCP());
-        cv.put(KEY_ITEM_SP,item.getItemSP());
-        cv.put(KEY_ITEM_HSN,item.getItemHSNcode());
-        cv.put(KEY_ITEM_GST,item.getItemGST());
-        cv.put(KEY_CATE_ID,item.getCategoryId());
-        db.insert(ITEM_TABLE_NAME,null,cv);
+        cv.put(KEY_ITEM_NAME, item.getItemName());
+        cv.put(KEY_IMAGE_PATH, item.getItemImage());
+        cv.put(KEY_ITEM_UOM, item.getItemUOM());
+        cv.put(KEY_ITEM_CP, item.getItemCP());
+        cv.put(KEY_ITEM_SP, item.getItemSP());
+        cv.put(KEY_ITEM_HSN, item.getItemHSNcode());
+        cv.put(KEY_ITEM_GST, item.getItemGST());
+        cv.put(KEY_CATE_ID, item.getCategoryId());
+        db.insert(ITEM_TABLE_NAME, null, cv);
         db.close();
     }
-
 
 
     public Item getItem(int id) {
@@ -230,11 +217,10 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
     // Getting All item
-    public List<Item> getAllitems( int categoryId) {
+    public List<Item> getAllitems(int categoryId) {
         itemList.clear();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " = "+  categoryId;
-
+        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " = " + categoryId;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -251,12 +237,10 @@ public class DbHandler extends SQLiteOpenHelper {
                 item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
                 item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                 item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
-
                 // Adding item to list
                 itemList.add(item);
             } while (c.moveToNext());
         }
-
         // return item list
         return itemList;
     }
@@ -277,21 +261,16 @@ public class DbHandler extends SQLiteOpenHelper {
 
         // updating row
         return db.update(ITEM_TABLE_NAME, values, KEY_ITEM_ID + " = ?",
-                new String[] { String.valueOf(item.getId()) });
+                new String[]{String.valueOf(item.getId())});
     }
-
-
 
     // Deleting single item
-    public void deleteItem(Item item) {
+    public void deleteItem(int item) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(ITEM_TABLE_NAME, KEY_ITEM_ID + " = ?",
-                new String[] { String.valueOf(item.getId()) });
+                new String[]{String.valueOf(item)});
         db.close();
     }
-
-
-
 
     // Getting item Count
     public int getItemCount() {

@@ -1,21 +1,21 @@
 package in.net.maitri.xb.itemdetails;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import java.util.List;
 
@@ -33,7 +33,6 @@ public class AddItemCategory extends AppCompatActivity {
     private List<Item> mGetAllItems;
     private DbHandler mDbHandler;
     private TextView mNoItem, mNoCategory, mSelectedCategory;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +58,19 @@ public class AddItemCategory extends AppCompatActivity {
         categoryView.setAdapter(mCategoryAdapter);
         mSelectedCategory.setText(mGetAllCategories.get(0).getCategoryName());
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("catName", mGetAllCategories.get(0).getCategoryName());
+        editor.putInt("catId", mGetAllCategories.get(0).getId());
+        editor.apply();
+
         int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
         if (columns > 1){
             columns -= 1;
         }
         GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
         itemView.setLayoutManager(gridLayoutManager);
-        mGetAllItems = mDbHandler.getAllitems(0);
+        mGetAllItems = mDbHandler.getAllitems(1);
         if (mGetAllItems.size() == 0) {
             mNoItem.setVisibility(View.VISIBLE);
         } else {
@@ -93,7 +98,8 @@ public class AddItemCategory extends AppCompatActivity {
 
             @Override
             public void onLongClick(View view, int position) {
-
+                Category category = mGetAllCategories.get(position);
+                showPopupMenu(view, category.getId(), category.getCategoryName(), true);
             }
         }));
 
@@ -148,6 +154,67 @@ public class AddItemCategory extends AppCompatActivity {
             mNoItem.setVisibility(View.GONE);
         }
         mItemAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Showing popup for long click
+     */
+    private void showPopupMenu(View view, int id, String name, boolean isCategory) {
+        PopupMenu popup = new PopupMenu(AddItemCategory.this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_add_item_category_long_click, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(id, name, isCategory));
+        popup.show();
+    }
+
+    /**
+     * Click listener for popup menu items
+     */
+    private class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        private int id;
+        private String name;
+        boolean isCategory;
+
+        MyMenuItemClickListener(int itemId, String itemName, boolean isCategory) {
+            id = itemId;
+            name = itemName;
+            this.isCategory = isCategory;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.edit:
+                    Toast.makeText(AddItemCategory.this, "Edit", Toast.LENGTH_SHORT).show();
+                    return true;
+                case R.id.delete:
+                    delete(id, name, isCategory);
+                    return true;
+                default:
+            }
+            return false;
+        }
+    }
+
+    private void delete(final int id, String name, boolean isCategory) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setMessage("Do you want to delete " + name + "?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id1) {
+                        mDbHandler.deletecategory(id);
+                        updateCategoryAdapter();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        android.support.v7.app.AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }

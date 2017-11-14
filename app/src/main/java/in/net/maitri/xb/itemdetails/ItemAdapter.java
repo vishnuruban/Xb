@@ -55,14 +55,14 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> {
         Item item = mItemList.get(position);
 
         holder.itemName.setText(item.getItemName());
-        holder.itemSp.setText(String.valueOf(item.getItemSP()));
+        String sp = "Rs. " + String.valueOf((int) item.getItemSP());
+        holder.itemSp.setText(sp);
         String imagePath = item.getItemImage();
         File imgFile = new File(imagePath);
         if(imgFile.exists()){
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             holder.itemImage.setImageBitmap(myBitmap);
         }
-
     }
 
     @Override
