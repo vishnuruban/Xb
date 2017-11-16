@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:weightSum="1"
     tools:context="in.net.maitri.xb.itemdetails.AddItemCategory">
@@ -88,6 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
+
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:src="@android:drawable/ic_input_add"/>

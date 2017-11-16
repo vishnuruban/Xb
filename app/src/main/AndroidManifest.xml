@@ -17,11 +17,23 @@
         <activity android:name=".db.DbActivity"/>
         <activity android:name=".itemdetails.AddItemCategory"/>
         <activity android:name=".MainActivity">
+        </activity>
+
+
+        <activity android:name=".billing.CheckoutActivity"
+            android:label="CHECKOUT"
+            android:windowSoftInputMode="stateHidden">
+
+        </activity>
+        <activity android:name=".billing.BillingActivity"
+            android:label="BILL"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>>
+
         </activity>
     </application>
 
