@@ -1,10 +1,12 @@
 package in.net.maitri.xb.db;
 
+import java.io.Serializable;
+
 /**
  * Created by SYSRAJ4 on 06/11/2017.
  */
 
-public class Item {
+public class Item implements Serializable {
 
     private int id;
     private String itemName;
@@ -25,10 +27,9 @@ public class Item {
 
     private int categoryId;
 
-     public Item()
-     {
+    public Item() {
 
-     }
+    }
 
     public String getItemName() {
         return itemName;
@@ -94,7 +95,7 @@ public class Item {
         this.categoryId = categoryId;
     }
 
-    public Item(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode, float itemGST, int categoryId,String itemImage) {
+    public Item(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode, float itemGST, int categoryId, String itemImage) {
         this.itemName = itemName;
         this.itemImage = itemImage;
         this.itemUOM = itemUOM;

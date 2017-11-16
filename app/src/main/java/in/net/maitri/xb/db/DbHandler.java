@@ -195,8 +195,6 @@ public class DbHandler extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE "
                 + KEY_ITEM_ID + " = " + id;
 
-        Log.d("query", selectQuery);
-
         Cursor c = db.rawQuery(selectQuery, null);
 
         if (c != null)

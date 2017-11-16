@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.List;
 
 import in.net.maitri.xb.R;
@@ -33,6 +34,7 @@ public class AddItemCategory extends AppCompatActivity {
     private List<Item> mGetAllItems;
     private DbHandler mDbHandler;
     private TextView mNoItem, mNoCategory, mSelectedCategory;
+    private int mCategoryId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +53,18 @@ public class AddItemCategory extends AppCompatActivity {
         RecyclerView itemView = (RecyclerView) findViewById(R.id.item_view);
         if (mGetAllCategories.size() == 0) {
             mNoCategory.setVisibility(View.VISIBLE);
+        } else {
+            mSelectedCategory.setText(mGetAllCategories.get(0).getCategoryName());
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("catName", mGetAllCategories.get(0).getCategoryName());
+            editor.putInt("catId", mGetAllCategories.get(0).getId());
+            editor.apply();
         }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
         categoryView.setLayoutManager(linearLayoutManager);
         mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, mGetAllCategories);
         categoryView.setAdapter(mCategoryAdapter);
-        mSelectedCategory.setText(mGetAllCategories.get(0).getCategoryName());
-
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("catName", mGetAllCategories.get(0).getCategoryName());
-        editor.putInt("catId", mGetAllCategories.get(0).getId());
-        editor.apply();
 
         int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
         if (columns > 1){
@@ -79,6 +81,7 @@ public class AddItemCategory extends AppCompatActivity {
         mItemAdapter = new ItemAdapter(AddItemCategory.this, mGetAllItems);
         itemView.setAdapter(mItemAdapter);
 
+        // category click and ong click
         categoryView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), categoryView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -88,18 +91,40 @@ public class AddItemCategory extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
                 String categoryName = category.getCategoryName();
                 mSelectedCategory.setText(categoryName);
-                int categoryId = category.getId();
+                mCategoryId = category.getId();
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("catName", categoryName);
-                editor.putInt("catId", categoryId);
+                editor.putInt("catId", mCategoryId);
                 editor.apply();
             }
 
             @Override
             public void onLongClick(View view, int position) {
                 Category category = mGetAllCategories.get(position);
-                showPopupMenu(view, category.getId(), category.getCategoryName(), true);
+                showPopupMenu(view, category, new Item(), true);
+                String categoryName = category.getCategoryName();
+                String catImgPath = category.getCategoryImage();
+                mCategoryId = category.getId();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("catName", categoryName);
+                editor.putInt("catId", mCategoryId);
+                editor.putString("catImg",catImgPath);
+                editor.apply();
+            }
+        }));
+
+        itemView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), itemView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Item item = mGetAllItems.get(position);
+                showPopupMenu(view, new Category(), item, false);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
             }
         }));
 
@@ -108,7 +133,7 @@ public class AddItemCategory extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
-                addCategory();
+                showFragment(new AddCategory());
             }
         });
 
@@ -117,21 +142,92 @@ public class AddItemCategory extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
-                addItem();
+                showFragment(new AddItem());
             }
         });
     }
 
-    private void addCategory() {
-        DialogFragment newFragment = new AddCategory();
+    private void showFragment(DialogFragment newFragment) {
         newFragment.setCancelable(false);
         newFragment.show(getSupportFragmentManager(), "");
     }
 
-    private void addItem() {
-        DialogFragment newFragment = new AddItem();
-        newFragment.setCancelable(false);
-        newFragment.show(getSupportFragmentManager(), "");
+    /**
+     * Showing popup for long click
+     */
+    private void showPopupMenu(View view, Category category, Item item, boolean isCategory) {
+        PopupMenu popup = new PopupMenu(AddItemCategory.this, view);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.menu_add_item_category_long_click, popup.getMenu());
+        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(category, item, isCategory));
+        popup.show();
+    }
+
+    /**
+     * Click listener for popup menu items
+     */
+    private class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
+
+        private Category mCategory;
+        private  Item mItem;
+        boolean isCategory;
+
+        MyMenuItemClickListener(Category category, Item item, boolean isCategory) {
+            mCategory = category;
+            mItem = item;
+            this.isCategory = isCategory;
+        }
+
+        @Override
+        public boolean onMenuItemClick(MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.edit:
+                    if (isCategory){
+                        showFragment(new EditCatrgory());
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("itemObj", (Serializable) mItem);
+                        DialogFragment newFragment = new EditItem();
+                        newFragment.setArguments(bundle);
+                        showFragment(newFragment);
+                    }
+                    return true;
+                case R.id.delete:
+                    if (isCategory){
+                       // delete(mCategory.getId(), mCategory.getCategoryName(), isCategory);
+                    } else {
+                        delete(mItem.getId(), mItem.getItemName(), isCategory);
+                    }
+                    return true;
+                default:
+            }
+            return false;
+        }
+    }
+
+    private void delete(final int id, String name, final boolean isCategory) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+        builder.setMessage("Do you want to delete " + name + "?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id1) {
+                        if (isCategory) {
+                            mDbHandler.deletecategory(id);
+                            updateCategoryAdapter();
+                        } else {
+                            mDbHandler.deleteItem(id);
+                            updateItem(mCategoryId);
+                        }
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        android.support.v7.app.AlertDialog alert = builder.create();
+        alert.show();
     }
 
     void updateCategoryAdapter() {
@@ -155,66 +251,4 @@ public class AddItemCategory extends AppCompatActivity {
         }
         mItemAdapter.notifyDataSetChanged();
     }
-
-    /**
-     * Showing popup for long click
-     */
-    private void showPopupMenu(View view, int id, String name, boolean isCategory) {
-        PopupMenu popup = new PopupMenu(AddItemCategory.this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.menu_add_item_category_long_click, popup.getMenu());
-        popup.setOnMenuItemClickListener(new MyMenuItemClickListener(id, name, isCategory));
-        popup.show();
-    }
-
-    /**
-     * Click listener for popup menu items
-     */
-    private class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
-
-        private int id;
-        private String name;
-        boolean isCategory;
-
-        MyMenuItemClickListener(int itemId, String itemName, boolean isCategory) {
-            id = itemId;
-            name = itemName;
-            this.isCategory = isCategory;
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem menuItem) {
-            switch (menuItem.getItemId()) {
-                case R.id.edit:
-                    Toast.makeText(AddItemCategory.this, "Edit", Toast.LENGTH_SHORT).show();
-                    return true;
-                case R.id.delete:
-                    delete(id, name, isCategory);
-                    return true;
-                default:
-            }
-            return false;
-        }
-    }
-
-    private void delete(final int id, String name, boolean isCategory) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
-        builder.setMessage("Do you want to delete " + name + "?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id1) {
-                        mDbHandler.deletecategory(id);
-                        updateCategoryAdapter();
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        android.support.v7.app.AlertDialog alert = builder.create();
-        alert.show();
-    }
-
 }
