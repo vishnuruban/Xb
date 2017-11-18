@@ -49,6 +49,17 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_CATE_ID = "category_id";
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
 
+
+
+    private static final String CUSTOMER_TABLE_NAME = "CustomerMst";
+
+    private static final String KEY_CST_ID = "id";
+    private static final String KEY_CST_NAME = "cst_name";
+    private static final String KEY_CST_NUMBER = "cst_number";
+    private static final String KEY_CST_GSTIN = "cst_gstin";
+    private static final String KEY_CST_ADDRESS = "cst_address";
+    private static final String KEY_CST_CREATED_AT = "cst_createdAt";
+
     private List<Item> itemList = new ArrayList<Item>();
     private List<Category> categoryList = new ArrayList<Category>();
 
@@ -72,6 +83,15 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_CATE_ID + " INTEGER,"
                 + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_ITEM_TABLE);
+
+        String CREATE_CUSTOMER_TABLE = "CREATE TABLE " + CUSTOMER_TABLE_NAME + "("
+                + KEY_CST_ID + " INTEGER PRIMARY KEY,"
+                + KEY_CST_NAME + " TEXT,"
+                + KEY_CST_NUMBER + " INTEGER"
+                + KEY_CST_GSTIN + " TEXT,"
+                + KEY_CST_ADDRESS + " TEXT,"
+                + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_CUSTOMER_TABLE);
     }
 
     // Upgrading database
@@ -80,7 +100,7 @@ public class DbHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE_NAME);
-
+        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_TABLE_NAME);
         // Create tables again
         onCreate(db);
     }
@@ -278,5 +298,29 @@ public class DbHandler extends SQLiteOpenHelper {
         cursor.close();
         // return count
         return cursor.getCount();
+    }
+
+    public void addCustomer(Customer customer) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_CST_NAME, customer.getName());
+        cv.put(KEY_CST_NUMBER, customer.getMobileno());
+        cv.put(KEY_CST_GSTIN, customer.getGstin());
+        cv.put(KEY_CST_ADDRESS, customer.getAddress());
+        db.insert(CATEGORY_TABLE_NAME, null, cv);
+        db.close();
+    }
+
+    public int updateCustomer(Customer customer) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_CST_NAME, customer.getName());
+        cv.put(KEY_CST_NUMBER, customer.getMobileno());
+        cv.put(KEY_CST_GSTIN, customer.getGstin());
+        cv.put(KEY_CST_ADDRESS, customer.getAddress());
+
+        // updating row
+        return db.update(CUSTOMER_TABLE_NAME, cv, KEY_CST_ID + " = ?",
+                new String[]{String.valueOf(customer.getId())});
     }
 }
