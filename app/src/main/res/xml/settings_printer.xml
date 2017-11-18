@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="key_settings_print"
+        android:title="Print Settings">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="key_settings_printer_bluetooth"
+            android:title="Bluetooth" />
+
+        <ListPreference
+            android:dialogTitle="Choose Bluetooth Device"
+            android:summary="%s"
+            android:key="key_settings_printer_paired_device"
+            android:title="Paired Device" />
+
+        <ListPreference
+            android:dialogTitle="select size"
+            android:summary="%s"
+            android:entries="@array/paper_size_name"
+            android:entryValues="@array/aper_size_values"
+            android:key="key_settings_printer_paper_size"
+            android:title="Printing paper size" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="key_settings_print_no_copies"
+            android:title="No of Copies" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="key_settings_print_margin_top"
+            android:summary="Margin in lines"
+            android:title="Margin Top" />
+
+        <EditTextPreference
+            android:inputType="number"
+            android:key="key_settings_print_margin_bottom"
+            android:summary="Margin in lines"
+            android:title="Margin Bottom" />
+
+        <EditTextPreference
+            android:key="key_settings_print_footer_text"
+            android:summary="Enter text"
+            android:title="Footer text" />
+
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Bill Settings"
+        android:key="key_settings_bill">
+
+        <ListPreference
+            android:key="key_settings_bill_inclusive_exclusive"
+            android:summary="%s"
+            android:defaultValue="1"
+            android:entries="@array/tax_type_name"
+            android:entryValues="@array/tax_type_values"
+            android:title="Tax type" />
+
+        <SwitchPreference
+            android:key="key_settings_bill_sales_person_rqd"
+            android:defaultValue="false"
+            android:title="Sales Person Required"/>
+
+
+        <SwitchPreference
+            android:key="key_settings_bill_round_cash"
+            android:defaultValue="false"
+            android:title="Round of Bill"/>
+
+
+        <EditTextPreference
+            android:key="key_settings_bill_suffix_prefix_name"
+            android:title="Bill name" />
+
+        <ListPreference
+            android:key="key_settings_bill_suffix_prefix"
+            android:entries="@array/suffix_prefix_name"
+            android:summary="%s"
+            android:defaultValue="2"
+            android:entryValues="@array/suffix_prefix_values"
+            android:title="Add bill name as" />
+
+        <EditTextPreference
+            android:key="key_settings_company_starting_bill_no"
+            android:title="Starting bill no" />
+
+        <EditTextPreference
+            android:key="key_settings_bill_discount_percentage"
+            android:title="Maximum Discount Percentage" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

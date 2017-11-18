@@ -1,3 +1,51 @@
 <resources>
     <string name="app_name">Xb</string>
+
+    <string-array name="registration_name">
+        <item>Regular</item>
+        <item>Composite</item>
+        <item>Unregistered</item>
+    </string-array>
+    <string-array name="registration_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="tax_type_name">
+        <item>Inclusive</item>
+        <item>Exclusive</item>
+    </string-array>
+    <string-array name="tax_type_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="suffix_prefix_name">
+        <item>Suffix</item>
+        <item>Prefix</item>
+    </string-array>
+    <string-array name="suffix_prefix_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="discount_name">
+        <item>Percentage</item>
+        <item>Value</item>
+    </string-array>
+    <string-array name="discount_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="paper_size_name">
+        <item>2 inch</item>
+        <item>3 inch</item>
+    </string-array>
+    <string-array name="aper_size_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="in.net.maitri.xb.settings.CompanySettings"
+        android:title="Company"
+        android:summary="Company details"/>
+
+    <header
+        android:fragment="in.net.maitri.xb.settings.BillSettings"
+        android:title="Bill"
+        android:summary="Bill details" />
+
+    <header
+        android:fragment="in.net.maitri.xb.settings.PrinterSettings"
+        android:title="Printer"
+        android:summary="Printer details" />
+
+
+</preference-headers>
