@@ -8,13 +8,13 @@
 
     <FrameLayout
         android:id="@+id/frameLayout1"
-        android:layout_weight="0.5"
+        android:layout_weight="0.45"
         android:layout_height="match_parent"
         android:layout_width="0dp" />
 
     <FrameLayout
         android:id="@+id/frameLayout2"
-        android:layout_weight="0.5"
+        android:layout_weight="0.55"
         android:layout_height="match_parent"
         android:layout_width="0dp"/>
 

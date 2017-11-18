@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import in.net.maitri.xb.R;
@@ -75,11 +76,13 @@ public class BillListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
+      DecimalFormat  df = new DecimalFormat("0.00");
+
            BillItems biItems = billItems.get(position);
             holder.mDesc.setText(biItems.getDesc());
             holder.mQty.setText(String.valueOf(biItems.getQty()));
-            holder.mAmt.setText(String.valueOf(biItems.getAmount()));
-            holder.mRate.setText(String.valueOf(biItems.getRate()));
+            holder.mAmt.setText(String.valueOf(df.format(biItems.getAmount())));
+            holder.mRate.setText(String.valueOf(df.format(biItems.getRate())));
 
 
         return view;

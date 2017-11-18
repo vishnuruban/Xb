@@ -6,6 +6,9 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import in.net.maitri.xb.R;
@@ -31,11 +35,12 @@ import in.net.maitri.xb.R;
 public class FragmentOne extends Fragment {
 
 
-    Button mCheckout;
-    private ArrayList<BillItems> billList;
+    Button mCheckout,mclearBill;
+    public static ArrayList<BillItems> billList;
     private ListView billListView;
-    BillListAdapter billListAdapter;
-    private TextView bTotalProducts,bTotalPrice;
+    private static BillListAdapter billListAdapter;
+    private static TextView bTotalProducts,bTotalPrice;
+    static DecimalFormat df;
 
 
     @Override
@@ -52,13 +57,21 @@ public class FragmentOne extends Fragment {
         bTotalPrice    = (TextView) view.findViewById(R.id.bTotalPrice);
 
         mCheckout = (Button) view.findViewById(R.id.mCheckout);
+        mclearBill = (Button) view.findViewById(R.id.mClearBill);
         billListView = (ListView) view.findViewById(R.id.bill_lv);
 
         billListAdapter = new BillListAdapter(getActivity(),billList);
         billListView.setAdapter(billListAdapter);
-        populateList();
-        UpdateProdPriceList();
-        billListAdapter.notifyDataSetChanged();
+       // populateList();
+
+        GradientDrawable bgShape = (GradientDrawable)mCheckout.getBackground();
+        bgShape.setColor(getResources().getColor(R.color.green));
+        GradientDrawable bgShape1 = (GradientDrawable)mclearBill.getBackground();
+        bgShape1.setColor(getResources().getColor(R.color.dark_orange));
+
+
+         df = new DecimalFormat("0.00");
+
         billListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
 
@@ -73,9 +86,47 @@ public class FragmentOne extends Fragment {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getActivity(),CheckoutActivity.class);
-                startActivity(intent);
 
+                if(billList.size()==0)
+                {
+                    Toast.makeText(getActivity(),"Bill is empty",Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("products", bTotalProducts.getText().toString());
+                    bundle.putString("price", bTotalPrice.getText().toString());
+                    Intent intent = new Intent(getActivity(), CheckoutActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
+
+            }
+        });
+
+        mclearBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder dialog =new AlertDialog.Builder(getActivity());
+                dialog.setTitle("Are you sure you want to clear the bill?");
+                dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        billList.clear();
+                        billListAdapter.notifyDataSetChanged();
+
+                    }
+                });
+                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
         });
 
@@ -88,26 +139,56 @@ public class FragmentOne extends Fragment {
 
 
 
-    private void populateList()
+    public static void populateList(BillItems be)
     {
 
-        BillItems item1,item2,item3,item4;
+      /*  BillItems item1,item2,item3,item4;
 
         item1 = new BillItems("Annapurna salt 1 kg",2,18,36);
         billList.add(item1);
         item2 = new BillItems("Aaashirvad Atta 1 kg",2,45,90);
         billList.add(item2);
         item3 = new BillItems("Fair and lovely 100gm  new arrival",1,80.90,80.90);
-        billList.add(item3);
+        billList.add(item3);*/
 
 
 
 
+      if(billList.size()!=0)
+      {
+
+
+          for(int i=0;i<billList.size();i++)
+          {
+              BillItems bItm = billList.get(i);
+
+              if(bItm.getDesc().equals(be.getDesc()))
+              {
+              System.out.println("Items Equalled");
+                  int qty = bItm.getQty() + be.getQty();
+                  double amt = bItm.getAmount() + be.getAmount();
+                  billList.remove(bItm);
+                  be.setQty(qty);
+                  be.setAmount(amt);
+
+              }
+
+          }
+          billList.add(be);
+          billListAdapter.notifyDataSetChanged();
+      }
+      else
+      {
+          billList.add(be);
+          billListAdapter.notifyDataSetChanged();
+    }
+
+        UpdateProdPriceList();
     }
 
 
 
-    private void UpdateProdPriceList(){
+    private static void UpdateProdPriceList(){
 
         String rs = "\u20B9";
         try{
@@ -119,6 +200,7 @@ public class FragmentOne extends Fragment {
             e.printStackTrace();
         }
 
+
         double a = 0;
         bTotalProducts.setText("Products   "+billList.size());
 
@@ -129,7 +211,8 @@ public class FragmentOne extends Fragment {
              a  = a + bi.getAmount();
         }
 
-        bTotalPrice.setText("Price("+rs+")   "+String.valueOf(a));
+        bTotalPrice.setText("Price("+rs+")   "+String.valueOf(df.format(a)));
+
     }
 
 

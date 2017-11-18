@@ -33,6 +33,15 @@ public class Category {
     private String categoryName;
     private String categoryImage;
     private String categoryTime;
+    private boolean selected;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     public int getId() {
         return id;

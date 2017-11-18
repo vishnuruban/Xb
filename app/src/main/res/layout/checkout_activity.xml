@@ -23,31 +23,33 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_edittext1"
+                android:background="@drawable/bgedittext2"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
-                    android:textColor="#fff"
+                    android:id="@+id/cTotalProducts"
+                    android:textColor="#000"
                     android:padding="15dp"
-                    android:textSize="15dp"
+                    android:textSize="20dp"
                     android:text="Products" />
 
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/cTotalPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
                     android:padding="15dp"
-                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:gravity="right"
                     android:text="Price(\u20B9)"
-                    android:textColor="#fff" />
+                    android:textColor="#000" />
             </LinearLayout>
+
 
 
 
@@ -80,11 +82,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_edittext"
+                    android:background="@drawable/checkout_edittext"
+                    android:textColor="#000"
                     android:padding="15dp"
                     android:textSize="15dp"
                     android:text ='\u20B9'
-                    android:textColor="#fff" />
+                />
             </LinearLayout>
 
 
@@ -152,16 +155,17 @@
                     android:textColorHint="#F6F6F6" />
 
 
-                <EditText
+                <TextView
+                    android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:background="@drawable/bg_edittext1"
                     android:drawablePadding="15dp"
                     android:hint="Date"
-                    android:padding="16dp"
-                    android:textColorHint="#F6F6F6" />
-
+                    android:textSize="17sp"
+                    android:textColor="#fff"
+                    android:padding="16dp" />
 
 
             </LinearLayout>
@@ -171,7 +175,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@color/colorCell2">
+                android:background="@color/dark_brown">
 
                 <TextView
                     android:layout_width="0dp"
@@ -223,7 +227,6 @@
     </RelativeLayout>
 
 
-
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -231,290 +234,287 @@
         android:layout_weight="1">
 
 
-
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/grid"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true">
-
-        <GridLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:columnCount="5"
-            android:orientation="horizontal"
-            android:padding="5dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true">
 
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="1"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="2"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="3"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="4"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="5"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="6"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="7"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="8"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="9"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="0"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="."
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="CLEAR"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="100"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="500"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="1000"
-                android:textColor="#fff"
-                android:textSize="20dp" />
-
-            <Button
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="CASH"
-                android:textColor="#fff"
-                android:textSize="20dp" />
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:columnCount="5"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
 
-            <Button
-                android:layout_columnSpan="1"
-                android:layout_gravity="fill"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="DC"
-                android:textColor="#fff"
-                android:textSize="20dp" />
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="1"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
 
-            <Button
-                android:layout_columnSpan="1"
-                android:layout_gravity="fill"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="CC"
-                android:textColor="#fff"
-                android:textSize="20dp" />
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="2"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
 
-            <Button
-                android:layout_columnSpan="2"
-                android:layout_gravity="fill"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorCell"
-                android:text="WALLET"
-                android:textColor="#fff"
-                android:textSize="20dp" />
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="3"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="4"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="5"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="6"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="7"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="8"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="9"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="0"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="."
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="CLEAR"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="100"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="500"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="1000"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="CASH"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
 
 
+                <Button
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="fill"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="DC"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="fill"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="CC"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
+
+                <Button
+                    android:layout_columnSpan="2"
+                    android:layout_gravity="fill"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorCell"
+                    android:text="WALLET"
+                    android:textColor="#fff"
+                    android:textSize="20dp" />
 
 
-        </GridLayout>
+            </GridLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_above="@id/grid"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_above="@id/grid"
+            android:layout_margin="5dp"
             android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_edittext"
-            android:orientation="horizontal">
-
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="#fff"
-                android:padding="15dp"
-                android:gravity = "center"
-                android:textStyle="bold"
-                android:textSize="15dp"
-                android:text="PAYMENT" />
-
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:background="#fff" />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-
-                android:textColor="@color/colorCell"
-                android:padding="15dp"
-                android:textSize="15dp"
-                android:text="Net Amount(\u20B9)" />
-
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@drawable/bg_edittext"
-                android:padding="15dp"
-                android:textSize="15dp"
-                android:text ='\u20B9'
-                android:textColor="#fff" />
-        </LinearLayout>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="15dp"
+                    android:text="PAYMENT"
+                    android:textColor="#fff"
+                    android:textSize="15dp"
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#fff" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="15dp"
+                    android:text="Net Amount(\u20B9)"
+                    android:textColor="@color/colorCell"
+                    android:textSize="15dp" />
+
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/checkout_edittext"
+                    android:textColor="#000"
+                    android:padding="15dp"
+                    android:text='\u20B9'
+                    android:textSize="12dp" />
+            </LinearLayout>
 
 
             <View
@@ -533,10 +533,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
 
+                    android:padding="12dp"
+                    android:text="Payment mode"
                     android:textColor="@color/colorCell"
-                    android:padding="15dp"
-                    android:textSize="15dp"
-                    android:text="Payment mode" />
+                    android:textSize="15dp" />
 
 
                 <EditText
@@ -544,11 +544,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_edittext"
-                    android:padding="15dp"
-                    android:textSize="15dp"
-                    android:text =''
-                    android:textColor="#fff" />
+                    android:background="@drawable/checkout_edittext"
+                    android:textColor="#000"
+                    android:padding="12dp"
+                    android:text=''
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <View
@@ -566,11 +566,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
-                    android:textColor="@color/colorCell"
                     android:padding="15dp"
-                    android:textSize="15dp"
-                    android:text="Cash(\u20B9)" />
+                    android:text="Cash(\u20B9)"
+                    android:textColor="@color/colorCell"
+                    android:textSize="15dp" />
 
 
                 <EditText
@@ -578,11 +577,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_edittext"
-                    android:padding="15dp"
-                    android:textSize="15dp"
-                    android:text =''
-                    android:textColor="#fff" />
+                    android:background="@drawable/checkout_edittext"
+                    android:textColor="#000"
+                    android:padding="12dp"
+                    android:text=''
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <View
@@ -599,11 +598,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
+                    android:padding="12dp"
+                    android:text="Mobile Number"
                     android:textColor="@color/colorCell"
-                    android:padding="15dp"
-                    android:textSize="15dp"
-                    android:text="Mobile Number" />
+                    android:textSize="15dp" />
 
 
                 <EditText
@@ -611,11 +609,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/bg_edittext"
-                    android:padding="15dp"
-                    android:textSize="15dp"
-                    android:text =''
-                    android:textColor="#fff" />
+                    android:background="@drawable/checkout_edittext"
+                    android:textColor="#000"
+                    android:padding="12dp"
+                    android:text=''
+                    android:textSize="15dp" />
             </LinearLayout>
 
 
@@ -624,51 +622,48 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
-                android:paddingTop="30dp"
+                android:orientation="horizontal"
                 android:paddingBottom="30dp"
-                android:orientation="horizontal">
+                android:paddingTop="30dp">
 
                 <Button
                     android:id="@+id/mSave"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="15dp"
-                    android:textColor="#fff"
-                    android:text="SAVE"
                     android:background="#0091EA"
                     android:padding="16dp"
-                    />
+                    android:text="SAVE"
+                    android:textColor="#fff"
+                    android:textSize="15dp" />
+
                 <Button
                     android:id="@+id/mPrint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="15dp"
-                    android:textColor="#fff"
-                    android:text="PRINT"
                     android:background="#1B5E20"
                     android:padding="16dp"
-                    />
+                    android:text="PRINT"
+                    android:textColor="#fff"
+                    android:textSize="15dp" />
 
                 <Button
                     android:id="@+id/mCancel"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="15dp"
-                    android:textColor="#fff"
-                    android:text="CANCEL"
                     android:background="#FF5252"
                     android:padding="16dp"
-                    />
+                    android:text="CANCEL"
+                    android:textColor="#fff"
+                    android:textSize="15dp" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@android:color/black"
-              />
+                android:background="@android:color/black" />
 
         </LinearLayout>
     </RelativeLayout>

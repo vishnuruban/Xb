@@ -1,5 +1,6 @@
 package in.net.maitri.xb.billing;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -26,11 +27,18 @@ public class BillingActivity extends AppCompatActivity {
             ft.add(R.id.frameLayout1, filterFirstFragment, "TAG FRAGMENT");
             ft.commit();
 
-            FragmentTwo filterSecondFragment = new FragmentTwo();
+         /*   FragmentTwo filterSecondFragment = new FragmentTwo();
             FragmentManager fm1 = getFragmentManager();
             FragmentTransaction ft1 = fm1.beginTransaction();
             ft1.add(R.id.frameLayout2, filterSecondFragment, "TAG1 FRAGMENT");
-            ft1.commit();
+            ft1.commit(); */
+
+
+            FragmentThree filterThirdFragment = new FragmentThree();
+            FragmentManager fm3 = getFragmentManager();
+            FragmentTransaction ft3 = fm3.beginTransaction();
+            ft3.add(R.id.frameLayout2, filterThirdFragment, "TAG1 FRAGMENT");
+            ft3.commit();
 
         }
     }

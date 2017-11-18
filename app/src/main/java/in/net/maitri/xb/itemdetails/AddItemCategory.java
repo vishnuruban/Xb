@@ -1,6 +1,7 @@
 package in.net.maitri.xb.itemdetails;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +23,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
@@ -35,17 +38,25 @@ public class AddItemCategory extends AppCompatActivity {
     private DbHandler mDbHandler;
     private TextView mNoItem, mNoCategory, mSelectedCategory;
     private int mCategoryId;
+    private Button go;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item_category);
 
+
+
+
+
         new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
 
+        go = (Button)findViewById(R.id.billScreen);
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
         mSelectedCategory = (TextView) findViewById(R.id.selected_category_name);
+
+
 
         mDbHandler = new DbHandler(AddItemCategory.this);
         mGetAllCategories = mDbHandler.getAllcategorys();
@@ -70,6 +81,7 @@ public class AddItemCategory extends AppCompatActivity {
         if (columns > 1){
             columns -= 1;
         }
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
         itemView.setLayoutManager(gridLayoutManager);
         mGetAllItems = mDbHandler.getAllitems(1);
@@ -145,6 +157,16 @@ public class AddItemCategory extends AppCompatActivity {
                 showFragment(new AddItem());
             }
         });
+
+
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddItemCategory.this, BillingActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void showFragment(DialogFragment newFragment) {
@@ -186,7 +208,7 @@ public class AddItemCategory extends AppCompatActivity {
                         showFragment(new EditCatrgory());
                     } else {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("itemObj", (Serializable) mItem);
+                        bundle.putSerializable("itemObj", mItem);
                         DialogFragment newFragment = new EditItem();
                         newFragment.setArguments(bundle);
                         showFragment(newFragment);

@@ -3,6 +3,20 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorCell">#015093</color>
-    <color name="colorCell2">#C51162</color>
+    <color name="colorCell">#191970</color>
+    <color name="colorCell2">#836953</color>
+    <color name="orange">#FBCEB1</color>
+    <color name="ok"> #85BB65</color>
+    <color name="buttonColour">#3B444B</color>
+    <color name="cancel"> #E97451</color>
+    <color name="keypadDialogheader">#5B92E5</color>
+    <color name="green">#388E3C</color>
+<color name="purple">#9C27B0</color>
+    <color name="grey">#616161</color>
+    <color name="dark_orange">#C04000</color>
+
+    <color name="yellow">#FFA812</color>
+    <color name="dark_brown"> #704214</color>
+
+    #FFC1CC
 </resources>
