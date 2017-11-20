@@ -42,10 +42,11 @@ public class FragmentOne extends Fragment {
     private static TextView bTotalProducts,bTotalPrice;
     static DecimalFormat df;
 
-
+    static double a = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
 
 
@@ -95,7 +96,7 @@ public class FragmentOne extends Fragment {
 
                     Bundle bundle = new Bundle();
                     bundle.putString("products", bTotalProducts.getText().toString());
-                    bundle.putString("price", bTotalPrice.getText().toString());
+                    bundle.putString("price",String.valueOf(df.format(a)));
                     Intent intent = new Intent(getActivity(), CheckoutActivity.class);
                     intent.putExtras(bundle);
                     startActivity(intent);
@@ -201,7 +202,6 @@ public class FragmentOne extends Fragment {
         }
 
 
-        double a = 0;
         bTotalProducts.setText("Products   "+billList.size());
 
         for(int i =0;i<billList.size();i++)

@@ -17,6 +17,8 @@
 
     <color name="yellow">#FFA812</color>
     <color name="dark_brown"> #704214</color>
+    <color name="white"> #fff</color>
+    <color name="black"> #000</color>
+    <color name="toggle"> #4FC3F7</color>
 
-    #FFC1CC
 </resources>
