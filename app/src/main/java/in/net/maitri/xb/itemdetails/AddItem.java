@@ -38,6 +38,7 @@ import java.util.Locale;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.settings.GetSettings;
 
 public class AddItem extends DialogFragment {
 
@@ -56,7 +57,7 @@ public class AddItem extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.add_category, container, false);
+        final View view =  inflater.inflate(R.layout.add_category, container, false);
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText("Add Item");
@@ -64,6 +65,8 @@ public class AddItem extends DialogFragment {
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
+        final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
+
         String selectedCategoryName = sharedPreferences.getString("catName", "");
         final int selectedCategoryId = sharedPreferences.getInt("catId", 0);
         dbHandler = new DbHandler(getActivity());
@@ -94,6 +97,12 @@ public class AddItem extends DialogFragment {
         final EditText hsnCode = (EditText) view.findViewById(R.id.hsn_code);
         final EditText gst = (EditText) view.findViewById(R.id.gst);
 
+        if( registrationType.equals("3")){
+            hsnCode.setVisibility(View.GONE);
+            gst.setVisibility(View.GONE);
+        }
+
+
         Button addDetails = (Button) view.findViewById(R.id.add_details);
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,14 +117,19 @@ public class AddItem extends DialogFragment {
                 String hsn = hsnCode.getText().toString();
 
 
-                if (catName.isEmpty() || iteName.isEmpty()
+                if (!registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
                         || cp.isEmpty()
                         || sp.isEmpty()
                         || uoM.isEmpty()
                         || gsT.isEmpty()
-                        || hsn.isEmpty()){
+                        || hsn.isEmpty())){
                     Toast.makeText(getActivity(),"Enter all the fields.", Toast.LENGTH_SHORT).show();
-                }else{
+                }  else if((registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
+                        || cp.isEmpty()
+                        || sp.isEmpty()
+                        || uoM.isEmpty()))){
+                    Toast.makeText(getActivity(),"Enter all the fields.", Toast.LENGTH_SHORT).show();
+                } else{
                     copyImage();
                     addItem(iteName,uoM,Float.valueOf(cp),Float.valueOf(sp),hsn,Float.valueOf(gsT),selectedCategoryId);
                     mAddItemCategory.updateItem(selectedCategoryId);

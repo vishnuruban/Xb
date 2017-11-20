@@ -30,15 +30,14 @@
             android:title="Address Line3" />
 
         <EditTextPreference
-            android:key="key_settings_company_city"
-            android:summary="Enter your city"
-            android:title="City" />
-
-        <EditTextPreference
             android:key="key_settings_company_pincode"
             android:summary="Enter your pincode"
             android:title="Pincode" />
 
+        <EditTextPreference
+            android:key="key_settings_company_city"
+            android:summary="Enter your city"
+            android:title="City" />
         <EditTextPreference
             android:key="key_settings_company_state"
             android:summary="Enter your state"
@@ -51,7 +50,7 @@
             android:inputType="phone"/>
 
         <EditTextPreference
-            android:key="key_settings_company_mobile_no"
+            android:key="key_settings_company_email"
             android:summary="Enter your email"
             android:title="Email"
             android:inputType="textEmailAddress"/>

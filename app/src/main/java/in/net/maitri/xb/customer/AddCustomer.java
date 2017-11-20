@@ -1,8 +1,8 @@
 package in.net.maitri.xb.customer;
 
-
 import android.app.Dialog;
-import android.app.DialogFragment;
+import android.content.Context;
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,14 @@ import in.net.maitri.xb.db.DbHandler;
 
 public class AddCustomer extends DialogFragment{
 
+    private CustomerDetail mCustomerDetail;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCustomerDetail = (CustomerDetail) context;
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -28,10 +37,17 @@ public class AddCustomer extends DialogFragment{
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText("Add Customer");
-
+        final boolean updateAdapter = getArguments().getBoolean("updateAdapter");
         final EditText customerName = (EditText) view.findViewById(R.id.customer_name);
         final EditText customerMobile = (EditText) view.findViewById(R.id.mobile);
         final EditText customerGstin = (EditText) view.findViewById(R.id.gstin);
+        ImageView close = (ImageView) view.findViewById(R.id.close);
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismiss();
+            }
+        });
         final EditText customerAddress = (EditText) view.findViewById(R.id.address);
         Button add = (Button) view.findViewById(R.id.add_details);
         add.setOnClickListener(new View.OnClickListener() {
@@ -51,9 +67,9 @@ public class AddCustomer extends DialogFragment{
                         customer.setName(name);
                     }
                     if (mob.isEmpty()){
-                        customer.setMobileno(Integer.parseInt(""));
+                        customer.setMobileno("");
                     } else {
-                        customer.setMobileno(Integer.parseInt(mob));
+                        customer.setMobileno(mob);
                     }
                     if (gstin.isEmpty()){
                         customer.setGstin("");
@@ -66,6 +82,9 @@ public class AddCustomer extends DialogFragment{
                         customer.setAddress(address);
                     }
                     addCustomer(customer);
+                    if (updateAdapter) {
+                        mCustomerDetail.updateCustomerAdapter();
+                    }
                 }
             }
         });

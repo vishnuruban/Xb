@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
@@ -38,6 +39,7 @@ public class AddItemCategory extends AppCompatActivity {
     private DbHandler mDbHandler;
     private TextView mNoItem, mNoCategory, mSelectedCategory;
     private int mCategoryId;
+    private FloatingActionButton mAddItemBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,8 +147,11 @@ public class AddItemCategory extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton addItemBtn = (FloatingActionButton) findViewById(R.id.add_item_button);
-        addItemBtn.setOnClickListener(new View.OnClickListener() {
+        mAddItemBtn = (FloatingActionButton) findViewById(R.id.add_item_button);
+        if (mGetAllCategories.size() == 0) {
+            mAddItemBtn.setVisibility(View.GONE);
+        }
+        mAddItemBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
@@ -243,8 +248,10 @@ public class AddItemCategory extends AppCompatActivity {
         mGetAllCategories = mDbHandler.getAllcategorys();
         if (mGetAllCategories.size() == 0) {
             mNoCategory.setVisibility(View.VISIBLE);
+            mAddItemBtn.setVisibility(View.GONE);
         } else {
             mNoCategory.setVisibility(View.GONE);
+            mAddItemBtn.setVisibility(View.VISIBLE);
         }
         mCategoryAdapter.notifyDataSetChanged();
     }
@@ -271,6 +278,9 @@ public class AddItemCategory extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.customers:
+                startActivity(new Intent(AddItemCategory.this, CustomerDetail.class));
+                break;
             case R.id.settings:
                 startActivity(new Intent(AddItemCategory.this, SettingsActivity.class));
                 break;

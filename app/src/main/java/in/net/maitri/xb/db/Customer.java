@@ -5,19 +5,19 @@ package in.net.maitri.xb.db;
 public class Customer {
 
     private int id;
-    private int mobileno;
+    private String mobileno;
     private String name, address, gstin;
 
     public Customer(){}
 
-    public Customer(String name, int mobileno, String gstin, String address){
+    public Customer(String name, String mobileno, String gstin, String address){
         this.name = name;
         this.mobileno = mobileno;
         this.gstin = gstin;
         this.address = address;
     }
 
-    public Customer(int id, String name, int mobileno, String gstin, String address){
+    public Customer(int id, String name, String mobileno, String gstin, String address){
         this.id = id;
         this.name = name;
         this.mobileno = mobileno;
@@ -33,11 +33,11 @@ public class Customer {
         this.id = id;
     }
 
-    public int getMobileno() {
+    public String getMobileno() {
         return mobileno;
     }
 
-    public void setMobileno(int mobileno) {
+    public void setMobileno(String mobileno) {
         this.mobileno = mobileno;
     }
 

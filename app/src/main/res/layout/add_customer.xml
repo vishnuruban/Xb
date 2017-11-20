@@ -37,6 +37,7 @@
             android:id="@+id/item_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="8dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -71,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:hint="Mobile No"
-                        android:inputType="text" />
+                        android:inputType="phone" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -93,8 +94,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:hint="GSTIN"
-                        android:inputType="numberDecimal" />
+                        android:hint="GSTIN" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -108,8 +108,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
-                        android:hint="Address"
-                        android:inputType="numberDecimal" />
+                        android:hint="Address" />
 
                 </android.support.design.widget.TextInputLayout>
 

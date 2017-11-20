@@ -50,7 +50,6 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
 
 
-
     private static final String CUSTOMER_TABLE_NAME = "CustomerMst";
 
     private static final String KEY_CST_ID = "id";
@@ -60,8 +59,14 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_CST_ADDRESS = "cst_address";
     private static final String KEY_CST_CREATED_AT = "cst_createdAt";
 
-    private List<Item> itemList = new ArrayList<Item>();
-    private List<Category> categoryList = new ArrayList<Category>();
+    private static final String UNIT_TABLE_NAME = "UnitMst";
+    private static final String KEY_UNIT_ID = "unit_id";
+    private static final String KEY_UNIT_DESC = "unit_desc";
+    private static final String KEY_UNIT_CREATED_AT = "unit_createdAt";
+
+    private List<Item> itemList = new ArrayList<>();
+    private List<Category> categoryList = new ArrayList<>();
+    private List<Customer> customerList = new ArrayList<>();
 
 
     // Creating Tables
@@ -87,11 +92,17 @@ public class DbHandler extends SQLiteOpenHelper {
         String CREATE_CUSTOMER_TABLE = "CREATE TABLE " + CUSTOMER_TABLE_NAME + "("
                 + KEY_CST_ID + " INTEGER PRIMARY KEY,"
                 + KEY_CST_NAME + " TEXT,"
-                + KEY_CST_NUMBER + " INTEGER"
+                + KEY_CST_NUMBER + " TEXT UNIQUE,"
                 + KEY_CST_GSTIN + " TEXT,"
                 + KEY_CST_ADDRESS + " TEXT,"
                 + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CUSTOMER_TABLE);
+
+        String CREATE_UNIT_TABLE = "CREATE TABLE " + UNIT_TABLE_NAME+ "("
+                + KEY_UNIT_ID + " INTEGER PRIMARY KEY,"
+                + KEY_UNIT_DESC  + " TEXT,"
+                + KEY_UNIT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_UNIT_TABLE);
     }
 
     // Upgrading database
@@ -101,6 +112,7 @@ public class DbHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UNIT_TABLE_NAME);
         // Create tables again
         onCreate(db);
     }
@@ -117,7 +129,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
     // Getting single category
-    public Category getcategory(int id) {
+    public Category getCategory(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(CATEGORY_TABLE_NAME, new String[]{KEY_CAT_ID,
@@ -128,6 +140,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
         Category category = new Category(cursor.getInt(0),
                 cursor.getString(1), cursor.getString(2));
+        cursor.close();
         // return category
         return category;
     }
@@ -154,7 +167,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 categoryList.add(category);
             } while (cursor.moveToNext());
         }
-
+        cursor.close();
         // return category list
         return categoryList;
     }
@@ -229,7 +242,7 @@ public class DbHandler extends SQLiteOpenHelper {
         item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
         item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
         item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
-
+        c.close();
         return item;
     }
 
@@ -260,6 +273,7 @@ public class DbHandler extends SQLiteOpenHelper {
             } while (c.moveToNext());
         }
         // return item list
+        c.close();
         return itemList;
     }
 
@@ -307,7 +321,7 @@ public class DbHandler extends SQLiteOpenHelper {
         cv.put(KEY_CST_NUMBER, customer.getMobileno());
         cv.put(KEY_CST_GSTIN, customer.getGstin());
         cv.put(KEY_CST_ADDRESS, customer.getAddress());
-        db.insert(CATEGORY_TABLE_NAME, null, cv);
+        db.insert(CUSTOMER_TABLE_NAME, null, cv);
         db.close();
     }
 
@@ -322,5 +336,27 @@ public class DbHandler extends SQLiteOpenHelper {
         // updating row
         return db.update(CUSTOMER_TABLE_NAME, cv, KEY_CST_ID + " = ?",
                 new String[]{String.valueOf(customer.getId())});
+    }
+
+    // Getting All Customer
+    public List<Customer> getAllCustomer() {
+        customerList.clear();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + CUSTOMER_TABLE_NAME ;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+        if (c.moveToFirst()) {
+            do {
+                Customer customer = new Customer();
+                customer.setName(c.getString(c.getColumnIndex(KEY_CST_NAME)));
+                customer.setMobileno(c.getString(c.getColumnIndex(KEY_CST_NUMBER)));
+                customer.setGstin(c.getString(c.getColumnIndex(KEY_CST_GSTIN)));
+                customer.setAddress(c.getString(c.getColumnIndex(KEY_CST_ADDRESS)));
+                customer.setId(c.getInt(c.getColumnIndex(KEY_CST_ID)));
+                customerList.add(customer);
+            } while (c.moveToNext());
+        }
+        c.close();
+        return customerList;
     }
 }
