@@ -7,28 +7,11 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class DbHandler extends SQLiteOpenHelper {
-
-
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "XposeBilling";
-
-
-    // Category table name
-    private static final String CATEGORY_TABLE_NAME = "CategoryMst";
-
-
-    // Category Table Columns names
-    private static final String KEY_CAT_ID = "id";
-    private static final String KEY_CAT_NAME = "category_name";
-    private static final String KEY_CAT_IMAGE_PATH = "category_image";
-    private static final String KEY_CAT_CREATED_AT = "category_createdAt";
 
     private Context mContext;
 
@@ -37,10 +20,17 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "XposeBilling";
+    // Category table name
+    private static final String CATEGORY_TABLE_NAME = "CategoryMst";
+    // Category Table Columns names
+    private static final String KEY_CAT_ID = "id";
+    private static final String KEY_CAT_NAME = "category_name";
+    private static final String KEY_CAT_IMAGE_PATH = "category_image";
+    private static final String KEY_CAT_CREATED_AT = "category_createdAt";
     // item table name
     private static final String ITEM_TABLE_NAME = "ItemMst";
-
     // item Table Columns names
     private static final String KEY_ITEM_ID = "id";
     private static final String KEY_ITEM_NAME = "item_name";
@@ -52,27 +42,39 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_ITEM_GST = "item_gst";
     private static final String KEY_CATE_ID = "category_id";
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
-
-
+    // customer table name
     private static final String CUSTOMER_TABLE_NAME = "CustomerMst";
-
+    // customer table column names
     private static final String KEY_CST_ID = "id";
     private static final String KEY_CST_NAME = "cst_name";
     private static final String KEY_CST_NUMBER = "cst_number";
     private static final String KEY_CST_GSTIN = "cst_gstin";
     private static final String KEY_CST_ADDRESS = "cst_address";
     private static final String KEY_CST_CREATED_AT = "cst_createdAt";
-
+    // unit table name
     private static final String UNIT_TABLE_NAME = "UnitMst";
+    // unit table column names
     private static final String KEY_UNIT_ID = "unit_id";
     private static final String KEY_UNIT_DESC = "unit_desc";
     private static final String KEY_UNIT_CREATED_AT = "unit_createdAt";
+    // sales mst table name
+    private static final String SALES_MST_TABLE_NAME = "SalesMst";
+    // sales mst table column names
+    private static final String KEY_SM_BILL_NO = "sm_billNo";
+    private static final String KEY_SM_DATE = "sm_date";
+    private static final String KEY_SM_QTY = "sm_qty";
+    private static final String KEY_SM_NET_AMT = "sm_netAmt";
+    private static final String KEY_SM_DISCOUNT = "sm_discount";
+    private static final String KEY_SM_PAYMENT_MODE = "sm_paymentMode";
+    private static final String KEY_SM_CUSTOMER = "sm_customer";
+    private static final String KEY_SM_SALESMAN = "sm_salesman";
+    private static final String KEY_SM_CREATED_AT = "sm_createdAt";
+
 
     private List<Item> itemList = new ArrayList<>();
     private List<Category> categoryList = new ArrayList<>();
     private List<Customer> customerList = new ArrayList<>();
     private List<Unit> unitList = new ArrayList<>();
-
 
     // Creating Tables
     @Override
@@ -81,7 +83,6 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_CAT_ID + " INTEGER PRIMARY KEY," + KEY_CAT_NAME + " TEXT,"
                 + KEY_CAT_IMAGE_PATH + " TEXT" + KEY_CAT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
-
 
         String CREATE_ITEM_TABLE = "CREATE TABLE " + ITEM_TABLE_NAME + "("
                 + KEY_ITEM_ID + " INTEGER PRIMARY KEY," + KEY_ITEM_NAME + " TEXT,"
@@ -108,6 +109,17 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_UNIT_DESC + " TEXT,"
                 + KEY_UNIT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_UNIT_TABLE);
+
+        String CREATE_SALES_MST_TABLE = "CREATE TABLE " + SALES_MST_TABLE_NAME + "("
+                + KEY_SM_BILL_NO + " INTEGER PRIMARY KEY,"
+                + KEY_SM_DATE + " INTEGER,"
+                + KEY_SM_QTY + " FLOAT,"
+                + KEY_SM_NET_AMT + " FLOAT,"
+                + KEY_SM_DISCOUNT + " FLOAT,"
+                + KEY_SM_SALESMAN + " TEXT,"
+                + KEY_SM_CUSTOMER + " INTEGER,"
+                + KEY_SM_PAYMENT_MODE + " TEXT" + KEY_SM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_SALES_MST_TABLE);
     }
 
     // Upgrading database
@@ -122,7 +134,6 @@ public class DbHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
     public void addCategory(Category category) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -135,7 +146,6 @@ public class DbHandler extends SQLiteOpenHelper {
             createErrorDialog(e.toString());
         }
     }
-
 
     // Getting single category
     public Category getCategory(int id) {
@@ -158,7 +168,6 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return new Category();
     }
-
 
     // Getting All categorys
     public List<Category> getAllcategorys() {
@@ -211,7 +220,6 @@ public class DbHandler extends SQLiteOpenHelper {
         }
     }
 
-
     // Getting categorys Count
     public int getcategorysCount() {
         String countQuery = "SELECT  * FROM " + CATEGORY_TABLE_NAME;
@@ -222,7 +230,6 @@ public class DbHandler extends SQLiteOpenHelper {
         // return count
         return cursor.getCount();
     }
-
 
     public void addItem(Item item) {
         try {
@@ -243,16 +250,12 @@ public class DbHandler extends SQLiteOpenHelper {
         }
     }
 
-
     public Item getItem(int id) {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
-
             String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE "
                     + KEY_ITEM_ID + " = " + id;
-
             Cursor c = db.rawQuery(selectQuery, null);
-
             if (c != null)
                 c.moveToFirst();
             Item item = new Item();
@@ -272,7 +275,6 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return new Item();
     }
-
 
     // Getting All item
     public List<Item> getAllitems(int categoryId) {
@@ -306,11 +308,9 @@ public class DbHandler extends SQLiteOpenHelper {
         return itemList;
     }
 
-
     // Updating single item
     public int updateItem(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(KEY_ITEM_NAME, item.getItemName());
         values.put(KEY_IMAGE_PATH, item.getItemImage());
@@ -319,7 +319,6 @@ public class DbHandler extends SQLiteOpenHelper {
         values.put(KEY_ITEM_GST, item.getItemGST());
         values.put(KEY_ITEM_HSN, item.getItemHSNcode());
         values.put(KEY_CATE_ID, item.getCategoryId());
-
         // updating row
         return db.update(ITEM_TABLE_NAME, values, KEY_ITEM_ID + " = ?",
                 new String[]{String.valueOf(item.getId())});
@@ -445,14 +444,10 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
 
-            String selectQuery = "SELECT  * FROM " + UNIT_TABLE_NAME + " WHERE "
-                    + KEY_UNIT_DESC + " = '" + uom + "'";
-
+            String selectQuery = "SELECT  * FROM " + UNIT_TABLE_NAME + " WHERE " + KEY_UNIT_DESC + " = '" + uom + "'";
             Cursor c = db.rawQuery(selectQuery, null);
-
             if (c != null)
                 c.moveToFirst();
-
             if (c != null) {
                 id = c.getColumnIndex(KEY_UNIT_ID);
             }
@@ -462,8 +457,26 @@ public class DbHandler extends SQLiteOpenHelper {
         } catch (SQLException e) {
             createErrorDialog(e.toString());
         }
-
         return id;
+    }
+
+    public void addSalesMst(SalesMst salesMst) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_SM_BILL_NO, salesMst.getBillNO());
+            cv.put(KEY_SM_DATE, salesMst.getDate());
+            cv.put(KEY_SM_QTY, salesMst.getQty());
+            cv.put(KEY_SM_NET_AMT, salesMst.getNetAmt());
+            cv.put(KEY_SM_DISCOUNT, salesMst.getDiscount());
+            cv.put(KEY_SM_CUSTOMER, salesMst.getCustomerId());
+            cv.put(KEY_SM_SALESMAN, salesMst.getSalesPerson());
+            cv.put(KEY_SM_PAYMENT_MODE, salesMst.getPaymentMode());
+            db.insert(SALES_MST_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
     }
 
     private void createErrorDialog(String msg) {
