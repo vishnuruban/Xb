@@ -22,6 +22,9 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cie.btp.BtpConsts;
+import com.cie.btp.CieBluetoothPrinter;
+import com.cie.btp.PrinterWidth;
 import com.reginald.editspinner.EditSpinner;
 
 import java.io.UnsupportedEncodingException;
@@ -51,6 +54,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     static DecimalFormat df;
     EditText et_result,cCash;
     EditSpinner mEditSpinner;
+    public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
 
 
 
@@ -514,6 +518,131 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
 
         }};
+
+
+
+
+
+
+
+
+    private void performPrinterTask() {
+
+
+      /*  BillItems billItems = new  BillItems("Annapurna Atta","2","50.00","100.00");
+        billList.add(billItems);
+        billItems = new  BillItems("Aachi Chick ma. ","2","10.00","200.00");
+        billList.add(billItems);*/
+        String ph = String.format("%1$-20s%20s\n", "Ph: 080-40951133", "TIN: 29160093044");
+        String bill = String.format("%1$-20s%20s\n", "Bill No: 578", "21/11/17 1.40 pm");
+        mPrinter.setPrinterWidth(PrinterWidth.PRINT_WIDTH_72MM);
+        mPrinter.setPrintMode(BtpConsts.PRINT_IN_BATCH);
+        mPrinter.resetPrinter();
+        mPrinter.setHighIntensity();
+        mPrinter.setAlignmentCenter();
+        mPrinter.setBold();
+        // mPrinter.setFontSizeMedium();
+        mPrinter.printTextLine("\nSudarshan Family Retail Store\n");
+        mPrinter.printLineFeed();
+        mPrinter.setRegular();
+        mPrinter.printTextLine("8 th Cross,Malleswaram Circle\n");
+        mPrinter.printTextLine("Bangalore,Bangalore-560068\n");
+        mPrinter.setAlignmentLeft();
+        mPrinter.printTextLine(" Ph: 080-40951133              TIN: 29160093044  \n");
+        mPrinter.setAlignmentCenter();
+        mPrinter.setBold();
+        mPrinter.printTextLine("CASH BILL\n");
+        mPrinter.setRegular();
+
+        //mPrinter.printLineFeed();
+
+
+        String custName ="test customer";
+        String cashName = "test cashier";
+
+        String s = String.format("%-15s%8s%12s%12s\n", "Item", "Qty", "Price","Amount");
+
+
+        String s2 = String.format("%-15s%8s%12s%12s\n", "Aachi Masala 1K", "2kg", "4500.00","9000.00");
+
+        String qtyNetAmt = String.format("%-15s%8s%12s%12s\n", "Items/qty : 1/1 ", "", "Subtotal","90000.00");
+        String discount = String.format("%-15s%8s%12s%12s\n", "", "", "Discount","10.00");
+        String total = String.format("%-15s%8s%12s%12s\n", "Total", "", "","80.00");
+        mPrinter.setAlignmentLeft();
+
+        mPrinter.printTextLine(" Bill No: 6789                 21/11/17 1.20 PM\n");
+        mPrinter.printTextLine(" Customer Name    : " + custName + "\n");
+        mPrinter.printTextLine(" Cashier Name     : " + cashName+ "\n");
+        mPrinter.printTextLine("------------------------------------------------\n");
+
+        mPrinter.setBold();
+        mPrinter.printTextLine(s);
+        //   mPrinter.setFontSizeXSmall();
+        mPrinter.printTextLine("------------------------------------------------\n");
+        mPrinter.setRegular();
+
+        //   mPrinter.printTextLine(s0);
+        //  mPrinter.printTextLine(s1);
+        //  mPrinter.setFontSizeSmall();
+        mPrinter.printTextLine(s2);
+        mPrinter.printTextLine("------------------------------------------------\n");
+        mPrinter.printTextLine(qtyNetAmt);
+        mPrinter.printTextLine(discount);
+        //  mPrinter.setFontSizeSmall();
+        // for(int i=0;i<billList.size();i++)
+        //{
+        // BillItems bi = billList.get(i);
+        // mPrinter.printTextLine(bi.getItem()+"    "+bi.getDesc()+"    "+bi.getRate()+"  "+bi.getAmt());
+        //  }
+        mPrinter.printLineFeed();
+        mPrinter.printTextLine("------------------------------------------------\n");
+        mPrinter.setBold();
+        mPrinter.printTextLine(total);
+        mPrinter.printTextLine("------------------------------------------------\n");
+        mPrinter.printLineFeed();
+        mPrinter.setAlignmentCenter();
+        mPrinter.setBold();
+        mPrinter.printTextLine("Thank you ! Visit Again");
+        mPrinter.setRegular();
+        mPrinter.printLineFeed();
+        mPrinter.printTextLine("************************************************\n");
+        mPrinter.printLineFeed();
+
+        mPrinter.printLineFeed();
+
+        mPrinter.setAlignmentCenter();
+
+
+        //Clearance for Paper tear
+        mPrinter.printLineFeed();
+        mPrinter.printLineFeed();
+        mPrinter.resetPrinter();
+
+        //print all commands
+        mPrinter.batchPrint();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
