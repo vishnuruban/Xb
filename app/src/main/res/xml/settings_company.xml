@@ -16,23 +16,26 @@
 
         <EditTextPreference
             android:key="key_settings_company_address1"
-            android:summary="Enter your addressline1"
+            android:maxLength="40"
+            android:summary="Enter your address line1"
             android:title="Address Line1" />
 
         <EditTextPreference
             android:key="key_settings_company_address2"
+            android:maxLength="40"
             android:summary="Enter your address line2"
             android:title="Address Line2" />
 
         <EditTextPreference
             android:key="key_settings_company_address3"
+            android:maxLength="40"
             android:summary="Enter your address line3"
             android:title="Address Line3" />
 
         <EditTextPreference
             android:key="key_settings_company_pincode"
             android:summary="Enter your pincode"
-            android:title="Pincode" />
+            android:title="PinCode" />
 
         <EditTextPreference
             android:key="key_settings_company_city"

@@ -207,7 +207,11 @@ public class AddItemCategory extends AppCompatActivity {
                     return true;
                 case R.id.delete:
                     if (isCategory){
-                       // delete(mCategory.getId(), mCategory.getCategoryName(), isCategory);
+                        if (mDbHandler.getAllitems(mCategory.getId()).isEmpty()){
+                            delete(mCategory.getId(), mCategory.getCategoryName(), isCategory);
+                        } else {
+                            Toast.makeText(AddItemCategory.this,"You can't delete a category having items.", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         delete(mItem.getId(), mItem.getItemName(), isCategory);
                     }
