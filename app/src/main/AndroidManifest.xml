@@ -15,23 +15,26 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".db.DbActivity"/>
-
-        <activity android:name=".MainActivity">
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-
-                    <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
-        </activity>
         <activity android:name=".itemdetails.AddItemCategory"/>
+        <activity android:name=".MainActivity">
+        </activity>
+
+
         <activity android:name=".billing.CheckoutActivity"
             android:label="CHECKOUT"
             android:windowSoftInputMode="stateHidden">
+
         </activity>
         <activity android:name=".billing.BillingActivity"
             android:label="BILL"
             android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>>
 
         </activity>
     </application>
+
 </manifest>

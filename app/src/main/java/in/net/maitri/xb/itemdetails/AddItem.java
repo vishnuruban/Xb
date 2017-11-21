@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,10 +20,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,12 +36,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.db.Unit;
+import in.net.maitri.xb.settings.GetSettings;
 
 public class AddItem extends DialogFragment {
 
@@ -55,8 +63,8 @@ public class AddItem extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.add_category, container, false);
+    public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final View view = inflater.inflate(R.layout.add_category, container, false);
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText("Add Item");
@@ -64,6 +72,8 @@ public class AddItem extends DialogFragment {
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
+        final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
+
         String selectedCategoryName = sharedPreferences.getString("catName", "");
         final int selectedCategoryId = sharedPreferences.getInt("catId", 0);
         dbHandler = new DbHandler(getActivity());
@@ -84,42 +94,90 @@ public class AddItem extends DialogFragment {
             }
         });
 
-        final EditText categoryName = (EditText) view.findViewById(R.id.category_name);
-        categoryName.setText(selectedCategoryName);
-        categoryName.setEnabled(false);
-        final EditText itemName = (EditText) view.findViewById(R.id.item_name);
-        final EditText costPrice = (EditText) view.findViewById(R.id.cp);
-        final EditText sellingPrice = (EditText) view.findViewById(R.id.sp);
-        final EditText uom = (EditText) view.findViewById(R.id.uom);
-        final EditText hsnCode = (EditText) view.findViewById(R.id.hsn_code);
-        final EditText gst = (EditText) view.findViewById(R.id.gst);
+        final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
+        categoryNameField.setText(selectedCategoryName);
+        categoryNameField.setEnabled(false);
+        final EditText itemNameField = (EditText) view.findViewById(R.id.item_name);
+        final EditText costPriceField = (EditText) view.findViewById(R.id.cp);
+        final EditText sellingPriceField = (EditText) view.findViewById(R.id.sp);
+        final EditText hsnCodeField = (EditText) view.findViewById(R.id.hsn_code);
+        final EditText gstField = (EditText) view.findViewById(R.id.gst);
+        final EditText newUomField = (EditText) view.findViewById(R.id.new_uom);
+        final Spinner uomField = (Spinner) view.findViewById(R.id.uom);
+
+        if (registrationType.equals("3")) {
+            hsnCodeField.setVisibility(View.GONE);
+            gstField.setVisibility(View.GONE);
+        }
+
+        List<Unit> unitList = dbHandler.getAllUnit();
+        final ArrayList<String> uomAdapter = new ArrayList<>();
+        uomAdapter.add("--Select Uom--");
+        for (int i = 0; i < unitList.size(); i++) {
+            uomAdapter.add(unitList.get(i).getDesc());
+        }
+        uomAdapter.add("Enter new UOM");
+        uomField.setAdapter(createAdapter(uomAdapter));
 
         Button addDetails = (Button) view.findViewById(R.id.add_details);
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String catName = categoryNameField.getText().toString();
+                String iteName = itemNameField.getText().toString();
+                String cp = costPriceField.getText().toString();
+                String sp = sellingPriceField.getText().toString();
+                String uoM;
+                if (newUomField.isEnabled()) {
+                    uoM = newUomField.getText().toString();
+                } else {
+                    uoM = uomField.getSelectedItem().toString();
+                }
+                String gsT = gstField.getText().toString();
+                String hsn = hsnCodeField.getText().toString();
 
-                String catName = categoryName.getText().toString();
-                String iteName =itemName.getText().toString();
-                String cp= costPrice.getText().toString();
-                String sp = sellingPrice.getText().toString();
-                String uoM =  uom.getText().toString();
-                String gsT = gst.getText().toString();
-                String hsn = hsnCode.getText().toString();
-
-
-                if (catName.isEmpty() || iteName.isEmpty()
+                if (!registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
                         || cp.isEmpty()
                         || sp.isEmpty()
                         || uoM.isEmpty()
                         || gsT.isEmpty()
-                        || hsn.isEmpty()){
-                    Toast.makeText(getActivity(),"Enter all the fields.", Toast.LENGTH_SHORT).show();
-                }else{
+                        || hsn.isEmpty())) {
+                    Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
+                } else if ((registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
+                        || cp.isEmpty()
+                        || sp.isEmpty()
+                        || uoM.isEmpty()))) {
+                    Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
+                } else if (uoM.equals("--Select Uom--") || uoM.isEmpty()) {
+                    Toast.makeText(getActivity(), "UOM field is empty.", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (newUomField.isEnabled()) {
+                        addUom(uoM);
+                    }
+                    if (gsT.isEmpty()){
+                        gsT = "0";
+                    }
                     copyImage();
-                    addItem(iteName,uoM,Float.valueOf(cp),Float.valueOf(sp),hsn,Float.valueOf(gsT),selectedCategoryId);
+                    addItem(iteName, String.valueOf(dbHandler.getUomId(uoM)), Float.valueOf(cp), Float.valueOf(sp), hsn, Float.valueOf(gsT), selectedCategoryId);
                     mAddItemCategory.updateItem(selectedCategoryId);
                 }
+            }
+        });
+
+        uomField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (uomAdapter.get(position).equals("Enter new UOM")){
+                    newUomField.setEnabled(true);
+                    newUomField.requestFocus();
+                } else {
+                    newUomField.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
         return view;
@@ -143,7 +201,7 @@ public class AddItem extends DialogFragment {
         ImagePicker.pickImage(this, "Select your image:");
     }
 
-    private void copyImage(){
+    private void copyImage() {
         File file = createFile();
         if (file != null) {
             FileOutputStream fout;
@@ -161,21 +219,48 @@ public class AddItem extends DialogFragment {
 
     private File createFile() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String name = "Xb_Img"+timeStamp + ".jpg";
+        String name = "Xb_Img" + timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
         File myDir = new File(root + "/Xb");
         if (!myDir.exists()) {
             myDir.mkdirs();
         }
         myDir = new File(myDir, name);
-        return  myDir;
+        return myDir;
     }
 
 
-    private void addItem(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode, float itemGST, int categoryId){
-        Item item = new Item(itemName,itemUOM,itemCP,itemSP,itemHSNcode,itemGST,categoryId,mImagePath);
+    private void addItem(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode, float itemGST, int categoryId) {
+        Item item = new Item(itemName, itemUOM, itemCP, itemSP, itemHSNcode, itemGST, categoryId, mImagePath);
         dbHandler.addItem(item);
         dismiss();
     }
 
+    private void addUom(String uom) {
+        dbHandler.addUnit(uom);
+    }
+
+
+    private ArrayAdapter<String> createAdapter(ArrayList<String> list) {
+        return new ArrayAdapter<String>
+                (getActivity(), android.R.layout.simple_spinner_dropdown_item, list) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if (position == 0) {
+                    tv.setTextColor(Color.GRAY);
+                } else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+    }
 }

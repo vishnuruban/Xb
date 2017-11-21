@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Company Settings"
+        android:key="key_settings_company">
+
+        <EditTextPreference
+            android:key="key_settings_company_legal_name"
+            android:summary="Enter company legal name"
+            android:title="Legal Name" />
+
+        <EditTextPreference
+            android:key="key_settings_company_trade_name"
+            android:summary="Enter company trade name"
+            android:title="Trade Name" />
+
+        <EditTextPreference
+            android:key="key_settings_company_address1"
+            android:maxLength="40"
+            android:summary="Enter your address line1"
+            android:title="Address Line1" />
+
+        <EditTextPreference
+            android:key="key_settings_company_address2"
+            android:maxLength="40"
+            android:summary="Enter your address line2"
+            android:title="Address Line2" />
+
+        <EditTextPreference
+            android:key="key_settings_company_address3"
+            android:maxLength="40"
+            android:summary="Enter your address line3"
+            android:title="Address Line3" />
+
+        <EditTextPreference
+            android:key="key_settings_company_pincode"
+            android:summary="Enter your pincode"
+            android:title="PinCode" />
+
+        <EditTextPreference
+            android:key="key_settings_company_city"
+            android:summary="Enter your city"
+            android:title="City" />
+        <EditTextPreference
+            android:key="key_settings_company_state"
+            android:summary="Enter your state"
+            android:title="State" />
+
+        <EditTextPreference
+            android:key="key_settings_company_phone_no"
+            android:summary="Enter your phone no"
+            android:title="Phone No"
+            android:inputType="phone"/>
+
+        <EditTextPreference
+            android:key="key_settings_company_email"
+            android:summary="Enter your email"
+            android:title="Email"
+            android:inputType="textEmailAddress"/>
+
+        <ListPreference
+            android:key="key_settings_company_registration_type"
+            android:summary="%s"
+            android:defaultValue="3"
+            android:title="Registration Type"
+            android:entries="@array/registration_name"
+            android:entryValues="@array/registration_values" />
+
+        <EditTextPreference
+            android:key="key_settings_company_gst_no"
+            android:summary="Enter your gst no"
+            android:title="GST No" />
+
+        <EditTextPreference
+            android:key="key_settings_company_pan_no"
+            android:summary="Enter your pan no"
+            android:title="PAN No" />
+
+        <EditTextPreference
+            android:key="key_settings_company_cin_no"
+            android:summary="Enter your cin no"
+            android:title="CIN No" />
+
+        <EditTextPreference
+            android:key="key_settings_company_authorised_signatory"
+            android:summary="Enter your authorised signatory"
+            android:title="Authorised Signatory" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

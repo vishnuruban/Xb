@@ -2,7 +2,9 @@ package in.net.maitri.xb.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -28,9 +30,11 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_CAT_IMAGE_PATH = "category_image";
     private static final String KEY_CAT_CREATED_AT = "category_createdAt";
 
+    private Context mContext;
 
     public DbHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        mContext = context;
     }
 
 
@@ -49,8 +53,25 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_CATE_ID = "category_id";
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
 
-    private List<Item> itemList = new ArrayList<Item>();
-    private List<Category> categoryList = new ArrayList<Category>();
+
+    private static final String CUSTOMER_TABLE_NAME = "CustomerMst";
+
+    private static final String KEY_CST_ID = "id";
+    private static final String KEY_CST_NAME = "cst_name";
+    private static final String KEY_CST_NUMBER = "cst_number";
+    private static final String KEY_CST_GSTIN = "cst_gstin";
+    private static final String KEY_CST_ADDRESS = "cst_address";
+    private static final String KEY_CST_CREATED_AT = "cst_createdAt";
+
+    private static final String UNIT_TABLE_NAME = "UnitMst";
+    private static final String KEY_UNIT_ID = "unit_id";
+    private static final String KEY_UNIT_DESC = "unit_desc";
+    private static final String KEY_UNIT_CREATED_AT = "unit_createdAt";
+
+    private List<Item> itemList = new ArrayList<>();
+    private List<Category> categoryList = new ArrayList<>();
+    private List<Customer> customerList = new ArrayList<>();
+    private List<Unit> unitList = new ArrayList<>();
 
 
     // Creating Tables
@@ -72,6 +93,21 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_CATE_ID + " INTEGER,"
                 + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_ITEM_TABLE);
+
+        String CREATE_CUSTOMER_TABLE = "CREATE TABLE " + CUSTOMER_TABLE_NAME + "("
+                + KEY_CST_ID + " INTEGER PRIMARY KEY,"
+                + KEY_CST_NAME + " TEXT,"
+                + KEY_CST_NUMBER + " TEXT UNIQUE,"
+                + KEY_CST_GSTIN + " TEXT,"
+                + KEY_CST_ADDRESS + " TEXT,"
+                + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_CUSTOMER_TABLE);
+
+        String CREATE_UNIT_TABLE = "CREATE TABLE " + UNIT_TABLE_NAME + "("
+                + KEY_UNIT_ID + " INTEGER PRIMARY KEY,"
+                + KEY_UNIT_DESC + " TEXT,"
+                + KEY_UNIT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_UNIT_TABLE);
     }
 
     // Upgrading database
@@ -80,36 +116,47 @@ public class DbHandler extends SQLiteOpenHelper {
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE_NAME);
-
+        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + UNIT_TABLE_NAME);
         // Create tables again
         onCreate(db);
     }
 
 
     public void addCategory(Category category) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_CAT_NAME, category.getCategoryName());
-        cv.put(KEY_CAT_IMAGE_PATH, category.getCategoryImage());
-        db.insert(CATEGORY_TABLE_NAME, null, cv);
-        db.close();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_CAT_NAME, category.getCategoryName());
+            cv.put(KEY_CAT_IMAGE_PATH, category.getCategoryImage());
+            db.insert(CATEGORY_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
     }
 
 
     // Getting single category
-    public Category getcategory(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+    public Category getCategory(int id) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(CATEGORY_TABLE_NAME, new String[]{KEY_CAT_ID,
-                        KEY_CAT_NAME, KEY_CAT_IMAGE_PATH}, KEY_CAT_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
+            Cursor cursor = db.query(CATEGORY_TABLE_NAME, new String[]{KEY_CAT_ID,
+                            KEY_CAT_NAME, KEY_CAT_IMAGE_PATH}, KEY_CAT_ID + "=?",
+                    new String[]{String.valueOf(id)}, null, null, null, null);
+            if (cursor != null)
+                cursor.moveToFirst();
 
-        Category category = new Category(cursor.getInt(0),
-                cursor.getString(1), cursor.getString(2));
-        // return category
-        return category;
+            Category category = new Category(cursor.getInt(0),
+                    cursor.getString(1), cursor.getString(2));
+            cursor.close();
+            // return category
+            return category;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return new Category();
     }
 
 
@@ -134,7 +181,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 categoryList.add(category);
             } while (cursor.moveToNext());
         }
-
+        cursor.close();
         // return category list
         return categoryList;
     }
@@ -154,10 +201,14 @@ public class DbHandler extends SQLiteOpenHelper {
 
     // Deleting single category
     public void deletecategory(int categoryId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(CATEGORY_TABLE_NAME, KEY_CAT_ID + " = ?",
-                new String[]{String.valueOf(categoryId)});
-        db.close();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(CATEGORY_TABLE_NAME, KEY_CAT_ID + " = ?",
+                    new String[]{String.valueOf(categoryId)});
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
     }
 
 
@@ -174,43 +225,52 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
     public void addItem(Item item) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_ITEM_NAME, item.getItemName());
-        cv.put(KEY_IMAGE_PATH, item.getItemImage());
-        cv.put(KEY_ITEM_UOM, item.getItemUOM());
-        cv.put(KEY_ITEM_CP, item.getItemCP());
-        cv.put(KEY_ITEM_SP, item.getItemSP());
-        cv.put(KEY_ITEM_HSN, item.getItemHSNcode());
-        cv.put(KEY_ITEM_GST, item.getItemGST());
-        cv.put(KEY_CATE_ID, item.getCategoryId());
-        db.insert(ITEM_TABLE_NAME, null, cv);
-        db.close();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_ITEM_NAME, item.getItemName());
+            cv.put(KEY_IMAGE_PATH, item.getItemImage());
+            cv.put(KEY_ITEM_UOM, item.getItemUOM());
+            cv.put(KEY_ITEM_CP, item.getItemCP());
+            cv.put(KEY_ITEM_SP, item.getItemSP());
+            cv.put(KEY_ITEM_HSN, item.getItemHSNcode());
+            cv.put(KEY_ITEM_GST, item.getItemGST());
+            cv.put(KEY_CATE_ID, item.getCategoryId());
+            db.insert(ITEM_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
     }
 
 
     public Item getItem(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE "
-                + KEY_ITEM_ID + " = " + id;
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE "
+                    + KEY_ITEM_ID + " = " + id;
 
-        Cursor c = db.rawQuery(selectQuery, null);
+            Cursor c = db.rawQuery(selectQuery, null);
 
-        if (c != null)
-            c.moveToFirst();
-        Item item = new Item();
-        item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
-        item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
-        item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
-        item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
-        item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
-        item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
-        item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
-        item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
-        item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
-
-        return item;
+            if (c != null)
+                c.moveToFirst();
+            Item item = new Item();
+            item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
+            item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
+            item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
+            item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+            item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
+            item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
+            item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
+            item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
+            item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+            c.close();
+            return item;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return new Item();
     }
 
 
@@ -218,28 +278,31 @@ public class DbHandler extends SQLiteOpenHelper {
     public List<Item> getAllitems(int categoryId) {
         itemList.clear();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " = " + categoryId;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (c.moveToFirst()) {
-            do {
-                Item item = new Item();
-                item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
-                item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
-                item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
-                item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
-                item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
-                item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
-                item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
-                item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
-                item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
-                // Adding item to list
-                itemList.add(item);
-            } while (c.moveToNext());
+        try {
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " = " + categoryId;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    Item item = new Item();
+                    item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
+                    item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
+                    item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
+                    item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+                    item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
+                    item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
+                    item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
+                    item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
+                    item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+                    // Adding item to list
+                    itemList.add(item);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
         }
-        // return item list
         return itemList;
     }
 
@@ -264,10 +327,14 @@ public class DbHandler extends SQLiteOpenHelper {
 
     // Deleting single item
     public void deleteItem(int item) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(ITEM_TABLE_NAME, KEY_ITEM_ID + " = ?",
-                new String[]{String.valueOf(item)});
-        db.close();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(ITEM_TABLE_NAME, KEY_ITEM_ID + " = ?",
+                    new String[]{String.valueOf(item)});
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
     }
 
     // Getting item Count
@@ -278,5 +345,138 @@ public class DbHandler extends SQLiteOpenHelper {
         cursor.close();
         // return count
         return cursor.getCount();
+    }
+
+    public void addCustomer(Customer customer) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_CST_NAME, customer.getName());
+            cv.put(KEY_CST_NUMBER, customer.getMobileno());
+            cv.put(KEY_CST_GSTIN, customer.getGstin());
+            cv.put(KEY_CST_ADDRESS, customer.getAddress());
+            db.insert(CUSTOMER_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+    }
+
+    public boolean updateCustomer(Customer customer) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_CST_NAME, customer.getName());
+            cv.put(KEY_CST_NUMBER, customer.getMobileno());
+            cv.put(KEY_CST_GSTIN, customer.getGstin());
+            cv.put(KEY_CST_ADDRESS, customer.getAddress());
+            db.update(CUSTOMER_TABLE_NAME, cv, KEY_CST_ID + " = ?",
+                    new String[]{String.valueOf(customer.getId())});
+            return true;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return false;
+    }
+
+    // Getting All Customer
+    public List<Customer> getAllCustomer() {
+        customerList.clear();
+        // Select All Query
+        try {
+            String selectQuery = "SELECT  * FROM " + CUSTOMER_TABLE_NAME;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    Customer customer = new Customer();
+                    customer.setName(c.getString(c.getColumnIndex(KEY_CST_NAME)));
+                    customer.setMobileno(c.getString(c.getColumnIndex(KEY_CST_NUMBER)));
+                    customer.setGstin(c.getString(c.getColumnIndex(KEY_CST_GSTIN)));
+                    customer.setAddress(c.getString(c.getColumnIndex(KEY_CST_ADDRESS)));
+                    customer.setId(c.getInt(c.getColumnIndex(KEY_CST_ID)));
+                    customerList.add(customer);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return customerList;
+    }
+
+    public void addUnit(String desc) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_UNIT_DESC, desc);
+            db.insert(UNIT_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+    }
+
+    // Getting All Customer
+    public List<Unit> getAllUnit() {
+        unitList.clear();
+        // Select All Query
+        try {
+            String selectQuery = "SELECT  * FROM " + UNIT_TABLE_NAME;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    Unit unit = new Unit();
+                    unit.setId(c.getInt(c.getColumnIndex(KEY_UNIT_ID)));
+                    unit.setDesc(c.getString(c.getColumnIndex(KEY_UNIT_DESC)));
+                    unitList.add(unit);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return unitList;
+    }
+
+    public int getUomId(String uom) {
+        int id = 0;
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+
+            String selectQuery = "SELECT  * FROM " + UNIT_TABLE_NAME + " WHERE "
+                    + KEY_UNIT_DESC + " = '" + uom + "'";
+
+            Cursor c = db.rawQuery(selectQuery, null);
+
+            if (c != null)
+                c.moveToFirst();
+
+            if (c != null) {
+                id = c.getColumnIndex(KEY_UNIT_ID);
+            }
+            if (c != null) {
+                c.close();
+            }
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+
+        return id;
+    }
+
+    private void createErrorDialog(String msg) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
+        builder.setTitle("SQL Error")
+                .setMessage(msg)
+                .setCancelable(false)
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        android.support.v7.app.AlertDialog alert = builder.create();
+        alert.show();
     }
 }

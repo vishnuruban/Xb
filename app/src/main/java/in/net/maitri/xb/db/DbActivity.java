@@ -7,9 +7,6 @@ import android.util.Log;
 
 import in.net.maitri.xb.R;
 
-/**
- * Created by SYSRAJ4 on 06/11/2017.
- */
 
 public class DbActivity extends Activity {
 
