@@ -1,6 +1,7 @@
 package in.net.maitri.xb.itemdetails;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,9 +23,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.settings.SettingsActivity;
 import in.net.maitri.xb.util.Permissions;
 
 public class AddItemCategory extends AppCompatActivity {
@@ -194,7 +198,11 @@ public class AddItemCategory extends AppCompatActivity {
                     return true;
                 case R.id.delete:
                     if (isCategory){
-                       // delete(mCategory.getId(), mCategory.getCategoryName(), isCategory);
+                        if (mDbHandler.getAllitems(mCategory.getId()).isEmpty()) {
+                            delete(mCategory.getId(), mCategory.getCategoryName(), isCategory);
+                        } else {
+                            Toast.makeText(AddItemCategory.this, "You can't delete a category having items. ", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         delete(mItem.getId(), mItem.getItemName(), isCategory);
                     }
@@ -251,4 +259,32 @@ public class AddItemCategory extends AppCompatActivity {
         }
         mItemAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_add_item_category, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.settings:
+             startActivity(new Intent(AddItemCategory.this, SettingsActivity.class));
+                break;
+
+            case R.id.customers:
+                startActivity(new Intent(AddItemCategory.this, CustomerDetail.class));
+                break;
+
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
