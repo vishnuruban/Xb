@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="payment">
+        <item>CASH</item>
+        <item>DEBIT CARD</item>
+        <item>CREDIT CARD</item>
+        <item>WALLET</item>
+    </array>
+</resources>

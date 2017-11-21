@@ -105,24 +105,10 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public void onClick(View view) {
 
-
-
         switch(view.getId()) {
-
 
             case R.id.btn_one:
                 et_result.setText(et_result.getText().toString() + btn_one.getText().toString());
@@ -198,9 +184,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 FragmentThree.dismissDialog();
                 break;
 
-
         }
-
 
         }
 
