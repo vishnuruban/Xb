@@ -76,13 +76,11 @@ public class BillListAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
 
-      DecimalFormat  df = new DecimalFormat("0.00");
-
            BillItems biItems = billItems.get(position);
             holder.mDesc.setText(biItems.getDesc());
             holder.mQty.setText(String.valueOf(biItems.getQty()));
-            holder.mAmt.setText(String.valueOf(df.format(biItems.getAmount())));
-            holder.mRate.setText(String.valueOf(df.format(biItems.getRate())));
+            holder.mAmt.setText(FragmentOne.commaSeperated(biItems.getAmount()));
+            holder.mRate.setText(FragmentOne.commaSeperated(biItems.getRate()));
 
 
         return view;

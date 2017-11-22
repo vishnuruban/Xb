@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +24,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.billing.BillingActivity;
+import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
@@ -39,6 +42,8 @@ public class AddItemCategory extends AppCompatActivity {
     private DbHandler mDbHandler;
     private TextView mNoItem, mNoCategory, mSelectedCategory;
     private int mCategoryId;
+    private Button mProceed;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +55,15 @@ public class AddItemCategory extends AppCompatActivity {
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
         mSelectedCategory = (TextView) findViewById(R.id.selected_category_name);
+        mProceed = (Button) findViewById(R.id.billScreen);
+
+        mProceed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddItemCategory.this, BillingActivity.class);
+                startActivity(intent);
+            }
+        });
 
         mDbHandler = new DbHandler(AddItemCategory.this);
         mGetAllCategories = mDbHandler.getAllcategorys();
@@ -190,7 +204,7 @@ public class AddItemCategory extends AppCompatActivity {
                         showFragment(new EditCatrgory());
                     } else {
                         Bundle bundle = new Bundle();
-                        bundle.putSerializable("itemObj", (Serializable) mItem);
+                        bundle.putSerializable("itemObj", mItem);
                         DialogFragment newFragment = new EditItem();
                         newFragment.setArguments(bundle);
                         showFragment(newFragment);
@@ -273,7 +287,7 @@ public class AddItemCategory extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.settings:
-             startActivity(new Intent(AddItemCategory.this, SettingsActivity.class));
+                startActivity(new Intent(AddItemCategory.this, SettingsActivity.class));
                 break;
 
             case R.id.customers:

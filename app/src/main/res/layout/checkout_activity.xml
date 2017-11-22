@@ -295,6 +295,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true">
 
+
             <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -305,6 +306,14 @@
                 android:orientation="horizontal"
                 android:padding="5dp">
 
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_columnSpan="5"
+                    android:gravity="right"
+                    android:id="@+id/cPrintstatus"
+                    android:text="prini status" />
 
                 <Button
                     android:id="@+id/btn_one"
@@ -703,7 +712,7 @@
                     android:textSize="15dp" />
 
                 <Button
-                    android:id="@+id/mPrint"
+                    android:id="@+id/cPrint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

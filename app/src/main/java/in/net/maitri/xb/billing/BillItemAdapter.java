@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import in.net.maitri.xb.R;
@@ -58,8 +59,18 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
 
         Item item = mItemList.get(position);
 
+        String rs = "\u20B9";
+        try{
+            byte[] utf8 = rs.getBytes("UTF-8");
+
+            rs = new String(utf8, "UTF-8");}
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+
         holder.itemName.setText(item.getItemName());
-        String sp = "Rs. " + String.valueOf((int) item.getItemSP());
+        String sp = rs+" " + FragmentOne.commaSeperated(item.getItemSP());
         holder.itemSp.setText(sp);
         String imagePath = item.getItemImage();
         File imgFile = new File(imagePath);

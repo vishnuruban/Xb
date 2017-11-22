@@ -1,8 +1,13 @@
 package in.net.maitri.xb.billing;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
@@ -24,6 +29,7 @@ import android.widget.Toast;
 
 import com.cie.btp.BtpConsts;
 import com.cie.btp.CieBluetoothPrinter;
+import com.cie.btp.DebugLog;
 import com.cie.btp.PrinterWidth;
 import com.reginald.editspinner.EditSpinner;
 
@@ -33,12 +39,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.printing.AppConsts;
+import in.net.maitri.xb.printing.FragmentMessageListener;
 
 /**
  * Created by SYSRAJ4 on 15/11/2017.
  */
 
-public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener {
+public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener ,FragmentMessageListener{
 
 
     ListView listView;
@@ -51,9 +59,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     String selectedButton;
     double netAmt = 0;
     String rs = "\u20B9";
-    static DecimalFormat df;
+    TextView cPrintStatus;
     EditText et_result,cCash;
     EditSpinner mEditSpinner;
+
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
 
 
@@ -64,7 +73,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     String[] pModes = {"CASH","DEBIT CARD","CREDIT CARD","WALLET"};
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
-            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear,btn_100,btn_500,btn_2000,btn_cash,btn_dc,btn_cc,btn_wallet;
+            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear,btn_100,btn_500,btn_2000,btn_cash,btn_dc,btn_cc,btn_wallet,cPrint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +82,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         cDiscount = (EditText) findViewById(R.id.cDiscount);
      //   cDiscount.setInputType(InputType.TYPE_NULL);
+
 
         cNetAmount = (TextView) findViewById(R.id.cNetamount);
         listView = (ListView) findViewById(R.id.listview);
@@ -85,8 +95,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         tCash = (TextView) findViewById(R.id.tCash);
         cCash = (EditText) findViewById(R.id.cCash);
         tBalance = (TextView)findViewById(R.id.cBalance);
+        cPrintStatus = (TextView)findViewById(R.id.cPrintstatus);
         tBalance.setVisibility(View.INVISIBLE);
-
+        mPrinter.connectToPrinter();
          cDiscountType = (RadioGroup)findViewById(R.id.discount_toggle);
 
         mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
@@ -97,10 +108,22 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mEditSpinner.setText("CASH");
 
 
+        BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mAdapter == null) {
+            Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        //un comment the line below to debug the print service
+        //mPrinter.setDebugService(BuildConfig.DEBUG);
+        try {
+            mPrinter.initService(CheckoutActivity.this, mMessenger);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 
-        df = new DecimalFormat("0.00");
         try{
             byte[] utf8 = rs.getBytes("UTF-8");
 
@@ -136,9 +159,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cDiscount.addTextChangedListener(watch);
         cCash.addTextChangedListener(cash);
         cProducts.setText(totalProducts);
-        cPrice.setText(totalPrice);
-        cNetAmount.setText(rs+" "+totalPrice);
-        cPayment.setText("PAYMENT - "+rs+" "+totalPrice);
+        cPrice.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+        cNetAmount.setText(rs+" "+FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+        cPayment.setText("PAYMENT - "+rs+" "+FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
 
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -199,6 +222,135 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPrinter.onActivityResult(requestCode, resultCode, this);
+    }
+    @Override
+    protected void onResume() {
+        mPrinter.onActivityResume();
+      //  printerSelection();
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onPause() {
+        mPrinter.onActivityPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPrinter.onActivityDestroy();
+        super.onDestroy();
+    }
+
+
+    final Messenger mMessenger = new Messenger(new PrintSrvMsgHandler());
+    private String mConnectedDeviceName = "";
+    public static final String title_connecting = "connecting...";
+    public static final String title_connected_to = "connected: ";
+    public static final String title_not_connected = "not connected";
+
+    @Override
+    public void onAppSignal(int iAppSignal) {
+        switch (iAppSignal) {
+            case AppConsts.CLEAR_PREFERRED_PRINTER:
+                mPrinter.clearPreferredPrinter();
+               // tbPrinter.setText("OFF");
+             //   tbPrinter.setChecked(false);
+                break;
+
+        }
+    }
+
+    @Override
+    public void onAppSignal(int iAppSignal, String data) {
+    }
+
+    @Override
+    public void onAppSignal(int iAppSignal, boolean data) {}
+
+    @Override
+    public void onAppSignal(int iAppSignal, byte[] data) {
+
+    }
+
+    class PrintSrvMsgHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CieBluetoothPrinter.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case CieBluetoothPrinter.STATE_CONNECTED:
+                            setStatusMsg(title_connected_to + mConnectedDeviceName);
+                            //Toast.makeText(CheckoutActivity.this,title_connected_to + mConnectedDeviceName,Toast.LENGTH_SHORT).show();
+                        //    tbPrinter.setText("ON");
+                          //  tbPrinter.setChecked(true);
+                            break;
+                        case CieBluetoothPrinter.STATE_CONNECTING:
+                            setStatusMsg(title_connected_to + title_connecting);
+                            //Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
+                            try {
+                            //    tbPrinter.setText("...");
+                             //   tbPrinter.setChecked(false);
+                            }catch (NullPointerException e){
+                                DebugLog.logTrace("Fragment creating");
+                            }
+                            break;
+                        case CieBluetoothPrinter.STATE_LISTEN:
+                            setStatusMsg(title_connected_to + title_connecting);
+                          //  Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
+
+                        case CieBluetoothPrinter.STATE_NONE:
+                            setStatusMsg(title_not_connected);
+                            Toast.makeText(CheckoutActivity.this,title_not_connected,Toast.LENGTH_SHORT).show();
+
+                            try {
+                               // tbPrinter.setText("OFF");
+                               // tbPrinter.setChecked(false);
+                            }catch (NullPointerException n){
+                                DebugLog.logTrace("Fragment creating");
+                            }
+                            break;
+                    }
+                    break;
+                case CieBluetoothPrinter.MESSAGE_DEVICE_NAME:
+                    mConnectedDeviceName = msg.getData().getString(
+                            CieBluetoothPrinter.DEVICE_NAME);
+                    break;
+                case CieBluetoothPrinter.MESSAGE_STATUS:
+                    DebugLog.logTrace("Message Status Received");
+              //      Toast.makeText(CheckoutActivity.this,msg.getData().getString(
+                         //   CieBluetoothPrinter.STATUS_TEXT),Toast.LENGTH_SHORT).show();
+                   setStatusMsg(msg.getData().getString(
+                          CieBluetoothPrinter.STATUS_TEXT));
+                    break;
+                case CieBluetoothPrinter.PRINT_COMPLETE:
+                    //Toast.makeText(CheckoutActivity.this,"PRINT OK",Toast.LENGTH_SHORT).show();
+                   setStatusMsg("PRINT OK");
+                    break;
+                case CieBluetoothPrinter.PRINTER_CONNECTION_CLOSED:
+                    setStatusMsg("PRINT CONN CLOSED");
+                   // Toast.makeText(CheckoutActivity.this,"PRINT CONN CLOSED",Toast.LENGTH_SHORT).show();
+                    break;
+                case CieBluetoothPrinter.PRINTER_DISCONNECTED:
+                    setStatusMsg("PRINT CONN FAILED");
+                //    Toast.makeText(CheckoutActivity.this,"PRINT CONN FAILED",Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    DebugLog.logTrace("Some un handled message : " + msg.what);
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+
+    public void setStatusMsg(String msg) {
+        cPrintStatus.setText(msg);
+    }
     public void initializeVars(){
 
 
@@ -221,6 +373,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_dc = (Button)findViewById(R.id.btn_dc);
         btn_cc = (Button)findViewById(R.id.btn_cc);
         btn_wallet = (Button)findViewById(R.id.btn_wallet);
+        cPrint = (Button) findViewById(R.id.cPrint);
 
         btn_one.setOnClickListener(this);
         btn_two.setOnClickListener(this);
@@ -241,6 +394,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_dc.setOnClickListener(this);
         btn_cc.setOnClickListener(this);
         btn_wallet.setOnClickListener(this);
+        cPrint.setOnClickListener(this);
 
 
     }
@@ -320,6 +474,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btn_wallet:
                 mEditSpinner.setText("WALLET");
+                break;
+            case R.id.cPrint:
+               // mPrinter.showDeviceList(CheckoutActivity.this);
+                performPrinterTask();
+                break;
         }
     }
 
@@ -349,7 +508,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
           else
           {
               tCash.setText("Amount ("+rs+")");
-              cCash.setText(df.format(netAmt));
+              cCash.setText(FragmentOne.commaSeperated(netAmt));
               cCash.setFocusable(false);
               cCash.setClickable(false);
           }
@@ -394,7 +553,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if(Double.parseDouble(s.toString()) > netAmt) {
                     tBalance.setVisibility(View.VISIBLE);
                     double balance = Double.parseDouble(s.toString()) - netAmt;
-                        tBalance.setText("Balance  "+rs+" "+String.valueOf(df.format(balance)));
+                        tBalance.setText("Balance  "+rs+" "+FragmentOne.commaSeperated(balance));
                 }
                 else
                 {
@@ -456,7 +615,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
             if(s.toString().equals("") || s.toString().equals(rs) || s.toString().equals("%")) {
 
-              cNetAmount.setText(rs+" "+totalPrice);
+              cNetAmount.setText(rs+" "+FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
                 netAmt = Double.parseDouble(totalPrice);
             }
 
@@ -493,8 +652,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     cDiscount.setText("");
                     return;
                 }
-                cNetAmount.setText(rs+" "+ String.valueOf(df.format(netAmt)));
-                cPayment.setText("PAYMENT - "+rs+" "+String.valueOf(df.format(netAmt)));
+                cNetAmount.setText(rs+" "+FragmentOne.commaSeperated(netAmt));
+                cPayment.setText("PAYMENT - "+rs+" "+FragmentOne.commaSeperated(netAmt));
                 tCash.setText("Cash ("+rs+")");
                 cCash.setText("");
                 mEditSpinner.setText("CASH");
@@ -621,20 +780,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         //print all commands
         mPrinter.batchPrint();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

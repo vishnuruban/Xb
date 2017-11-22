@@ -40,7 +40,7 @@ public class FragmentOne extends Fragment {
     private ListView billListView;
     private static BillListAdapter billListAdapter;
     private static TextView bTotalProducts,bTotalPrice;
-    static DecimalFormat df;
+    static DecimalFormat df,df1;
 
     static double a = 0;
     @Override
@@ -72,6 +72,8 @@ public class FragmentOne extends Fragment {
 
 
          df = new DecimalFormat("0.00");
+        df1 =  new DecimalFormat("#,###");
+
 
         billListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -211,7 +213,8 @@ public class FragmentOne extends Fragment {
              a  = a + bi.getAmount();
         }
 
-        bTotalPrice.setText("Price("+rs+")   "+String.valueOf(df.format(a)));
+
+        bTotalPrice.setText("Price("+rs+")   "+commaSeperated(a));
 
     }
 
@@ -219,7 +222,12 @@ public class FragmentOne extends Fragment {
 
 
 
+      public static String commaSeperated(double s)
+      {
 
+          DecimalFormat formatter = new DecimalFormat("#,###.00");
+            return  formatter.format(s);
+      }
 
 
 
