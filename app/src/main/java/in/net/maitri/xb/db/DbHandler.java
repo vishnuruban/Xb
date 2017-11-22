@@ -66,9 +66,20 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_NET_AMT = "sm_netAmt";
     private static final String KEY_SM_DISCOUNT = "sm_discount";
     private static final String KEY_SM_PAYMENT_MODE = "sm_paymentMode";
+    private static final String KEY_SM_PAYMENT_DET = "sm_paymentDet";
+    private static final String KEY_SM_STATUS = "sm_status";
     private static final String KEY_SM_CUSTOMER = "sm_customer";
     private static final String KEY_SM_SALESMAN = "sm_salesman";
     private static final String KEY_SM_CREATED_AT = "sm_createdAt";
+    // sales mst table name
+    private static final String SALES_DET_TABLE_NAME = "SalesDet";
+    // sales mst table column names
+    private static final String KEY_SD_SL_NO = "sd_slNo";
+    private static final String KEY_SD_BILL_NO = "sd_billNo";
+    private static final String KEY_SD_CATEGORY = "sd_category";
+    private static final String KEY_SD_ITEM = "sd_item";
+    private static final String KEY_SD_QTY = "sd_qty";
+    private static final String KEY_SD_CREATED_AT = "sd_createdAt";
 
 
     private List<Item> itemList = new ArrayList<>();
@@ -118,8 +129,21 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SM_DISCOUNT + " FLOAT,"
                 + KEY_SM_SALESMAN + " TEXT,"
                 + KEY_SM_CUSTOMER + " INTEGER,"
-                + KEY_SM_PAYMENT_MODE + " TEXT" + KEY_SM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                + KEY_SM_PAYMENT_MODE + " TEXT"
+                + KEY_SM_PAYMENT_DET + " TEXT"
+                + KEY_SM_STATUS + " TEXT"
+                + KEY_SM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_SALES_MST_TABLE);
+
+        String CREATE_SALES_DET_TABLE = "CREATE TABLE " + SALES_DET_TABLE_NAME + "("
+                + KEY_SD_SL_NO + " INTEGER PRIMARY KEY,"
+                + KEY_SD_BILL_NO + " INTEGER,"
+                + KEY_SD_CATEGORY+ " FLOAT,"
+                + KEY_SD_ITEM + " FLOAT,"
+                + KEY_SD_QTY + " FLOAT,"
+                + " FOREIGN KEY ("+ KEY_SD_BILL_NO +") REFERENCES "
+                + KEY_SD_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_SALES_DET_TABLE);
     }
 
     // Upgrading database
@@ -130,6 +154,7 @@ public class DbHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UNIT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SALES_MST_TABLE_NAME);
         // Create tables again
         onCreate(db);
     }
@@ -472,7 +497,24 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_CUSTOMER, salesMst.getCustomerId());
             cv.put(KEY_SM_SALESMAN, salesMst.getSalesPerson());
             cv.put(KEY_SM_PAYMENT_MODE, salesMst.getPaymentMode());
+            cv.put(KEY_SM_PAYMENT_DET, salesMst.getPaymentDet());
+            cv.put(KEY_SM_STATUS, salesMst.getStatus());
             db.insert(SALES_MST_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+    }
+
+    public void addSalesDet(SalesDet salesDet) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_SD_BILL_NO, salesDet.getBillNo());
+            cv.put(KEY_SD_CATEGORY, salesDet.getCategory());
+            cv.put(KEY_SD_ITEM, salesDet.getItem());
+            cv.put(KEY_SD_QTY, salesDet.getQty());
+            db.insert(SALES_DET_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
