@@ -85,9 +85,9 @@ public class AddItemCategory extends AppCompatActivity {
         categoryView.setAdapter(mCategoryAdapter);
 
         int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
-        if (columns > 1){
+        /*if (columns > 1){
             columns -= 1;
-        }
+        }*/
         GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
         itemView.setLayoutManager(gridLayoutManager);
         mGetAllItems = mDbHandler.getAllitems(1);

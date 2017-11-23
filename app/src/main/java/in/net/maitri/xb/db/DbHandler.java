@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -80,6 +81,14 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SD_ITEM = "sd_item";
     private static final String KEY_SD_QTY = "sd_qty";
     private static final String KEY_SD_CREATED_AT = "sd_createdAt";
+    // sales mst table name
+    private static final String SYSSPEC_TABLE_NAME = "SysSpec";
+    // sales mst table column names
+    private static final String KEY_SYS_KEY = "sys_key";
+    private static final String KEY_SYS_VALUE = "sd_billNo";
+    private static final String KEY_SYS_CATEGORY = "sd_category";
+    private static final String KEY_SYS_COMMENT = "sd_item";
+    private static final String KEY_SYS_CREATED_AT = "sd_createdAt";
 
 
     private List<Item> itemList = new ArrayList<>();
@@ -90,12 +99,12 @@ public class DbHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CATEGORY_TABLE = "CREATE TABLE " + CATEGORY_TABLE_NAME + "("
+        String CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS " + CATEGORY_TABLE_NAME + "("
                 + KEY_CAT_ID + " INTEGER PRIMARY KEY," + KEY_CAT_NAME + " TEXT,"
                 + KEY_CAT_IMAGE_PATH + " TEXT" + KEY_CAT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
 
-        String CREATE_ITEM_TABLE = "CREATE TABLE " + ITEM_TABLE_NAME + "("
+        String CREATE_ITEM_TABLE = "CREATE TABLE IF NOT EXISTS " + ITEM_TABLE_NAME + "("
                 + KEY_ITEM_ID + " INTEGER PRIMARY KEY," + KEY_ITEM_NAME + " TEXT,"
                 + KEY_ITEM_UOM + " TEXT,"
                 + KEY_ITEM_CP + " FLOAT,"
@@ -106,7 +115,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_ITEM_TABLE);
 
-        String CREATE_CUSTOMER_TABLE = "CREATE TABLE " + CUSTOMER_TABLE_NAME + "("
+        String CREATE_CUSTOMER_TABLE = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_TABLE_NAME + "("
                 + KEY_CST_ID + " INTEGER PRIMARY KEY,"
                 + KEY_CST_NAME + " TEXT,"
                 + KEY_CST_NUMBER + " TEXT UNIQUE,"
@@ -115,13 +124,13 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CUSTOMER_TABLE);
 
-        String CREATE_UNIT_TABLE = "CREATE TABLE " + UNIT_TABLE_NAME + "("
+        String CREATE_UNIT_TABLE = "CREATE TABLE IF NOT EXISTS " + UNIT_TABLE_NAME + "("
                 + KEY_UNIT_ID + " INTEGER PRIMARY KEY,"
                 + KEY_UNIT_DESC + " TEXT,"
                 + KEY_UNIT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_UNIT_TABLE);
 
-        String CREATE_SALES_MST_TABLE = "CREATE TABLE " + SALES_MST_TABLE_NAME + "("
+        String CREATE_SALES_MST_TABLE = "CREATE TABLE IF NOT EXISTS " + SALES_MST_TABLE_NAME + "("
                 + KEY_SM_BILL_NO + " INTEGER PRIMARY KEY,"
                 + KEY_SM_DATE + " INTEGER,"
                 + KEY_SM_QTY + " FLOAT,"
@@ -135,26 +144,36 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_SALES_MST_TABLE);
 
-        String CREATE_SALES_DET_TABLE = "CREATE TABLE " + SALES_DET_TABLE_NAME + "("
+        String CREATE_SALES_DET_TABLE = "CREATE TABLE IF NOT EXISTS " + SALES_DET_TABLE_NAME + "("
                 + KEY_SD_SL_NO + " INTEGER PRIMARY KEY,"
                 + KEY_SD_BILL_NO + " INTEGER,"
-                + KEY_SD_CATEGORY+ " FLOAT,"
+                + KEY_SD_CATEGORY + " FLOAT,"
                 + KEY_SD_ITEM + " FLOAT,"
                 + KEY_SD_QTY + " FLOAT,"
-                + " FOREIGN KEY ("+ KEY_SD_BILL_NO +") REFERENCES "
-                + KEY_SD_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                + KEY_SD_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
+                + " FOREIGN KEY (" + KEY_SD_BILL_NO + ") REFERENCES " + SALES_DET_TABLE_NAME + "(" + KEY_SM_BILL_NO + "))";
         db.execSQL(CREATE_SALES_DET_TABLE);
+
+        String CREATE_SYSSPEC_TABLE = "CREATE TABLE IF NOT EXISTS " + SYSSPEC_TABLE_NAME + "("
+                + KEY_SYS_KEY + " TEXT PRIMARY KEY,"
+                + KEY_SYS_VALUE + " TEXT,"
+                + KEY_SYS_CATEGORY + " TEXT,"
+                + KEY_SYS_COMMENT + " TEXT,"
+                + KEY_SYS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_SYSSPEC_TABLE);
     }
+
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + UNIT_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SALES_MST_TABLE_NAME);
+        // db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
+        // db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE_NAME);
+        // db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_TABLE_NAME);
+        // db.execSQL("DROP TABLE IF EXISTS " + UNIT_TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXISTS " + SALES_MST_TABLE_NAME);
+        //db.execSQL("DROP TABLE IF EXISTS " + SALES_DET_TABLE_NAME);
         // Create tables again
         onCreate(db);
     }
@@ -342,6 +361,7 @@ public class DbHandler extends SQLiteOpenHelper {
         values.put(KEY_ITEM_CP, item.getItemCP());
         values.put(KEY_ITEM_SP, item.getItemSP());
         values.put(KEY_ITEM_GST, item.getItemGST());
+        values.put(KEY_ITEM_UOM, item.getItemUOM());
         values.put(KEY_ITEM_HSN, item.getItemHSNcode());
         values.put(KEY_CATE_ID, item.getCategoryId());
         // updating row
@@ -465,25 +485,16 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
     public int getUomId(String uom) {
-        int id = 0;
-        try {
-            SQLiteDatabase db = this.getReadableDatabase();
-
-            String selectQuery = "SELECT  * FROM " + UNIT_TABLE_NAME + " WHERE " + KEY_UNIT_DESC + " = '" + uom + "'";
-            Cursor c = db.rawQuery(selectQuery, null);
-            if (c != null)
-                c.moveToFirst();
-            if (c != null) {
-                id = c.getColumnIndex(KEY_UNIT_ID);
-            }
-            if (c != null) {
-                c.close();
-            }
-        } catch (SQLException e) {
-            createErrorDialog(e.toString());
-        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT " + KEY_UNIT_ID + " FROM " + UNIT_TABLE_NAME + " WHERE " + KEY_UNIT_DESC + " = '" + uom + "'";
+        Log.d("Query", selectQuery);
+        Cursor c = db.rawQuery(selectQuery, null);
+        c.moveToFirst();
+        int id = c.getInt(c.getColumnIndex(KEY_UNIT_ID));Log.d("Value", String.valueOf(id));
+        c.close();
         return id;
     }
+
 
     public void addSalesMst(SalesMst salesMst) {
         try {
@@ -521,12 +532,42 @@ public class DbHandler extends SQLiteOpenHelper {
         }
     }
 
+    public void addSysSpec(SysSpec sysSpec) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_SYS_KEY, sysSpec.getSysKey());
+            cv.put(KEY_SYS_VALUE, sysSpec.getSysValue());
+            cv.put(KEY_SYS_CATEGORY, sysSpec.getSysCategory());
+            cv.put(KEY_SYS_COMMENT, sysSpec.getSysComment());
+            db.insert(SYSSPEC_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+    }
+
+    public boolean updateSysValue(String sysKey, String sysValue) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(KEY_SYS_VALUE, sysValue);
+            db.update(SYSSPEC_TABLE_NAME, values, KEY_ITEM_ID + " = ?",
+                    new String[]{sysKey});
+            return true;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return false;
+    }
+
+
     private void createErrorDialog(String msg) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
         builder.setTitle("SQL Error")
                 .setMessage(msg)
                 .setCancelable(false)
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }

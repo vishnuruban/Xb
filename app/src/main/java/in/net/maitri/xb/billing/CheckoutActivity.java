@@ -46,12 +46,12 @@ import in.net.maitri.xb.printing.FragmentMessageListener;
  * Created by SYSRAJ4 on 15/11/2017.
  */
 
-public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener ,FragmentMessageListener{
+public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener, FragmentMessageListener {
 
 
     ListView listView;
     BillListAdapter badapter;
-    TextView cProducts,cPrice,cDate,cNetAmount,cPayment,tCash,tBalance;
+    TextView cProducts, cPrice, cDate, cNetAmount, cPayment, tCash, tBalance;
     EditText cDiscount;
     String totalProducts, totalPrice;
     LinearLayout lNetAmt;
@@ -60,20 +60,15 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     double netAmt = 0;
     String rs = "\u20B9";
     TextView cPrintStatus;
-    EditText et_result,cCash;
+    EditText et_result, cCash;
     EditSpinner mEditSpinner;
 
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
 
 
-
-
-
-
-
-    String[] pModes = {"CASH","DEBIT CARD","CREDIT CARD","WALLET"};
+    String[] pModes = {"CASH", "DEBIT CARD", "CREDIT CARD", "WALLET"};
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
-            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear,btn_100,btn_500,btn_2000,btn_cash,btn_dc,btn_cc,btn_wallet,cPrint;
+            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear, btn_100, btn_500, btn_2000, btn_cash, btn_dc, btn_cc, btn_wallet, cPrint;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,24 +76,24 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.checkout_activity);
 
         cDiscount = (EditText) findViewById(R.id.cDiscount);
-     //   cDiscount.setInputType(InputType.TYPE_NULL);
+        //   cDiscount.setInputType(InputType.TYPE_NULL);
 
 
         cNetAmount = (TextView) findViewById(R.id.cNetamount);
         listView = (ListView) findViewById(R.id.listview);
 
-        cPrice    = (TextView)findViewById(R.id.cTotalPrice);
-        cProducts = (TextView)findViewById(R.id.cTotalProducts);
-        cDate = (TextView)findViewById(R.id.date);
-        cPayment =(TextView) findViewById(R.id.cPayment);
-        lNetAmt = (LinearLayout)findViewById(R.id.layout_Net) ;
+        cPrice = (TextView) findViewById(R.id.cTotalPrice);
+        cProducts = (TextView) findViewById(R.id.cTotalProducts);
+        cDate = (TextView) findViewById(R.id.date);
+        cPayment = (TextView) findViewById(R.id.cPayment);
+        lNetAmt = (LinearLayout) findViewById(R.id.layout_Net);
         tCash = (TextView) findViewById(R.id.tCash);
         cCash = (EditText) findViewById(R.id.cCash);
-        tBalance = (TextView)findViewById(R.id.cBalance);
-        cPrintStatus = (TextView)findViewById(R.id.cPrintstatus);
+        tBalance = (TextView) findViewById(R.id.cBalance);
+        cPrintStatus = (TextView) findViewById(R.id.cPrintstatus);
         tBalance.setVisibility(View.INVISIBLE);
         mPrinter.connectToPrinter();
-         cDiscountType = (RadioGroup)findViewById(R.id.discount_toggle);
+        cDiscountType = (RadioGroup) findViewById(R.id.discount_toggle);
 
         mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
         ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
@@ -123,13 +118,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         }
 
 
-
-        try{
+        try {
             byte[] utf8 = rs.getBytes("UTF-8");
 
-            rs = new String(utf8, "UTF-8");}
-        catch (UnsupportedEncodingException e)
-        {
+            rs = new String(utf8, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         initializeVars();
@@ -139,9 +132,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cDiscount.setText(selectedButton);
         Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
 
-        GradientDrawable bgShape = (GradientDrawable)lNetAmt.getBackground();
+        GradientDrawable bgShape = (GradientDrawable) lNetAmt.getBackground();
         bgShape.setColor(getResources().getColor(R.color.green));
-        badapter = new BillListAdapter(CheckoutActivity.this,FragmentOne.billList);
+        badapter = new BillListAdapter(CheckoutActivity.this, FragmentOne.billList);
         listView.setAdapter(badapter);
 
         String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
@@ -149,19 +142,19 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         Bundle bundle = getIntent().getExtras();
 
-        if(bundle!=null) {
-           totalProducts = bundle.getString("products");
-            totalPrice  = bundle.getString("price");
+        if (bundle != null) {
+            totalProducts = bundle.getString("products");
+            totalPrice = bundle.getString("price");
 
         }
         netAmt = Double.parseDouble(totalPrice);
-       mEditSpinner.addTextChangedListener(paymentMode);
+        mEditSpinner.addTextChangedListener(paymentMode);
         cDiscount.addTextChangedListener(watch);
         cCash.addTextChangedListener(cash);
         cProducts.setText(totalProducts);
         cPrice.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-        cNetAmount.setText(rs+" "+FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-        cPayment.setText("PAYMENT - "+rs+" "+FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+        cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+        cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
 
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -180,13 +173,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         et_result = cDiscount;
 
-        cDiscount.setOnTouchListener(new View.OnTouchListener()
-        {
-            public boolean onTouch(View v, MotionEvent event)
-            {
+        cDiscount.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
 
                 v.onTouchEvent(event);
-                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
@@ -198,14 +189,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         });
 
 
-
-        cCash.setOnTouchListener(new View.OnTouchListener()
-        {
-            public boolean onTouch(View v, MotionEvent event)
-            {
+        cCash.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
 
                 v.onTouchEvent(event);
-                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
@@ -221,16 +209,16 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mPrinter.onActivityResult(requestCode, resultCode, this);
     }
+
     @Override
     protected void onResume() {
         mPrinter.onActivityResume();
-      //  printerSelection();
+        //  printerSelection();
         super.onResume();
     }
 
@@ -259,8 +247,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         switch (iAppSignal) {
             case AppConsts.CLEAR_PREFERRED_PRINTER:
                 mPrinter.clearPreferredPrinter();
-               // tbPrinter.setText("OFF");
-             //   tbPrinter.setChecked(false);
+                // tbPrinter.setText("OFF");
+                //   tbPrinter.setChecked(false);
                 break;
 
         }
@@ -271,7 +259,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onAppSignal(int iAppSignal, boolean data) {}
+    public void onAppSignal(int iAppSignal, boolean data) {
+    }
 
     @Override
     public void onAppSignal(int iAppSignal, byte[] data) {
@@ -287,31 +276,31 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                         case CieBluetoothPrinter.STATE_CONNECTED:
                             setStatusMsg(title_connected_to + mConnectedDeviceName);
                             //Toast.makeText(CheckoutActivity.this,title_connected_to + mConnectedDeviceName,Toast.LENGTH_SHORT).show();
-                        //    tbPrinter.setText("ON");
-                          //  tbPrinter.setChecked(true);
+                            //    tbPrinter.setText("ON");
+                            //  tbPrinter.setChecked(true);
                             break;
                         case CieBluetoothPrinter.STATE_CONNECTING:
                             setStatusMsg(title_connected_to + title_connecting);
                             //Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
                             try {
-                            //    tbPrinter.setText("...");
-                             //   tbPrinter.setChecked(false);
-                            }catch (NullPointerException e){
+                                //    tbPrinter.setText("...");
+                                //   tbPrinter.setChecked(false);
+                            } catch (NullPointerException e) {
                                 DebugLog.logTrace("Fragment creating");
                             }
                             break;
                         case CieBluetoothPrinter.STATE_LISTEN:
                             setStatusMsg(title_connected_to + title_connecting);
-                          //  Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
+                            //  Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
 
                         case CieBluetoothPrinter.STATE_NONE:
                             setStatusMsg(title_not_connected);
-                            Toast.makeText(CheckoutActivity.this,title_not_connected,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
 
                             try {
-                               // tbPrinter.setText("OFF");
-                               // tbPrinter.setChecked(false);
-                            }catch (NullPointerException n){
+                                // tbPrinter.setText("OFF");
+                                // tbPrinter.setChecked(false);
+                            } catch (NullPointerException n) {
                                 DebugLog.logTrace("Fragment creating");
                             }
                             break;
@@ -323,22 +312,22 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     break;
                 case CieBluetoothPrinter.MESSAGE_STATUS:
                     DebugLog.logTrace("Message Status Received");
-              //      Toast.makeText(CheckoutActivity.this,msg.getData().getString(
-                         //   CieBluetoothPrinter.STATUS_TEXT),Toast.LENGTH_SHORT).show();
-                   setStatusMsg(msg.getData().getString(
-                          CieBluetoothPrinter.STATUS_TEXT));
+                    //      Toast.makeText(CheckoutActivity.this,msg.getData().getString(
+                    //   CieBluetoothPrinter.STATUS_TEXT),Toast.LENGTH_SHORT).show();
+                    setStatusMsg(msg.getData().getString(
+                            CieBluetoothPrinter.STATUS_TEXT));
                     break;
                 case CieBluetoothPrinter.PRINT_COMPLETE:
                     //Toast.makeText(CheckoutActivity.this,"PRINT OK",Toast.LENGTH_SHORT).show();
-                   setStatusMsg("PRINT OK");
+                    setStatusMsg("PRINT OK");
                     break;
                 case CieBluetoothPrinter.PRINTER_CONNECTION_CLOSED:
                     setStatusMsg("PRINT CONN CLOSED");
-                   // Toast.makeText(CheckoutActivity.this,"PRINT CONN CLOSED",Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(CheckoutActivity.this,"PRINT CONN CLOSED",Toast.LENGTH_SHORT).show();
                     break;
                 case CieBluetoothPrinter.PRINTER_DISCONNECTED:
                     setStatusMsg("PRINT CONN FAILED");
-                //    Toast.makeText(CheckoutActivity.this,"PRINT CONN FAILED",Toast.LENGTH_SHORT).show();
+                    //    Toast.makeText(CheckoutActivity.this,"PRINT CONN FAILED",Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     DebugLog.logTrace("Some un handled message : " + msg.what);
@@ -351,28 +340,29 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     public void setStatusMsg(String msg) {
         cPrintStatus.setText(msg);
     }
-    public void initializeVars(){
+
+    public void initializeVars() {
 
 
-        btn_one = (Button)findViewById(R.id.btn_one);
-        btn_two = (Button)findViewById(R.id.btn_two);
-        btn_three = (Button)findViewById(R.id.btn_three);
-        btn_four = (Button)findViewById(R.id.btn_four);
-        btn_five = (Button)findViewById(R.id.btn_five);
-        btn_six = (Button)findViewById(R.id.btn_six);
-        btn_seven = (Button)findViewById(R.id.btn_seven);
-        btn_eight = (Button)findViewById(R.id.btn_eight);
-        btn_nine = (Button)findViewById(R.id.btn_nine);
-        btn_zero = (Button)findViewById(R.id.btn_zero);
-        btn_point = (Button)findViewById(R.id.btn_point);
-        btn_clear = (Button)findViewById(R.id.btn_clear);
-        btn_100 = (Button)findViewById(R.id.btn_100);
-        btn_500 = (Button)findViewById(R.id.btn_500);
-        btn_2000 = (Button)findViewById(R.id.btn_2000);
-        btn_cash = (Button)findViewById(R.id.btn_cash);
-        btn_dc = (Button)findViewById(R.id.btn_dc);
-        btn_cc = (Button)findViewById(R.id.btn_cc);
-        btn_wallet = (Button)findViewById(R.id.btn_wallet);
+        btn_one = (Button) findViewById(R.id.btn_one);
+        btn_two = (Button) findViewById(R.id.btn_two);
+        btn_three = (Button) findViewById(R.id.btn_three);
+        btn_four = (Button) findViewById(R.id.btn_four);
+        btn_five = (Button) findViewById(R.id.btn_five);
+        btn_six = (Button) findViewById(R.id.btn_six);
+        btn_seven = (Button) findViewById(R.id.btn_seven);
+        btn_eight = (Button) findViewById(R.id.btn_eight);
+        btn_nine = (Button) findViewById(R.id.btn_nine);
+        btn_zero = (Button) findViewById(R.id.btn_zero);
+        btn_point = (Button) findViewById(R.id.btn_point);
+        btn_clear = (Button) findViewById(R.id.btn_clear);
+        btn_100 = (Button) findViewById(R.id.btn_100);
+        btn_500 = (Button) findViewById(R.id.btn_500);
+        btn_2000 = (Button) findViewById(R.id.btn_2000);
+        btn_cash = (Button) findViewById(R.id.btn_cash);
+        btn_dc = (Button) findViewById(R.id.btn_dc);
+        btn_cc = (Button) findViewById(R.id.btn_cc);
+        btn_wallet = (Button) findViewById(R.id.btn_wallet);
         cPrint = (Button) findViewById(R.id.cPrint);
 
         btn_one.setOnClickListener(this);
@@ -400,10 +390,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
     @Override
     public void onClick(View view) {
-        switch(view.getId()) {
+        switch (view.getId()) {
 
             case R.id.btn_one:
                 et_result.setText(et_result.getText().toString() + btn_one.getText().toString());
@@ -476,42 +465,33 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 mEditSpinner.setText("WALLET");
                 break;
             case R.id.cPrint:
-               // mPrinter.showDeviceList(CheckoutActivity.this);
+                // mPrinter.showDeviceList(CheckoutActivity.this);
                 performPrinterTask();
                 break;
         }
     }
 
 
-
-
-
-
-
-
-    TextWatcher paymentMode = new TextWatcher(){
+    TextWatcher paymentMode = new TextWatcher() {
 
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
 
 
-          if(s.toString().equals("CASH"))
-          {
-               tCash.setText("Cash ("+rs+")");
-               cCash.setText("");
-               cCash.setFocusable(true);
-              cCash.setFocusableInTouchMode(true);
-               cCash.setClickable(true);
+            if (s.toString().equals("CASH")) {
+                tCash.setText("Cash (" + rs + ")");
+                cCash.setText("");
+                cCash.setFocusable(true);
+                cCash.setFocusableInTouchMode(true);
+                cCash.setClickable(true);
 
-          }
-          else
-          {
-              tCash.setText("Amount ("+rs+")");
-              cCash.setText(FragmentOne.commaSeperated(netAmt));
-              cCash.setFocusable(false);
-              cCash.setClickable(false);
-          }
+            } else {
+                tCash.setText("Amount (" + rs + ")");
+                cCash.setText(FragmentOne.commaSeperated(netAmt));
+                cCash.setFocusable(false);
+                cCash.setClickable(false);
+            }
 
 
         }
@@ -528,35 +508,27 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             // TODO Auto-generated method stub
 
 
-
-        }};
-
-
+        }
+    };
 
 
-
-    TextWatcher cash = new TextWatcher(){
+    TextWatcher cash = new TextWatcher() {
 
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
 
 
-            if(s.toString().equals(""))
-            {
+            if (s.toString().equals("")) {
                 tBalance.setVisibility(View.INVISIBLE);
-            }
-            else
-            {
+            } else {
 
 
-                if(Double.parseDouble(s.toString()) > netAmt) {
+                if (Double.parseDouble(s.toString()) > netAmt) {
                     tBalance.setVisibility(View.VISIBLE);
                     double balance = Double.parseDouble(s.toString()) - netAmt;
-                        tBalance.setText("Balance  "+rs+" "+FragmentOne.commaSeperated(balance));
-                }
-                else
-                {
+                    tBalance.setText("Balance  " + rs + " " + FragmentOne.commaSeperated(balance));
+                } else {
                     tBalance.setVisibility(View.INVISIBLE);
                 }
             }
@@ -576,68 +548,42 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             // TODO Auto-generated method stub
 
 
-
-        }};
-
-
+        }
+    };
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    TextWatcher watch = new TextWatcher(){
+    TextWatcher watch = new TextWatcher() {
 
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
 
 
-
-
-            if(!s.toString().startsWith(selectedButton)){
+            if (!s.toString().startsWith(selectedButton)) {
                 cDiscount.setText(selectedButton);
                 Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
 
             }
 
-            if(s.toString().equals("") || s.toString().equals(rs) || s.toString().equals("%")) {
+            if (s.toString().equals("") || s.toString().equals(rs) || s.toString().equals("%")) {
 
-              cNetAmount.setText(rs+" "+FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+                cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
                 netAmt = Double.parseDouble(totalPrice);
-            }
-
-            else
-            {
+            } else {
 
                 char disSymbl = s.charAt(0);
                 String ss = Character.toString(disSymbl);
-                if(ss.equals(rs)){
-                        System.out.println("S "+s);
-                    if(s.toString().substring(1).startsWith("."))
-                    {
-                        Toast.makeText(CheckoutActivity.this,"Enter valid discount",Toast.LENGTH_SHORT).show();
+                if (ss.equals(rs)) {
+                    System.out.println("S " + s);
+                    if (s.toString().substring(1).startsWith(".")) {
+                        Toast.makeText(CheckoutActivity.this, "Enter valid discount", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    System.out.println("SS "+ s.toString().substring(1));
-               netAmt = Double.parseDouble(totalPrice) - Double.parseDouble( s.toString().substring(1));
+                    System.out.println("SS " + s.toString().substring(1));
+                    netAmt = Double.parseDouble(totalPrice) - Double.parseDouble(s.toString().substring(1));
 
 
-            }
-            else
-                {
+                } else {
                     String disPrice = s.toString().substring(1);
 
                     double discount = (Double.parseDouble(disPrice.toString()) / 100.0) * Double.parseDouble(totalPrice);
@@ -646,18 +592,16 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 }
 
 
-                if(netAmt <= 0)
-                {
-                    Toast.makeText(CheckoutActivity.this,"Please enter valid discount",Toast.LENGTH_SHORT).show();
+                if (netAmt <= 0) {
+                    Toast.makeText(CheckoutActivity.this, "Please enter valid discount", Toast.LENGTH_SHORT).show();
                     cDiscount.setText("");
                     return;
                 }
-                cNetAmount.setText(rs+" "+FragmentOne.commaSeperated(netAmt));
-                cPayment.setText("PAYMENT - "+rs+" "+FragmentOne.commaSeperated(netAmt));
-                tCash.setText("Cash ("+rs+")");
+                cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(netAmt));
+                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(netAmt));
+                tCash.setText("Cash (" + rs + ")");
                 cCash.setText("");
                 mEditSpinner.setText("CASH");
-
 
 
             }
@@ -675,19 +619,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             // TODO Auto-generated method stub
 
 
-
-        }};
-
-
-
-
-
-
+        }
+    };
 
 
     private void performPrinterTask() {
-
-
       /*  BillItems billItems = new  BillItems("Annapurna Atta","2","50.00","100.00");
         billList.add(billItems);
         billItems = new  BillItems("Aachi Chick ma. ","2","10.00","200.00");
@@ -712,34 +648,24 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.setBold();
         mPrinter.printTextLine("CASH BILL\n");
         mPrinter.setRegular();
-
         //mPrinter.printLineFeed();
-
-
-        String custName ="test customer";
+        String custName = "test customer";
         String cashName = "test cashier";
-
-        String s = String.format("%-15s%8s%12s%12s\n", "Item", "Qty", "Price","Amount");
-
-
-        String s2 = String.format("%-15s%8s%12s%12s\n", "Aachi Masala 1K", "2kg", "4500.00","9000.00");
-
-        String qtyNetAmt = String.format("%-15s%8s%12s%12s\n", "Items/qty : 1/1 ", "", "Subtotal","90000.00");
-        String discount = String.format("%-15s%8s%12s%12s\n", "", "", "Discount","10.00");
-        String total = String.format("%-15s%8s%12s%12s\n", "Total", "", "","80.00");
+        String s = String.format("%-15s%8s%12s%12s\n", "Item", "Qty", "Price", "Amount");
+        String s2 = String.format("%-15s%8s%12s%12s\n", "Aachi Masala 1K", "2kg", "4500.00", "9000.00");
+        String qtyNetAmt = String.format("%-15s%8s%12s%12s\n", "Items/qty : 1/1 ", "", "Subtotal", "90000.00");
+        String discount = String.format("%-15s%8s%12s%12s\n", "", "", "Discount", "10.00");
+        String total = String.format("%-15s%8s%12s%12s\n", "Total", "", "", "80.00");
         mPrinter.setAlignmentLeft();
-
         mPrinter.printTextLine(" Bill No: 6789                 21/11/17 1.20 PM\n");
         mPrinter.printTextLine(" Customer Name    : " + custName + "\n");
-        mPrinter.printTextLine(" Cashier Name     : " + cashName+ "\n");
+        mPrinter.printTextLine(" Cashier Name     : " + cashName + "\n");
         mPrinter.printTextLine("------------------------------------------------\n");
-
         mPrinter.setBold();
         mPrinter.printTextLine(s);
         //   mPrinter.setFontSizeXSmall();
         mPrinter.printTextLine("------------------------------------------------\n");
         mPrinter.setRegular();
-
         //   mPrinter.printTextLine(s0);
         //  mPrinter.printTextLine(s1);
         //  mPrinter.setFontSizeSmall();
@@ -766,28 +692,15 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.printLineFeed();
         mPrinter.printTextLine("************************************************\n");
         mPrinter.printLineFeed();
-
         mPrinter.printLineFeed();
-
         mPrinter.setAlignmentCenter();
-
-
         //Clearance for Paper tear
         mPrinter.printLineFeed();
         mPrinter.printLineFeed();
         mPrinter.resetPrinter();
-
         //print all commands
         mPrinter.batchPrint();
     }
-
-
-
-
-
-
-
-
 
 
 }

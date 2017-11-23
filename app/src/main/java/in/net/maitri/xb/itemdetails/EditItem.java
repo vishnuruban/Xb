@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,10 +21,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,13 +37,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
-
+import in.net.maitri.xb.db.Unit;
+import in.net.maitri.xb.settings.GetSettings;
 
 public class EditItem extends DialogFragment {
 
@@ -48,6 +55,7 @@ public class EditItem extends DialogFragment {
     private DbHandler dbHandler;
     private Bitmap mSelectedImage;
     private AddItemCategory mAddItemCategory;
+    private List<Unit> unitList;
 
     @Override
     public void onAttach(Context context) {
@@ -65,7 +73,7 @@ public class EditItem extends DialogFragment {
 
         Bundle bundle = getArguments();
         final Item item = (Item) bundle.getSerializable("itemObj");
-
+        final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
@@ -88,32 +96,41 @@ public class EditItem extends DialogFragment {
             }
         });
 
-        final EditText categoryName = (EditText) view.findViewById(R.id.category_name);
-        categoryName.setText(selectedCategoryName);
-        categoryName.setEnabled(false);
-        final EditText itemName = (EditText) view.findViewById(R.id.item_name);
+        final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
+        categoryNameField.setText(selectedCategoryName);
+        categoryNameField.setEnabled(false);
+        final EditText itemNameField = (EditText) view.findViewById(R.id.item_name);
         if (item != null) {
-            itemName.setText(item.getItemName());
+            itemNameField.setText(item.getItemName());
         }
-        final EditText costPrice = (EditText) view.findViewById(R.id.cp);
+        final EditText costPriceField = (EditText) view.findViewById(R.id.cp);
         if (item != null) {
-            costPrice.setText(String.valueOf(item.getItemCP()));
+            costPriceField.setText(String.valueOf(item.getItemCP()));
         }
-        final EditText sellingPrice = (EditText) view.findViewById(R.id.sp);
+        final EditText sellingPriceField = (EditText) view.findViewById(R.id.sp);
         if (item != null) {
-            sellingPrice.setText(String.valueOf(item.getItemSP()));
+            sellingPriceField.setText(String.valueOf(item.getItemSP()));
         }
-        final EditText uom = (EditText) view.findViewById(R.id.uom);
-        if (item != null) {
-            uom.setText(item.getItemUOM());
+        final Spinner uomField = (Spinner) view.findViewById(R.id.uom);
+        unitList = dbHandler.getAllUnit();
+        final ArrayList<String> uomAdapter = new ArrayList<>();
+        uomAdapter.add("--Select Uom--");
+        for (int i = 0; i < unitList.size(); i++) {
+            uomAdapter.add(unitList.get(i).getDesc());
         }
-        final EditText hsnCode = (EditText) view.findViewById(R.id.hsn_code);
-        if (item != null) {
-            hsnCode.setText(item.getItemHSNcode());
+        uomAdapter.add("Enter new UOM");
+        uomField.setAdapter(createAdapter(uomAdapter));
+        final EditText newUomField = (EditText) view.findViewById(R.id.new_uom);
+        if (item != null ) {
+           uomField.setSelection(uomAdapter.indexOf(getUnitName(Integer.parseInt(item.getItemUOM()))));
         }
-        final EditText gst = (EditText) view.findViewById(R.id.gst);
+        final EditText hsnCodeField = (EditText) view.findViewById(R.id.hsn_code);
         if (item != null) {
-            gst.setText(String.valueOf(item.getItemGST()));
+            hsnCodeField.setText(item.getItemHSNcode());
+        }
+        final EditText gstField = (EditText) view.findViewById(R.id.gst);
+        if (item != null) {
+            gstField.setText(String.valueOf(item.getItemGST()));
         }
         if (item != null) {
             mImagePath = item.getItemImage();
@@ -124,26 +141,41 @@ public class EditItem extends DialogFragment {
             }
         }
 
+        if (registrationType.equals("3")) {
+            hsnCodeField.setVisibility(View.GONE);
+            gstField.setVisibility(View.GONE);
+        }
+
         Button addDetails = (Button) view.findViewById(R.id.add_details);
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String catName = categoryName.getText().toString();
-                String iteName =itemName.getText().toString();
-                String cp= costPrice.getText().toString();
-                String sp = sellingPrice.getText().toString();
-                String uoM =  uom.getText().toString();
-                String gsT = gst.getText().toString();
-                String hsn = hsnCode.getText().toString();
+                String catName = categoryNameField.getText().toString();
+                String iteName =itemNameField.getText().toString();
+                String cp= costPriceField.getText().toString();
+                String sp = sellingPriceField.getText().toString();
+                String uoM;
+                if (newUomField.isEnabled()) {
+                    uoM = newUomField.getText().toString();
+                } else {
+                    uoM = uomField.getSelectedItem().toString();
+                }
+                String gsT = gstField.getText().toString();
+                String hsn = hsnCodeField.getText().toString();
 
 
-                if (catName.isEmpty() || iteName.isEmpty()
+                if (!registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
                         || cp.isEmpty()
                         || sp.isEmpty()
                         || uoM.isEmpty()
                         || gsT.isEmpty()
-                        || hsn.isEmpty()){
+                        || hsn.isEmpty())) {
+                    Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
+                } else if (registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
+                        || cp.isEmpty()
+                        || sp.isEmpty()
+                        || uoM.isEmpty())){
                     Toast.makeText(getActivity(),"Enter all the fields.", Toast.LENGTH_SHORT).show();
                 }else{
                     if (mSelectedImage != null) {
@@ -156,16 +188,40 @@ public class EditItem extends DialogFragment {
                     if (item != null) {
                         item1.setCategoryId(item.getCategoryId());
                     }
+                    if (newUomField.isEnabled()) {
+                        addUom(uoM);
+                    }
+                    if (gsT.isEmpty()){
+                        gsT = "0";
+                    }
                     item1.setItemImage(mImagePath);
                     item1.setItemName(iteName);
                     item1.setItemCP(Float.parseFloat(cp));
                     item1.setItemSP(Float.parseFloat(sp));
-                    item1.setItemUOM(uoM);
+                    item1.setItemUOM(String.valueOf(dbHandler.getUomId(uoM)));
+                    Log.d("UOM", uoM);
                     item1.setItemHSNcode(hsn);
                     item1.setItemGST(Float.parseFloat(gsT));
                     editItem(item1);
                     mAddItemCategory.updateItem(item.getCategoryId());
                 }
+            }
+        });
+
+        uomField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (uomAdapter.get(position).equals("Enter new UOM")){
+                    newUomField.setEnabled(true);
+                    newUomField.requestFocus();
+                } else {
+                    newUomField.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
         return view;
@@ -221,5 +277,41 @@ public class EditItem extends DialogFragment {
     private void editItem(Item item){
         dbHandler.updateItem(item);
         dismiss();
+    }
+
+    private void addUom(String uom) {
+        dbHandler.addUnit(uom);
+    }
+
+    private ArrayAdapter<String> createAdapter(ArrayList<String> list) {
+        return new ArrayAdapter<String>
+                (getActivity(), android.R.layout.simple_spinner_dropdown_item, list) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView,
+                                        ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if (position == 0) {
+                    tv.setTextColor(Color.GRAY);
+                } else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
+    }
+
+    private String getUnitName(int unitId){
+        for (int i = 0; i<unitList.size(); i++){
+            if (unitList.get(i).getId() == unitId){
+                return unitList.get(i).getDesc();
+            }
+        }
+        return "--Select Uom--";
     }
 }
