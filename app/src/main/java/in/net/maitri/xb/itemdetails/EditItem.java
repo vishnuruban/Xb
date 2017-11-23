@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,7 +71,7 @@ public class EditItem extends DialogFragment {
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText("Edit Item");
-
+        final LinearLayout newUomLayout = (LinearLayout) view.findViewById(R.id.new_uom_layout);
         Bundle bundle = getArguments();
         final Item item = (Item) bundle.getSerializable("itemObj");
         final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
@@ -95,7 +96,7 @@ public class EditItem extends DialogFragment {
                 onPickImage();
             }
         });
-
+        final Switch decimalAllowed = (Switch) view.findViewById(R.id.decimal_allowed);
         final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
         categoryNameField.setText(selectedCategoryName);
         categoryNameField.setEnabled(false);
@@ -189,7 +190,14 @@ public class EditItem extends DialogFragment {
                         item1.setCategoryId(item.getCategoryId());
                     }
                     if (newUomField.isEnabled()) {
-                        addUom(uoM);
+                        Unit unit = new Unit();
+                        unit.setDesc(uoM);
+                        if (decimalAllowed.isChecked()) {
+                            unit.setDecimalAllowed(1);
+                        } else {
+                            unit.setDecimalAllowed(0);
+                        }
+                        addUom(unit);
                     }
                     if (gsT.isEmpty()){
                         gsT = "0";
@@ -212,10 +220,10 @@ public class EditItem extends DialogFragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 if (uomAdapter.get(position).equals("Enter new UOM")){
-                    newUomField.setEnabled(true);
                     newUomField.requestFocus();
+                    newUomLayout.setVisibility(View.VISIBLE);
                 } else {
-                    newUomField.setEnabled(false);
+                    newUomLayout.setVisibility(View.GONE);
                 }
             }
 
@@ -279,9 +287,10 @@ public class EditItem extends DialogFragment {
         dismiss();
     }
 
-    private void addUom(String uom) {
-        dbHandler.addUnit(uom);
+    private void addUom(Unit unit) {
+        dbHandler.addUnit(unit);
     }
+
 
     private ArrayAdapter<String> createAdapter(ArrayList<String> list) {
         return new ArrayAdapter<String>

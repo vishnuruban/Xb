@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +70,8 @@ public class AddItem extends DialogFragment {
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText("Add Item");
 
+        final LinearLayout newUomLayout = (LinearLayout) view.findViewById(R.id.new_uom_layout);
+
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
@@ -104,6 +107,7 @@ public class AddItem extends DialogFragment {
         final EditText gstField = (EditText) view.findViewById(R.id.gst);
         final EditText newUomField = (EditText) view.findViewById(R.id.new_uom);
         final Spinner uomField = (Spinner) view.findViewById(R.id.uom);
+        final Switch decimalAllowed = (Switch) view.findViewById(R.id.decimal_allowed);
 
         if (registrationType.equals("3")) {
             hsnCodeField.setVisibility(View.GONE);
@@ -152,7 +156,14 @@ public class AddItem extends DialogFragment {
                     Toast.makeText(getActivity(), "UOM field is empty.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (newUomField.isEnabled()) {
-                        addUom(uoM);
+                        Unit unit = new Unit();
+                        unit.setDesc(uoM);
+                        if (decimalAllowed.isChecked()) {
+                            unit.setDecimalAllowed(1);
+                        } else {
+                            unit.setDecimalAllowed(0);
+                        }
+                        addUom(unit);
                     }
                     if (gsT.isEmpty()){
                         gsT = "0";
@@ -170,7 +181,9 @@ public class AddItem extends DialogFragment {
                 if (uomAdapter.get(position).equals("Enter new UOM")){
                     newUomField.setEnabled(true);
                     newUomField.requestFocus();
+                    newUomLayout.setVisibility(View.VISIBLE);
                 } else {
+                    newUomLayout.setVisibility(View.GONE);
                     newUomField.setEnabled(false);
                 }
             }
@@ -236,8 +249,8 @@ public class AddItem extends DialogFragment {
         dismiss();
     }
 
-    private void addUom(String uom) {
-        dbHandler.addUnit(uom);
+    private void addUom(Unit unit) {
+        dbHandler.addUnit(unit);
     }
 
 

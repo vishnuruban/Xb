@@ -21,7 +21,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -57,6 +57,7 @@ public class DbHandler extends SQLiteOpenHelper {
     // unit table column names
     private static final String KEY_UNIT_ID = "unit_id";
     private static final String KEY_UNIT_DESC = "unit_desc";
+    private static final String KEY_UNIT_DECIMAL_ALLOWED = "item_decimalAllowed";
     private static final String KEY_UNIT_CREATED_AT = "unit_createdAt";
     // sales mst table name
     private static final String SALES_MST_TABLE_NAME = "SalesMst";
@@ -127,6 +128,7 @@ public class DbHandler extends SQLiteOpenHelper {
         String CREATE_UNIT_TABLE = "CREATE TABLE IF NOT EXISTS " + UNIT_TABLE_NAME + "("
                 + KEY_UNIT_ID + " INTEGER PRIMARY KEY,"
                 + KEY_UNIT_DESC + " TEXT,"
+                + KEY_UNIT_DECIMAL_ALLOWED + "INTEGER,"
                 + KEY_UNIT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_UNIT_TABLE);
 
@@ -167,14 +169,9 @@ public class DbHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
-        // db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
-        // db.execSQL("DROP TABLE IF EXISTS " + ITEM_TABLE_NAME);
-        // db.execSQL("DROP TABLE IF EXISTS " + CUSTOMER_TABLE_NAME);
-        // db.execSQL("DROP TABLE IF EXISTS " + UNIT_TABLE_NAME);
-        //db.execSQL("DROP TABLE IF EXISTS " + SALES_MST_TABLE_NAME);
-        //db.execSQL("DROP TABLE IF EXISTS " + SALES_DET_TABLE_NAME);
-        // Create tables again
+        if (newVersion > oldVersion) {
+            db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
+        }
         onCreate(db);
     }
 
@@ -449,11 +446,12 @@ public class DbHandler extends SQLiteOpenHelper {
         return customerList;
     }
 
-    public void addUnit(String desc) {
+    public void addUnit(Unit unit) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(KEY_UNIT_DESC, desc);
+            cv.put(KEY_UNIT_DESC, unit.getDesc());
+            cv.put(KEY_UNIT_DECIMAL_ALLOWED, unit.getDecimalAllowed());
             db.insert(UNIT_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
@@ -474,6 +472,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     Unit unit = new Unit();
                     unit.setId(c.getInt(c.getColumnIndex(KEY_UNIT_ID)));
                     unit.setDesc(c.getString(c.getColumnIndex(KEY_UNIT_DESC)));
+                    unit.setDecimalAllowed(c.getInt(c.getColumnIndex(KEY_UNIT_DECIMAL_ALLOWED)));
                     unitList.add(unit);
                 } while (c.moveToNext());
             }
