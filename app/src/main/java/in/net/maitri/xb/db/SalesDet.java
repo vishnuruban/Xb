@@ -1,12 +1,19 @@
 package in.net.maitri.xb.db;
 
+import in.net.maitri.xb.billing.BillItems;
+
 public class SalesDet {
 
     private int id, billNo, category, item;
     private float qty;
+    BillItems billItems;
 
     public SalesDet(int billNo, int category, int item){}
 
+    public SalesDet(int billNo, BillItems billItems) {
+        this.billNo = billNo;
+        this.billItems = billItems;
+    }
 
     public int getId() {
         return id;

@@ -36,6 +36,9 @@
         <activity android:name=".billing.BillingActivity"
             android:label="BILL"
             android:windowSoftInputMode="stateHidden">
+            </activity>
+            <activity android:name="customer.CustomerDetail"
+                >
 
 
         </activity>

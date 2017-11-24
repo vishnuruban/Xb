@@ -70,7 +70,7 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
         }
 
         holder.itemName.setText(item.getItemName());
-        String sp = rs+" " + FragmentOne.commaSeperated(item.getItemSP());
+        String sp = rs+" " + FragmentOne.df.format(item.getItemSP());
         holder.itemSp.setText(sp);
         String imagePath = item.getItemImage();
         File imgFile = new File(imagePath);
