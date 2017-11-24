@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -35,12 +36,15 @@ import com.reginald.editspinner.EditSpinner;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.printing.AppConsts;
 import in.net.maitri.xb.printing.FragmentMessageListener;
+import in.net.maitri.xb.settings.GetSettings;
 
 /**
  * Created by SYSRAJ4 on 15/11/2017.
@@ -62,6 +66,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     TextView cPrintStatus;
     EditText et_result, cCash;
     EditSpinner mEditSpinner;
+    String cDiscountValue = "";
+    DecimalFormat df;
+    GetSettings getSettings;
 
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
 
@@ -79,6 +86,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         //   cDiscount.setInputType(InputType.TYPE_NULL);
 
 
+        df = new DecimalFormat("0.00");
         cNetAmount = (TextView) findViewById(R.id.cNetamount);
         listView = (ListView) findViewById(R.id.listview);
 
@@ -102,7 +110,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mEditSpinner.setEditable(false);
         mEditSpinner.setText("CASH");
 
+        getSettings = new GetSettings(CheckoutActivity.this);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mAdapter == null) {
             Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
@@ -221,6 +232,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         //  printerSelection();
         super.onResume();
     }
+
+
 
 
     @Override
@@ -438,7 +451,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 et_result.setText(et_result.getText().toString() + btn_point.getText().toString());
                 break;
             case R.id.btn_100:
-                et_result.setText("");
+
                 et_result.setText(et_result.getText().toString() + btn_100.getText().toString());
                 break;
             case R.id.btn_500:
@@ -465,8 +478,20 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 mEditSpinner.setText("WALLET");
                 break;
             case R.id.cPrint:
-                // mPrinter.showDeviceList(CheckoutActivity.this);
-                performPrinterTask();
+                //mPrinter.showDeviceList(CheckoutActivity.this);
+
+                String printSize   = getSettings.getPrintingPaperSize();
+                // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
+
+                if(printSize.equals("1"))
+                {
+                    printTwoInch();
+                }
+                else
+                {
+                    printThreeInch();
+                }
+
                 break;
         }
     }
@@ -524,12 +549,14 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             } else {
 
 
-                if (Double.parseDouble(s.toString()) > netAmt) {
-                    tBalance.setVisibility(View.VISIBLE);
-                    double balance = Double.parseDouble(s.toString()) - netAmt;
-                    tBalance.setText("Balance  " + rs + " " + FragmentOne.commaSeperated(balance));
-                } else {
-                    tBalance.setVisibility(View.INVISIBLE);
+                if (mEditSpinner.getText().toString().equals("CASH")) {
+                    if (Double.parseDouble(s.toString()) > netAmt) {
+                        tBalance.setVisibility(View.VISIBLE);
+                        double balance = Double.parseDouble(s.toString()) - netAmt;
+                        tBalance.setText("Balance  " + rs + " " + FragmentOne.commaSeperated(balance));
+                    } else {
+                        tBalance.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
 
@@ -562,30 +589,35 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             if (!s.toString().startsWith(selectedButton)) {
                 cDiscount.setText(selectedButton);
                 Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
+                cDiscountValue = "";
 
             }
 
             if (s.toString().equals("") || s.toString().equals(rs) || s.toString().equals("%")) {
 
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+                cPayment.setText("PAYMENT - " + rs + " " +  FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
                 netAmt = Double.parseDouble(totalPrice);
+                cDiscountValue = "";
             } else {
 
                 char disSymbl = s.charAt(0);
                 String ss = Character.toString(disSymbl);
                 if (ss.equals(rs)) {
                     System.out.println("S " + s);
+
                     if (s.toString().substring(1).startsWith(".")) {
                         Toast.makeText(CheckoutActivity.this, "Enter valid discount", Toast.LENGTH_SHORT).show();
                         return;
                     }
                     System.out.println("SS " + s.toString().substring(1));
                     netAmt = Double.parseDouble(totalPrice) - Double.parseDouble(s.toString().substring(1));
+                    cDiscountValue = df.format(Double.parseDouble( s.toString().substring(1)));
 
 
                 } else {
                     String disPrice = s.toString().substring(1);
-
+                    cDiscountValue = disPrice + "%";
                     double discount = (Double.parseDouble(disPrice.toString()) / 100.0) * Double.parseDouble(totalPrice);
                     netAmt = Double.parseDouble(totalPrice) - discount;
 
@@ -595,6 +627,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (netAmt <= 0) {
                     Toast.makeText(CheckoutActivity.this, "Please enter valid discount", Toast.LENGTH_SHORT).show();
                     cDiscount.setText("");
+                    cDiscountValue = "";
+                    //     cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(netAmt));
                     return;
                 }
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(netAmt));
@@ -623,18 +657,25 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     };
 
 
-    private void performPrinterTask() {
-      /*  BillItems billItems = new  BillItems("Annapurna Atta","2","50.00","100.00");
-        billList.add(billItems);
-        billItems = new  BillItems("Aachi Chick ma. ","2","10.00","200.00");
-        billList.add(billItems);*/
-        String ph = String.format("%1$-20s%20s\n", "Ph: 080-40951133", "TIN: 29160093044");
-        String bill = String.format("%1$-20s%20s\n", "Bill No: 578", "21/11/17 1.40 pm");
-        mPrinter.setPrinterWidth(PrinterWidth.PRINT_WIDTH_72MM);
+    private void printThreeInch() {
+
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
+        String formattedDate = dateFormat.format(new Date()).toString();
+        NumberFormat nf = new DecimalFormat("##.##");
+        double quantity = 0;
+
+
+        //  String ph = String.format("%1$-20s%20s\n", "Ph: 080-40951133", "TIN: 29160093044");
+        // String bill = String.format("%1$-20s%20s\n", "Bill No: 578", formattedDate);
+
         mPrinter.setPrintMode(BtpConsts.PRINT_IN_BATCH);
         mPrinter.resetPrinter();
+        mPrinter.setPrinterWidth(PrinterWidth.PRINT_WIDTH_72MM);
         mPrinter.setHighIntensity();
-        mPrinter.setAlignmentCenter();
+        //headerPrint1();
+        headerPrint();
+       /* mPrinter.setAlignmentCenter();
         mPrinter.setBold();
         // mPrinter.setFontSizeMedium();
         mPrinter.printTextLine("\nSudarshan Family Retail Store\n");
@@ -642,43 +683,74 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.setRegular();
         mPrinter.printTextLine("8 th Cross,Malleswaram Circle\n");
         mPrinter.printTextLine("Bangalore,Bangalore-560068\n");
-        mPrinter.setAlignmentLeft();
-        mPrinter.printTextLine(" Ph: 080-40951133              TIN: 29160093044  \n");
+        mPrinter.printTextLine("Ph: 080-40951133\n");
+        mPrinter.setAlignmentLeft();*/
+        // mPrinter.printTextLine(" Ph: 080-40951133              TIN: 29160093044  \n");
         mPrinter.setAlignmentCenter();
         mPrinter.setBold();
         mPrinter.printTextLine("CASH BILL\n");
         mPrinter.setRegular();
+
         //mPrinter.printLineFeed();
+
+
         String custName = "test customer";
         String cashName = "test cashier";
+
         String s = String.format("%-15s%8s%12s%12s\n", "Item", "Qty", "Price", "Amount");
+
+
         String s2 = String.format("%-15s%8s%12s%12s\n", "Aachi Masala 1K", "2kg", "4500.00", "9000.00");
-        String qtyNetAmt = String.format("%-15s%8s%12s%12s\n", "Items/qty : 1/1 ", "", "Subtotal", "90000.00");
-        String discount = String.format("%-15s%8s%12s%12s\n", "", "", "Discount", "10.00");
-        String total = String.format("%-15s%8s%12s%12s\n", "Total", "", "", "80.00");
+
+        String total = String.format("%-15s%8s%9s%15s\n", "Total", "","","Rs."+FragmentOne.commaSeperated(netAmt));
         mPrinter.setAlignmentLeft();
-        mPrinter.printTextLine(" Bill No: 6789                 21/11/17 1.20 PM\n");
-        mPrinter.printTextLine(" Customer Name    : " + custName + "\n");
-        mPrinter.printTextLine(" Cashier Name     : " + cashName + "\n");
+
+        mPrinter.printTextLine(" Bill No: 6789                 " + formattedDate + "\n");
+        mPrinter.printTextLine(" Customer Name  : " + custName + "\n");
+        mPrinter.printTextLine(" Cashier Name   : " + cashName + "\n");
         mPrinter.printTextLine("------------------------------------------------\n");
+
         mPrinter.setBold();
         mPrinter.printTextLine(s);
         //   mPrinter.setFontSizeXSmall();
         mPrinter.printTextLine("------------------------------------------------\n");
         mPrinter.setRegular();
-        //   mPrinter.printTextLine(s0);
-        //  mPrinter.printTextLine(s1);
-        //  mPrinter.setFontSizeSmall();
-        mPrinter.printTextLine(s2);
+
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        for (int i = 0; i < FragmentOne.billList.size(); i++) {
+
+            BillItems billItems = FragmentOne.billList.get(i);
+
+            quantity = quantity + billItems.getQty();
+
+            if (billItems.getDesc().length() <= 15) {
+                String sa = String.format("%-15s%8s%12s%12s\n", billItems.getDesc(), billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+                mPrinter.printTextLine(sa);
+            } else {
+                String sa1 = String.format("%-15s%8s%12s%12s\n", billItems.getDesc(), "", "", "");
+                String sa2 = String.format("%-15s%8s%12s%12s\n", "", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+                mPrinter.printTextLine(sa1);
+                mPrinter.printTextLine(sa2);
+            }
+        }
+
+        String discount = "";
+        String qtyNetAmt = String.format("%-15s%8s%10s%14s\n", "Items : " + FragmentOne.billList.size(), "", "Subtotal", totalPrice);
+        if(cDiscountValue.equals(""))
+        {
+            discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(quantity), "", "", "");
+
+        }
+        else {
+
+            discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(quantity), "", "Discount", cDiscountValue);
+        }
+
         mPrinter.printTextLine("------------------------------------------------\n");
         mPrinter.printTextLine(qtyNetAmt);
         mPrinter.printTextLine(discount);
-        //  mPrinter.setFontSizeSmall();
-        // for(int i=0;i<billList.size();i++)
-        //{
-        // BillItems bi = billList.get(i);
-        // mPrinter.printTextLine(bi.getItem()+"    "+bi.getDesc()+"    "+bi.getRate()+"  "+bi.getAmt());
-        //  }
         mPrinter.printLineFeed();
         mPrinter.printTextLine("------------------------------------------------\n");
         mPrinter.setBold();
@@ -687,20 +759,306 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.printLineFeed();
         mPrinter.setAlignmentCenter();
         mPrinter.setBold();
-        mPrinter.printTextLine("Thank you ! Visit Again");
+        mPrinter.printTextLine("Thank you ! Visit Again\n");
         mPrinter.setRegular();
         mPrinter.printLineFeed();
         mPrinter.printTextLine("************************************************\n");
         mPrinter.printLineFeed();
+
         mPrinter.printLineFeed();
+
         mPrinter.setAlignmentCenter();
+
+
         //Clearance for Paper tear
         mPrinter.printLineFeed();
         mPrinter.printLineFeed();
         mPrinter.resetPrinter();
+
         //print all commands
         mPrinter.batchPrint();
     }
+
+
+
+
+    public void headerPrint()
+    {
+
+        String clName   = getSettings.getCompanyLegalName();
+        String ctName   = getSettings.getCompanyTradeName();
+        String addLine1 = getSettings.getCompanyAddressLine1();
+        String addLine2 = getSettings.getCompanyAddressLine2();
+        String addLine3 = getSettings.getCompanyAddressLine3();
+        String city      = getSettings.getCompanyCity();
+        String pincode = getSettings.getCompanyPincode();
+        String cityPin  = city+"-"+pincode;
+        String phNum   =getSettings.getCompanyPhoneNo();
+        String gstin =getSettings.getCompanyGstNo();
+
+
+        if(ctName.isEmpty())
+        {
+            Toast.makeText(CheckoutActivity.this,"Company name not present in settings",Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        mPrinter.setAlignmentCenter();
+        mPrinter.setBold();
+        // mPrinter.setFontSizeXSmall();
+        //   mPrinter.printTextLine("\n"+clName+"\n");
+        mPrinter.printTextLine("\n"+ctName+"\n");
+
+        mPrinter.setRegular();
+        if(!addLine1.isEmpty())
+            mPrinter.printTextLine(addLine1+"\n");
+        if(!addLine2.isEmpty())
+            mPrinter.printTextLine(addLine2+"\n");
+        if(!addLine3.isEmpty())
+            mPrinter.printTextLine(addLine3+"\n");
+        if(!cityPin.isEmpty())
+            mPrinter.printTextLine(cityPin+"\n");
+        if(!phNum.isEmpty())
+            mPrinter.printTextLine("PH:"+phNum+"\n");
+
+        if(!gstin.isEmpty())
+            mPrinter.printTextLine(gstin+"\n");
+
+
+
+
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
+    public void printTwoInch()
+    {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
+        String formattedDate = dateFormat.format(new Date()).toString();
+        NumberFormat nf = new DecimalFormat("##.##");
+        double quantity = 0;
+
+
+        String clName   = getSettings.getCompanyLegalName();
+        String ctName   = getSettings.getCompanyTradeName();
+        String addLine1 = getSettings.getCompanyAddressLine1();
+        String addLine2 = getSettings.getCompanyAddressLine2();
+        String addLine3 = getSettings.getCompanyAddressLine3();
+        String city      = getSettings.getCompanyCity();
+        String pincode = getSettings.getCompanyPincode();
+        String cityPin  = city+"-"+pincode;
+        String phNum   =getSettings.getCompanyPhoneNo();
+
+
+
+
+
+        String gstin =getSettings.getCompanyGstNo();
+
+        String custName = "test customer";
+        String cashName = "test cashier";
+
+        if(ctName.isEmpty())
+        {
+            Toast.makeText(CheckoutActivity.this,"Company name not present in settings",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String s = String.format("%12s%-10s%5s%9s%10s\n","", "Item", "Qty", "Rate", "Amount");
+        String total = String.format("%12s%-10s%5s%9s%10s\n", "","Total", "","","Rs."+FragmentOne.commaSeperated(netAmt));
+
+        mPrinter.setAlignmentCenter();
+        mPrinter.setBold();
+        mPrinter.setFontSizeXSmall();
+        //   mPrinter.printTextLine("\n"+clName+"\n");
+        mPrinter.printTextLine("\n           "+ctName+"\n");
+
+        mPrinter.setRegular();
+        if(!addLine1.isEmpty())
+            mPrinter.printTextLine("            "+addLine1+"\n");
+        if(!addLine2.isEmpty())
+            mPrinter.printTextLine("            "+addLine2+"\n");
+        if(!addLine3.isEmpty())
+            mPrinter.printTextLine(addLine3+"\n");
+        if(!cityPin.isEmpty())
+            mPrinter.printTextLine("            "+cityPin+"\n");
+        if(!phNum.isEmpty())
+            mPrinter.printTextLine("            "+"PH:"+phNum+"\n");
+        mPrinter.printLineFeed();
+        mPrinter.setBold();
+        mPrinter.printTextLine("            CASH BILL\n");
+        mPrinter.printLineFeed();
+        mPrinter.setRegular();
+        mPrinter.setAlignmentLeft();
+        mPrinter.printTextLine("            Bill No: 6789     " + formattedDate + "\n");
+        mPrinter.printTextLine("            Customer Name  : " + custName + "\n");
+        mPrinter.printTextLine("            Cashier Name   : " + cashName + "\n");
+        mPrinter.printLineFeed();
+        mPrinter.setFontSizeSmall();
+        mPrinter.printTextLine("            ------------------------------------\n");
+        mPrinter.setFontSizeXSmall();
+        mPrinter.setBold();
+        mPrinter.printTextLine(s);
+        mPrinter.setRegular();
+        mPrinter.setFontSizeSmall();
+        mPrinter.printTextLine("            ------------------------------------\n");
+        mPrinter.setFontSizeXSmall();
+
+        for (int i = 0; i < FragmentOne.billList.size(); i++) {
+
+            BillItems billItems = FragmentOne.billList.get(i);
+
+            quantity = quantity + billItems.getQty();
+
+            //  if (billItems.getDesc().length() <= 10) {
+            //     String sa = String.format("12s%-13s%3s%9s%10s\n", "",billItems.getDesc(), billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+            //      mPrinter.printTextLine(sa);
+            //   } else {
+            String sa1 = String.format("%12s%-20s%4s%5s%5s\n","", billItems.getDesc(), "", "", "");
+            String sa2 = String.format("%12s%-10s%5s%9s%10s\n","", "", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+            mPrinter.printTextLine(sa1);
+            mPrinter.printLineFeed();
+            mPrinter.printTextLine(sa2);
+            // }
+        }
+
+        String discount = "";
+        String qtyNetAmt = String.format("%12s%-10s%5s%9s%10s\n", "","Items : " + FragmentOne.billList.size(), "", "Subtotal", totalPrice);
+        System.out.println("cDiscountValue "+cDiscountType);
+        if(cDiscountValue.isEmpty())
+        {
+            discount = String.format("%12s%-10s%5s%9s%10s\n","", "Qty   : " + nf.format(quantity), "", "", "");
+
+        }
+        else {
+
+            discount = String.format("%12s%-10s%5s%9s%10s\n","", "Qty   : " + nf.format(quantity), "", "Discount", cDiscountValue);
+        }
+        // if(!gstin.isEmpty())
+        //mPrinter.printTextLine(gstin+"\n");
+
+
+
+        mPrinter.setFontSizeSmall();
+        mPrinter.printTextLine("            ------------------------------------\n");
+        mPrinter.setFontSizeXSmall();
+        mPrinter.printTextLine(qtyNetAmt);
+        mPrinter.printTextLine(discount);
+        mPrinter.printLineFeed();
+        mPrinter.setFontSizeSmall();
+        mPrinter.printTextLine("            ------------------------------------\n");
+        mPrinter.setBold();
+        mPrinter.setFontSizeXSmall();
+        mPrinter.printTextLine(total);
+        mPrinter.setFontSizeSmall();
+        mPrinter.printTextLine("            ------------------------------------\n");
+        mPrinter.setFontSizeXSmall();
+        mPrinter.printLineFeed();
+        mPrinter.setAlignmentCenter();
+        mPrinter.setBold();
+        mPrinter.printTextLine("            Thank you ! Visit Again\n");
+        mPrinter.setRegular();
+        mPrinter.printLineFeed();
+        mPrinter.printTextLine("            ************************************\n");
+        mPrinter.printLineFeed();
+
+        mPrinter.printLineFeed();
+
+        mPrinter.setAlignmentCenter();
+
+
+        //Clearance for Paper tear
+        mPrinter.printLineFeed();
+        mPrinter.printLineFeed();
+        mPrinter.resetPrinter();
+
+        //print all commands
+        mPrinter.batchPrint();
+
+
+
+
+    }
+
+    private  void centerPrint1()
+    {
+
+    }
+
+
+
+
+/*
+    private void performPrinterTask2() {
+
+        mPrinter.setPrintMode(BtpConsts.PRINT_IN_BATCH);
+        mPrinter.resetPrinter();
+        mPrinter.setHighIntensity();
+        mPrinter.setAlignmentCenter();
+        mPrinter.setBold();
+        mPrinter.printTextLine("\nMY COMPANY BILL\n");
+        mPrinter.setRegular();
+        mPrinter.printTextLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        mPrinter.printLineFeed();
+        // Bill Header End
+
+        // Bill Details Start
+        Bill b = new Bill();
+        b.setCustomerName("Test Cust");
+        b.setCustomerOrderNo("0045");
+
+        mPrinter.setAlignmentLeft();
+        mPrinter.printTextLine("Customer Name     : " + b.getCustomerName() + "\n");
+        mPrinter.printTextLine("Customer Order ID : " + b.getCustomerOrderNo() + "\n");
+        mPrinter.printTextLine("------------------------------\n");
+        mPrinter.printTextLine("  Item      Quantity     Price\n");
+        mPrinter.printTextLine("------------------------------\n");
+        mPrinter.printTextLine("  Item 1          1       1.00\n");
+        mPrinter.printTextLine("  Bags           10    2220.00\n");
+        mPrinter.printTextLine("  Next Item     999   99999.00\n");
+        mPrinter.printLineFeed();
+        mPrinter.printTextLine("------------------------------\n");
+        mPrinter.printTextLine("  Total              107220.00\n");
+        mPrinter.printTextLine("------------------------------\n");
+        mPrinter.printLineFeed();
+        mPrinter.setBold();
+        mPrinter.printTextLine("    Thank you ! Visit Again   \n");
+        mPrinter.setRegular();
+        mPrinter.printLineFeed();
+        mPrinter.printTextLine("******************************\n");
+        mPrinter.printLineFeed();
+
+        mPrinter.printTextLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        mPrinter.printLineFeed();
+
+        mPrinter.setAlignmentCenter();
+
+        //Clearance for Paper tear
+        mPrinter.printLineFeed();
+        mPrinter.printLineFeed();
+        mPrinter.resetPrinter();
+
+        //print all commands
+        mPrinter.batchPrint();
+    }
+
+*/
+
+
+
+
+
+
+
+
 
 
 }

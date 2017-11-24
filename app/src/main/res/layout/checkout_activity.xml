@@ -454,7 +454,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/buttonColour"
-                    android:text="100"
+                    android:text="00"
                     android:textColor="#fff"
                     android:textSize="20dp" />
 
@@ -486,7 +486,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/colorPrimary"
                     android:text="CASH"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -500,7 +500,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/colorPrimary"
                     android:text="DC"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -513,7 +513,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/colorPrimary"
                     android:text="CC"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -526,7 +526,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/colorPrimary"
                     android:text="WALLET"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -697,8 +697,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:orientation="horizontal"
-                android:paddingBottom="30dp"
-                android:paddingTop="30dp">
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp">
 
                 <Button
                     android:id="@+id/mSave"
@@ -706,7 +706,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#0091EA"
-                    android:padding="16dp"
+
                     android:text="SAVE"
                     android:textColor="#fff"
                     android:textSize="15dp" />
@@ -717,7 +717,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#1B5E20"
-                    android:padding="16dp"
+
                     android:text="PRINT"
                     android:textColor="#fff"
                     android:textSize="15dp" />
@@ -728,7 +728,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="#FF5252"
-                    android:padding="16dp"
+
                     android:text="CANCEL"
                     android:textColor="#fff"
                     android:textSize="15dp" />

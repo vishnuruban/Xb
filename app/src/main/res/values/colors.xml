@@ -21,4 +21,6 @@
     <color name="black"> #000</color>
     <color name="toggle"> #4FC3F7</color>
 
+    <color name="light_grey"> #D3D3D3</color>
+
 </resources>

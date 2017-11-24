@@ -19,14 +19,13 @@
                 android:layout_width="403dp"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@+id/et_result"
-                android:layout_marginTop="20dp"
+
                 android:background="@color/keypadDialogheader"
                 android:ems="10"
                 android:gravity="center"
                 android:padding="20dp"
                 android:text="ITEM NAME"
                 android:textSize="16sp"
-                android:textStyle="bold"
                 android:textColor="#fff"></TextView>
 
             <android.support.design.widget.TextInputLayout

@@ -84,5 +84,11 @@ public class GetSettings {
     }
     public String getBillMaximumDiscountPercentage(){
         return getSharedPreferences().getString("key_settings_bill_discount_percentage","");
+
+    } //Print Settings
+    public String getPrintingPaperSize(){
+        return getSharedPreferences().getString("key_settings_printer_paper_size","");
     }
+
+
 }

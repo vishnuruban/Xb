@@ -140,7 +140,7 @@
 
 
                 <ImageButton
-                    android:id="@+id/imageButton1"
+                    android:id="@+id/selectCustomer"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.2"
