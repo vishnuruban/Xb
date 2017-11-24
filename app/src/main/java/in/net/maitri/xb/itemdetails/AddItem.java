@@ -65,20 +65,20 @@ public class AddItem extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.add_category, container, false);
+        final View view = inflater.inflate(R.layout.add_item, container, false);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
+        final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
+        final String selectedCategoryName = sharedPreferences.getString("catName", "");
+        final int selectedCategoryId = sharedPreferences.getInt("catId", 0);
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
-        dialogHeader.setText("Add Item");
+        String headerText = "Add Item to" + selectedCategoryName;
+        dialogHeader.setText(headerText);
 
         final LinearLayout newUomLayout = (LinearLayout) view.findViewById(R.id.new_uom_layout);
 
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
-        final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
-
-        String selectedCategoryName = sharedPreferences.getString("catName", "");
-        final int selectedCategoryId = sharedPreferences.getInt("catId", 0);
         dbHandler = new DbHandler(getActivity());
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
@@ -97,9 +97,9 @@ public class AddItem extends DialogFragment {
             }
         });
 
-        final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
-        categoryNameField.setText(selectedCategoryName);
-        categoryNameField.setEnabled(false);
+       // final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
+        //categoryNameField.setText(selectedCategoryName);
+       // categoryNameField.setEnabled(false);
         final EditText itemNameField = (EditText) view.findViewById(R.id.item_name);
         final EditText costPriceField = (EditText) view.findViewById(R.id.cp);
         final EditText sellingPriceField = (EditText) view.findViewById(R.id.sp);
@@ -127,11 +127,12 @@ public class AddItem extends DialogFragment {
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String catName = categoryNameField.getText().toString();
+                //String catName = categoryNameField.getText().toString();
+                String catName = selectedCategoryName;
                 String iteName = itemNameField.getText().toString();
                 String cp = costPriceField.getText().toString();
                 String sp = sellingPriceField.getText().toString();
-                String uoM;
+                String uoM ;
                 if (newUomField.isEnabled()) {
                     uoM = newUomField.getText().toString();
                 } else {
@@ -147,14 +148,11 @@ public class AddItem extends DialogFragment {
                         || gsT.isEmpty()
                         || hsn.isEmpty())) {
                     Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                } else if ((registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
+                } else if ((registrationType.equals("3") && ( iteName.isEmpty()
                         || cp.isEmpty()
-                        || sp.isEmpty()
-                        || uoM.isEmpty()))) {
+                        || sp.isEmpty()))) {
                     Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                } else if (uoM.equals("--Select Uom--") || uoM.isEmpty()) {
-                    Toast.makeText(getActivity(), "UOM field is empty.", Toast.LENGTH_SHORT).show();
-                } else {
+                }  else {
                     if (newUomField.isEnabled()) {
                         Unit unit = new Unit();
                         unit.setDesc(uoM);
@@ -168,8 +166,12 @@ public class AddItem extends DialogFragment {
                     if (gsT.isEmpty()){
                         gsT = "0";
                     }
+                    String uomValue = "0";
+                    if (!uoM.equals("--Select Uom--")){
+                        uomValue = String.valueOf(dbHandler.getUomId(uoM));
+                    }
                     copyImage();
-                    addItem(iteName, String.valueOf(dbHandler.getUomId(uoM)), Float.valueOf(cp), Float.valueOf(sp), hsn, Float.valueOf(gsT), selectedCategoryId);
+                    addItem(iteName, uomValue, Float.valueOf(cp), Float.valueOf(sp), hsn, Float.valueOf(gsT), selectedCategoryId);
                     mAddItemCategory.updateItem(selectedCategoryId);
                 }
             }
