@@ -67,18 +67,19 @@ public class EditItem extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.add_category, container, false);
+        View view =  inflater.inflate(R.layout.add_item, container, false);
+
+        Bundle bundle = getArguments();
+        final Item item = (Item) bundle.getSerializable("itemObj");
+        final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText("Edit Item");
         final LinearLayout newUomLayout = (LinearLayout) view.findViewById(R.id.new_uom_layout);
-        Bundle bundle = getArguments();
-        final Item item = (Item) bundle.getSerializable("itemObj");
-        final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
         LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
-        String selectedCategoryName = sharedPreferences.getString("catName", "");
+        final String selectedCategoryName = sharedPreferences.getString("catName", "");
         dbHandler = new DbHandler(getActivity());
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
@@ -97,9 +98,6 @@ public class EditItem extends DialogFragment {
             }
         });
         final Switch decimalAllowed = (Switch) view.findViewById(R.id.decimal_allowed);
-        final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
-        categoryNameField.setText(selectedCategoryName);
-        categoryNameField.setEnabled(false);
         final EditText itemNameField = (EditText) view.findViewById(R.id.item_name);
         if (item != null) {
             itemNameField.setText(item.getItemName());
@@ -152,7 +150,7 @@ public class EditItem extends DialogFragment {
             @Override
             public void onClick(View view) {
 
-                String catName = categoryNameField.getText().toString();
+                String catName = selectedCategoryName;
                 String iteName =itemNameField.getText().toString();
                 String cp= costPriceField.getText().toString();
                 String sp = sellingPriceField.getText().toString();
@@ -173,10 +171,9 @@ public class EditItem extends DialogFragment {
                         || gsT.isEmpty()
                         || hsn.isEmpty())) {
                     Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                } else if (registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
+                } else if (registrationType.equals("3") && (iteName.isEmpty()
                         || cp.isEmpty()
-                        || sp.isEmpty()
-                        || uoM.isEmpty())){
+                        || sp.isEmpty())){
                     Toast.makeText(getActivity(),"Enter all the fields.", Toast.LENGTH_SHORT).show();
                 }else{
                     if (mSelectedImage != null) {
@@ -202,11 +199,15 @@ public class EditItem extends DialogFragment {
                     if (gsT.isEmpty()){
                         gsT = "0";
                     }
+                    String uomValue = "0";
+                    if (!uoM.equals("--Select Uom--")){
+                        uomValue = String.valueOf(dbHandler.getUomId(uoM));
+                    }
                     item1.setItemImage(mImagePath);
                     item1.setItemName(iteName);
                     item1.setItemCP(Float.parseFloat(cp));
                     item1.setItemSP(Float.parseFloat(sp));
-                    item1.setItemUOM(String.valueOf(dbHandler.getUomId(uoM)));
+                    item1.setItemUOM(uomValue);
                     Log.d("UOM", uoM);
                     item1.setItemHSNcode(hsn);
                     item1.setItemGST(Float.parseFloat(gsT));
