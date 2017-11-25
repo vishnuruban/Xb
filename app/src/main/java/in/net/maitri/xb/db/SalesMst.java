@@ -7,15 +7,25 @@ public class SalesMst {
     private String paymentMode;
     private String paymentDet;
     private String status;
-    private float qty;
-    private float netAmt;
-    private float discount;
+    private double qty;
+    private double netAmt;
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    private double discount;
+    private String dateTime;
 
     public SalesMst() {
     }
 
-    public SalesMst(int date, int customerId, float qty,
-                    float netAmt, float discount, String salesPerson, String paymentMode,
+    public SalesMst(int date, int customerId, double qty,
+                    double netAmt, double discount, String salesPerson, String paymentMode,
                     String paymentDet, String status) {
 
         this.date = date;
@@ -29,8 +39,8 @@ public class SalesMst {
         this.status = status;
     }
 
-    public SalesMst(int billNO, int date, int customerId, float qty,
-                    float netAmt, float discount, String salesPerson, String paymentMode,
+    public SalesMst(int billNO, int date, int customerId, double qty,
+                    double netAmt, double discount, String salesPerson, String paymentMode,
                     String paymentDet, String status) {
         this.billNO = billNO;
         this.date = date;
@@ -85,27 +95,27 @@ public class SalesMst {
         this.paymentMode = paymentMode;
     }
 
-    public float getQty() {
+    public double getQty() {
         return qty;
     }
 
-    public void setQty(float qty) {
+    public void setQty(double qty) {
         this.qty = qty;
     }
 
-    public float getNetAmt() {
+    public double getNetAmt() {
         return netAmt;
     }
 
-    public void setNetAmt(float netAmt) {
+    public void setNetAmt(double netAmt) {
         this.netAmt = netAmt;
     }
 
-    public float getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(float discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 

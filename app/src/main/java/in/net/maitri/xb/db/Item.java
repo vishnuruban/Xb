@@ -9,10 +9,10 @@ public class Item implements Serializable {
     private String itemName;
     private String itemImage;
     private String itemUOM;
-    private float itemCP;
-    private float itemSP;
+    private double itemCP;
+    private double itemSP;
     private String itemHSNcode;
-    private float itemGST;
+    private double itemGST;
 
     public int getId() {
         return id;
@@ -44,19 +44,19 @@ public class Item implements Serializable {
         this.itemUOM = itemUOM;
     }
 
-    public float getItemCP() {
+    public double getItemCP() {
         return itemCP;
     }
 
-    public void setItemCP(float itemCP) {
+    public void setItemCP(double itemCP) {
         this.itemCP = itemCP;
     }
 
-    public float getItemSP() {
+    public double getItemSP() {
         return itemSP;
     }
 
-    public void setItemSP(float itemSP) {
+    public void setItemSP(double itemSP) {
         this.itemSP = itemSP;
     }
 
@@ -76,11 +76,11 @@ public class Item implements Serializable {
         this.itemHSNcode = itemHSNcode;
     }
 
-    public float getItemGST() {
+    public double getItemGST() {
         return itemGST;
     }
 
-    public void setItemGST(float itemGST) {
+    public void setItemGST(double itemGST) {
         this.itemGST = itemGST;
     }
 
@@ -92,8 +92,8 @@ public class Item implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public Item(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode,
-                float itemGST, int categoryId, String itemImage) {
+    public Item(String itemName, String itemUOM, double itemCP, double itemSP, String itemHSNcode,
+                double itemGST, int categoryId, String itemImage) {
         this.itemName = itemName;
         this.itemImage = itemImage;
         this.itemUOM = itemUOM;

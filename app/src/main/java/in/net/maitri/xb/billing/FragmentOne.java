@@ -9,13 +9,18 @@ import android.content.Intent;
 import android.graphics.Color;
 
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -32,7 +37,7 @@ import in.net.maitri.xb.R;
  * Created by SYSRAJ4 on 10/11/2017.
  */
 
-public class FragmentOne extends Fragment {
+public class FragmentOne extends Fragment implements View.OnClickListener {
 
 
     Button mCheckout,mclearBill;
@@ -41,8 +46,10 @@ public class FragmentOne extends Fragment {
     private static BillListAdapter billListAdapter;
     private static TextView bTotalProducts,bTotalPrice;
     static DecimalFormat df,df1;
-
-    static double a = 0;
+    Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
+            btn_eight, btn_nine, btn_zero, btn_point, btn_clear;
+    TextInputEditText eQty;
+  static double a = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -101,7 +108,9 @@ public class FragmentOne extends Fragment {
                     bundle.putString("price",String.valueOf(df.format(a)));
                     Intent intent = new Intent(getActivity(), CheckoutActivity.class);
                     intent.putExtras(bundle);
+
                     startActivity(intent);
+
                 }
 
             }
@@ -192,10 +201,11 @@ public class FragmentOne extends Fragment {
 
 
     private static void UpdateProdPriceList(){
-
+        double b =0;
         String rs = "\u20B9";
         try{
         byte[] utf8 = rs.getBytes("UTF-8");
+
 
         rs = new String(utf8, "UTF-8");}
         catch (UnsupportedEncodingException e)
@@ -203,18 +213,24 @@ public class FragmentOne extends Fragment {
             e.printStackTrace();
         }
 
-
+        bTotalProducts.setText("");
         bTotalProducts.setText("Products   "+billList.size());
 
         for(int i =0;i<billList.size();i++)
         {
             BillItems bi= billList.get(i);
 
-             a  = a + bi.getAmount();
+             b  = b + bi.getAmount();
         }
 
-
-        bTotalPrice.setText("Price("+rs+")   "+commaSeperated(a));
+        if(b==0)
+        {
+            bTotalPrice.setText("Price("+rs+")   "+"");
+        }
+        else {
+            a=b;
+            bTotalPrice.setText("Price(" + rs + ")   " + commaSeperated(b));
+        }
 
     }
 
@@ -244,14 +260,45 @@ public class FragmentOne extends Fragment {
 
         // You have to list down your form elements
 
-
         final RadioGroup billModifyGroup = (RadioGroup) formElementsView
                 .findViewById(R.id.billModifyGroup);
-
-        final TextInputEditText eQty = (TextInputEditText) formElementsView
+       final LinearLayout lGrid = (LinearLayout) formElementsView.findViewById(R.id.grid);
+        eQty = (TextInputEditText) formElementsView
                 .findViewById(R.id.eQty);
-        eQty.setVisibility(View.INVISIBLE);
+        eQty.addTextChangedListener(watch);
+        eQty.requestFocus();
 
+
+
+        btn_one = (Button) formElementsView.findViewById(R.id.btn_one);
+        btn_two = (Button) formElementsView.findViewById(R.id.btn_two);
+        btn_three = (Button) formElementsView.findViewById(R.id.btn_three);
+        btn_four = (Button) formElementsView.findViewById(R.id.btn_four);
+        btn_five = (Button) formElementsView.findViewById(R.id.btn_five);
+        btn_six = (Button) formElementsView.findViewById(R.id.btn_six);
+        btn_seven = (Button) formElementsView.findViewById(R.id.btn_seven);
+        btn_eight = (Button) formElementsView.findViewById(R.id.btn_eight);
+        btn_nine = (Button) formElementsView.findViewById(R.id.btn_nine);
+        btn_zero = (Button) formElementsView.findViewById(R.id.btn_zero);
+        btn_point = (Button) formElementsView.findViewById(R.id.btn_point);
+        btn_clear = (Button) formElementsView.findViewById(R.id.btn_clear);
+
+        btn_one.setOnClickListener(this);
+        btn_two.setOnClickListener(this);
+        btn_three.setOnClickListener(this);
+        btn_four.setOnClickListener(this);
+        btn_five.setOnClickListener(this);
+        btn_six.setOnClickListener(this);
+        btn_seven.setOnClickListener(this);
+        btn_eight.setOnClickListener(this);
+        btn_nine.setOnClickListener(this);
+        btn_zero.setOnClickListener(this);
+        btn_point.setOnClickListener(this);
+
+        btn_clear.setOnClickListener(this);
+        eQty.setVisibility(View.GONE);
+        lGrid.setVisibility(View.GONE);
+        disableSoftInputFromAppearing(eQty);
 
 
         billModifyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -261,11 +308,15 @@ public class FragmentOne extends Fragment {
 
 
                         if (checkedId == R.id.delete) {
-                            eQty.setVisibility(View.INVISIBLE);
+                            eQty.setVisibility(View.GONE);
+                            lGrid.setVisibility(View.GONE);
                         } else if (checkedId == R.id.cQty) {
                             //some code
+                            eQty.requestFocus();
                             eQty.setVisibility(View.VISIBLE);
+                            lGrid.setVisibility(View.VISIBLE);
                             eQty.setText(String.valueOf(bi.getQty()));
+                            eQty.setSelection(eQty.getText().length());
                         }
                     }
                 });
@@ -322,6 +373,121 @@ public class FragmentOne extends Fragment {
 
 
     }
+
+
+
+
+
+
+    public static void disableSoftInputFromAppearing(TextInputEditText editText) {
+        if (Build.VERSION.SDK_INT >= 11) {
+            editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+            editText.setTextIsSelectable(true);
+        } else {
+            editText.setRawInputType(InputType.TYPE_NULL);
+            editText.setFocusable(true);
+        }
+    }
+
+
+
+
+    @Override
+    public void onClick(View view) {
+        switch(view.getId()) {
+
+            case R.id.btn_one:
+
+                eQty.setText(eQty.getText().toString() + btn_one.getText().toString());
+                break;
+
+            case R.id.btn_two:
+
+                eQty.setText(eQty.getText().toString() + btn_two.getText().toString());
+                break;
+
+            case R.id.btn_three:
+                eQty.setText(eQty.getText().toString() + btn_three.getText().toString());
+                break;
+
+            case R.id.btn_four:
+
+                eQty.setText(eQty.getText().toString() + btn_four.getText().toString());
+                break;
+
+            case R.id.btn_five:
+
+                eQty.setText(eQty.getText().toString() + btn_five.getText().toString());
+                break;
+
+            case R.id.btn_six:
+
+                eQty.setText(eQty.getText().toString() + btn_six.getText().toString());
+                break;
+
+            case R.id.btn_seven:
+
+                eQty.setText(eQty.getText().toString() + btn_seven.getText().toString());
+                break;
+
+            case R.id.btn_eight:
+                eQty.setText(eQty.getText().toString() + btn_eight.getText().toString());
+                break;
+
+            case R.id.btn_nine:
+
+                eQty.setText(eQty.getText().toString() + btn_nine.getText().toString());
+                break;
+
+            case R.id.btn_zero:
+
+                eQty.setText(eQty.getText().toString() + btn_zero.getText().toString());
+                break;
+
+            case R.id.btn_point:
+
+                eQty.setText(eQty.getText().toString() + btn_point.getText().toString());
+                break;
+
+            case R.id.btn_clear:
+                int length = eQty.getText().length();
+                if (length > 0) {
+                    eQty.getText().delete(length - 1, length);
+                }
+                //  et_result.setText("");
+                break;
+    }}
+
+
+
+
+
+
+    TextWatcher watch = new TextWatcher() {
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+
+            String searchString = s.toString();
+            int textLength = searchString.length();
+            eQty.setSelection(textLength);
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int a, int b, int c) {
+            // TODO Auto-generated method stub
+
+
+        }
+    };
 
 
 

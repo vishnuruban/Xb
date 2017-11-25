@@ -308,11 +308,11 @@
 
 
                 <TextView
+                    android:id="@+id/cPrintstatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_columnSpan="5"
                     android:gravity="right"
-                    android:id="@+id/cPrintstatus"
                     android:text="prini status" />
 
                 <Button
@@ -538,10 +538,11 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/grid"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -627,6 +628,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/checkout_edittext"
+                    android:maxLength="12"
                     android:padding="12dp"
                     android:text=''
                     android:textColor="#000"
@@ -639,33 +641,6 @@
                 android:layout_height="10dp"
                 android:background="#fff" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="12dp"
-                    android:text="Mobile Number"
-                    android:textColor="@color/colorCell"
-                    android:textSize="15dp" />
-
-
-                <EditText
-                    android:id="@+id/textView9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/checkout_edittext"
-                    android:padding="12dp"
-                    android:text=''
-                    android:textColor="#000"
-                    android:textSize="15dp" />
-            </LinearLayout>
-
 
             <View
                 android:layout_width="match_parent"
@@ -673,6 +648,7 @@
                 android:background="#fff" />
 
             <LinearLayout
+                android:id="@+id/layoutBalance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -691,55 +667,45 @@
             </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/grid"
+            android:orientation="horizontal"
+          android:layout_margin="20dp" >
+
+            <Button
+                android:id="@+id/cSave"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:orientation="horizontal"
-                android:paddingBottom="20dp"
-                android:paddingTop="20dp">
+                android:layout_weight="1"
+                android:background="#0091EA"
+                android:text="SAVE "
+                android:textColor="#fff"
+                android:textSize="15dp" />
 
-                <Button
-                    android:id="@+id/mSave"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#0091EA"
-
-                    android:text="SAVE"
-                    android:textColor="#fff"
-                    android:textSize="15dp" />
-
-                <Button
-                    android:id="@+id/cPrint"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#1B5E20"
-
-                    android:text="PRINT"
-                    android:textColor="#fff"
-                    android:textSize="15dp" />
-
-                <Button
-                    android:id="@+id/mCancel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="#FF5252"
-
-                    android:text="CANCEL"
-                    android:textColor="#fff"
-                    android:textSize="15dp" />
-            </LinearLayout>
 
             <View
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:background="@android:color/black" />
+                android:layout_weight="0.1"
+              />
 
+
+            <Button
+                android:id="@+id/cCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#FF5252"
+                android:text="CANCEL"
+                android:textColor="#fff"
+                android:textSize="15dp" />
         </LinearLayout>
+
     </RelativeLayout>
 
 

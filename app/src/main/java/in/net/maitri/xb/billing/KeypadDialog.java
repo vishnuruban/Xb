@@ -6,12 +6,17 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DecimalFormat;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Item;
@@ -51,7 +56,13 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
 
         initializeVars();
         disableSoftInputFromAppearing(et_result);
+
+       DecimalFormat df = new DecimalFormat("0.00");
         tv_itemName.setText(bItem.getItemName());
+
+        et_result.setText(df.format(bItem.getItemSP()));
+        et_result.addTextChangedListener(watch);
+        et_result.setSelection(et_result.getText().length());
     }
 
     @Override
@@ -111,70 +122,86 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         switch(view.getId()) {
 
             case R.id.btn_one:
+
                 et_result.setText(et_result.getText().toString() + btn_one.getText().toString());
                 break;
 
             case R.id.btn_two:
+
                 et_result.setText(et_result.getText().toString() + btn_two.getText().toString());
                 break;
 
             case R.id.btn_three:
-                et_result.setText(et_result.getText().toString() + btn_three.getText().toString());
+                 et_result.setText(et_result.getText().toString() + btn_three.getText().toString());
                 break;
 
             case R.id.btn_four:
+
                 et_result.setText(et_result.getText().toString() + btn_four.getText().toString());
                 break;
 
             case R.id.btn_five:
+
                 et_result.setText(et_result.getText().toString() + btn_five.getText().toString());
                 break;
 
             case R.id.btn_six:
+
                 et_result.setText(et_result.getText().toString() + btn_six.getText().toString());
                 break;
 
             case R.id.btn_seven:
+
                 et_result.setText(et_result.getText().toString() + btn_seven.getText().toString());
                 break;
 
             case R.id.btn_eight:
+
                 et_result.setText(et_result.getText().toString() + btn_eight.getText().toString());
                 break;
 
             case R.id.btn_nine:
+
                 et_result.setText(et_result.getText().toString() + btn_nine.getText().toString());
                 break;
 
             case R.id.btn_zero:
+
                 et_result.setText(et_result.getText().toString() + btn_zero.getText().toString());
                 break;
 
             case R.id.btn_point:
+
                 et_result.setText(et_result.getText().toString() + btn_point.getText().toString());
                 break;
 
             case R.id.btn_clear:
-                et_result.setText("");
+
+                int length = et_result.getText().length();
+                if (length > 0) {
+                    et_result.getText().delete(length - 1, length);
+                }
+              //  et_result.setText("");
                 break;
             case R.id.btn_ok:
 
-                if(et_result.getText().toString().isEmpty())
+                if(et_result.getText().toString().isEmpty() || et_result.getText().toString().startsWith("."))
                 {
-                    Toast.makeText(c,"Please enter quantity",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c,"Please enter valid price",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                int qty = Integer.parseInt(et_result.getText().toString());
+                double price = Double.parseDouble(
+                        et_result.getText().toString());
 
-                if(qty == 0 )
+                if(price == 0 )
                 {
                     Toast.makeText(c,"Please enter valid quantity",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                double price =  qty * bItem.getItemSP();
-                billItems = new BillItems(bItem.getItemName(),qty,bItem.getItemSP(),price);
+              //  double price =  qty * bItem.getItemSP();
+                billItems = new BillItems(bItem.getCategoryId(),bItem.getId(),bItem.getItemName(),1,price,price);
                 Toast.makeText(c,et_result.getText().toString(),Toast.LENGTH_SHORT).show();
                 FragmentOne.populateList(billItems);
                 FragmentThree.dismissDialog();
@@ -189,6 +216,31 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         }
 
 
+    TextWatcher watch = new TextWatcher() {
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
+
+            String searchString = s.toString();
+            int textLength = searchString.length();
+            et_result.setSelection(textLength);
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int a, int b, int c) {
+            // TODO Auto-generated method stub
+
+
+        }
+    };
 
     public static void disableSoftInputFromAppearing(TextInputEditText editText) {
         if (Build.VERSION.SDK_INT >= 11) {

@@ -21,7 +21,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -73,6 +73,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_CUSTOMER = "sm_customer";
     private static final String KEY_SM_SALESMAN = "sm_salesman";
     private static final String KEY_SM_CREATED_AT = "sm_createdAt";
+    private static final String KEY_SM_DATETIME = "sm_datetime";
     // sales mst table name
     private static final String SALES_DET_TABLE_NAME = "SalesDet";
     // sales mst table column names
@@ -81,6 +82,8 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SD_CATEGORY = "sd_category";
     private static final String KEY_SD_ITEM = "sd_item";
     private static final String KEY_SD_QTY = "sd_qty";
+    private static final String KEY_SD_RATE = "sd_rate";
+    private static final String KEY_SD_AMOUNT = "sd_amount";
     private static final String KEY_SD_CREATED_AT = "sd_createdAt";
     // sales mst table name
     private static final String SYSSPEC_TABLE_NAME = "SysSpec";
@@ -140,9 +143,10 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SM_DISCOUNT + " FLOAT,"
                 + KEY_SM_SALESMAN + " TEXT,"
                 + KEY_SM_CUSTOMER + " INTEGER,"
-                + KEY_SM_PAYMENT_MODE + " TEXT"
-                + KEY_SM_PAYMENT_DET + " TEXT"
-                + KEY_SM_STATUS + " TEXT"
+                + KEY_SM_PAYMENT_MODE + " TEXT,"
+                + KEY_SM_PAYMENT_DET + " TEXT,"
+                + KEY_SM_STATUS + " TEXT,"
+                + KEY_SM_DATETIME + " TEXT,"
                 + KEY_SM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_SALES_MST_TABLE);
 
@@ -152,6 +156,8 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SD_CATEGORY + " FLOAT,"
                 + KEY_SD_ITEM + " FLOAT,"
                 + KEY_SD_QTY + " FLOAT,"
+                + KEY_SD_RATE + " FLOAT,"
+                + KEY_SD_AMOUNT + " FLOAT,"
                 + KEY_SD_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
                 + " FOREIGN KEY (" + KEY_SD_BILL_NO + ") REFERENCES " + SALES_DET_TABLE_NAME + "(" + KEY_SM_BILL_NO + "))";
         db.execSQL(CREATE_SALES_DET_TABLE);
@@ -169,9 +175,11 @@ public class DbHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion) {
-            db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
-        }
+      //  if (newVersion > oldVersion) {
+         //   db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
+       // }
+
+        db.execSQL("DROP TABLE IF EXISTS " +  SALES_MST_TABLE_NAME);
         onCreate(db);
     }
 
@@ -235,6 +243,48 @@ public class DbHandler extends SQLiteOpenHelper {
         // return category list
         return categoryList;
     }
+
+
+
+
+    public int  getDateCount(String date) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String query = "Select Cast ((JulianDay('"+date+"') - JulianDay('1900-01-01')) As Integer) as date";
+
+            Cursor cursor = db.rawQuery(query,null);
+            if (cursor != null)
+                cursor.moveToFirst();
+
+            int c =cursor.getInt(0);
+
+            cursor.close();
+            // return category
+            return c;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return 0;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Updating single category
     public int updatecategory(Category category) {
@@ -495,12 +545,15 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-    public void addSalesMst(SalesMst salesMst) {
+    public long addSalesMst(SalesMst salesMst) {
+        long result = 0;
+
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_SM_BILL_NO, salesMst.getBillNO());
             cv.put(KEY_SM_DATE, salesMst.getDate());
+            cv.put(KEY_SM_DATETIME, salesMst.getDateTime());
             cv.put(KEY_SM_QTY, salesMst.getQty());
             cv.put(KEY_SM_NET_AMT, salesMst.getNetAmt());
             cv.put(KEY_SM_DISCOUNT, salesMst.getDiscount());
@@ -509,26 +562,34 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_PAYMENT_MODE, salesMst.getPaymentMode());
             cv.put(KEY_SM_PAYMENT_DET, salesMst.getPaymentDet());
             cv.put(KEY_SM_STATUS, salesMst.getStatus());
-            db.insert(SALES_MST_TABLE_NAME, null, cv);
-            db.close();
+            result =   db.insert(SALES_MST_TABLE_NAME, null, cv);
+         db.close();
+            return result;
         } catch (SQLException e) {
             createErrorDialog(e.toString());
         }
+        return  result;
     }
 
-    public void addSalesDet(SalesDet salesDet) {
+    public long addSalesDet(SalesDet salesDet) {
+
+
+        long result = 0;
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_SD_BILL_NO, salesDet.getBillNo());
-            cv.put(KEY_SD_CATEGORY, salesDet.getCategory());
-            cv.put(KEY_SD_ITEM, salesDet.getItem());
-            cv.put(KEY_SD_QTY, salesDet.getQty());
-            db.insert(SALES_DET_TABLE_NAME, null, cv);
+            cv.put(KEY_SD_CATEGORY, salesDet.billItems.getCat_id());
+            cv.put(KEY_SD_ITEM, salesDet.billItems.getItem_id());
+            cv.put(KEY_SD_QTY, salesDet.billItems.getQty());
+            cv.put(KEY_SD_RATE, salesDet.billItems.getRate());
+            cv.put(KEY_SD_AMOUNT,salesDet.billItems.getAmount());
+           result = db.insert(SALES_DET_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
         }
+        return  result;
     }
 
     public void addSysSpec(SysSpec sysSpec) {
