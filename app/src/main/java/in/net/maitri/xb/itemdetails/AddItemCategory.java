@@ -30,6 +30,7 @@ import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.reports.TotalSales;
 import in.net.maitri.xb.settings.SettingsActivity;
 import in.net.maitri.xb.util.Permissions;
 
@@ -292,6 +293,10 @@ public class AddItemCategory extends AppCompatActivity {
 
             case R.id.customers:
                 startActivity(new Intent(AddItemCategory.this, CustomerDetail.class));
+                break;
+
+            case R.id.sales_report:
+                startActivity(new Intent(AddItemCategory.this, TotalSales.class));
                 break;
 
             case android.R.id.home:

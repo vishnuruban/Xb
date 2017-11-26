@@ -23,4 +23,22 @@
 
     <color name="light_grey"> #D3D3D3</color>
 
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="listView">#EEEEEE</color>
+    <color name="listViewSelcted">#FFFFFF</color>
+    <color name="blueGrey">#009688</color>
+    <color name="blue">#01579B</color>
+    <color name="blueGreyDarker">#2B606C</color>
+    <color name="darkRed">#7C0317</color>
+    <color name="lightRed">#AB031E</color>
+    <color name="darkpink">#6D0633</color>
+    <color name="lightpink">#9F0A4B</color>
+    <color name="darkBrown">#682903</color>
+    <color name="lightBrown">#9F3F04</color>
+    <color name="darkskyBlue">#18789F</color>
+    <color name="lightskyBlue">#1D94C5</color>
+
+    <color name="longClick">#9BDEFA</color>
+
 </resources>

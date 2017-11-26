@@ -7,8 +7,13 @@
         android:title="Customers" />
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/sales_report"
         android:orderInCategory="101"
+        android:title="Sales Report"/>
+
+    <item
+        android:id="@+id/settings"
+        android:orderInCategory="102"
         android:title="Settings" />
 
 </menu>

@@ -99,6 +99,9 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<Category> categoryList = new ArrayList<>();
     private List<Customer> customerList = new ArrayList<>();
     private List<Unit> unitList = new ArrayList<>();
+    private List<ReportData> totalCategory = new ArrayList<>();
+    private List<ReportData> totalItem = new ArrayList<>();
+    private List<ReportData> totalReport = new ArrayList<>();
 
     // Creating Tables
     @Override
@@ -591,6 +594,105 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return  result;
     }
+
+    public List<ReportData> getTotalReport(int fromDate, int toDate) {
+        totalReport.clear();
+        try {
+            String selectQuery = "SELECT cast(SUM(SD." + KEY_SD_QTY + ")as text) AS sQTY, "
+                    + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE, "
+                    + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
+                    + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
+                    + " INNER JOIN " + CATEGORY_TABLE_NAME + " AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
+                    + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
+                    + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
+            Log.d("Query", selectQuery);
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    ReportData reportData = new ReportData();
+                    reportData.setrDescription("Grand Total");
+                    reportData.setrQty(c.getString(c.getColumnIndex("sQTY")));
+                    reportData.setrMrp(c.getString(c.getColumnIndex("sRATE")));
+                    reportData.setrNetSales(c.getString(c.getColumnIndex("sAMT")));
+                    totalReport.add(reportData);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return totalReport;
+    }
+
+    public List<ReportData> getTotalCategoryReport(int fromDate, int toDate){
+        totalCategory.clear();
+        try {
+            String selectQuery = "SELECT CAT." + KEY_CAT_NAME
+                    + ", cast(SUM(SD."+ KEY_SD_QTY + ")as text) AS sQTY, "
+                    + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE, "
+                    + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
+                    + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
+                    + " INNER JOIN " + CATEGORY_TABLE_NAME +" AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
+                    + " INNER JOIN " + SALES_MST_TABLE_NAME+" AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
+                    + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate
+                    + " GROUP BY CAT." + KEY_CAT_NAME ;
+            Log.d("Query", selectQuery);
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    ReportData reportData = new ReportData();
+                    reportData.setrDescription(c.getString(c.getColumnIndex(KEY_CAT_NAME)));
+                    reportData.setrCategory(c.getString(c.getColumnIndex(KEY_CAT_NAME)));
+                    reportData.setrQty(c.getString(c.getColumnIndex("sQTY")));
+                    reportData.setrMrp(c.getString(c.getColumnIndex("sRATE")));
+                    reportData.setrNetSales(c.getString(c.getColumnIndex("sAMT")));
+                    totalCategory.add(reportData);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return totalCategory;
+    }
+
+    public List<ReportData> getTotalItemReport(int fromDate, int toDate){
+        totalItem.clear();
+        try {
+            String selectQuery = "SELECT CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME
+                    + ", cast(SUM(SD."+ KEY_SD_QTY + ")as text) AS sQTY, "
+                    + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE, "
+                    + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
+                    + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
+                    + " INNER JOIN " + CATEGORY_TABLE_NAME +" AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
+                    + " INNER JOIN " + ITEM_TABLE_NAME +" AS ITM ON ITM." + KEY_ITEM_ID+ " = SD." + KEY_SD_ITEM
+                    + " INNER JOIN " + SALES_MST_TABLE_NAME+" AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
+                    + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate
+                    + " GROUP BY CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME;
+            Log.d("Query", selectQuery);
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    ReportData reportData = new ReportData();
+                    reportData.setrDescription(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+                    reportData.setrCategory(c.getString(c.getColumnIndex(KEY_CAT_NAME)));
+                    reportData.setrItem(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+                    reportData.setrQty(c.getString(c.getColumnIndex("sQTY")));
+                    reportData.setrMrp(c.getString(c.getColumnIndex("sRATE")));
+                    reportData.setrNetSales(c.getString(c.getColumnIndex("sAMT")));
+                    totalItem.add(reportData);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return totalItem;
+    }
+
 
     public void addSysSpec(SysSpec sysSpec) {
         try {
