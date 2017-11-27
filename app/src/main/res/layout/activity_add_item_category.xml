@@ -93,12 +93,13 @@
             android:layout_alignParentEnd="true"
             android:src="@android:drawable/ic_input_add"/>
 
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:id="@+id/billScreen"
-            android:text="GO"
+            android:src=""
+            android:text="PROCCED"
             />
 
     </RelativeLayout>

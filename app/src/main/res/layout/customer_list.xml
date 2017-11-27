@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+
+
+
+
+    <LinearLayout
+        android:id="@+id/qty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+
+        android:layout_gravity = "center"
+        >
+
+        <Button
+            android:id="@+id/tv_itemName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+           android:layout_margin="10dp"
+            android:background="@color/keypadDialogheader"
+            android:ems="10"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="ADD NEW CUSTOMER"
+            android:textSize="16sp"
+            android:textColor="#fff"></Button>
+
+        </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:weightSum="1">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.75"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:hint="SEARCH CUSTOMER" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.25"
+            android:layout_marginTop="5dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/etSearchType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="SEARCH BY" />
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvCustomers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:dividerHeight="1dip"
+        android:divider="@color/light_grey"
+
+        ></ListView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:weightSum="1">
+
+        <Button
+            android:id="@+id/cuCancel"
+            android:background="@color/cancel"
+            android:layout_width="0dp"
+            android:layout_weight="0.48"
+            android:textColor="#fff"
+            android:text="CANCEL"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+        </Button>
+        <view
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.04"
+            android:background="#fff"/>
+
+        <Button
+            android:id="@+id/cuOk"
+            android:layout_width="0dp"
+            android:background="@color/ok"
+            android:layout_weight="0.48"
+            android:text="OK"
+            android:textColor="#fff"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+        </Button>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>
