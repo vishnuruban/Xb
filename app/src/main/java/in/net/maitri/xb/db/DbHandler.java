@@ -21,7 +21,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -82,6 +82,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SD_CATEGORY = "sd_category";
     private static final String KEY_SD_ITEM = "sd_item";
     private static final String KEY_SD_QTY = "sd_qty";
+    private static final String KEY_SD_NET_RATE = "sd_net_rate";
     private static final String KEY_SD_RATE = "sd_rate";
     private static final String KEY_SD_AMOUNT = "sd_amount";
     private static final String KEY_SD_CREATED_AT = "sd_createdAt";
@@ -159,6 +160,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SD_CATEGORY + " FLOAT,"
                 + KEY_SD_ITEM + " FLOAT,"
                 + KEY_SD_QTY + " FLOAT,"
+                + KEY_SD_NET_RATE + " FLOAT,"
                 + KEY_SD_RATE + " FLOAT,"
                 + KEY_SD_AMOUNT + " FLOAT,"
                 + KEY_SD_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
@@ -183,6 +185,7 @@ public class DbHandler extends SQLiteOpenHelper {
        // }
 
         db.execSQL("DROP TABLE IF EXISTS " +  SALES_MST_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " +  SALES_DET_TABLE_NAME);
         onCreate(db);
     }
 
@@ -269,22 +272,6 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return 0;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -586,6 +573,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SD_ITEM, salesDet.billItems.getItem_id());
             cv.put(KEY_SD_QTY, salesDet.billItems.getQty());
             cv.put(KEY_SD_RATE, salesDet.billItems.getRate());
+            cv.put(KEY_SD_NET_RATE,salesDet.billItems.getNet_rate());
             cv.put(KEY_SD_AMOUNT,salesDet.billItems.getAmount());
            result = db.insert(SALES_DET_TABLE_NAME, null, cv);
             db.close();

@@ -174,7 +174,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
           {
               BillItems bItm = billList.get(i);
 
-              if(bItm.getDesc().equals(be.getDesc()))
+              if(bItm.getDesc().equals(be.getDesc()) && bItm.getRate() == be.getRate())
               {
               System.out.println("Items Equalled");
                   int qty = bItm.getQty() + be.getQty();

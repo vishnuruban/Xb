@@ -201,7 +201,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 }
 
               //  double price =  qty * bItem.getItemSP();
-                billItems = new BillItems(bItem.getCategoryId(),bItem.getId(),bItem.getItemName(),1,price,price);
+                billItems = new BillItems(bItem.getCategoryId(),bItem.getId(),bItem.getItemName(),1,bItem.getItemSP(),price,price);
                 Toast.makeText(c,et_result.getText().toString(),Toast.LENGTH_SHORT).show();
                 FragmentOne.populateList(billItems);
                 FragmentThree.dismissDialog();
@@ -214,6 +214,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         }
 
         }
+
 
 
     TextWatcher watch = new TextWatcher() {
@@ -242,6 +243,9 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         }
     };
 
+
+
+
     public static void disableSoftInputFromAppearing(TextInputEditText editText) {
         if (Build.VERSION.SDK_INT >= 11) {
             editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
@@ -251,4 +255,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
             editText.setFocusable(true);
         }
     }
+
+
+
 }

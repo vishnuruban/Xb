@@ -9,6 +9,8 @@ public class BillItems {
 
     private String desc;
 
+    private double net_rate;
+
     public int getCat_id() {
         return cat_id;
     }
@@ -28,13 +30,22 @@ public class BillItems {
     private int qty;
     private double rate;
 
-    public BillItems( int cat_id, int item_id,String desc, int qty, double rate, double amount) {
+    public BillItems( int cat_id, int item_id,String desc, int qty,double net_rate, double rate, double amount) {
         this.desc = desc;
         this.qty = qty;
         this.rate = rate;
         this.cat_id = cat_id;
         this.item_id = item_id;
         this.amount = amount;
+        this.net_rate = net_rate;
+    }
+
+    public double getNet_rate() {
+        return net_rate;
+    }
+
+    public void setNet_rate(double net_rate) {
+        this.net_rate = net_rate;
     }
 
     private int cat_id;

@@ -11,6 +11,16 @@ public class Item implements Serializable {
     private String itemUOM;
     private double itemCP;
     private double itemSP;
+    private double itemNetSP;
+
+    public double getItemNetSP() {
+        return itemNetSP;
+    }
+
+    public void setItemNetSP(double itemNetSP) {
+        this.itemNetSP = itemNetSP;
+    }
+
     private String itemHSNcode;
     private double itemGST;
 
@@ -99,6 +109,7 @@ public class Item implements Serializable {
         this.itemUOM = itemUOM;
         this.itemCP = itemCP;
         this.itemSP = itemSP;
+      //  this.itemNetSP = itemNetSP;
         this.itemHSNcode = itemHSNcode;
         this.itemGST = itemGST;
         this.categoryId = categoryId;
