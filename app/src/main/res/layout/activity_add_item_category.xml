@@ -93,12 +93,13 @@
             android:layout_alignParentEnd="true"
             android:src="@android:drawable/ic_input_add"/>
 
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:id="@+id/billScreen"
-            android:src=""
+            android:background="@color/yellow"
+            android:drawableTop="@mipmap/ic_arrow_forward_black_24dp"
             android:text="PROCEED"
             />
 
