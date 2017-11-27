@@ -42,10 +42,24 @@
             android:title="Margin Bottom" />
 
         <EditTextPreference
-            android:key="key_settings_print_footer_text"
+            android:key="key_settings_print_footer_text1"
             android:summary="Enter text"
-            android:title="Footer text" />
+            android:title="Footer text1" />
 
+        <EditTextPreference
+            android:key="key_settings_print_footer_text2"
+            android:summary="Enter text"
+            android:title="Footer text2" />
+
+        <EditTextPreference
+            android:key="key_settings_print_footer_text3"
+            android:summary="Enter text"
+            android:title="Footer text3" />
+
+        <EditTextPreference
+            android:key="key_settings_print_footer_text4"
+            android:summary="Enter text"
+            android:title="Footer text4" />
 
     </PreferenceCategory>
 

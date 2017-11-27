@@ -2,6 +2,7 @@ package in.net.maitri.xb.reports;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -28,8 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.ReportData;
+import in.net.maitri.xb.itemdetails.AddItemCategory;
+import in.net.maitri.xb.settings.SettingsActivity;
 import in.net.maitri.xb.util.CheckDeviceType;
 
 public class TotalSales extends AppCompatActivity {
@@ -44,7 +49,7 @@ public class TotalSales extends AppCompatActivity {
     private HashMap<String, List<ReportData>> mItemLevelData;
     private List<ReportData> mCategoryLevelData;
     private TotalSalesAdapter mTotalSalesAdapter;
-    private LinearLayout mHeader1, mHeader2, mFooter;
+    private LinearLayout mHeader1, mHeader2;
     private ProgressDialog mProgressDialog;
     private boolean isAdapterEnabled = false;
 
@@ -71,10 +76,8 @@ public class TotalSales extends AppCompatActivity {
         mExpandableListView = (ExpandableListView) findViewById(R.id.mainList);
         mHeader1 = (LinearLayout) findViewById(R.id.header1);
         mHeader2 = (LinearLayout) findViewById(R.id.header2);
-        mFooter = (LinearLayout) findViewById(R.id.net_sales_layout);
         mHeader1.setVisibility(View.INVISIBLE);
         mHeader2.setVisibility(View.INVISIBLE);
-        mFooter.setVisibility(View.INVISIBLE);
         LinearLayout mShowReport = (LinearLayout) findViewById(R.id.showReport);
         LinearLayout mFromDateLayout = (LinearLayout) findViewById(R.id.from_date_layout);
         LinearLayout mToDateLayout = (LinearLayout) findViewById(R.id.to_date_layout);
@@ -122,7 +125,6 @@ public class TotalSales extends AppCompatActivity {
                 } else {
                     mHeader1.setVisibility(View.INVISIBLE);
                     mHeader2.setVisibility(View.INVISIBLE);
-                    mFooter.setVisibility(View.INVISIBLE);
                     mExpandableListView.setVisibility(View.INVISIBLE);
 
                     mProgressDialog = new ProgressDialog(TotalSales.this);
@@ -239,7 +241,6 @@ public class TotalSales extends AppCompatActivity {
     private void prepareData(List<ReportData> totalData, List<ReportData> totalData1 ) {
         mHeader1.setVisibility(View.VISIBLE);
         mHeader2.setVisibility(View.VISIBLE);
-        mFooter.setVisibility(View.VISIBLE);
         mExpandableListView.setVisibility(View.VISIBLE);
 
         Resources r = getResources();
@@ -279,36 +280,23 @@ public class TotalSales extends AppCompatActivity {
         textView.setTextColor(ContextCompat.getColor(TotalSales.this, R.color.colorBlack));
         mHeader2.addView(textView);
 
-        mFooter.removeAllViews();
         textView = new TextView(this);
-        String totalMrp = "Total Rate \n" + data.getrMrp();
-        textView.setText(totalMrp);
+        textView.setText(data1.getrDiscount());
         textView.setWidth((int) px);
         textView.setGravity(Gravity.END);
         textView.setPadding(4, 0, 4, 0);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setTextColor(ContextCompat.getColor(TotalSales.this, R.color.colorBlack));
-        mFooter.addView(textView);
+        mHeader2.addView(textView);
 
         textView = new TextView(this);
-        String totalDiscount = "Total Discount \n" + data1.getrDiscount();
-        textView.setText(totalDiscount);
+        textView.setText(data1.getrNetSales());
         textView.setWidth((int) px);
         textView.setGravity(Gravity.END);
         textView.setPadding(4, 0, 4, 0);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setTextColor(ContextCompat.getColor(TotalSales.this, R.color.colorBlack));
-        mFooter.addView(textView);
-
-        textView = new TextView(this);
-        String totalNetSales = "Net Sales \n" + data1.getrNetSales();
-        textView.setText(totalNetSales);
-        textView.setWidth((int) px);
-        textView.setGravity(Gravity.END);
-        textView.setPadding(4, 0, 4, 0);
-        textView.setTypeface(null, Typeface.BOLD);
-        textView.setTextColor(ContextCompat.getColor(TotalSales.this, R.color.colorBlack));
-        mFooter.addView(textView);
+        mHeader2.addView(textView);
         mProgressDialog.cancel();
     }
 
@@ -318,7 +306,7 @@ public class TotalSales extends AppCompatActivity {
     }
 
     private void setHeader(){
-        String[] header = {"Description", "Total Rate", "Total Qty"};
+        String[] header = {"Description", "Total Rate", "Total Qty", "Total Discount", "Net Sales"};
         Resources r = getResources();
         float px;
         if (new CheckDeviceType(TotalSales.this).isTablet()) {
@@ -348,5 +336,16 @@ public class TotalSales extends AppCompatActivity {
                 mHeader1.addView(textView);
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
