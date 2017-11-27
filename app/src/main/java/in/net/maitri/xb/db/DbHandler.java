@@ -102,6 +102,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<ReportData> totalCategory = new ArrayList<>();
     private List<ReportData> totalItem = new ArrayList<>();
     private List<ReportData> totalReport = new ArrayList<>();
+    private List<ReportData> totalReport1 = new ArrayList<>();
 
     // Creating Tables
     @Override
@@ -599,10 +600,8 @@ public class DbHandler extends SQLiteOpenHelper {
         totalReport.clear();
         try {
             String selectQuery = "SELECT cast(SUM(SD." + KEY_SD_QTY + ")as text) AS sQTY, "
-                    + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE, "
-                    + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
+                    + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE "
                     + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
-                    + " INNER JOIN " + CATEGORY_TABLE_NAME + " AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
                     + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
                     + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
             Log.d("Query", selectQuery);
@@ -614,7 +613,6 @@ public class DbHandler extends SQLiteOpenHelper {
                     reportData.setrDescription("Grand Total");
                     reportData.setrQty(c.getString(c.getColumnIndex("sQTY")));
                     reportData.setrMrp(c.getString(c.getColumnIndex("sRATE")));
-                    reportData.setrNetSales(c.getString(c.getColumnIndex("sAMT")));
                     totalReport.add(reportData);
                 } while (c.moveToNext());
             }
@@ -623,6 +621,31 @@ public class DbHandler extends SQLiteOpenHelper {
             createErrorDialog(e.toString());
         }
         return totalReport;
+    }
+
+    public List<ReportData> getTotalReport1(int fromDate, int toDate) {
+        totalReport1.clear();
+        try {
+            String selectQuery = "SELECT cast(SUM(SM." + KEY_SM_DISCOUNT + ")as text) AS sDISCOUNT, "
+                    + "cast(SUM(SM." + KEY_SM_NET_AMT + ")as text) AS sAMT "
+                    + "FROM " + SALES_MST_TABLE_NAME + " AS SM "
+                    + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
+            Log.d("Query", selectQuery);
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    ReportData reportData = new ReportData();
+                    reportData.setrDiscount(c.getString(c.getColumnIndex("sDISCOUNT")));
+                    reportData.setrNetSales(c.getString(c.getColumnIndex("sAMT")));
+                    totalReport1.add(reportData);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return totalReport1;
     }
 
     public List<ReportData> getTotalCategoryReport(int fromDate, int toDate){

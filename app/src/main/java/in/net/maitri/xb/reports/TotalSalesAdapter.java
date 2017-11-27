@@ -3,6 +3,7 @@ package in.net.maitri.xb.reports;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -59,42 +60,37 @@ class TotalSalesAdapter extends BaseExpandableListAdapter {
         }
         for (int i = 0; i < _listDataChild.size(); i++) {
             if (groupPosition == i) {
-                List<ReportData> list = _listDataChild.get(i);
+                List<ReportData> list = _listDataChild.get(String.valueOf(i));
                 for (int j = 0; j < list.size(); j++) {
-                    ReportData reportData = list.get(j);
-                    TextView textView = new TextView(_context);
+                    if (childPosition == j) {
+                        ReportData reportData = list.get(j);
+                        TextView textView = new TextView(_context);
 
-                    String text = reportData.getrDescription();
-                    textView.setText(text);
-                    textView.setGravity(Gravity.CENTER);
-                    textView.setPadding(64, 0, 4, 0);
-                    textView.setWidth((int) px);
-                    textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-                    linear1.addView(textView);
+                        String text = reportData.getrDescription();
+                        Log.d("ITMDes", text);
+                        textView.setText(text);
+                        textView.setGravity(Gravity.CENTER);
+                        textView.setPadding(64, 0, 4, 0);
+                        textView.setWidth((int) px);
+                        textView.setTextColor(ContextCompat.getColor(_context, R.color.colorBlack));
+                        linear1.addView(textView);
 
-                    textView = new TextView(_context);
-                    textView.setText(reportData.getrMrp());
-                    textView.setGravity(Gravity.END);
-                    textView.setPadding(4, 0, 4, 0);
-                    textView.setWidth((int) px);
-                    textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-                    linear1.addView(textView);
+                        textView = new TextView(_context);
+                        textView.setText(reportData.getrMrp());
+                        textView.setGravity(Gravity.END);
+                        textView.setPadding(4, 0, 4, 0);
+                        textView.setWidth((int) px);
+                        textView.setTextColor(ContextCompat.getColor(_context, R.color.colorBlack));
+                        linear1.addView(textView);
 
-                    textView = new TextView(_context);
-                    textView.setText(reportData.getrQty());
-                    textView.setGravity(Gravity.END);
-                    textView.setPadding(4, 0, 4, 0);
-                    textView.setWidth((int) px);
-                    textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-                    linear1.addView(textView);
-
-                    textView = new TextView(_context);
-                    textView.setText(reportData.getrNetSales());
-                    textView.setGravity(Gravity.END);
-                    textView.setPadding(4, 0, 4, 0);
-                    textView.setWidth((int) px);
-                    textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-                    linear1.addView(textView);
+                        textView = new TextView(_context);
+                        textView.setText(reportData.getrQty());
+                        textView.setGravity(Gravity.END);
+                        textView.setPadding(4, 0, 4, 0);
+                        textView.setWidth((int) px);
+                        textView.setTextColor(ContextCompat.getColor(_context, R.color.colorBlack));
+                        linear1.addView(textView);
+                    }
                 }
             }
         }
@@ -135,40 +131,35 @@ class TotalSalesAdapter extends BaseExpandableListAdapter {
             px = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 125, r.getDisplayMetrics());
         }
         for (int j = 0; j < _listDataHeader.size(); j++) {
-            ReportData reportData = _listDataHeader.get(j);
-            TextView textView = new TextView(_context);
+            if (groupPosition == j) {
+                ReportData reportData = _listDataHeader.get(j);
+                TextView textView = new TextView(_context);
 
-            String text = reportData.getrDescription();
-            textView.setText(text);
-            textView.setGravity(Gravity.CENTER);
-            textView.setPadding(64, 0, 4, 0);
-            textView.setWidth((int) px);
-            textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-            linear1.addView(textView);
+                String text = reportData.getrDescription();
+                Log.d("CatDes", text);
+                textView.setText(text);
+                textView.setGravity(Gravity.CENTER);
+                textView.setPadding(64, 0, 4, 0);
+                textView.setWidth((int) px);
+                textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
+                linear1.addView(textView);
 
-            textView = new TextView(_context);
-            textView.setText(reportData.getrMrp());
-            textView.setGravity(Gravity.END);
-            textView.setPadding(4, 0, 4, 0);
-            textView.setWidth((int) px);
-            textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-            linear1.addView(textView);
+                textView = new TextView(_context);
+                textView.setText(reportData.getrMrp());
+                textView.setGravity(Gravity.END);
+                textView.setPadding(4, 0, 4, 0);
+                textView.setWidth((int) px);
+                textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
+                linear1.addView(textView);
 
-            textView = new TextView(_context);
-            textView.setText(reportData.getrQty());
-            textView.setGravity(Gravity.END);
-            textView.setPadding(4, 0, 4, 0);
-            textView.setWidth((int) px);
-            textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-            linear1.addView(textView);
-
-            textView = new TextView(_context);
-            textView.setText(reportData.getrNetSales());
-            textView.setGravity(Gravity.END);
-            textView.setPadding(4, 0, 4, 0);
-            textView.setWidth((int) px);
-            textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
-            linear1.addView(textView);
+                textView = new TextView(_context);
+                textView.setText(reportData.getrQty());
+                textView.setGravity(Gravity.END);
+                textView.setPadding(4, 0, 4, 0);
+                textView.setWidth((int) px);
+                textView.setTextColor(ContextCompat.getColor(_context, R.color.colorWhite));
+                linear1.addView(textView);
+            }
         }
         return convertView;
     }
