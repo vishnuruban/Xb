@@ -20,7 +20,7 @@ public class DbActivity extends Activity {
         Log.d("Insert: ", "Inserting ..");
         Category cat = new Category("DIARY PRODUCTS","IMAGE");
         dbHandler.addCategory(cat);
-        Item ite = new Item("MILK","LTR",20,22,"SHJDUD11",12,1,"IMAGE");
-        dbHandler.addItem(ite);
+        //Item ite = new Item("MILK","LTR",20,22,"SHJDUD11",12,1,"IMAGE");
+        //dbHandler.addItem(ite);
     }
 }

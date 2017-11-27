@@ -82,6 +82,7 @@ public class AddItemCategory extends AppCompatActivity {
         }
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
         categoryView.setLayoutManager(linearLayoutManager);
+        mGetAllCategories.get(0).setSelected(true);
         mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, mGetAllCategories);
         categoryView.setAdapter(mCategoryAdapter);
 
@@ -104,6 +105,8 @@ public class AddItemCategory extends AppCompatActivity {
         categoryView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), categoryView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
+
+                mCategoryAdapter.setSelected(position);
                 Category category = mGetAllCategories.get(position);
                 updateItem(category.getId());
                 view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));

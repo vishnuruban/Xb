@@ -3,6 +3,8 @@ package in.net.maitri.xb.itemdetails;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,11 +37,13 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
 
         ImageView categoryImage;
         TextView categoryName;
+        CardView cardView;
 
          MyViewHolder(View itemView) {
             super(itemView);
              categoryImage = (ImageView) itemView.findViewById(R.id.category_img);
              categoryName = (TextView) itemView.findViewById(R.id.category_name);
+             cardView  = (CardView) itemView.findViewById(R.id.card_view);
          }
     }
 
@@ -55,7 +59,15 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
         Category categoryDetails = mAllCategories.get(position);
         holder.categoryName.setText(categoryDetails.getCategoryName());
         String imagePath = categoryDetails.getCategoryImage();
+        if (mAllCategories.get(position).isSelected()) {
+            holder.cardView.setBackgroundColor(Color.parseColor("#0675AD"));
+            holder.categoryName.setTextColor(Color.parseColor("#ffffff"));
+            mAllCategories.get(position).setSelected(false);
 
+        } else {
+            holder.cardView.setBackgroundColor(Color.parseColor("#B3E5FC"));
+            holder.categoryName.setTextColor(Color.parseColor("#000000"));
+        }
          Log.i("Image Path",imagePath);
 
         File imgFile = new File(imagePath);
@@ -71,5 +83,14 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
     }
 
 
+    public void setSelected(int pos) {
+        try {
+
+            mAllCategories.get(pos).setSelected(true);
+            notifyDataSetChanged();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
