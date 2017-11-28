@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.billReports.BillReportActivity;
 import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.customer.CustomerDetail;
@@ -300,6 +301,10 @@ public class AddItemCategory extends AppCompatActivity {
 
             case R.id.sales_report:
                 startActivity(new Intent(AddItemCategory.this, TotalSales.class));
+                break;
+
+            case R.id.bill_report:
+                startActivity(new Intent(AddItemCategory.this, BillReportActivity.class));
                 break;
 
             case android.R.id.home:

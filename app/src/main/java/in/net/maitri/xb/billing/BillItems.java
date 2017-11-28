@@ -30,6 +30,11 @@ public class BillItems {
     private int qty;
     private double rate;
 
+    public BillItems ()
+    {
+
+    }
+
     public BillItems( int cat_id, int item_id,String desc, int qty,double net_rate, double rate, double amount) {
         this.desc = desc;
         this.qty = qty;

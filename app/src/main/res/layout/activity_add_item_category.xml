@@ -98,8 +98,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:id="@+id/billScreen"
-            android:background="@color/yellow"
-            android:drawableTop="@mipmap/ic_arrow_forward_black_24dp"
+            android:gravity="center"
+            android:background="@drawable/bgedittext2"
+            android:drawableLeft="@mipmap/ic_arrow_forward_black_24dp"
             android:text="PROCEED"
             />
 

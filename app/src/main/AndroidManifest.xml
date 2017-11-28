@@ -37,6 +37,7 @@
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name="customer.CustomerDetail"/>
         <activity android:name=".reports.TotalSales"/>
+        <activity android:name=".billReports.BillReportActivity" />
     </application>
 
 </manifest>

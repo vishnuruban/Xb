@@ -127,6 +127,8 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                         billList.clear();
+                        bTotalProducts.setText("");
+                        bTotalPrice.setText("");
                         billListAdapter.notifyDataSetChanged();
 
                     }

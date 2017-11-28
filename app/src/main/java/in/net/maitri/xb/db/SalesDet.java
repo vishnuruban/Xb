@@ -6,8 +6,16 @@ public class SalesDet {
 
     private int id, billNo, category, item;
     private float qty;
-    BillItems billItems;
 
+    public BillItems billItems;
+
+
+
+    private String itemName;
+ public SalesDet()
+{
+
+}
     public SalesDet(int billNo, int category, int item){}
 
     public SalesDet(int billNo, BillItems billItems) {

@@ -12,6 +12,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+import in.net.maitri.xb.billing.BillItems;
+
 public class DbHandler extends SQLiteOpenHelper {
 
     private Context mContext;
@@ -21,7 +23,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -72,6 +74,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_STATUS = "sm_status";
     private static final String KEY_SM_CUSTOMER = "sm_customer";
     private static final String KEY_SM_SALESMAN = "sm_salesman";
+    private static final String KEY_SM_ITEM = "sm_item";
     private static final String KEY_SM_CREATED_AT = "sm_createdAt";
     private static final String KEY_SM_DATETIME = "sm_datetime";
     // sales mst table name
@@ -144,6 +147,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SM_BILL_NO + " INTEGER PRIMARY KEY,"
                 + KEY_SM_DATE + " INTEGER,"
                 + KEY_SM_QTY + " FLOAT,"
+                + KEY_SM_ITEM + " FLOAT,"
                 + KEY_SM_NET_AMT + " FLOAT,"
                 + KEY_SM_DISCOUNT + " FLOAT,"
                 + KEY_SM_SALESMAN + " TEXT,"
@@ -185,7 +189,7 @@ public class DbHandler extends SQLiteOpenHelper {
          //   db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
        // }
 
-        db.execSQL("DROP TABLE IF EXISTS " +  SALES_MST_TABLE_NAME);
+       db.execSQL("DROP TABLE IF EXISTS " +  SALES_MST_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " +  SALES_DET_TABLE_NAME);
         onCreate(db);
     }
@@ -487,6 +491,94 @@ public class DbHandler extends SQLiteOpenHelper {
         return customerList;
     }
 
+
+
+
+
+
+    // Getting All item
+    public List<SalesDet> getBillDetails(int billNo,int fromDate,int toDate) {
+   //     sdList.clear();
+        // Select All Query
+
+        List<SalesDet> sdList = new ArrayList<SalesDet>();
+        try {
+
+            String selectQuery ="select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
+                    "join SalesMst sm on sd.sd_billNo = sm.sm_billNo where sd.sd_billNo ="+billNo+" and SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate ;
+
+         System.out.println(selectQuery);
+
+            //String selectQuery = "SELECT  * FROM " + SALES_DET_TABLE_NAME + " WHERE " + KEY_SD_BILL_NO + " = " + billNo;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+
+
+
+                    BillItems bm = new BillItems();
+                   // sd.setBillNo(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)));
+                    bm.setRate(c.getDouble(c.getColumnIndex(KEY_SD_RATE)));
+                    bm.setQty(c.getInt(c.getColumnIndex(KEY_SD_QTY)));
+                    bm.setAmount(c.getDouble(c.getColumnIndex(KEY_SD_AMOUNT)));
+                    bm.setDesc(c.getString(c.getColumnIndex("itm_name")));
+
+                    System.out.println("DBDESC "+c.getString(c.getColumnIndex("itm_name")));
+
+                    SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)),bm);
+
+
+
+
+                /*
+
+                    item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
+                    item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
+                    item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
+                    item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+                    item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
+                    item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
+                    item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
+                    item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
+                    item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));*/
+                    // Adding item to list
+                  sdList.add(sd);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return sdList;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public void addUnit(Unit unit) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -536,6 +628,38 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
+
+    public List<SalesMst> getAllBills(int fromDate,int toDate) {
+      //  customerList.clear();
+        // Select All Query
+        List<SalesMst> smList = new ArrayList<SalesMst>();
+
+        try {
+            String selectQuery = "SELECT  * FROM " + SALES_MST_TABLE_NAME +  " WHERE " + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    SalesMst mst = new SalesMst();
+
+                    mst.setBillNO(c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
+                    mst.setDateTime(c.getString(c.getColumnIndex(KEY_SM_DATETIME)));
+                    mst.setNetAmt(c.getDouble(c.getColumnIndex(KEY_SM_NET_AMT)));
+                    mst.setDiscount(c.getDouble(c.getColumnIndex(KEY_SM_DISCOUNT)));
+                    mst.setPaymentMode(c.getString(c.getColumnIndex(KEY_SM_PAYMENT_MODE)));
+                    mst.setQty(c.getInt(c.getColumnIndex(KEY_SM_QTY)));
+                    mst.setItems(c.getInt(c.getColumnIndex(KEY_SM_ITEM)));
+                    smList.add(mst);
+                    System.out.println("dbBillNo "+c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return smList;
+    }
+
     public long addSalesMst(SalesMst salesMst) {
         long result = 0;
 
@@ -549,6 +673,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_NET_AMT, salesMst.getNetAmt());
             cv.put(KEY_SM_DISCOUNT, salesMst.getDiscount());
             cv.put(KEY_SM_CUSTOMER, salesMst.getCustomerId());
+            cv.put(KEY_SM_ITEM,salesMst.getItems());
             cv.put(KEY_SM_SALESMAN, salesMst.getSalesPerson());
             cv.put(KEY_SM_PAYMENT_MODE, salesMst.getPaymentMode());
             cv.put(KEY_SM_PAYMENT_DET, salesMst.getPaymentDet());

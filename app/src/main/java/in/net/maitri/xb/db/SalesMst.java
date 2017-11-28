@@ -8,7 +8,41 @@ public class SalesMst {
     private String paymentDet;
     private String status;
     private double qty;
+    private int  items;
     private double netAmt;
+
+    public SalesMst(int billNO, int date, int customerId, String salesPerson, String paymentMode, String paymentDet, String status, double qty, int items, double netAmt, double discount, String dateTime) {
+        this.billNO = billNO;
+        this.date = date;
+        this.customerId = customerId;
+        this.salesPerson = salesPerson;
+        this.paymentMode = paymentMode;
+        this.paymentDet = paymentDet;
+        this.status = status;
+        this.qty = qty;
+        this.items = items;
+        this.netAmt = netAmt;
+        this.discount = discount;
+        this.dateTime = dateTime;
+    }
+
+    public int getItems() {
+        return items;
+    }
+
+    public void setItems(int items) {
+        this.items = items;
+    }
+
+    private boolean selected;
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 
     public String getDateTime() {
         return dateTime;

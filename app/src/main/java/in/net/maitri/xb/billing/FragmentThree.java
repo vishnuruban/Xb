@@ -21,6 +21,7 @@ import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
+import in.net.maitri.xb.itemdetails.CalculateNoOfColumnsAccScreenSize;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
 
 
@@ -99,7 +100,8 @@ public class FragmentThree extends Fragment {
             }
         }));
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
+        int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), columns);
         itemView.setLayoutManager(gridLayoutManager);
      //   mGetAllItems = new ArrayList<Item>();
 
