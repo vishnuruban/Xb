@@ -532,7 +532,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setStatus("SAVED");
         sm.setDate(dateCount);
         sm.setDateTime(formattedDate);
-
+        sm.setItems(FragmentOne.billList.size());
         mstInserted = dbHandler.addSalesMst(sm);
 
         Log.i("MST", String.valueOf(mstInserted));
