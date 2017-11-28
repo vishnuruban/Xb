@@ -76,7 +76,7 @@ class TotalSalesAdapter extends BaseExpandableListAdapter {
                         linear1.addView(textView);
 
                         textView = new TextView(_context);
-                        textView.setText(reportData.getrMrp());
+                        textView.setText(reportData.getrQty());
                         textView.setGravity(Gravity.END);
                         textView.setPadding(4, 0, 4, 0);
                         textView.setWidth((int) px);
@@ -84,7 +84,7 @@ class TotalSalesAdapter extends BaseExpandableListAdapter {
                         linear1.addView(textView);
 
                         textView = new TextView(_context);
-                        textView.setText(reportData.getrQty());
+                        textView.setText(reportData.getrNetSales());
                         textView.setGravity(Gravity.END);
                         textView.setPadding(4, 0, 4, 0);
                         textView.setWidth((int) px);
@@ -145,7 +145,7 @@ class TotalSalesAdapter extends BaseExpandableListAdapter {
                 linear1.addView(textView);
 
                 textView = new TextView(_context);
-                textView.setText(reportData.getrMrp());
+                textView.setText(reportData.getrQty());
                 textView.setGravity(Gravity.END);
                 textView.setPadding(4, 0, 4, 0);
                 textView.setWidth((int) px);
@@ -153,7 +153,7 @@ class TotalSalesAdapter extends BaseExpandableListAdapter {
                 linear1.addView(textView);
 
                 textView = new TextView(_context);
-                textView.setText(reportData.getrQty());
+                textView.setText(reportData.getrNetSales());
                 textView.setGravity(Gravity.END);
                 textView.setPadding(4, 0, 4, 0);
                 textView.setWidth((int) px);

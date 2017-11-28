@@ -12,7 +12,8 @@ import android.widget.Toast;
 public class Permissions extends Activity {
 
     private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1,
-            MY_PERMISSIONS_CAMERA = 2;
+            MY_PERMISSIONS_CAMERA = 2,
+            MY_PERMISSIONS_PHONE_STATE = 3;
     private Context context;
 
     public Permissions(Context context) {
@@ -38,6 +39,17 @@ public class Permissions extends Activity {
                     MY_PERMISSIONS_CAMERA);
         }
     }
+
+    public void checkPhoneStatePermission() {
+        ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE);
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context,
+                    new String[]{Manifest.permission.READ_PHONE_STATE},
+                    MY_PERMISSIONS_PHONE_STATE);
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {

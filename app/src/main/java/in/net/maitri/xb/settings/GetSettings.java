@@ -89,6 +89,18 @@ public class GetSettings {
     public String getPrintingPaperSize(){
         return getSharedPreferences().getString("key_settings_printer_paper_size","");
     }
+    public String getFooterText1(){
+        return getSharedPreferences().getString("key_settings_print_footer_text1","");
+    }
+    public String getFooterText2(){
+        return getSharedPreferences().getString("key_settings_print_footer_text2","");
+    }
+    public String getFooterText3(){
+        return getSharedPreferences().getString("key_settings_print_footer_text3","");
+    }
+    public String getFooterText4(){
+        return getSharedPreferences().getString("key_settings_print_footer_text4","");
+    }
 
 
 }
