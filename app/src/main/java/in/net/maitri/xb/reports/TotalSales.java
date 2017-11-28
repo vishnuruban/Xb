@@ -263,7 +263,7 @@ public class TotalSales extends AppCompatActivity {
         mHeader2.addView(textView);
 
         textView = new TextView(this);
-        textView.setText(data.getrMrp());
+        textView.setText(data.getrQty());
         textView.setWidth((int) px);
         textView.setGravity(Gravity.END);
         textView.setPadding(4, 0, 4, 0);
@@ -272,13 +272,14 @@ public class TotalSales extends AppCompatActivity {
         mHeader2.addView(textView);
 
         textView = new TextView(this);
-        textView.setText(data.getrQty());
+        textView.setText(data.getrNetSales());
         textView.setWidth((int) px);
         textView.setGravity(Gravity.END);
         textView.setPadding(4, 0, 4, 0);
         textView.setTypeface(null, Typeface.BOLD);
         textView.setTextColor(ContextCompat.getColor(TotalSales.this, R.color.colorBlack));
         mHeader2.addView(textView);
+
 
         textView = new TextView(this);
         textView.setText(data1.getrDiscount());
@@ -306,7 +307,7 @@ public class TotalSales extends AppCompatActivity {
     }
 
     private void setHeader(){
-        String[] header = {"Description", "Total Rate", "Total Qty", "Total Discount", "Net Sales"};
+        String[] header = {"Description", "Total Qty", "Total Amount", "Total Discount", "Net Sales"};
         Resources r = getResources();
         float px;
         if (new CheckDeviceType(TotalSales.this).isTablet()) {

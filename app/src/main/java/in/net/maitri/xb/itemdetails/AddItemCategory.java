@@ -70,6 +70,10 @@ public class AddItemCategory extends AppCompatActivity {
         mGetAllCategories = mDbHandler.getAllcategorys();
         final RecyclerView categoryView = (RecyclerView) findViewById(R.id.category_view);
         RecyclerView itemView = (RecyclerView) findViewById(R.id.item_view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
+        categoryView.setLayoutManager(linearLayoutManager);
+        mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, mGetAllCategories);
+        categoryView.setAdapter(mCategoryAdapter);
         if (mGetAllCategories.size() == 0) {
             mNoCategory.setVisibility(View.VISIBLE);
         } else {
@@ -79,13 +83,8 @@ public class AddItemCategory extends AppCompatActivity {
             editor.putString("catName", mGetAllCategories.get(0).getCategoryName());
             editor.putInt("catId", mGetAllCategories.get(0).getId());
             editor.apply();
+            mGetAllCategories.get(0).setSelected(true);
         }
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
-        categoryView.setLayoutManager(linearLayoutManager);
-        mGetAllCategories.get(0).setSelected(true);
-        mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, mGetAllCategories);
-        categoryView.setAdapter(mCategoryAdapter);
-
         int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
         /*if (columns > 1){
             columns -= 1;

@@ -588,7 +588,7 @@ public class DbHandler extends SQLiteOpenHelper {
         totalReport.clear();
         try {
             String selectQuery = "SELECT cast(SUM(SD." + KEY_SD_QTY + ")as text) AS sQTY, "
-                    + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE "
+                    + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
                     + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
                     + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
                     + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
@@ -600,7 +600,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     ReportData reportData = new ReportData();
                     reportData.setrDescription("Grand Total");
                     reportData.setrQty(c.getString(c.getColumnIndex("sQTY")));
-                    reportData.setrMrp(c.getString(c.getColumnIndex("sRATE")));
+                    reportData.setrNetSales(c.getString(c.getColumnIndex("sAMT")));
                     totalReport.add(reportData);
                 } while (c.moveToNext());
             }

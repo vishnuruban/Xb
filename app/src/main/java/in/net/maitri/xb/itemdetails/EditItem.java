@@ -164,12 +164,9 @@ public class EditItem extends DialogFragment {
                 String hsn = hsnCodeField.getText().toString();
 
 
-                if (!registrationType.equals("3") && (catName.isEmpty() || iteName.isEmpty()
+                if (!registrationType.equals("3") && ( iteName.isEmpty()
                         || cp.isEmpty()
-                        || sp.isEmpty()
-                        || uoM.isEmpty()
-                        || gsT.isEmpty()
-                        || hsn.isEmpty())) {
+                        || sp.isEmpty())) {
                     Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
                 } else if (registrationType.equals("3") && (iteName.isEmpty()
                         || cp.isEmpty()
