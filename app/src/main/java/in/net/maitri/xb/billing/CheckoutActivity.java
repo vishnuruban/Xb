@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
@@ -487,7 +488,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.cSave:
                 saveBill();
-                //mPrinter.showDeviceList(CheckoutActivity.this);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                if (sharedPreferences.getBoolean("isFirstTym", false)) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("isFirstTym", false);
+                    editor.apply();
+                    mPrinter.showDeviceList(CheckoutActivity.this);
+                }
                 break;
         }
     }
