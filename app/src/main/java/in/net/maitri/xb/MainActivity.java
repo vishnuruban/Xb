@@ -4,7 +4,9 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
             String imei = telephonyManager.getDeviceId();
 
             if (isIMEIRegistered(imei, imeiList)) {
+                checkIfFirstTym();
                 startActivity(new Intent(MainActivity.this, AddItemCategory.class));
             } else {
                 createErrorDialog("This device is not registered with us.");
@@ -60,5 +63,14 @@ public class MainActivity extends AppCompatActivity {
                 });
         android.support.v7.app.AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    private void checkIfFirstTym(){
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        if (sharedPreferences.getBoolean("isFirstTym", true)) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isFirstTym", true);
+            editor.apply();
+        }
     }
 }
