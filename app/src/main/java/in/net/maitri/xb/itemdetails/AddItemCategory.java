@@ -163,6 +163,12 @@ public class AddItemCategory extends AppCompatActivity {
         addItemBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(mSelectedCategory.getText().toString().isEmpty())
+                {
+                    Toast.makeText(AddItemCategory.this,"Please select category before adding item!",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
                 showFragment(new AddItem());
             }

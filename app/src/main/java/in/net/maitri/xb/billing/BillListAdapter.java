@@ -1,6 +1,7 @@
 package in.net.maitri.xb.billing;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ public class BillListAdapter extends BaseAdapter {
 
     public ArrayList<BillItems> billItems;
     Activity activity;
+    Context c;
+    LayoutInflater inflater;
 
 
 
@@ -27,8 +30,15 @@ public class BillListAdapter extends BaseAdapter {
     {
         this.activity = activity;
         this.billItems = billItems;
+        inflater = activity.getLayoutInflater();
     }
 
+    public BillListAdapter(Context c, ArrayList<BillItems> billItems)
+    {
+        this.c = c;
+        this.billItems = billItems;
+        inflater =LayoutInflater.from(c);
+    }
 
     @Override
     public int getCount() {
@@ -59,7 +69,7 @@ public class BillListAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
 
         ViewHolder holder;
-        LayoutInflater inflater = activity.getLayoutInflater();
+
         if(view == null)
         {
          view = inflater.inflate(R.layout.bill_row,null);

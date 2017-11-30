@@ -33,5 +33,7 @@ dependencies {
     compile 'com.clough.android.androiddbviewer:androiddbviewer:1.0.0'
     compile 'com.github.Mariovc:ImagePicker:1.2.0'
     compile 'com.reginald:editspinner:1.0.0'
+    compile "commons-io:commons-io:+"
+    compile files('libs/jxl.jar')
     testCompile 'junit:junit:4.12'
 }

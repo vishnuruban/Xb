@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -52,19 +54,24 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
     class MyViewHolder extends RecyclerView.ViewHolder {
 
 
-        TextView rBillNo,rQty,rItems,rDiscount,rNetAmt;
+        TextView rBillNo,rQty,rItems,rDiscount,rNetAmt,rPayment,rSno,rDate,rCustomer,rCashier;
         TextView rBillDate;
         CardView cardView;
 
         MyViewHolder(View itemView) {
             super(itemView);
 
-            rBillNo = (TextView) itemView.findViewById(R.id.reBillNo);
+           rBillNo = (TextView) itemView.findViewById(R.id.reBillno);
             rQty = (TextView) itemView.findViewById(R.id.reQty);
             rItems = (TextView) itemView.findViewById(R.id.reItems);
             rDiscount = (TextView) itemView.findViewById(R.id.reDiscount);
-            rNetAmt = (TextView) itemView.findViewById(R.id.reAmount);
-            //rBillDate = (TextView) itemView.findViewById(R.id.rBillDate);
+           rNetAmt = (TextView) itemView.findViewById(R.id.reNetAmt);
+            rPayment = (TextView) itemView.findViewById(R.id.rePayment);
+            rSno =(TextView) itemView.findViewById(R.id.reSno);
+            rDate = (TextView) itemView.findViewById(R.id.reDate);
+            rCustomer =(TextView) itemView.findViewById(R.id.reCustName);
+            rCashier =(TextView) itemView.findViewById(R.id.reCashName);
+            rBillDate = (TextView) itemView.findViewById(R.id.reDate);
             cardView  = (CardView) itemView.findViewById(R.id.card_view);
         }
     }
@@ -85,11 +92,16 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
         DecimalFormat df = new DecimalFormat("0.00");
 
         System.out.println("BILL NO "+billDetails.getBillNO());
+        holder.rSno.setText(String.valueOf(position+1));
+        holder.rBillDate.setText(billDetails.getDateTime());
         holder.rBillNo.setText(String.valueOf(billDetails.getBillNO()));
         holder.rQty.setText(String.valueOf((int)billDetails.getQty()));
         holder.rDiscount.setText(df.format(billDetails.getDiscount()));
         holder.rNetAmt.setText(df.format(billDetails.getNetAmt()));
         holder.rItems.setText(String.valueOf(billDetails.getItems()));
+        holder.rPayment.setText(String.valueOf(billDetails.getPaymentMode()));
+        holder.rCustomer.setText("");
+        holder.rCashier.setText("");
       //  holder.rBillDate.setText("Date  : "+String.valueOf(billDetails.getDateTime()));
 
         if (billDetails.isSelected()) {
@@ -99,6 +111,7 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
             holder.rDiscount.setTextColor(Color.parseColor("#ffffff"));
             holder.rNetAmt.setTextColor(Color.parseColor("#ffffff"));
             holder.rItems.setTextColor(Color.parseColor("#ffffff"));
+            holder.rPayment.setTextColor(Color.parseColor("#ffffff"));
            // holder.rBillDate.setTextColor(Color.parseColor("#ffffff"));
             billDetails.setSelected(false);
 
@@ -109,6 +122,7 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
             holder.rDiscount.setTextColor(Color.parseColor("#000000"));
             holder.rNetAmt.setTextColor(Color.parseColor("#000000"));
             holder.rItems.setTextColor(Color.parseColor("#000000"));
+            holder.rPayment.setTextColor(Color.parseColor("#000000"));
          //   holder.rBillDate.setTextColor(Color.parseColor("#000000"));
         }
 
