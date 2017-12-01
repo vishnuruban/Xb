@@ -1,5 +1,7 @@
 package in.net.maitri.xb.itemdetails;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 import java.io.Serializable;
 import java.util.List;
 
+import in.net.maitri.xb.MainActivity;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billReports.BillReportActivity;
 import in.net.maitri.xb.billing.BillingActivity;
@@ -62,8 +65,14 @@ public class AddItemCategory extends AppCompatActivity {
         mProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AddItemCategory.this, BillingActivity.class);
-                startActivity(intent);
+                if(mGetAllItems.size() != 0) {
+                    Intent intent = new Intent(AddItemCategory.this, BillingActivity.class);
+                    startActivity(intent);
+                }
+                else
+                {
+                    Toast.makeText(AddItemCategory.this,"No Items Present",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -288,7 +297,6 @@ public class AddItemCategory extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_add_item_category, menu);
-
         return true;
     }
 
@@ -312,11 +320,43 @@ public class AddItemCategory extends AppCompatActivity {
                 startActivity(new Intent(AddItemCategory.this, BillReportActivity.class));
                 break;
 
+            case R.id.reset:
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddItemCategory.this);
+                builder.setTitle("Are you sure you want to reset the app?");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        reset();
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                        System.exit(1);
+                    }
+                });
+                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+               builder.show();
+                break;
+
             case android.R.id.home:
                 finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+     void reset()
+     {
+             SharedPreferences preferences = getSharedPreferences(CheckoutActivity.mypreference, Context.MODE_PRIVATE);
+             SharedPreferences.Editor editor = preferences.edit();
+             editor.clear();
+             editor.commit();
+            mDbHandler.resetData();
+     }
 
 }

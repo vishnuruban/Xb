@@ -105,13 +105,13 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
       //  holder.rBillDate.setText("Date  : "+String.valueOf(billDetails.getDateTime()));
 
         if (billDetails.isSelected()) {
-            holder.cardView.setBackgroundColor(Color.parseColor("#00897B"));
-           holder.rBillNo.setTextColor(Color.parseColor("#ffffff"));
-            holder.rQty.setTextColor(Color.parseColor("#ffffff"));
-            holder.rDiscount.setTextColor(Color.parseColor("#ffffff"));
-            holder.rNetAmt.setTextColor(Color.parseColor("#ffffff"));
-            holder.rItems.setTextColor(Color.parseColor("#ffffff"));
-            holder.rPayment.setTextColor(Color.parseColor("#ffffff"));
+            holder.cardView.setBackgroundColor(Color.parseColor("#80CBC4"));
+           holder.rBillNo.setTextColor(Color.parseColor("#000000"));
+            holder.rQty.setTextColor(Color.parseColor("#000000"));
+            holder.rDiscount.setTextColor(Color.parseColor("#000000"));
+            holder.rNetAmt.setTextColor(Color.parseColor("#000000"));
+            holder.rItems.setTextColor(Color.parseColor("#000000"));
+            holder.rPayment.setTextColor(Color.parseColor("#000000"));
            // holder.rBillDate.setTextColor(Color.parseColor("#ffffff"));
             billDetails.setSelected(false);
 

@@ -428,7 +428,7 @@ byte[] excelReport;
         String[] headerColumns = {"SNo", "Bill No", "Date", "Items", "Qty", "Discount(" + rs + ")", "Net Amount(" + rs + ")", "Pay mode", "Customer Name", "Cashier Name"};
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-        String[] summaryColumns = {"Date from", "Date to", "Total bills", "Total Items", "Total Qty", "Total Discount", "Total NetAmt"};
+        String[] summaryColumns = {"From Date", "To Date", "Total bills", "Total Items", "Total Qty", "Total Discount", "Total NetAmt"};
         File sd = Environment.getExternalStorageDirectory();
       //  String csvFile = "v1.xls";
 
@@ -527,7 +527,7 @@ byte[] excelReport;
 
             workbook.write();
             workbook.close();
-            Toast.makeText(getApplication(), "Data Exported in a Excel Sheet", Toast.LENGTH_SHORT).show();
+          //   Toast.makeText(getApplication(), "Data Exported in a Excel Sheet", Toast.LENGTH_SHORT).show();
 
 
            // byte[] bytesArray = new byte[(int) file.length()];

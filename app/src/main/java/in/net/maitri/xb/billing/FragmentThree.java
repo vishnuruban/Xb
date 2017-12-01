@@ -84,7 +84,7 @@ public class FragmentThree extends Fragment {
                hCategoryAdapter.setSelected(position);
 
                 Category category = mGetAllCategories.get(position);
-                Toast.makeText(getActivity(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getActivity(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
                 String categoryName = category.getCategoryName();
                 mCategoryId = category.getId();
                 updateItem(mCategoryId);
@@ -100,8 +100,8 @@ public class FragmentThree extends Fragment {
             }
         }));
 
-        int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), columns);
+      //  int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
         itemView.setLayoutManager(gridLayoutManager);
      //   mGetAllItems = new ArrayList<Item>();
 

@@ -69,10 +69,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textSize="15dp"
-                    android:textColor="#fff"
-                    android:textStyle="bold"
+                    android:textColor="#000"
                     android:text="CLEAR BILL"
-                    android:drawableLeft="@mipmap/ic_clear_white_24dp"
+                    android:drawableLeft="@mipmap/ic_clear_black_24dp"
                     android:background="@drawable/button_shape"
                     android:padding="16dp"
                     />

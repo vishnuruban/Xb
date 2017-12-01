@@ -99,6 +99,7 @@
             android:layout_alignParentBottom="true"
             android:id="@+id/billScreen"
             android:gravity="center"
+            android:layout_margin="5dp"
             android:background="@drawable/bgedittext2"
             android:drawableLeft="@mipmap/ic_arrow_forward_black_24dp"
             android:text="PROCEED"

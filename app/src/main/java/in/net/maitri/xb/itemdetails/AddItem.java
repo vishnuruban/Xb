@@ -72,7 +72,7 @@ public class AddItem extends DialogFragment {
         final String selectedCategoryName = sharedPreferences.getString("catName", "");
         final int selectedCategoryId = sharedPreferences.getInt("catId", 0);
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
-        String headerText = "Add Item to" + selectedCategoryName;
+        String headerText = "Add Item to " + selectedCategoryName;
         dialogHeader.setText(headerText);
 
         final LinearLayout newUomLayout = (LinearLayout) view.findViewById(R.id.new_uom_layout);

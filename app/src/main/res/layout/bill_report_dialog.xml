@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/billLayout"
+        android:weightSum="1">
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:background="#F3F7F9">
+
+
+        <LinearLayout
+            android:id="@+id/llHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="5dp"
+            android:background="#00796B"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/selected_bill"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.45"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:id="@+id/selected_bill_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.45"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+
+        <LinearLayout
+            android:id="@+id/l"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@color/cancel"
+         >
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:padding="8dp"
+                android:id="@+id/closeDialog"
+                android:textColor="#FFFFFF"
+                android:background="@mipmap/ic_clear_white_24dp"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/llHeader"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/linearL6"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:padding="10dp"
+                    android:text="Customer Name :"
+                    android:textColor="#000" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:padding="10dp"
+                    android:text="Cashier Name :"
+                    android:textColor="#000" />
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:id="@+id/linearL2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="#006064">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.75"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Items"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Qty"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Rate(\u20B9)"
+                    android:textColor="#ffffff" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.25"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Amount(\u20B9)"
+                    android:textColor="#ffffff" />
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/bill_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+
+        </LinearLayout>
+
+
+</LinearLayout>

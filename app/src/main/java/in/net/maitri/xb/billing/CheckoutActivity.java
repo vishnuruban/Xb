@@ -87,7 +87,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     String[] pModes = {"CASH", "DEBIT CARD", "CREDIT CARD", "WALLET"};
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
-            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear, btn_100, btn_500, btn_2000, btn_cash, btn_dc, btn_cc, btn_wallet, cPrint, cSave;
+            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear, btn_100, btn_500, btn_2000, btn_cash, btn_dc, btn_cc, btn_wallet, cPrint, cSave,cCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,10 +109,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         tCash = (TextView) findViewById(R.id.tCash);
         cCash = (EditText) findViewById(R.id.cCash);
         tBalance = (TextView) findViewById(R.id.cBalance);
+      //  cPrint = (Button) findViewById(R.id.cPrint);
         cPrintStatus = (TextView) findViewById(R.id.cPrintstatus);
         tBalance.setVisibility(View.INVISIBLE);
         mPrinter.connectToPrinter();
         cDiscountType = (RadioGroup) findViewById(R.id.discount_toggle);
+        cCancel = (Button) findViewById(R.id.cCancel);
 
         dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
 
@@ -127,6 +129,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         getSettings = new GetSettings(CheckoutActivity.this);
         dbHandler = new DbHandler(CheckoutActivity.this);
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -159,7 +162,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
 
         GradientDrawable bgShape = (GradientDrawable) lNetAmt.getBackground();
-        bgShape.setColor(getResources().getColor(R.color.green));
+        bgShape.setColor(getResources().getColor(R.color.dark_green));
         badapter = new BillListAdapter(CheckoutActivity.this, FragmentOne.billList);
         listView.setAdapter(badapter);
 
@@ -227,7 +230,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         if (sharedpreferences == null) {
             SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putInt(billNo, 1);
+            editor.putInt(billNo, 0);
             editor.apply();
         }
     }
@@ -319,7 +322,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
                         case CieBluetoothPrinter.STATE_NONE:
                             setStatusMsg(title_not_connected);
-                            Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
 
                             try {
                                 // tbPrinter.setText("OFF");
@@ -361,6 +364,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
+
     public void setStatusMsg(String msg) {
         cPrintStatus.setText(msg);
     }
@@ -385,9 +389,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_dc = (Button) findViewById(R.id.btn_dc);
         btn_cc = (Button) findViewById(R.id.btn_cc);
         btn_wallet = (Button) findViewById(R.id.btn_wallet);
-//        cPrint = (Button) findViewById(R.id.cPrint);
+      cPrint = (Button) findViewById(R.id.cPrint);
         cSave = (Button) findViewById(R.id.cSave);
-
+        cCancel =(Button)findViewById(R.id.cCancel) ;
+        cPrint.setVisibility(View.INVISIBLE);
         btn_one.setOnClickListener(this);
         btn_two.setOnClickListener(this);
         btn_three.setOnClickListener(this);
@@ -407,8 +412,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_dc.setOnClickListener(this);
         btn_cc.setOnClickListener(this);
         btn_wallet.setOnClickListener(this);
-//        cPrint.setOnClickListener(this);
+      cPrint.setOnClickListener(this);
         cSave.setOnClickListener(this);
+        cCancel.setOnClickListener(this);
     }
 
 
@@ -486,6 +492,32 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_wallet:
                 mEditSpinner.setText("WALLET");
                 break;
+
+            case R.id.cCancel:
+
+                AlertDialog.Builder builder= new AlertDialog.Builder(CheckoutActivity.this);
+                builder.setTitle("Are you sure you want to cancel the bill?");
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+                builder.show();
+                break;
+
+
             case R.id.cSave:
                 saveBill();
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -495,6 +527,21 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     editor.apply();
                     mPrinter.showDeviceList(CheckoutActivity.this);
                 }
+               break;
+            case R.id.cPrint:
+
+
+                String printSize = getSettings.getPrintingPaperSize();
+                // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
+                if (printSize.equals("1")) {
+                    printTwoInch();
+                } else {
+                    printThreeInch();
+                }
+                Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -546,39 +593,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         Log.i("DET", String.valueOf(detInserted));
 
         if (detInserted != -1 && mstInserted != -1) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(CheckoutActivity.this);
-            builder.setCancelable(false);
-            builder.setTitle("Bill saved. Do you want to print? ");
-            builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            String printSize = getSettings.getPrintingPaperSize();
-                            // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
-                            if (printSize.equals("1")) {
-                                printTwoInch();
-                            } else {
-                                printThreeInch();
-                            }
-                            Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
-                        }
-
-
-                    }
-            );
-            builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-            );
-            builder.show();
+           cPrint.setVisibility(View.VISIBLE);
+            cSave.setVisibility(View.INVISIBLE);
+            cCancel.setVisibility(View.INVISIBLE);
+            Toast.makeText(CheckoutActivity.this, "Bill Saved!", Toast.LENGTH_SHORT).show();
 
         } else {
             Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
@@ -586,6 +604,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             finish();
             Toast.makeText(CheckoutActivity.this, "Error saving bill", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     TextWatcher paymentMode = new TextWatcher() {
@@ -634,6 +653,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     } else {
                         tBalance.setVisibility(View.INVISIBLE);
                     }
+                }
+
+                else
+                {
+                    tBalance.setVisibility(View.INVISIBLE);
                 }
             }
         }
@@ -711,6 +735,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     };
 
 
+
     private void printThreeInch() {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
@@ -721,86 +746,87 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.resetPrinter();
         mPrinter.setPrinterWidth(PrinterWidth.PRINT_WIDTH_72MM);
         mPrinter.setHighIntensity();
-        headerPrint();
-        mPrinter.setAlignmentCenter();
-        mPrinter.setBold();
-        mPrinter.printTextLine("CASH BILL\n");
-        mPrinter.setRegular();
-       // String custName = "test customer";
-       // String cashName = "test cashier";
-        String s = String.format("%-15s%8s%12s%12s\n", "Item", "Qty", "Price", "Amount");
-        String s2 = String.format("%-15s%8s%12s%12s\n", "Aachi Masala 1K", "2kg", "4500.00", "9000.00");
-        String total = String.format("%-15s%8s%9s%15s\n", "Total", "", "", "Rs." + FragmentOne.commaSeperated(netAmt));
-        mPrinter.setAlignmentLeft();
-        String billNo = String.format("%-10s%8s%9s%15s\n", "Bill No", sm.getBillNO(), "", formattedDate);
-        mPrinter.printTextLine(billNo);
-       // mPrinter.printTextLine(" Customer Name  : " + custName + "\n");
-        //mPrinter.printTextLine(" Cashier Name   : " + cashName + "\n");
-        mPrinter.printTextLine("------------------------------------------------\n");
-        mPrinter.setBold();
-        mPrinter.printTextLine(s);
-        mPrinter.printTextLine("------------------------------------------------\n");
-        mPrinter.setRegular();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        for (int i = 0; i < FragmentOne.billList.size(); i++) {
-            BillItems billItems = FragmentOne.billList.get(i);
-            quantity = quantity + billItems.getQty();
-            if (billItems.getDesc().length() <= 15) {
-                String sa = String.format("%-15s%8s%12s%12s\n", billItems.getDesc(), billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
-                mPrinter.printTextLine(sa);
+        if(headerPrint()) {
+            mPrinter.setAlignmentCenter();
+            mPrinter.setBold();
+            mPrinter.printTextLine("CASH BILL\n");
+            mPrinter.setRegular();
+            // String custName = "test customer";
+            // String cashName = "test cashier";
+            String s = String.format("%-15s%8s%12s%12s\n", "Item", "Qty", "Price", "Amount");
+            String s2 = String.format("%-15s%8s%12s%12s\n", "Aachi Masala 1K", "2kg", "4500.00", "9000.00");
+            String total = String.format("%-15s%8s%9s%15s\n", "Total", "", "", "Rs." + FragmentOne.commaSeperated(netAmt));
+            mPrinter.setAlignmentLeft();
+            String billNo = String.format("%-10s%-8s%9s%15s\n", "Bill No", sm.getBillNO(), "", formattedDate);
+            mPrinter.printTextLine(billNo);
+            // mPrinter.printTextLine(" Customer Name  : " + custName + "\n");
+            //mPrinter.printTextLine(" Cashier Name   : " + cashName + "\n");
+            mPrinter.printTextLine("------------------------------------------------\n");
+            mPrinter.setBold();
+            mPrinter.printTextLine(s);
+            mPrinter.printTextLine("------------------------------------------------\n");
+            mPrinter.setRegular();
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            for (int i = 0; i < FragmentOne.billList.size(); i++) {
+                BillItems billItems = FragmentOne.billList.get(i);
+                quantity = quantity + billItems.getQty();
+                if (billItems.getDesc().length() <= 15) {
+                    String sa = String.format("%-15s%8s%12s%12s\n", billItems.getDesc(), billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+                    mPrinter.printTextLine(sa);
+                } else {
+                    String sa1 = String.format("%-40s%3s\n", billItems.getDesc(), "");
+                    String sa2 = String.format("%-15s%8s%12s%12s\n", "", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+                    mPrinter.printTextLine(sa1);
+                    mPrinter.printTextLine(sa2);
+                }
+            }
+            String discount = "";
+            String qtyNetAmt = String.format("%-15s%8s%10s%14s\n", "Items : " + FragmentOne.billList.size(), "", "Subtotal", totalPrice);
+            if (cDiscountValue.equals("")) {
+                discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(quantity), "", "", "");
             } else {
-                String sa1 = String.format("%-15s%8s%12s%12s\n", billItems.getDesc(), "", "", "");
-                String sa2 = String.format("%-15s%8s%12s%12s\n", "", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
-                mPrinter.printTextLine(sa1);
-                mPrinter.printTextLine(sa2);
+                discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(quantity), "", "Discount", cDiscountValue);
             }
-        }
-        String discount = "";
-        String qtyNetAmt = String.format("%-15s%8s%10s%14s\n", "Items : " + FragmentOne.billList.size(), "", "Subtotal", totalPrice);
-        if (cDiscountValue.equals("")) {
-            discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(quantity), "", "", "");
-        } else {
-            discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(quantity), "", "Discount", cDiscountValue);
-        }
-        mPrinter.printTextLine("------------------------------------------------\n");
-        mPrinter.printTextLine(qtyNetAmt);
-        mPrinter.printTextLine(discount);
-        mPrinter.printLineFeed();
-        mPrinter.printTextLine("------------------------------------------------\n");
-        mPrinter.setBold();
-        mPrinter.printTextLine(total);
-        mPrinter.printTextLine("------------------------------------------------\n");
-        mPrinter.printLineFeed();
-        mPrinter.setAlignmentCenter();
-        mPrinter.setBold();
-        GetSettings getSettings = new GetSettings(CheckoutActivity.this);
-        String[] footerArray = {getSettings.getFooterText1(), getSettings.getFooterText2(),
-                getSettings.getFooterText3(), getSettings.getFooterText4()};
-        for (String aFooterArray : footerArray) {
-            if (!aFooterArray.isEmpty()) {
-                mPrinter.printTextLine( aFooterArray + "\n");
-                mPrinter.printLineFeed();
+            mPrinter.printTextLine("------------------------------------------------\n");
+            mPrinter.printTextLine(qtyNetAmt);
+            mPrinter.printTextLine(discount);
+            mPrinter.printLineFeed();
+            mPrinter.printTextLine("------------------------------------------------\n");
+            mPrinter.setBold();
+            mPrinter.printTextLine(total);
+            mPrinter.printTextLine("------------------------------------------------\n");
+            mPrinter.printLineFeed();
+            mPrinter.setAlignmentCenter();
+            mPrinter.setBold();
+            GetSettings getSettings = new GetSettings(CheckoutActivity.this);
+            String[] footerArray = {getSettings.getFooterText1(), getSettings.getFooterText2(),
+                    getSettings.getFooterText3(), getSettings.getFooterText4()};
+            for (String aFooterArray : footerArray) {
+                if (!aFooterArray.isEmpty()) {
+                    mPrinter.printTextLine(aFooterArray + "\n");
+                    mPrinter.printLineFeed();
+                }
             }
+            mPrinter.setRegular();
+            mPrinter.printTextLine("************************************************\n");
+            mPrinter.printLineFeed();
+            mPrinter.printLineFeed();
+            mPrinter.setAlignmentCenter();
+            mPrinter.printLineFeed();
+            mPrinter.printLineFeed();
+            mPrinter.resetPrinter();
+            //print all commands
+            mPrinter.batchPrint();
         }
-        mPrinter.setRegular();
-        mPrinter.printTextLine("************************************************\n");
-        mPrinter.printLineFeed();
-        mPrinter.printLineFeed();
-        mPrinter.setAlignmentCenter();
-        mPrinter.printLineFeed();
-        mPrinter.printLineFeed();
-        mPrinter.resetPrinter();
-        //print all commands
-        mPrinter.batchPrint();
     }
 
 
-    public void headerPrint() {
+    public boolean headerPrint() {
         String city = getSettings.getCompanyCity();
         String pincode = getSettings.getCompanyPincode();
         String cityPin = city + "-" + pincode;
-        String phNumber = "PH:" + getSettings.getCompanyPhoneNo();
+        String phNumber = "Ph:" + getSettings.getCompanyPhoneNo();
         String[] billHeader = {getSettings.getCompanyAddressLine1(),
                 getSettings.getCompanyAddressLine2(), getSettings.getCompanyAddressLine3(),
                 cityPin, phNumber, getSettings.getCompanyGstNo() };
@@ -808,7 +834,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         String ctName = getSettings.getCompanyTradeName();
         if (ctName.isEmpty()) {
             Toast.makeText(CheckoutActivity.this, "Company name not present in settings", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
         mPrinter.setAlignmentCenter();
         mPrinter.setBold();
@@ -821,6 +847,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 mPrinter.printTextLine(aBillHeader + "\n");
             }
         }
+        return true;
     }
 
     @Override
@@ -857,9 +884,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         String billNo = String.format("%12s%-7s%-5s%4s%15s\n", "", "Bill No:", sm.getBillNO(), "", formattedDate);
         mPrinter.setAlignmentCenter();
         mPrinter.setBold();
-        mPrinter.setFontSizeXSmall();
+        mPrinter.setFontSizeSmall();
         //   mPrinter.printTextLine("\n"+clName+"\n");
         mPrinter.printTextLine("\n           " + ctName + "\n");
+        mPrinter.setFontSizeXSmall();
         mPrinter.setRegular();
         if (!addLine1.isEmpty())
             mPrinter.printTextLine("            " + addLine1 + "\n");
@@ -871,17 +899,19 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (!cityPin.isEmpty())
             mPrinter.printTextLine("            " + cityPin + "\n");
         if (!phNum.isEmpty())
-            mPrinter.printTextLine("            " + "PH:" + phNum + "\n");
+            mPrinter.printTextLine("            " + "Ph:" + phNum + "\n");
         mPrinter.printLineFeed();
         mPrinter.setBold();
+        mPrinter.setFontSizeSmall();
         mPrinter.printTextLine("            CASH BILL\n");
         mPrinter.printLineFeed();
         mPrinter.setRegular();
+        mPrinter.setFontSizeXSmall();
         mPrinter.setAlignmentLeft();
         mPrinter.printTextLine(billNo);
         //mPrinter.printTextLine("            Customer Name  : " + custName + "\n");
-       // mPrinter.printTextLine("            Cashier Name   : " + cashName + "\n");
-        mPrinter.printLineFeed();
+        // mPrinter.printTextLine("            Cashier Name   : " + cashName + "\n");
+      //  mPrinter.printLineFeed();
         mPrinter.setFontSizeSmall();
         mPrinter.printTextLine("            ------------------------------------\n");
         mPrinter.setFontSizeXSmall();
@@ -898,7 +928,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             //     String sa = String.format("12s%-13s%3s%9s%10s\n", "",billItems.getDesc(), billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
             //      mPrinter.printTextLine(sa);
             //   } else {
-            String sa1 = String.format("%12s%-20s%4s%5s%5s\n", "", billItems.getDesc(), "", "", "");
+            String sa1 = String.format("%12s%-34s\n", "", billItems.getDesc());
             String sa2 = String.format("%12s%-10s%5s%9s%10s\n", "", "", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
             mPrinter.printTextLine(sa1);
             mPrinter.printLineFeed();
@@ -925,7 +955,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.setFontSizeSmall();
         mPrinter.printTextLine("            ------------------------------------\n");
         mPrinter.setBold();
-        mPrinter.setFontSizeXSmall();
+        mPrinter.setFontSizeSmall();
         mPrinter.printTextLine(total);
         mPrinter.setFontSizeSmall();
         mPrinter.printTextLine("            ------------------------------------\n");
@@ -954,6 +984,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         //print all commands
         mPrinter.batchPrint();
     }
+
 
     private void centerPrint1() {
 

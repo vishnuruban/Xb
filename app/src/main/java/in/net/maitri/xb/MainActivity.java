@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             if (isIMEIRegistered(imei, imeiList)) {
                 checkIfFirstTym();
                 startActivity(new Intent(MainActivity.this, AddItemCategory.class));
+                finish();
             } else {
                 createErrorDialog("This device is not registered with us.");
             }

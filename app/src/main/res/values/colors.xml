@@ -21,6 +21,10 @@
     <color name="black"> #000</color>
     <color name="toggle"> #4FC3F7</color>
 
+    <color name="keypad_colour">#78909C</color>
+    <color name="dark_green">   #00695C</color>
+    <color name="red"> #EF9A9A</color>
+    <color name="light_orange">#FFCCBC</color>
     <color name="light_grey"> #D3D3D3</color>
 
     <color name="colorBlack">#000000</color>

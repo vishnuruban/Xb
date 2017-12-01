@@ -197,23 +197,13 @@
                 android:weightSum="1">
 
 
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.6"
-                    android:background="@drawable/bg_edittext1"
-                    android:drawableLeft="@mipmap/ic_account_box_white_24dp"
-                    android:drawablePadding="15dp"
-                    android:hint="Customer Name"
-                    android:padding="16dp"
-                    android:textColorHint="#F6F6F6" />
 
 
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
+                    android:layout_weight="1"
                     android:background="@drawable/bg_edittext1"
                     android:drawablePadding="15dp"
                     android:hint="Date"
@@ -229,7 +219,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@color/dark_brown">
+                android:background="#009688">
 
                 <TextView
                     android:layout_width="0dp"
@@ -321,7 +311,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="1"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -332,7 +322,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="2"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -343,7 +333,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="3"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -354,7 +344,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="4"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -365,7 +355,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="5"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -376,7 +366,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="6"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -387,7 +377,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="7"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -398,7 +388,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="8"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -409,7 +399,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="9"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -420,7 +410,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="0"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -431,7 +421,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="."
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -442,7 +432,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="CLEAR"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -453,7 +443,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="00"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -464,7 +454,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="500"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -475,7 +465,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/buttonColour"
+                    android:background="@color/keypad_colour"
                     android:text="2000"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -486,7 +476,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimary"
+                    android:background="#455A64"
                     android:text="CASH"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -500,7 +490,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimary"
+                    android:background="#455A64"
                     android:text="DC"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -513,7 +503,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimary"
+                    android:background="#455A64"
                     android:text="CC"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -526,7 +516,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimary"
+                    android:background="#455A64"
                     android:text="WALLET"
                     android:textColor="#fff"
                     android:textSize="20dp" />
@@ -693,6 +683,24 @@
                 android:layout_height="2dp"
                 android:layout_weight="0.1"
               />
+
+
+            <Button
+                android:id="@+id/cPrint"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/ok"
+                android:text="PRINT "
+                android:textColor="#fff"
+                android:textSize="15dp" />
+
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="0.1"
+                />
 
 
             <Button

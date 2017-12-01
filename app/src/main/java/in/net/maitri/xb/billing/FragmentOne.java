@@ -46,6 +46,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     private static BillListAdapter billListAdapter;
     private static TextView bTotalProducts,bTotalPrice;
     static DecimalFormat df,df1;
+    LinearLayout custScreen;
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
             btn_eight, btn_nine, btn_zero, btn_point, btn_clear;
     TextInputEditText eQty;
@@ -63,6 +64,8 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
         bTotalProducts = (TextView) view.findViewById(R.id.bTotalProducts);
         bTotalPrice    = (TextView) view.findViewById(R.id.bTotalPrice);
+        custScreen =(LinearLayout) view.findViewById(R.id.customerscrren);
+        custScreen.setVisibility(View.GONE);
 
         mCheckout = (Button) view.findViewById(R.id.mCheckout);
         mclearBill = (Button) view.findViewById(R.id.mClearBill);
@@ -73,9 +76,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
        // populateList();
 
         GradientDrawable bgShape = (GradientDrawable)mCheckout.getBackground();
-        bgShape.setColor(getResources().getColor(R.color.green));
+        bgShape.setColor(getResources().getColor(R.color.dark_green));
         GradientDrawable bgShape1 = (GradientDrawable)mclearBill.getBackground();
-        bgShape1.setColor(getResources().getColor(R.color.dark_orange));
+        bgShape1.setColor(getResources().getColor(R.color.red));
 
 
          df = new DecimalFormat("0.00");
@@ -296,6 +299,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         btn_nine.setOnClickListener(this);
         btn_zero.setOnClickListener(this);
         btn_point.setOnClickListener(this);
+
+        btn_point.setFocusable(false);
+        btn_point.setFocusableInTouchMode(false);
 
         btn_clear.setOnClickListener(this);
         eQty.setVisibility(View.GONE);

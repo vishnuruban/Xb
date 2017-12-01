@@ -108,6 +108,9 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<ReportData> totalReport = new ArrayList<>();
     private List<ReportData> totalReport1 = new ArrayList<>();
 
+
+
+
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -200,7 +203,7 @@ public class DbHandler extends SQLiteOpenHelper {
             ContentValues cv = new ContentValues();
             cv.put(KEY_CAT_NAME, category.getCategoryName());
             cv.put(KEY_CAT_IMAGE_PATH, category.getCategoryImage());
-            db.insert(CATEGORY_TABLE_NAME, null, cv);
+             db.insert(CATEGORY_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
@@ -254,7 +257,6 @@ public class DbHandler extends SQLiteOpenHelper {
         // return category list
         return categoryList;
     }
-
 
 
 
@@ -872,5 +874,18 @@ public class DbHandler extends SQLiteOpenHelper {
                 });
         android.support.v7.app.AlertDialog alert = builder.create();
         alert.show();
+    }
+
+
+
+
+    public void resetData()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM "+CATEGORY_TABLE_NAME);
+        db.execSQL("DELETE FROM "+ITEM_TABLE_NAME);
+        db.execSQL("DELETE FROM "+SALES_MST_TABLE_NAME);
+        db.execSQL("DELETE FROM "+SALES_DET_TABLE_NAME);
+        db.close();
     }
 }
