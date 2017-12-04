@@ -495,28 +495,37 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.cCancel:
 
-                AlertDialog.Builder builder= new AlertDialog.Builder(CheckoutActivity.this);
-                builder.setTitle("Are you sure you want to cancel the bill?");
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
+                if(cCancel.getText().toString().equals("NEXT BILL"))
+                {
+                    Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+                else {
 
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CheckoutActivity.this);
+                    builder.setTitle("Are you sure you want to cancel the bill?");
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
 
-                builder.show();
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+                    builder.show();
+                }
                 break;
-
 
             case R.id.cSave:
                 saveBill();
@@ -595,7 +604,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (detInserted != -1 && mstInserted != -1) {
            cPrint.setVisibility(View.VISIBLE);
             cSave.setVisibility(View.INVISIBLE);
-            cCancel.setVisibility(View.INVISIBLE);
+            cCancel.setVisibility(View.VISIBLE);
+            cCancel.setText("NEXT BILL");
             Toast.makeText(CheckoutActivity.this, "Bill Saved!", Toast.LENGTH_SHORT).show();
 
         } else {

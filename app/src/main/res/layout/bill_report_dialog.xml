@@ -56,9 +56,9 @@
         <LinearLayout
             android:id="@+id/l"
             android:layout_width="0dp"
+            android:layout_weight="0.1"
             android:layout_height="match_parent"
-            android:background="@color/cancel"
-         >
+            android:background="@color/cancel">
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

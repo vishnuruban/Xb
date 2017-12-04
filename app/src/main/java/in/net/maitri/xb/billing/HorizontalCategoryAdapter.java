@@ -60,7 +60,7 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
             mAllCategories.get(position).setSelected(false);
 
         } else {
-            holder.cardView.setBackgroundColor(Color.parseColor("#5D4037"));
+            holder.cardView.setBackgroundColor(Color.parseColor("#009688"));
         }
     }
 
