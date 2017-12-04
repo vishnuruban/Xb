@@ -31,6 +31,7 @@ import in.net.maitri.xb.billReports.BillReportActivity;
 import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.customer.CustomerDetail;
+import in.net.maitri.xb.db.BackUpAndRestoreDb;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
@@ -56,6 +57,14 @@ public class AddItemCategory extends AppCompatActivity {
         setContentView(R.layout.activity_add_item_category);
 
         new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
+
+        Button backup = (Button) findViewById(R.id.backup);
+        backup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new BackUpAndRestoreDb(AddItemCategory.this).exportDB();
+            }
+        });
 
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
