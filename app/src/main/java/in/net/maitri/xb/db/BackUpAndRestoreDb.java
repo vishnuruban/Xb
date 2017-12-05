@@ -11,6 +11,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class BackUpAndRestoreDb {
 
@@ -66,27 +69,17 @@ public class BackUpAndRestoreDb {
                 myDir.mkdirs();
             }
             File data = Environment.getDataDirectory();
-
             if (sd.canWrite()) {
-                Log.d("Success", "1");
                 String currentDBPath = "XposeBilling";
-                Log.d("Success", "2");
-                String backupDBPath = "XposeBilling.db";
-                Log.d("Success", "3");
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                String backupDBPath = "Backup" + timeStamp + ".db";
                 File currentDB = new File(DB_PATH, currentDBPath);
-                Log.d("Success", currentDB.toString());
                 File backupDB = new File(myDir, backupDBPath);
-                Log.d("Success", backupDB.toString());
                 FileChannel src = new FileInputStream(currentDB).getChannel();
-                Log.d("Success", "6");
                 FileChannel dst = new FileOutputStream(backupDB).getChannel();
-                Log.d("Success", "7");
                 dst.transferFrom(src, 0, src.size());
-                Log.d("Success", "8");
                 src.close();
-                Log.d("Success", "9");
                 dst.close();
-                Log.d("Success", "10");
                 Toast.makeText(mContext, "Backup Successful!",
                         Toast.LENGTH_SHORT).show();
 

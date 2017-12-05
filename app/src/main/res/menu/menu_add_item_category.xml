@@ -3,11 +3,13 @@
 
     <item
         android:id="@+id/customers"
+        android:visible="false"
         android:orderInCategory="100"
         android:title="Customers" />
 
     <item
         android:id="@+id/sales_report"
+        android:visible="false"
         android:orderInCategory="101"
         android:title="Sales Report"/>
 
@@ -22,8 +24,13 @@
         android:title="Settings" />
 
     <item
-        android:id="@+id/reset"
+        android:id="@+id/backup"
         android:orderInCategory="103"
+        android:title="Backup Data" />
+
+    <item
+        android:id="@+id/reset"
+        android:orderInCategory="104"
         android:title="Delete Data" />
 
 

@@ -57,15 +57,6 @@ public class AddItemCategory extends AppCompatActivity {
         setContentView(R.layout.activity_add_item_category);
 
         new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
-
-        Button backup = (Button) findViewById(R.id.backup);
-        backup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new BackUpAndRestoreDb(AddItemCategory.this).exportDB();
-            }
-        });
-
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
         mSelectedCategory = (TextView) findViewById(R.id.selected_category_name);
@@ -348,6 +339,10 @@ public class AddItemCategory extends AppCompatActivity {
                     }
                 });
                builder.show();
+                break;
+
+            case R.id.backup:
+                new BackUpAndRestoreDb(AddItemCategory.this).exportDB();
                 break;
 
             case android.R.id.home:
