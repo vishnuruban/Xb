@@ -192,8 +192,7 @@ public class DbHandler extends SQLiteOpenHelper {
          //   db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
        // }
 
-       db.execSQL("DROP TABLE IF EXISTS " +  SALES_MST_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " +  SALES_DET_TABLE_NAME);
+
         onCreate(db);
     }
 

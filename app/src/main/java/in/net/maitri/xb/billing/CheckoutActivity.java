@@ -182,7 +182,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cProducts.setText(totalProducts);
         cPrice.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
         cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-        cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+        cPayment.setText("Amount to receive - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
 
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -836,9 +836,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         String pincode = getSettings.getCompanyPincode();
         String cityPin = city + "-" + pincode;
         String phNumber = "Ph:" + getSettings.getCompanyPhoneNo();
+        String gstNumber ="GSTIN:"+getSettings.getCompanyGstNo();
         String[] billHeader = {getSettings.getCompanyAddressLine1(),
                 getSettings.getCompanyAddressLine2(), getSettings.getCompanyAddressLine3(),
-                cityPin, phNumber, getSettings.getCompanyGstNo() };
+                cityPin, phNumber,gstNumber};
         String clName = getSettings.getCompanyLegalName();
         String ctName = getSettings.getCompanyTradeName();
         if (ctName.isEmpty()) {
@@ -909,6 +910,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             mPrinter.printTextLine("            " + cityPin + "\n");
         if (!phNum.isEmpty())
             mPrinter.printTextLine("            " + "Ph:" + phNum + "\n");
+        if(!gstin.isEmpty())
+        {
+            mPrinter.printTextLine("            " + "GSTIN:" + gstin + "\n");
+        }
         mPrinter.printLineFeed();
         mPrinter.setBold();
         mPrinter.setFontSizeSmall();
