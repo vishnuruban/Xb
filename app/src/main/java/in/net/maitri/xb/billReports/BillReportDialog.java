@@ -27,7 +27,7 @@ import in.net.maitri.xb.db.SalesDet;
 
 public class BillReportDialog extends Dialog implements DialogInterface.OnClickListener{
 
-    TextView selectedBill,selectedBillDate;
+    TextView selectedBill,selectedBillDate,dSubTotal,dDiscount,dNetAmt;
 
     Context context;
     int fromDate=0;int toDate=0;
@@ -39,9 +39,10 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     BillListAdapter billListAdapter;
     private ListView billListView;
     Button closeDialog;
+     String discount,netAmt,subTotal;
 
 
-    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog)
+    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,String netAmt,String subTotal)
     {
         super (context);
         this.context = context;
@@ -50,6 +51,9 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         this.billNo = billNo;
         this.mDialog = mDialog;
         this.dateTime = dateTime;
+        this.discount = discount;
+        this.netAmt = netAmt;
+        this.subTotal = subTotal;
 
     }
 
@@ -63,8 +67,15 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         dbHandler = new DbHandler(context);
         selectedBill = (TextView) findViewById(R.id.selected_bill);
         selectedBillDate = (TextView)findViewById(R.id.selected_bill_date);
+       dSubTotal =(TextView)findViewById(R.id.dSubTotal);
+        dDiscount =(TextView)findViewById(R.id.dSubDiscount);
+        dNetAmt =(TextView)findViewById(R.id.dNetAmt);
         billListView = (ListView) findViewById(R.id.bill_lv);
         closeDialog =(Button)findViewById(R.id.closeDialog);
+
+        dDiscount.setText(discount);
+        dNetAmt.setText(netAmt);
+        dSubTotal.setText(subTotal);
 
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -86,7 +86,7 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
         MyViewHolder(View c) {
             super(c);
             categoryName = (TextView) c.findViewById(R.id.bCatName);
-            categoryName2 = (TextView) c.findViewById(R.id.bIemCount);
+           // categoryName2 = (TextView) c.findViewById(R.id.bIemCount);
             cardView  = (CardView) c.findViewById(R.id.card_view);
         }
      }

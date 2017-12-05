@@ -301,13 +301,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 case CieBluetoothPrinter.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case CieBluetoothPrinter.STATE_CONNECTED:
-                            setStatusMsg(title_connected_to + mConnectedDeviceName);
+                            setStatusMsg("Printer Status :"+title_connected_to + mConnectedDeviceName);
                             //Toast.makeText(CheckoutActivity.this,title_connected_to + mConnectedDeviceName,Toast.LENGTH_SHORT).show();
                             //    tbPrinter.setText("ON");
                             //  tbPrinter.setChecked(true);
                             break;
                         case CieBluetoothPrinter.STATE_CONNECTING:
-                            setStatusMsg(title_connected_to + title_connecting);
+                            setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
                             //Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
                             try {
                                 //    tbPrinter.setText("...");
@@ -317,13 +317,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                             }
                             break;
                         case CieBluetoothPrinter.STATE_LISTEN:
-                            setStatusMsg(title_connected_to + title_connecting);
+                            setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
                             //  Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
 
                         case CieBluetoothPrinter.STATE_NONE:
-                            setStatusMsg(title_not_connected);
+                            setStatusMsg("Printer Status :"+title_not_connected);
                          //   Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
-
                             try {
                                 // tbPrinter.setText("OFF");
                                 // tbPrinter.setChecked(false);

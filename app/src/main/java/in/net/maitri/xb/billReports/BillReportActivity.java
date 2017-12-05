@@ -88,6 +88,8 @@ byte[] excelReport;
 
     DecimalFormat df;
 
+
+
     String rs;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -247,8 +249,11 @@ byte[] excelReport;
                 mProgressDialog.show();
                 int billNo = mst.getBillNO();
               String billDateTime =mst.getDateTime();
+                double discount = mst.getDiscount();
+                double netAmt = mst.getNetAmt();
+                double subTotal = discount + netAmt;
 
-                 brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog);
+                 brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,"Discount:  "+rs+ df.format(discount),"Net Amount:  "+rs+ df.format(netAmt),"Subtotal:  "+rs+ df.format(subTotal));
                 brd.show();
 
 

@@ -5,138 +5,194 @@
     >
 
     <LinearLayout
+        android:id="@+id/billLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:id="@+id/billLayout"
         android:weightSum="1">
-    <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
 
-        android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:background="#F3F7F9">
-
-
-        <LinearLayout
-            android:id="@+id/llHeader"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
 
             android:layout_margin="5dp"
-            android:background="#00796B"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/selected_bill"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.45"
-                android:gravity="center"
-                android:padding="8dp"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            android:layout_weight="1"
+            android:background="#F3F7F9">
 
 
-            <TextView
-                android:id="@+id/selected_bill_date"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.45"
-                android:gravity="center"
-                android:padding="8dp"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-
-
-
-        <LinearLayout
-            android:id="@+id/l"
-            android:layout_width="0dp"
-            android:layout_weight="0.1"
-            android:layout_height="match_parent"
-            android:background="@color/cancel">
-            <Button
+            <LinearLayout
+                android:id="@+id/llHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:gravity="center"
-                android:padding="8dp"
-                android:id="@+id/closeDialog"
-                android:textColor="#FFFFFF"
-                android:background="@mipmap/ic_clear_white_24dp"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:layout_margin="5dp"
+                android:background="#00796B"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/selected_bill"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/selected_bill_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:id="@+id/l"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.1"
+                    android:background="@color/cancel">
+
+                    <Button
+                        android:id="@+id/closeDialog"
+                        android:layout_width="match_parent"
+
+                        android:layout_height="wrap_content"
+                        android:background="@mipmap/ic_clear_white_24dp"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/l1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/llHeader"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
 
 
             <LinearLayout
-                android:id="@+id/linearL6"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp">
+                android:id="@+id/l1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/llHeader"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:padding="10dp"
-                    android:text="Customer Name :"
-                    android:textColor="#000" />
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:id="@+id/linearL6"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.5"
-                    android:padding="10dp"
-                    android:text="Cashier Name :"
-                    android:textColor="#000" />
+                    android:layout_margin="2dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:padding="10dp"
+                        android:text="Customer Name :"
+                        android:textColor="#000" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:padding="10dp"
+                        android:text="Cashier Name :"
+                        android:textColor="#000" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/linearL2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="#006064">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.75"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Items"
+                        android:textColor="#ffffff" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Qty"
+                        android:textColor="#ffffff" />
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Rate(\u20B9)"
+                        android:textColor="#ffffff" />
+
+                    <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Amount(\u20B9)"
+                        android:textColor="#ffffff" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linearL3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <ListView
+                        android:id="@+id/bill_lv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
             </LinearLayout>
 
 
 
-
             <LinearLayout
-                android:id="@+id/linearL2"
+                android:id="@+id/linearL4"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="#006064">
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:background="#5D6D7E">
 
                 <TextView
+                    android:id="@+id/dSubTotal"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.75"
+                    android:layout_weight="1.5"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Items"
                     android:textColor="#ffffff" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="Qty"
-                    android:textColor="#ffffff" />
+
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/dSubDiscount"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.5"
@@ -146,29 +202,20 @@
                     android:textColor="#ffffff" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/dNetAmt"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1.25"
+                    android:layout_weight="1.5"
                     android:gravity="center"
                     android:padding="10dp"
+                    android:textStyle="bold"
                     android:text="Amount(\u20B9)"
                     android:textColor="#ffffff" />
             </LinearLayout>
-
-            <ListView
-                android:id="@+id/bill_lv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        </RelativeLayout>
 
 
-        </LinearLayout>
-
-
-    </RelativeLayout>
-
-
-        </LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
