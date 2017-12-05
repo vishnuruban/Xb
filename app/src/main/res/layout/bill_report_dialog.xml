@@ -210,7 +210,7 @@
                     android:padding="10dp"
                     android:textStyle="bold"
                     android:text="Amount(\u20B9)"
-                    android:textColor="#ffffff" />
+                    android:textColor="#fff" />
             </LinearLayout>
         </RelativeLayout>
 
