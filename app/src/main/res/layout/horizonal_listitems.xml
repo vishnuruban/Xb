@@ -29,7 +29,11 @@
         android:text="TEST"
         android:textStyle="bold" />
 
-
+    <TextView
+        android:id="@+id/bIemCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/bCatName" />
     </android.support.v7.widget.CardView>
 
 </RelativeLayout>
