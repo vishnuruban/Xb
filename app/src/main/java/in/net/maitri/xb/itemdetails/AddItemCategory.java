@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -37,6 +38,7 @@ import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.reports.TotalSales;
 import in.net.maitri.xb.settings.SettingsActivity;
+import in.net.maitri.xb.util.FilePicker;
 import in.net.maitri.xb.util.Permissions;
 
 public class AddItemCategory extends AppCompatActivity {
@@ -49,6 +51,7 @@ public class AddItemCategory extends AppCompatActivity {
     private TextView mNoItem, mNoCategory, mSelectedCategory;
     private int mCategoryId;
     private Button mProceed;
+    private static final int REQUEST_PICK_FILE = 1;
 
 
     @Override
@@ -68,9 +71,7 @@ public class AddItemCategory extends AppCompatActivity {
                 if(mGetAllItems.size() != 0) {
                     Intent intent = new Intent(AddItemCategory.this, BillingActivity.class);
                     startActivity(intent);
-                }
-                else
-                {
+                } else {
                     Toast.makeText(AddItemCategory.this,"No Items Present",Toast.LENGTH_SHORT).show();
                 }
             }
@@ -345,6 +346,11 @@ public class AddItemCategory extends AppCompatActivity {
                 new BackUpAndRestoreDb(AddItemCategory.this).exportDB();
                 break;
 
+            case R.id.restore:
+                Intent intent = new Intent(this, FilePicker.class);
+                startActivityForResult(intent, REQUEST_PICK_FILE);
+                break;
+
             case android.R.id.home:
                 finish();
                 break;
@@ -352,15 +358,36 @@ public class AddItemCategory extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
-     void reset()
-     {
+     void reset() {
              SharedPreferences preferences = getSharedPreferences(CheckoutActivity.mypreference, Context.MODE_PRIVATE);
              SharedPreferences.Editor editor = preferences.edit();
              editor.clear();
-             editor.commit();
+             editor.apply();
             mDbHandler.resetData();
      }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode == RESULT_OK) {
+
+            switch(requestCode) {
+
+                case REQUEST_PICK_FILE:
+
+                    if(data.hasExtra(FilePicker.EXTRA_FILE_PATH)) {
+
+                        File selectedFile = new File
+                                (data.getStringExtra(FilePicker.EXTRA_FILE_PATH));
+                        if (new BackUpAndRestoreDb(AddItemCategory.this).importDB(selectedFile)){
+                            startActivity(new Intent(AddItemCategory.this, AddItemCategory.class));
+                            finish();
+                        }
+
+                    }
+                    break;
+            }
+        }
+    }
 
 }

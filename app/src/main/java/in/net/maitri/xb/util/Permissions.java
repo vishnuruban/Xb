@@ -55,7 +55,7 @@ public class Permissions extends Activity {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
 
-            case MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE:
+            case MY_PERMISSIONS_PHONE_STATE:
                /* if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show();
                 } else {

@@ -1,6 +1,5 @@
 package in.net.maitri.xb.db;
 
-
 import android.content.Context;
 import android.os.Build;
 import android.os.Environment;
@@ -23,36 +22,38 @@ public class BackUpAndRestoreDb {
         mContext = context;
     }
 
-    public void importDB() {
+    public boolean importDB(File file) {
+        String DB_PATH;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DB_PATH = mContext.getFilesDir().getAbsolutePath().replace("files", "databases") + File.separator;
+        } else {
+            DB_PATH = mContext.getFilesDir().getPath() + mContext.getPackageName() + "/databases/";
+        }
+        File sd = Environment.getExternalStorageDirectory();
+    /*    File myDir = new File(sd + "/Xb/Backup");
+        String backupDBPath = "Backup20171205_113033.db";
+        File currDB = new File(myDir, backupDBPath);*/
         try {
-            File sd = Environment.getExternalStorageDirectory();
-            File myDir = new File(sd + "/Xb/Backup");
-            if (!myDir.exists()) {
-                myDir.mkdirs();
-            }
-            File data = Environment.getDataDirectory();
             if (sd.canWrite()) {
-                String currentDBPath = "//data//" + "in.net.maitri"
-                        + "//databases//" + "DbHandler";
-                String backupDBPath = "/Xb/Backup"; // From SD directory.
-                File backupDB = new File(data, currentDBPath);
-                File currentDB = new File(sd, backupDBPath);
-
-                FileChannel src = new FileInputStream(backupDB).getChannel();
-                FileChannel dst = new FileOutputStream(currentDB).getChannel();
-                dst.transferFrom(src, 0, src.size());
-                src.close();
-                dst.close();
-                Toast.makeText(mContext, "Import Successful!",
-                        Toast.LENGTH_SHORT).show();
-
+                String restoreDBPath = "XposeBilling";
+                File restoreDB = new File(DB_PATH, restoreDBPath);
+                if (restoreDB.delete()) {
+                    FileChannel src = new FileInputStream(file).getChannel();
+                    FileChannel dst = new FileOutputStream(restoreDB).getChannel();
+                    dst.transferFrom(src, 0, src.size());
+                    src.close();
+                    dst.close();
+                    Toast.makeText(mContext, "Restore Successful!",
+                            Toast.LENGTH_SHORT).show();
+                    return true;
+                }
             }
         } catch (Exception e) {
-
-            Toast.makeText(mContext, "Import Failed!", Toast.LENGTH_SHORT)
+            Toast.makeText(mContext, "Restore Failed!", Toast.LENGTH_SHORT)
                     .show();
-
+            return false;
         }
+        return false;
     }
 
     public void exportDB() {
@@ -68,7 +69,6 @@ public class BackUpAndRestoreDb {
             if (!myDir.exists()) {
                 myDir.mkdirs();
             }
-            File data = Environment.getDataDirectory();
             if (sd.canWrite()) {
                 String currentDBPath = "XposeBilling";
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -82,13 +82,10 @@ public class BackUpAndRestoreDb {
                 dst.close();
                 Toast.makeText(mContext, "Backup Successful!",
                         Toast.LENGTH_SHORT).show();
-
             }
         } catch (Exception e) {
-
             Toast.makeText(mContext, "Backup Failed!", Toast.LENGTH_SHORT)
                     .show();
-
         }
     }
 }

@@ -1,8 +1,10 @@
 package in.net.maitri.xb.db;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -109,11 +111,10 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<ReportData> totalReport1 = new ArrayList<>();
 
 
-
-
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         String CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS " + CATEGORY_TABLE_NAME + "("
                 + KEY_CAT_ID + " INTEGER PRIMARY KEY," + KEY_CAT_NAME + " TEXT,"
                 + KEY_CAT_IMAGE_PATH + " TEXT" + KEY_CAT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
@@ -188,9 +189,9 @@ public class DbHandler extends SQLiteOpenHelper {
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-      //  if (newVersion > oldVersion) {
-         //   db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
-       // }
+        //  if (newVersion > oldVersion) {
+        //   db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
+        // }
 
 
         onCreate(db);
@@ -202,7 +203,7 @@ public class DbHandler extends SQLiteOpenHelper {
             ContentValues cv = new ContentValues();
             cv.put(KEY_CAT_NAME, category.getCategoryName());
             cv.put(KEY_CAT_IMAGE_PATH, category.getCategoryImage());
-             db.insert(CATEGORY_TABLE_NAME, null, cv);
+            db.insert(CATEGORY_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
@@ -258,17 +259,16 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-
-    public int  getDateCount(String date) {
+    public int getDateCount(String date) {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
-            String query = "Select Cast ((JulianDay('"+date+"') - JulianDay('1900-01-01')) As Integer) as date";
+            String query = "Select Cast ((JulianDay('" + date + "') - JulianDay('1900-01-01')) As Integer) as date";
 
-            Cursor cursor = db.rawQuery(query,null);
+            Cursor cursor = db.rawQuery(query, null);
             if (cursor != null)
                 cursor.moveToFirst();
 
-            int c =cursor.getInt(0);
+            int c = cursor.getInt(0);
 
             cursor.close();
             // return category
@@ -278,8 +278,6 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return 0;
     }
-
-
 
 
     // Updating single category
@@ -493,22 +491,18 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-
-
-
-
     // Getting All item
-    public List<SalesDet> getBillDetails(int billNo,int fromDate,int toDate) {
-   //     sdList.clear();
+    public List<SalesDet> getBillDetails(int billNo, int fromDate, int toDate) {
+        //     sdList.clear();
         // Select All Query
 
         List<SalesDet> sdList = new ArrayList<SalesDet>();
         try {
 
-            String selectQuery ="select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
-                    "join SalesMst sm on sd.sd_billNo = sm.sm_billNo where sd.sd_billNo ="+billNo+" and SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate ;
+            String selectQuery = "select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
+                    "join SalesMst sm on sd.sd_billNo = sm.sm_billNo where sd.sd_billNo =" + billNo + " and SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
 
-         System.out.println(selectQuery);
+            System.out.println(selectQuery);
 
             //String selectQuery = "SELECT  * FROM " + SALES_DET_TABLE_NAME + " WHERE " + KEY_SD_BILL_NO + " = " + billNo;
             SQLiteDatabase db = this.getWritableDatabase();
@@ -518,17 +512,16 @@ public class DbHandler extends SQLiteOpenHelper {
                 do {
 
 
-
                     BillItems bm = new BillItems();
-                   // sd.setBillNo(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)));
+                    // sd.setBillNo(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)));
                     bm.setRate(c.getDouble(c.getColumnIndex(KEY_SD_RATE)));
                     bm.setQty(c.getInt(c.getColumnIndex(KEY_SD_QTY)));
                     bm.setAmount(c.getDouble(c.getColumnIndex(KEY_SD_AMOUNT)));
                     bm.setDesc(c.getString(c.getColumnIndex("itm_name")));
 
-                    System.out.println("DBDESC "+c.getString(c.getColumnIndex("itm_name")));
+                    System.out.println("DBDESC " + c.getString(c.getColumnIndex("itm_name")));
 
-                    SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)),bm);
+                    SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)), bm);
 
 
 
@@ -545,7 +538,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));*/
                     // Adding item to list
-                  sdList.add(sd);
+                    sdList.add(sd);
                 } while (c.moveToNext());
             }
             c.close();
@@ -554,30 +547,6 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return sdList;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public void addUnit(Unit unit) {
@@ -623,20 +592,20 @@ public class DbHandler extends SQLiteOpenHelper {
         Log.d("Query", selectQuery);
         Cursor c = db.rawQuery(selectQuery, null);
         c.moveToFirst();
-        int id = c.getInt(c.getColumnIndex(KEY_UNIT_ID));Log.d("Value", String.valueOf(id));
+        int id = c.getInt(c.getColumnIndex(KEY_UNIT_ID));
+        Log.d("Value", String.valueOf(id));
         c.close();
         return id;
     }
 
 
-
-    public List<SalesMst> getAllBills(int fromDate,int toDate) {
-      //  customerList.clear();
+    public List<SalesMst> getAllBills(int fromDate, int toDate) {
+        //  customerList.clear();
         // Select All Query
         List<SalesMst> smList = new ArrayList<SalesMst>();
 
         try {
-            String selectQuery = "SELECT  * FROM " + SALES_MST_TABLE_NAME +  " WHERE " + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
+            String selectQuery = "SELECT  * FROM " + SALES_MST_TABLE_NAME + " WHERE " + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             if (c.moveToFirst()) {
@@ -651,7 +620,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     mst.setQty(c.getInt(c.getColumnIndex(KEY_SM_QTY)));
                     mst.setItems(c.getInt(c.getColumnIndex(KEY_SM_ITEM)));
                     smList.add(mst);
-                    System.out.println("dbBillNo "+c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
+                    System.out.println("dbBillNo " + c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
                 } while (c.moveToNext());
             }
             c.close();
@@ -674,18 +643,18 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_NET_AMT, salesMst.getNetAmt());
             cv.put(KEY_SM_DISCOUNT, salesMst.getDiscount());
             cv.put(KEY_SM_CUSTOMER, salesMst.getCustomerId());
-            cv.put(KEY_SM_ITEM,salesMst.getItems());
+            cv.put(KEY_SM_ITEM, salesMst.getItems());
             cv.put(KEY_SM_SALESMAN, salesMst.getSalesPerson());
             cv.put(KEY_SM_PAYMENT_MODE, salesMst.getPaymentMode());
             cv.put(KEY_SM_PAYMENT_DET, salesMst.getPaymentDet());
             cv.put(KEY_SM_STATUS, salesMst.getStatus());
-            result =   db.insert(SALES_MST_TABLE_NAME, null, cv);
-         db.close();
+            result = db.insert(SALES_MST_TABLE_NAME, null, cv);
+            db.close();
             return result;
         } catch (SQLException e) {
             createErrorDialog(e.toString());
         }
-        return  result;
+        return result;
     }
 
     public long addSalesDet(SalesDet salesDet) {
@@ -700,14 +669,14 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SD_ITEM, salesDet.billItems.getItem_id());
             cv.put(KEY_SD_QTY, salesDet.billItems.getQty());
             cv.put(KEY_SD_RATE, salesDet.billItems.getRate());
-            cv.put(KEY_SD_NET_RATE,salesDet.billItems.getNet_rate());
-            cv.put(KEY_SD_AMOUNT,salesDet.billItems.getAmount());
-           result = db.insert(SALES_DET_TABLE_NAME, null, cv);
+            cv.put(KEY_SD_NET_RATE, salesDet.billItems.getNet_rate());
+            cv.put(KEY_SD_AMOUNT, salesDet.billItems.getAmount());
+            result = db.insert(SALES_DET_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
         }
-        return  result;
+        return result;
     }
 
     public List<ReportData> getTotalReport(int fromDate, int toDate) {
@@ -762,18 +731,18 @@ public class DbHandler extends SQLiteOpenHelper {
         return totalReport1;
     }
 
-    public List<ReportData> getTotalCategoryReport(int fromDate, int toDate){
+    public List<ReportData> getTotalCategoryReport(int fromDate, int toDate) {
         totalCategory.clear();
         try {
             String selectQuery = "SELECT CAT." + KEY_CAT_NAME
-                    + ", cast(SUM(SD."+ KEY_SD_QTY + ")as text) AS sQTY, "
+                    + ", cast(SUM(SD." + KEY_SD_QTY + ")as text) AS sQTY, "
                     + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE, "
                     + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
                     + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
-                    + " INNER JOIN " + CATEGORY_TABLE_NAME +" AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
-                    + " INNER JOIN " + SALES_MST_TABLE_NAME+" AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
+                    + " INNER JOIN " + CATEGORY_TABLE_NAME + " AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
+                    + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
                     + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate
-                    + " GROUP BY CAT." + KEY_CAT_NAME ;
+                    + " GROUP BY CAT." + KEY_CAT_NAME;
             Log.d("Query", selectQuery);
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
@@ -795,17 +764,17 @@ public class DbHandler extends SQLiteOpenHelper {
         return totalCategory;
     }
 
-    public List<ReportData> getTotalItemReport(int fromDate, int toDate){
+    public List<ReportData> getTotalItemReport(int fromDate, int toDate) {
         totalItem.clear();
         try {
             String selectQuery = "SELECT CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME
-                    + ", cast(SUM(SD."+ KEY_SD_QTY + ")as text) AS sQTY, "
+                    + ", cast(SUM(SD." + KEY_SD_QTY + ")as text) AS sQTY, "
                     + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE, "
                     + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
                     + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
-                    + " INNER JOIN " + CATEGORY_TABLE_NAME +" AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
-                    + " INNER JOIN " + ITEM_TABLE_NAME +" AS ITM ON ITM." + KEY_ITEM_ID+ " = SD." + KEY_SD_ITEM
-                    + " INNER JOIN " + SALES_MST_TABLE_NAME+" AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
+                    + " INNER JOIN " + CATEGORY_TABLE_NAME + " AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
+                    + " INNER JOIN " + ITEM_TABLE_NAME + " AS ITM ON ITM." + KEY_ITEM_ID + " = SD." + KEY_SD_ITEM
+                    + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
                     + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate
                     + " GROUP BY CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME;
             Log.d("Query", selectQuery);
@@ -860,6 +829,14 @@ public class DbHandler extends SQLiteOpenHelper {
         return false;
     }
 
+    public void resetData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + CATEGORY_TABLE_NAME);
+        db.execSQL("DELETE FROM " + ITEM_TABLE_NAME);
+        db.execSQL("DELETE FROM " + SALES_MST_TABLE_NAME);
+        db.execSQL("DELETE FROM " + SALES_DET_TABLE_NAME);
+        db.close();
+    }
 
     private void createErrorDialog(String msg) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(mContext);
@@ -875,16 +852,4 @@ public class DbHandler extends SQLiteOpenHelper {
         alert.show();
     }
 
-
-
-
-    public void resetData()
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM "+CATEGORY_TABLE_NAME);
-        db.execSQL("DELETE FROM "+ITEM_TABLE_NAME);
-        db.execSQL("DELETE FROM "+SALES_MST_TABLE_NAME);
-        db.execSQL("DELETE FROM "+SALES_DET_TABLE_NAME);
-        db.close();
-    }
 }
