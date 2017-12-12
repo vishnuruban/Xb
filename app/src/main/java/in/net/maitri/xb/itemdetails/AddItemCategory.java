@@ -68,11 +68,11 @@ public class AddItemCategory extends AppCompatActivity {
         mProceed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(mGetAllItems.size() != 0) {
+                if (mGetAllItems.size() != 0) {
                     Intent intent = new Intent(AddItemCategory.this, BillingActivity.class);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(AddItemCategory.this,"No Items Present",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddItemCategory.this, "No Items Present", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -142,7 +142,7 @@ public class AddItemCategory extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("catName", categoryName);
                 editor.putInt("catId", mCategoryId);
-                editor.putString("catImg",catImgPath);
+                editor.putString("catImg", catImgPath);
                 editor.apply();
             }
         }));
@@ -174,9 +174,8 @@ public class AddItemCategory extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(mSelectedCategory.getText().toString().isEmpty())
-                {
-                    Toast.makeText(AddItemCategory.this,"Please select category before adding item!",Toast.LENGTH_SHORT).show();
+                if (mSelectedCategory.getText().toString().isEmpty()) {
+                    Toast.makeText(AddItemCategory.this, "Please select category before adding item!", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
@@ -207,7 +206,7 @@ public class AddItemCategory extends AppCompatActivity {
     private class MyMenuItemClickListener implements PopupMenu.OnMenuItemClickListener {
 
         private Category mCategory;
-        private  Item mItem;
+        private Item mItem;
         boolean isCategory;
 
         MyMenuItemClickListener(Category category, Item item, boolean isCategory) {
@@ -220,7 +219,7 @@ public class AddItemCategory extends AppCompatActivity {
         public boolean onMenuItemClick(MenuItem menuItem) {
             switch (menuItem.getItemId()) {
                 case R.id.edit:
-                    if (isCategory){
+                    if (isCategory) {
                         showFragment(new EditCatrgory());
                     } else {
                         Bundle bundle = new Bundle();
@@ -231,7 +230,7 @@ public class AddItemCategory extends AppCompatActivity {
                     }
                     return true;
                 case R.id.delete:
-                    if (isCategory){
+                    if (isCategory) {
                         if (mDbHandler.getAllitems(mCategory.getId()).isEmpty()) {
                             delete(mCategory.getId(), mCategory.getCategoryName(), isCategory);
                         } else {
@@ -339,7 +338,7 @@ public class AddItemCategory extends AppCompatActivity {
                         dialogInterface.dismiss();
                     }
                 });
-               builder.show();
+                builder.show();
                 break;
 
             case R.id.backup:
@@ -358,32 +357,26 @@ public class AddItemCategory extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-     void reset() {
-             SharedPreferences preferences = getSharedPreferences(CheckoutActivity.mypreference, Context.MODE_PRIVATE);
-             SharedPreferences.Editor editor = preferences.edit();
-             editor.clear();
-             editor.apply();
-            mDbHandler.resetData();
-     }
+    void reset() {
+        SharedPreferences preferences = getSharedPreferences(CheckoutActivity.mypreference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+        mDbHandler.resetData();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(resultCode == RESULT_OK) {
-
-            switch(requestCode) {
-
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
                 case REQUEST_PICK_FILE:
-
-                    if(data.hasExtra(FilePicker.EXTRA_FILE_PATH)) {
-
+                    if (data.hasExtra(FilePicker.EXTRA_FILE_PATH)) {
                         File selectedFile = new File
                                 (data.getStringExtra(FilePicker.EXTRA_FILE_PATH));
-                        if (new BackUpAndRestoreDb(AddItemCategory.this).importDB(selectedFile)){
+                        if (new BackUpAndRestoreDb(AddItemCategory.this).importDB(selectedFile)) {
                             startActivity(new Intent(AddItemCategory.this, AddItemCategory.class));
                             finish();
                         }
-
                     }
                     break;
             }
