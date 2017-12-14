@@ -1,130 +1,163 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-        <RelativeLayout
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="64dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="@string/add_Customer"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/dialog_header"
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:background="@color/colorPrimary"
-                android:gravity="center"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
 
-            <ImageView
-                android:id="@+id/close"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:padding="12dp"
-                android:src="@android:drawable/ic_menu_close_clear_cancel" />
+    </RelativeLayout>
 
-        </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
         <LinearLayout
             android:id="@+id/item_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="#EFF0EF"
+            android:padding="8dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
+            <LinearLayout style="@style/horizontal_linear_layout">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5">
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/name"
+                    android:text="@string/name" />
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/customer_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:hint="Customer Name"
-                        android:inputType="text" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/mobile"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:hint="Mobile No"
-                        android:inputType="phone" />
-
-                </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/name"
+                    style="@style/add_customer_edit_text" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
+            <LinearLayout style="@style/horizontal_linear_layout">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5">
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/mobile"
+                    android:text="@string/mob_number" />
 
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/gstin"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:hint="GSTIN" />
-
-                </android.support.design.widget.TextInputLayout>
-
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/address"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:hint="Address" />
-
-                </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/mobile"
+                    style="@style/add_customer_edit_text"
+                    android:inputType="phone" />
 
             </LinearLayout>
 
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/email"
+                    android:text="@string/email" />
+
+                <EditText
+                    android:id="@+id/email"
+                    style="@style/add_customer_edit_text"
+                    android:inputType="textEmailAddress" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/add1"
+                    android:text="@string/add1" />
+
+                <EditText
+                    android:id="@+id/add1"
+                    style="@style/add_customer_edit_text" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/add2"
+                    android:text="@string/add2" />
+
+                <EditText
+                    android:id="@+id/add2"
+                    style="@style/add_customer_edit_text" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/city"
+                    android:text="@string/city" />
+
+                <EditText
+                    android:id="@+id/city"
+                    style="@style/add_customer_edit_text" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/state"
+                    android:text="@string/state" />
+
+                <EditText
+                    android:id="@+id/state"
+                    style="@style/add_customer_edit_text" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/gst"
+                    android:text="@string/gst_no" />
+
+                <EditText
+                    android:id="@+id/gst"
+                    style="@style/add_customer_edit_text" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/add_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:text="Add"
-            android:textColor="#FFFFFF" />
+    </ScrollView>
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/add_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#7C2018"
+        android:text="Add"
+        android:textColor="#FFFFFF" />
 
-</ScrollView>
+</LinearLayout>
+

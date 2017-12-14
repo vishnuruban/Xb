@@ -52,6 +52,7 @@ public class AddItemCategory extends AppCompatActivity {
     private int mCategoryId;
     private Button mProceed;
     private static final int REQUEST_PICK_FILE = 1;
+    private Category mAll;
 
 
     @Override
@@ -60,6 +61,8 @@ public class AddItemCategory extends AppCompatActivity {
         setContentView(R.layout.activity_add_item_category);
 
         new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
+
+
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
         mSelectedCategory = (TextView) findViewById(R.id.selected_category_name);
@@ -120,7 +123,7 @@ public class AddItemCategory extends AppCompatActivity {
                 Category category = mGetAllCategories.get(position);
                 updateItem(category.getId());
                 view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                Toast.makeText(getApplicationContext(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
                 String categoryName = category.getCategoryName();
                 mSelectedCategory.setText(categoryName);
                 mCategoryId = category.getId();

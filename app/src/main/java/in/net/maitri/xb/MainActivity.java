@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String[] imeiList = {"911431850362828", "911431850362836", "351558073207583", "351558071729646", "911528701045419", "911367106180517"};
+        String[] imeiList = {"911431850362828", "911431850362836", "351558073207583",
+                "351558071729646", "911528701045419", "911367106180517","354115076530193"};
 
         new Permissions(MainActivity.this).checkPhoneStatePermission();
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)
