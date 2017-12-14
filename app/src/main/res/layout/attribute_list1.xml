@@ -43,49 +43,27 @@
 
             </LinearLayout>
 
-
-
             <LinearLayout
                 android:id="@+id/llHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/qty_view"
+              android:layout_below="@+id/qty_view"
                 android:layout_margin="5dp"
-                android:weightSum="1">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.70"
-                    android:hint="SEARCH CUSTOMER" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.30"
-                    android:hint="SEARCH BY" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/llHeader"
-
-                android:id="@+id/layoutSearch"
                 android:weightSum="1">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/etSearch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.70"
-                  />
+                    android:layout_weight="0.75"
+                    android:hint="SEARCH CUSTOMER" />
 
-                <com.reginald.editspinner.EditSpinner
+                <android.support.design.widget.TextInputEditText
                     android:id="@+id/etSearchType"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.30" />
+                    android:layout_weight="0.25"
+                    android:hint="SEARCH BY" />
 
             </LinearLayout>
 
@@ -94,7 +72,7 @@
                 android:id="@+id/l1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/layoutSearch"
+                android:layout_below="@id/llHeader"
                 android:layout_margin="5dp"
                 android:orientation="vertical">
 

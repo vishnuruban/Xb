@@ -7,4 +7,9 @@
         <item>CREDIT CARD</item>
         <item>WALLET</item>
     </array>
+
+    <array name="search_mode">
+        <item>NAME</item>
+        <item>PHONE NUMBER</item>
+    </array>
 </resources>

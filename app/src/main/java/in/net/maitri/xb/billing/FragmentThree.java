@@ -1,16 +1,26 @@
 package in.net.maitri.xb.billing;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -34,13 +44,20 @@ public class FragmentThree extends Fragment {
 
     private List<Category> mGetAllCategories;
     private List<Item> mGetAllItems;
+
+    private List<Item> sGetAllItems;
+    private List<Item> mGetAllItemsC;
     private DbHandler mDbHandler;
     private HorizontalCategoryAdapter hCategoryAdapter;
     private BillItemAdapter bItemAdapter;
+    private BillItemAdapter bItemAdapter1;
     private int mCategoryId;
+
+    private TextInputEditText searchItems;
    static KeypadDialog kpd;
-
-
+    RecyclerView categoryView;
+    RecyclerView itemView;
+    AppCompatTextView searchResults;
 
 
 
@@ -52,6 +69,8 @@ public class FragmentThree extends Fragment {
 
         mDbHandler = new DbHandler(getActivity());
         mGetAllCategories = mDbHandler.getAllcategorys();
+        mGetAllItemsC = new ArrayList<Item>();
+        mGetAllItems = new ArrayList<Item>();
 
         for(int i =0;i<mGetAllCategories.size();i++)
         {
@@ -59,8 +78,20 @@ public class FragmentThree extends Fragment {
             System.out.println("catName "+c.getCategoryName());
         }
 
-        RecyclerView categoryView = (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
-        RecyclerView itemView = (RecyclerView) view.findViewById(R.id.bill_item_view);
+      //  searchItems = (TextInputEditText)view.findViewById(R.id.search_Items);
+
+        setHasOptionsMenu(true);
+
+
+
+        categoryView = (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
+        itemView = (RecyclerView) view.findViewById(R.id.bill_item_view);
+        searchResults = (AppCompatTextView) view.findViewById(R.id.searchResults);
+        searchResults.setVisibility(View.GONE);
+
+
+        categoryView.setVisibility(View.VISIBLE);
+
 
         if (mGetAllCategories.size() == 0) {
             Toast.makeText(getActivity(),"No Categories Present",Toast.LENGTH_SHORT).show();
@@ -106,9 +137,17 @@ public class FragmentThree extends Fragment {
      //   mGetAllItems = new ArrayList<Item>();
 
 
+    /*    for(int i=0;i<mGetAllItemsC.size();i++)
+        {
+            Item item = mGetAllItemsC.get(i);
+            if(item.getCategoryId() == 1)
+            {
+                mGetAllItems.add(item);
+            }
+        }*/
 
+    mGetAllItems = mDbHandler.getAllitems(1);
 
-       mGetAllItems = mDbHandler.getAllitems(1);
         bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
 
         itemView.setAdapter(bItemAdapter);
@@ -117,10 +156,13 @@ public class FragmentThree extends Fragment {
             @Override
             public void onClick(View view, int position) {
 
-                Item item = mGetAllItems.get(position);
-                kpd = new KeypadDialog(getActivity(),item);
-                kpd.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                kpd.show();
+                if(mGetAllItems.size()!=0) {
+                    Item item = (Item)bItemAdapter.getItem(position);
+                    kpd = new KeypadDialog(getActivity(), item);
+                    kpd.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    kpd.show();
+                }
+
 
             }
             @Override
@@ -130,22 +172,139 @@ public class FragmentThree extends Fragment {
         }));
 
 
-
-
-
-
-
-
         return  view;
     }
 
+   @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+        MenuItem search_item = menu.findItem(R.id.mi_search);
+
+        SearchView searchView = (SearchView) search_item.getActionView();
+        searchView.setFocusable(false);
+        searchView.setQueryHint("Search Items");
+
+
+
+        for(int i =0;i<mGetAllItemsC.size();i++)
+        {
+            Item c = mGetAllItemsC.get(i);
+            System.out.println("itName "+c.getItemName());
+        }
+
+     searchView.setOnSearchClickListener(new View.OnClickListener() {
+        @Override
+          public void onClick(View v) {
+              //do what you want when search view expended
+            System.out.println("EXPANDED");
+            //bItemAdapter.clear();
+            searchResults.setVisibility(View.VISIBLE);
+            mGetAllItemsC = mDbHandler.getAllitemC();
+            categoryView.setVisibility(View.GONE);
+            System.out.println("ONSEARCH "+mGetAllItemsC.size());
+            for(int i=0;i<mGetAllItemsC.size();i++)
+            {
+                System.out.println("ONSEARCH "+mGetAllItemsC.get(i).getItemName());
+            }
+            bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItemsC);
+            itemView.setAdapter(bItemAdapter);
+            bItemAdapter.notifyDataSetChanged();
+         }
+         });
+
+
+
+
+       searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+
+                categoryView.setVisibility(View.VISIBLE);
+                searchResults.setVisibility(View.GONE);
+
+
+               // bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
+              //  itemView.setAdapter(bItemAdapter);
+
+               mGetAllItems = mDbHandler.getAllitems(1);
+               bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
+              itemView.setAdapter(bItemAdapter);
+
+
+                return false;
+            }
+        });
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+
+
+                //bItemAdapter.getFilter().filter(s.toString());
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                    categoryView.setVisibility(View.GONE);
+                  searchResults.setVisibility(View.VISIBLE);
+                    if (bItemAdapter != null) bItemAdapter.getFilter().filter(s);
+                    bItemAdapter.notifyDataSetChanged();
+                    return true;
+
+        }
+
+        });
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.mi_search:
+
+                Toast.makeText(getActivity(),"Search Clicked",Toast.LENGTH_SHORT).show();
+
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
     void updateItem(int categoryId) {
         mGetAllItems.clear();
-        mGetAllItems = mDbHandler.getAllitems(categoryId);
+
+
+    /*
+      for(int i=0;i<mGetAllItemsC.size();i++)
+        {
+
+            Item item = mGetAllItemsC.get(i);
+            if(item.getCategoryId() == categoryId)
+            {
+                mGetAllItems.add(item);
+            }
+        }
+
+        */
+
+       mGetAllItems = mDbHandler.getAllitems(categoryId);
         if (mGetAllItems.size() == 0) {
           Toast.makeText(getActivity(),"No Items found",Toast.LENGTH_SHORT).show();
         } else {
             bItemAdapter.notifyDataSetChanged();
+
         }
 
     }

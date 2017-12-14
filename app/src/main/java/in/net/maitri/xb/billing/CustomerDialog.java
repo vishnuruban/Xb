@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import com.reginald.editspinner.EditSpinner;
 
 import java.util.ArrayList;
 
@@ -26,8 +31,9 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
     ArrayList<CustomerList> customerListArrayList;
     TextInputEditText etSearch;
     ListView ctList;
+    EditSpinner editSpinner;
     CustomerAdapter customerAdapter;
-
+    String[] pModes = {"NAME", "PHONE NUMBER"};
 
     public CustomerDialog(Activity activity)
     {
@@ -46,8 +52,12 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
         setContentView(R.layout.customer_list);
         etSearch = (TextInputEditText) findViewById(R.id.etSearch);
         ctList = (ListView)findViewById(R.id.lvCustomers);
-
-
+        editSpinner = (EditSpinner)findViewById(R.id.etSearchType);
+        ListAdapter adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_spinner_dropdown_item, activity.getResources().getStringArray(R.array.search_mode));
+        editSpinner.setAdapter(adapter);
+        editSpinner.setEditable(false);
+        editSpinner.setText("NAME");
+        editSpinner.addTextChangedListener(searchMode);
 
         customerListArrayList = new ArrayList<>();
         customerListArrayList.add(new CustomerList("ashok", "100"));
@@ -84,9 +94,8 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
 
 
 
-        customerAdapter =new CustomerAdapter(activity,customerListArrayList);
+        customerAdapter =new CustomerAdapter(activity,customerListArrayList,editSpinner.getText().toString());
         ctList.setAdapter(customerAdapter);
-
 
 
 
@@ -110,9 +119,26 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
         });
 
 
-
-
     }
+
+
+    TextWatcher searchMode = new TextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            customerAdapter =new CustomerAdapter(activity,customerListArrayList,editSpinner.getText().toString());
+            ctList.setAdapter(customerAdapter);
+            customerAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int a, int b, int c) {
+        }
+    };
 
 
 

@@ -252,8 +252,9 @@ byte[] excelReport;
                 double discount = mst.getDiscount();
                 double netAmt = mst.getNetAmt();
                 double subTotal = discount + netAmt;
+                double qty =mst.getQty();
 
-                 brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,"Discount:  "+rs+ df.format(discount),"Net Amount:  "+rs+ df.format(netAmt),"Subtotal:  "+rs+ df.format(subTotal));
+                 brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty);
                 brd.show();
 
 

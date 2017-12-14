@@ -34,7 +34,14 @@ public class Item implements Serializable {
 
     private int categoryId;
 
+    public Item(String itemName, String itemImage, double itemSP) {
+        this.itemName = itemName;
+        this.itemImage = itemImage;
+        this.itemSP = itemSP;
+    }
+
     public Item() {
+
 
     }
 

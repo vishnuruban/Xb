@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import in.net.maitri.xb.R;
@@ -29,11 +31,7 @@ public class BillingActivity extends AppCompatActivity {
             ft.add(R.id.frameLayout1, filterFirstFragment, "TAG FRAGMENT");
             ft.commit();
 
-         /*   FragmentTwo filterSecondFragment = new FragmentTwo();
-            FragmentManager fm1 = getFragmentManager();
-            FragmentTransaction ft1 = fm1.beginTransaction();
-            ft1.add(R.id.frameLayout2, filterSecondFragment, "TAG1 FRAGMENT");
-            ft1.commit(); */
+
 
 
             FragmentThree filterThirdFragment = new FragmentThree();
@@ -46,12 +44,4 @@ public class BillingActivity extends AppCompatActivity {
     }
 
 
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-        return true;
-    }
 }

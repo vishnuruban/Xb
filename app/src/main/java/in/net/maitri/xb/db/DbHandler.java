@@ -459,6 +459,61 @@ public class DbHandler extends SQLiteOpenHelper {
         return itemList;
     }
 
+
+
+    public List<Item> getAllitemC() {
+        itemList.clear();
+        // Select All Query
+        try {
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME ;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    Item item = new Item();
+                    item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
+                    item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
+                    item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
+                    item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+                    item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
+                    item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
+                    item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
+                    item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
+                    item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+                    // Adding item to list
+                    itemList.add(item);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return itemList;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // Updating single item
     public int updateItem(Item item) {
         SQLiteDatabase db = this.getWritableDatabase();

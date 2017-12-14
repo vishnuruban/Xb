@@ -27,14 +27,17 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
     private ArrayList<CustomerList> mDisplayedValues;    // Values to be displayed
     LayoutInflater inflater;
     Context context ;
+    String mode;
 
-    public CustomerAdapter (Context context,ArrayList<CustomerList> customerLists)
+    public CustomerAdapter (Context context,ArrayList<CustomerList> customerLists,String mode)
     {
         this.context = context;
         this.mOriginalValues = customerLists;
         this.mDisplayedValues = customerLists;
+        this.mode = mode;
         inflater = LayoutInflater.from(context);
 
+        System.out.println("MODE "+mode);
 
 
 
@@ -134,7 +137,15 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
                 } else {
                     constraint = constraint.toString().toLowerCase();
                     for (int i = 0; i < mOriginalValues.size(); i++) {
-                        String data = mOriginalValues.get(i).getName();
+
+                        String data ="";
+                        if(mode.equals("NAME")) {
+                            data = mOriginalValues.get(i).getName();
+                        }
+                        else if(mode.equals("PHONE NUMBER"))
+                        {
+                            data = mOriginalValues.get(i).getMobileNumber();
+                        }
                         if (data.toLowerCase().startsWith(constraint.toString())) {
                             FilteredArrList.add(new CustomerList(mOriginalValues.get(i).getName(),mOriginalValues.get(i).getMobileNumber()));
                         }
@@ -147,5 +158,10 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
             }
         };
         return filter;
+    }
+
+    public void clear()
+    {
+        mDisplayedValues.clear();
     }
 }

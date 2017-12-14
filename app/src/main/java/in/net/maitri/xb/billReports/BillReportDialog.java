@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,13 @@ import java.util.List;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billing.BillItems;
 import in.net.maitri.xb.billing.BillListAdapter;
+import in.net.maitri.xb.billing.BillPrint;
+import in.net.maitri.xb.billing.FragmentOne;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesDet;
+import in.net.maitri.xb.settings.GetSettings;
+
+import static in.net.maitri.xb.billing.CheckoutActivity.mPrinter;
 
 /**
  * Created by SYSRAJ4 on 29/11/2017.
@@ -39,10 +45,17 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     BillListAdapter billListAdapter;
     private ListView billListView;
     Button closeDialog;
-     String discount,netAmt,subTotal;
+    Button printBill;
+    double netAmt;
+     String discount,subTotal;
+    BillPrint billPrint;
+    GetSettings getSettings;
+    ArrayList<BillItems> billItems;
+    double dQty;
+    String rs;
+    DecimalFormat df;
 
-
-    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,String netAmt,String subTotal)
+    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty)
     {
         super (context);
         this.context = context;
@@ -54,7 +67,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         this.discount = discount;
         this.netAmt = netAmt;
         this.subTotal = subTotal;
-
+        this.dQty = dQty;
     }
 
 
@@ -64,6 +77,18 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.bill_report_dialog);
 
+        rs = "\u20B9";
+        try{
+            byte[] utf8 = rs.getBytes("UTF-8");
+
+
+            rs = new String(utf8, "UTF-8");}
+        catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
+        df = new DecimalFormat("0.00");
+
         dbHandler = new DbHandler(context);
         selectedBill = (TextView) findViewById(R.id.selected_bill);
         selectedBillDate = (TextView)findViewById(R.id.selected_bill_date);
@@ -72,10 +97,33 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         dNetAmt =(TextView)findViewById(R.id.dNetAmt);
         billListView = (ListView) findViewById(R.id.bill_lv);
         closeDialog =(Button)findViewById(R.id.closeDialog);
+        printBill = (Button) findViewById(R.id.printBill);
+        billPrint = new BillPrint(context);
+        dDiscount.setText("Discount:  "+rs+ discount);
+        dNetAmt.setText("Net Amount:  "+rs+ df.format(netAmt));
+        dSubTotal.setText("Subtotal:  "+rs+ subTotal);
+        getSettings = new GetSettings(context);
 
-        dDiscount.setText(discount);
-        dNetAmt.setText(netAmt);
-        dSubTotal.setText(subTotal);
+        printBill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String printSize = getSettings.getPrintingPaperSize();
+                // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
+                if (printSize.equals("1")) {
+
+                    billPrint.printTwoInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime);
+                } else {
+                    billPrint.printThreeInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime);
+
+                }
+
+
+
+            }
+        });
+
+
 
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,7 +160,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         int quantity = 0;
         int items = 0;
 
-        ArrayList<BillItems> billItems = new ArrayList<>();
+        billItems = new ArrayList<>();
 
 
         for(int i =0;i<mGetBillDetails.size();i++)
