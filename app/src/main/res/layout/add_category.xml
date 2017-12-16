@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -28,236 +28,72 @@
 
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:weightSum="1"
-                android:baselineAligned="false">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5">
-
-                    <ImageView
-                        android:id="@+id/item_image"
-                        android:layout_width="100dp"
-                        android:layout_height="80dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/noimageavailable" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:layout_weight="0.5">
-
-                    <Button
-                        android:id="@+id/browse_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:text="Browse" />
-
-                </RelativeLayout>
-
-            </LinearLayout>
+            android:baselineAligned="false"
+            android:padding="16dp"
+            android:weightSum="1">
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5">
 
-                <android.support.design.widget.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp">
-
-                    <android.support.design.widget.TextInputEditText
-                        android:id="@+id/category_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
-                        android:layout_margin="8dp"
-                        android:hint="Category Name"
-                        android:inputType="text" />
-
-                </android.support.design.widget.TextInputLayout>
+                <ImageView
+                    android:id="@+id/item_image"
+                    android:layout_width="100dp"
+                    android:layout_height="80dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/noimageavailable" />
 
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/item_layout"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_margin="16dp"
+                android:layout_weight="0.5">
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/browse_image"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="Browse" />
 
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/item_name"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:imeOptions="actionNext"
-                            android:hint="Item Name"
-                            android:inputType="text" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.v7.widget.AppCompatSpinner
-                        android:id="@+id/uom"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:layout_weight="0.5"
-                        android:hint="UOM" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/new_uom_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    android:weightSum="1">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/new_uom"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:enabled="false"
-                            android:hint="Enter new UOM"
-                            android:inputType="text" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <Switch
-                        android:id="@+id/decimal_allowed"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="8dp"
-                        android:layout_weight="0.5"
-                        android:text="Decimal value allowed" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/cp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:imeOptions="actionNext"
-                            android:hint="Cost Price"
-                            android:inputType="numberDecimal" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/sp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:imeOptions="actionDone"
-                            android:hint="Selling Price"
-                            android:inputType="numberDecimal" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/hsn_code"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:imeOptions="actionNext"
-                            android:hint="HSN Code"
-                            android:inputType="number" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5">
-
-                        <android.support.design.widget.TextInputEditText
-                            android:id="@+id/gst"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:imeOptions="actionDone"
-                            android:hint="GST %"
-                            android:inputType="number" />
-
-                    </android.support.design.widget.TextInputLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 
-    </ScrollView>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/category_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:hint="Category Name"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/add_details"

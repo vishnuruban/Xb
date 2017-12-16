@@ -68,12 +68,14 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
             holder.cardView.setBackgroundColor(Color.parseColor("#B3E5FC"));
             holder.categoryName.setTextColor(Color.parseColor("#000000"));
         }
-         Log.i("Image Path",imagePath);
+//         Log.i("Image Path",imagePath);
 
-        File imgFile = new File(imagePath);
-        if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            holder.categoryImage.setImageBitmap(myBitmap);
+        if (imagePath != null) {
+            File imgFile = new File(imagePath);
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                holder.categoryImage.setImageBitmap(myBitmap);
+            }
         }
     }
 

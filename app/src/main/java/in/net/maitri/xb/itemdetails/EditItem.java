@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.db.Unit;
@@ -57,6 +58,8 @@ public class EditItem extends DialogFragment {
     private Bitmap mSelectedImage;
     private AddItemCategory mAddItemCategory;
     private List<Unit> unitList;
+    private List<Category> categoryList;
+    private int id;
 
     @Override
     public void onAttach(Context context) {
@@ -67,7 +70,7 @@ public class EditItem extends DialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.add_item, container, false);
+        View view =  inflater.inflate(R.layout.edit_item, container, false);
 
         Bundle bundle = getArguments();
         final Item item = (Item) bundle.getSerializable("itemObj");
@@ -76,10 +79,6 @@ public class EditItem extends DialogFragment {
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText("Edit Item");
         final LinearLayout newUomLayout = (LinearLayout) view.findViewById(R.id.new_uom_layout);
-        LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
-        itemLayout.setVisibility(View.VISIBLE);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mAddItemCategory);
-        final String selectedCategoryName = sharedPreferences.getString("catName", "");
         dbHandler = new DbHandler(getActivity());
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);
@@ -110,6 +109,18 @@ public class EditItem extends DialogFragment {
         if (item != null) {
             sellingPriceField.setText(String.valueOf(item.getItemSP()));
         }
+        final Spinner categoryField = (Spinner) view.findViewById(R.id.category_name);
+        categoryList = dbHandler.getAllcategorys();
+        final ArrayList<String> categoryAdapter = new ArrayList<>();
+        categoryAdapter.add("--Select Category--");
+        for (int i = 0; i < categoryList.size(); i++) {
+            categoryAdapter.add(categoryList.get(i).getCategoryName());
+        }
+        categoryField.setAdapter(createAdapter(categoryAdapter));
+        if (item != null) {
+            categoryField.setSelection(categoryAdapter.indexOf(getCategoryName(item.getCategoryId())));
+        }
+
         final Spinner uomField = (Spinner) view.findViewById(R.id.uom);
         unitList = dbHandler.getAllUnit();
         final ArrayList<String> uomAdapter = new ArrayList<>();
@@ -120,11 +131,11 @@ public class EditItem extends DialogFragment {
         uomAdapter.add("Enter new UOM");
         uomField.setAdapter(createAdapter(uomAdapter));
         final EditText newUomField = (EditText) view.findViewById(R.id.new_uom);
-        if (item != null ) {
+        if (item.getItemUOM() != null ) {
            uomField.setSelection(uomAdapter.indexOf(getUnitName(Integer.parseInt(item.getItemUOM()))));
         }
         final EditText hsnCodeField = (EditText) view.findViewById(R.id.hsn_code);
-        if (item != null) {
+        if (item.getItemHSNcode() != null) {
             hsnCodeField.setText(item.getItemHSNcode());
         }
         final EditText gstField = (EditText) view.findViewById(R.id.gst);
@@ -150,7 +161,7 @@ public class EditItem extends DialogFragment {
             @Override
             public void onClick(View view) {
 
-                String catName = selectedCategoryName;
+                String catName = categoryField.getSelectedItem().toString();
                 String iteName =itemNameField.getText().toString();
                 String cp= costPriceField.getText().toString();
                 String sp = sellingPriceField.getText().toString();
@@ -171,7 +182,7 @@ public class EditItem extends DialogFragment {
                 } else if (registrationType.equals("3") && (iteName.isEmpty()
                         || cp.isEmpty()
                         || sp.isEmpty())){
-                    Toast.makeText(getActivity(),"Enter all the fields.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
                 }else{
                     if (mSelectedImage != null) {
                         copyImage();
@@ -200,6 +211,7 @@ public class EditItem extends DialogFragment {
                     if (!uoM.equals("--Select Uom--")){
                         uomValue = String.valueOf(dbHandler.getUomId(uoM));
                     }
+                    item1.setCategoryId(getCategoryId(catName));
                     item1.setItemImage(mImagePath);
                     item1.setItemName(iteName);
                     item1.setItemCP(Float.parseFloat(cp));
@@ -271,7 +283,7 @@ public class EditItem extends DialogFragment {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String name = "Xb_Img"+timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/Xb");
+        File myDir = new File(root + "/Xb/Images");
         if (!myDir.exists()) {
             myDir.mkdirs();
         }
@@ -320,5 +332,23 @@ public class EditItem extends DialogFragment {
             }
         }
         return "--Select Uom--";
+    }
+
+    private String getCategoryName(int categoryId){
+        for (int i = 0; i <categoryList.size(); i++){
+            if (categoryList.get(i).getId() == categoryId){
+                return categoryList.get(i).getCategoryName();
+            }
+        }
+        return "--Select Categoty--";
+    }
+
+    private int getCategoryId(String categoryName){
+        for (int i = 0; i <categoryList.size(); i++){
+            if (categoryList.get(i).getCategoryName().equals(categoryName)){
+                return categoryList.get(i).getId();
+            }
+        }
+        return id;
     }
 }

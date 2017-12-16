@@ -12,6 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import in.net.maitri.xb.billing.BillItems;
@@ -102,7 +103,9 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
     private List<Item> itemList = new ArrayList<>();
+    private List<Item> itemList1 = new ArrayList<>();
     private List<Category> categoryList = new ArrayList<>();
+    private List<Category> categoryList1 = new ArrayList<>();
     private List<Customer> customerList = new ArrayList<>();
     private List<Unit> unitList = new ArrayList<>();
     private List<ReportData> totalCategory = new ArrayList<>();
@@ -254,8 +257,40 @@ public class DbHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         cursor.close();
+
         // return category list
         return categoryList;
+    }
+
+    // Getting All categorys
+    public List<Category> getAllcategorys1() {
+//        categoryList.clear();
+        categoryList1.clear();
+        Category cat = new Category();
+        cat.setCategoryName("All");
+        categoryList1.add(cat);
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + CATEGORY_TABLE_NAME + " ORDER BY " + KEY_CAT_NAME;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Category category = new Category();
+                category.setId(cursor.getInt(0));
+                category.setCategoryName(cursor.getString(1));
+                category.setCategoryImage(cursor.getString(2));
+                // Adding category to list
+                categoryList1.add(category);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+      /*  Collections.sort(categoryList, new Category.OrderByCatName());
+        categoryList1.addAll(categoryList);*/
+        // return category list
+        return categoryList1;
     }
 
 
@@ -367,6 +402,37 @@ public class DbHandler extends SQLiteOpenHelper {
         // Select All Query
         try {
             String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " = " + categoryId;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            // looping through all rows and adding to list
+            if (c.moveToFirst()) {
+                do {
+                    Item item = new Item();
+                    item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
+                    item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
+                    item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
+                    item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+                    item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
+                    item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
+                    item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
+                    item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
+                    item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+                    // Adding item to list
+                    itemList.add(item);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return itemList;
+    }
+
+    public List<Item> getAllitems1() {
+        itemList.clear();
+        // Select All Query
+        try {
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME ;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             // looping through all rows and adding to list

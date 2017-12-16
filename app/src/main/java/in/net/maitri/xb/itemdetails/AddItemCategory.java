@@ -50,9 +50,10 @@ public class AddItemCategory extends AppCompatActivity {
     private DbHandler mDbHandler;
     private TextView mNoItem, mNoCategory, mSelectedCategory;
     private int mCategoryId;
+    private FloatingActionButton mAddItemBtn;
     private Button mProceed;
     private static final int REQUEST_PICK_FILE = 1;
-    private Category mAll;
+    private boolean isAll = true;
 
 
     @Override
@@ -81,7 +82,7 @@ public class AddItemCategory extends AppCompatActivity {
         });
 
         mDbHandler = new DbHandler(AddItemCategory.this);
-        mGetAllCategories = mDbHandler.getAllcategorys();
+        mGetAllCategories = mDbHandler.getAllcategorys1();
         final RecyclerView categoryView = (RecyclerView) findViewById(R.id.category_view);
         RecyclerView itemView = (RecyclerView) findViewById(R.id.item_view);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
@@ -105,7 +106,7 @@ public class AddItemCategory extends AppCompatActivity {
         }*/
         GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
         itemView.setLayoutManager(gridLayoutManager);
-        mGetAllItems = mDbHandler.getAllitems(1);
+        mGetAllItems = mDbHandler.getAllitems1() ;
         if (mGetAllItems.size() == 0) {
             mNoItem.setVisibility(View.VISIBLE);
         } else {
@@ -119,19 +120,29 @@ public class AddItemCategory extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
 
-                mCategoryAdapter.setSelected(position);
-                Category category = mGetAllCategories.get(position);
-                updateItem(category.getId());
-                view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                //Toast.makeText(getApplicationContext(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
-                String categoryName = category.getCategoryName();
-                mSelectedCategory.setText(categoryName);
-                mCategoryId = category.getId();
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("catName", categoryName);
-                editor.putInt("catId", mCategoryId);
-                editor.apply();
+                if (position == 0){
+                    mAddItemBtn.setVisibility(View.GONE);
+                    mCategoryAdapter.setSelected(position);
+                    isAll = true;
+                    updateItem(0);
+                    mSelectedCategory.setText("All");
+                }else {
+                    mAddItemBtn.setVisibility(View.VISIBLE);
+                    mCategoryAdapter.setSelected(position);
+                    Category category = mGetAllCategories.get(position);
+                    isAll = false;
+                    updateItem(category.getId());
+                    view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    //Toast.makeText(getApplicationContext(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
+                    String categoryName = category.getCategoryName();
+                    mSelectedCategory.setText(categoryName);
+                    mCategoryId = category.getId();
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("catName", categoryName);
+                    editor.putInt("catId", mCategoryId);
+                    editor.apply();
+                }
             }
 
             @Override
@@ -172,8 +183,9 @@ public class AddItemCategory extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton addItemBtn = (FloatingActionButton) findViewById(R.id.add_item_button);
-        addItemBtn.setOnClickListener(new View.OnClickListener() {
+        mAddItemBtn = (FloatingActionButton) findViewById(R.id.add_item_button);
+        mAddItemBtn.setVisibility(View.GONE);
+        mAddItemBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -276,7 +288,7 @@ public class AddItemCategory extends AppCompatActivity {
 
     void updateCategoryAdapter() {
         mGetAllCategories.clear();
-        mGetAllCategories = mDbHandler.getAllcategorys();
+        mGetAllCategories = mDbHandler.getAllcategorys1();
         if (mGetAllCategories.size() == 0) {
             mNoCategory.setVisibility(View.VISIBLE);
         } else {
@@ -285,15 +297,25 @@ public class AddItemCategory extends AppCompatActivity {
         mCategoryAdapter.notifyDataSetChanged();
     }
 
-    void updateItem(int categoryId) {
+    void updateItem( int categoryId) {
         mGetAllItems.clear();
-        mGetAllItems = mDbHandler.getAllitems(categoryId);
-        if (mGetAllItems.size() == 0) {
-            mNoItem.setVisibility(View.VISIBLE);
-        } else {
-            mNoItem.setVisibility(View.GONE);
+        if (isAll){
+            mGetAllItems = mDbHandler.getAllitems1();
+            if (mGetAllItems.size() == 0) {
+                mNoItem.setVisibility(View.VISIBLE);
+            } else {
+                mNoItem.setVisibility(View.GONE);
+            }
+            mItemAdapter.notifyDataSetChanged();
+        }else {
+            mGetAllItems = mDbHandler.getAllitems(categoryId);
+            if (mGetAllItems.size() == 0) {
+                mNoItem.setVisibility(View.VISIBLE);
+            } else {
+                mNoItem.setVisibility(View.GONE);
+            }
+            mItemAdapter.notifyDataSetChanged();
         }
-        mItemAdapter.notifyDataSetChanged();
     }
 
     @Override

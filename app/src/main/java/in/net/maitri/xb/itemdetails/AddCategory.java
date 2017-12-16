@@ -99,9 +99,23 @@ public class AddCategory extends DialogFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("Image Result", "1");
         mSelectedImage = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
+        Log.d("Image Result", "2");
         mItemImage.setImageBitmap(mSelectedImage);
+        Log.d("Image Result", "3");
     }
+
+    /*    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("Image Result", "1");
+        mSelectedImage = ImagePicker.getImageFromResult(getActivity(), requestCode, resultCode, data);
+        Log.d("Image Result", "2");
+        mItemImage.setImageBitmap(mSelectedImage);
+        Log.d("Image Result", "3");
+    }*/
 
     private void addCategory(String catName, String imgPath) {
         Category category = new Category(catName, imgPath);
@@ -133,7 +147,7 @@ public class AddCategory extends DialogFragment {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String name = "Xb_" + timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/Xb");
+        File myDir = new File(root + "/Xb/Images");
         if (!myDir.exists()) {
             myDir.mkdirs();
         }

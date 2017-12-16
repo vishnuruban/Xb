@@ -150,7 +150,7 @@ public class EditCatrgory extends DialogFragment {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String name = "Xb_" + timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/Xb");
+        File myDir = new File(root + "/Xb/Images");
         if (!myDir.exists()) {
             myDir.mkdirs();
         }
