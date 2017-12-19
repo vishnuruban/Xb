@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import in.net.maitri.xb.MainActivity;
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.Customer;
 
 /**
  * Created by SYSRAJ4 on 23/11/2017.
@@ -23,13 +24,13 @@ import in.net.maitri.xb.R;
 
 public class CustomerAdapter extends BaseAdapter implements Filterable {
 
-    private ArrayList<CustomerList> mOriginalValues; // Original Values
-    private ArrayList<CustomerList> mDisplayedValues;    // Values to be displayed
+    private ArrayList<Customer> mOriginalValues; // Original Values
+    private ArrayList<Customer> mDisplayedValues;    // Values to be displayed
     LayoutInflater inflater;
     Context context ;
     String mode;
 
-    public CustomerAdapter (Context context,ArrayList<CustomerList> customerLists,String mode)
+    public CustomerAdapter (Context context,ArrayList<Customer> customerLists,String mode)
     {
         this.context = context;
         this.mOriginalValues = customerLists;
@@ -52,7 +53,7 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
 
     @Override
     public Object getItem(int i) {
-        return i;
+        return mDisplayedValues.get(i);
     }
 
     @Override
@@ -83,15 +84,16 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
             holder = (ViewHolder) convertView.getTag();
         }
         holder.cName.setText(mDisplayedValues.get(position).getName());
-        holder.cMobileNumber.setText(mDisplayedValues.get(position).getMobileNumber()+"");
+        holder.cMobileNumber.setText(mDisplayedValues.get(position).getMobileno()+"");
 
-        holder.llContainer.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-
-                Toast.makeText(context, mDisplayedValues.get(position).getName(), Toast.LENGTH_SHORT).show();
-            }
-        });
+//        holder.llContainer.setOnClickListener(new View.OnClickListener() {
+//
+//            public void onClick(View v) {
+//
+//                Toast.makeText(context, mDisplayedValues.get(position).getName(), Toast.LENGTH_SHORT).show();
+//
+//            }
+//        });
 
         return convertView;
     }
@@ -110,17 +112,17 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
             @Override
             protected void publishResults(CharSequence constraint,FilterResults results) {
 
-                mDisplayedValues = (ArrayList<CustomerList>) results.values; // has the filtered values
+                mDisplayedValues = (ArrayList<Customer>) results.values; // has the filtered values
                 notifyDataSetChanged();  // notifies the data with new filtered values
             }
 
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();        // Holds the results of a filtering operation in values
-                ArrayList<CustomerList> FilteredArrList = new ArrayList<CustomerList>();
+                ArrayList<Customer> FilteredArrList = new ArrayList<Customer>();
 
                 if (mOriginalValues == null) {
-                    mOriginalValues = new ArrayList<CustomerList>(mDisplayedValues); // saves the original data in mOriginalValues
+                    mOriginalValues = new ArrayList<Customer>(mDisplayedValues); // saves the original data in mOriginalValues
                 }
 
                 /********
@@ -139,15 +141,17 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
                     for (int i = 0; i < mOriginalValues.size(); i++) {
 
                         String data ="";
+                        String data1 ="";
                         if(mode.equals("NAME")) {
                             data = mOriginalValues.get(i).getName();
+                            data1 =  mOriginalValues.get(i).getMobileno();
                         }
                         else if(mode.equals("PHONE NUMBER"))
                         {
-                            data = mOriginalValues.get(i).getMobileNumber();
+                            data = mOriginalValues.get(i).getMobileno();
                         }
-                        if (data.toLowerCase().startsWith(constraint.toString())) {
-                            FilteredArrList.add(new CustomerList(mOriginalValues.get(i).getName(),mOriginalValues.get(i).getMobileNumber()));
+                        if (data.toLowerCase().contains(constraint.toString()) ||data1.toLowerCase().contains(constraint.toString())) {
+                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getName(),mOriginalValues.get(i).getMobileno()));
                         }
                     }
                     // set the Filtered result to return

@@ -193,23 +193,90 @@
                 android:id="@+id/customerscrren"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:background="#f8bbd0"
+                android:weightSum="1">
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:drawablePadding="15dp"
+                    android:text="Customer Name"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:drawablePadding="15dp"
+                    android:text="Bill Number"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:drawablePadding="15dp"
+                    android:text="Date"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:id="@+id/customer"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:weightSum="1">
 
+                <TextView
+                    android:id="@+id/cCustname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.4"
+                    android:drawablePadding="15dp"
+                    android:text="Vishnu"
+                    android:padding="5dp"
+                    android:maxLines="1"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
 
+                <TextView
+                    android:id="@+id/cBillNo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.35"
+                    android:drawablePadding="15dp"
+                    android:text="2"
+                    android:padding="5dp"
+                    android:maxLines="1"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
 
 
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_edittext1"
+                    android:layout_weight="0.25"
                     android:drawablePadding="15dp"
-                    android:hint="Date"
-                    android:padding="16dp"
-                    android:textColor="#fff"
-                    android:textSize="17sp" />
+                    android:text="18-12-2017"
+                    android:padding="5dp"
+                    android:maxLines="1"
+                    android:textColor="#000"
+                    android:textSize="15sp" />
 
 
             </LinearLayout>

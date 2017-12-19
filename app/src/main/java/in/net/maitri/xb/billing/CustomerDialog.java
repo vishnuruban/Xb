@@ -60,7 +60,7 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
         editSpinner.addTextChangedListener(searchMode);
 
         customerListArrayList = new ArrayList<>();
-        customerListArrayList.add(new CustomerList("ashok", "100"));
+        customerListArrayList.add(new CustomerList("ashok", "9999900000"));
         customerListArrayList.add(new CustomerList("balu", "200"));
         customerListArrayList.add(new CustomerList("chandru", "300"));
         customerListArrayList.add(new CustomerList("dinesh", "400"));
@@ -82,7 +82,7 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
         customerListArrayList.add(new CustomerList("mani", "1300"));
         customerListArrayList.add(new CustomerList("nandha", "1400"));
         customerListArrayList.add(new CustomerList("owl", "1500"));
-        customerListArrayList.add(new CustomerList("praveen", "1600"));
+        customerListArrayList.add(new CustomerList("praveen", "8867518994"));
         customerListArrayList.add(new CustomerList("jaya", "1000"));
         customerListArrayList.add(new CustomerList("kumar", "1100"));
         customerListArrayList.add(new CustomerList("lakshan", "1200"));
@@ -94,8 +94,8 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
 
 
 
-        customerAdapter =new CustomerAdapter(activity,customerListArrayList,editSpinner.getText().toString());
-        ctList.setAdapter(customerAdapter);
+        //customerAdapter =new CustomerAdapter(activity,customerListArrayList,editSpinner.getText().toString());
+       // ctList.setAdapter(customerAdapter);
 
 
 
@@ -125,9 +125,8 @@ public class CustomerDialog extends Dialog implements DialogInterface.OnClickLis
     TextWatcher searchMode = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
-            customerAdapter =new CustomerAdapter(activity,customerListArrayList,editSpinner.getText().toString());
-            ctList.setAdapter(customerAdapter);
-            customerAdapter.notifyDataSetChanged();
+            //customerAdapter =new CustomerAdapter(activity,customerListArrayList,editSpinner.getText().toString());
+//            customerAdapter.notifyDataSetChanged();
         }
 
         @Override

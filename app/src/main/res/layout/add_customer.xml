@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="#EFF0EF"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -30,7 +31,11 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#EFF0EF">
+
+
+
 
 
         <LinearLayout
@@ -40,6 +45,10 @@
             android:orientation="vertical"
             android:background="#EFF0EF"
             android:padding="8dp">
+
+
+
+
 
             <LinearLayout style="@style/horizontal_linear_layout">
 
@@ -147,17 +156,27 @@
 
             </LinearLayout>
 
-        </LinearLayout>
-
+           </LinearLayout>
     </ScrollView>
 
-    <Button
-        android:id="@+id/add_details"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#7C2018"
-        android:text="Add"
-        android:textColor="#FFFFFF" />
+    <LinearLayout style="@style/horizontal_linear_layout">
+        <Button
+            android:id="@+id/clearCustomer"
+            style="@style/add_customer_edit_text"
+            android:background="@color/cancel"
+            android:text="CLEAR"
+            android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/addCustomer"
+            style="@style/add_customer_edit_text"
+            android:background="@color/green"
+            android:text="Add"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
 
 </LinearLayout>
+
+
 

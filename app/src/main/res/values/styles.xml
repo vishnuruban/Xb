@@ -11,6 +11,15 @@
         <item name="android:textSize">16sp</item>
     </style>
 
+    <style name="auto_drop">
+        <item name="android:dropDownListViewStyle">@style/DropDownListViewStyle</item>
+    </style>
+
+    <style name="DropDownListViewStyle">
+        <item name="android:divider">#4F4F4F</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
     <style name="horizontal_linear_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -29,7 +38,7 @@
     <style name="add_customer_edit_text">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">35dp</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_weight">1.5</item>
         <item name="android:background">@drawable/rounded_edittext</item>
         <item name="android:layout_margin">8dp</item>
         <item name="android:paddingLeft">16dp</item>

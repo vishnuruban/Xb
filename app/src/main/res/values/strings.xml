@@ -2,14 +2,15 @@
     <string name="app_name">Xb</string>
 
     <string name="add_Customer">Add Customer</string>
-    <string name="name">Name</string>
-    <string name="mob_number">Mobile</string>
+
+    <string name="name">Name<font fgcolor="red"> *</font></string>
+    <string name="mob_number">Mobile<font fgcolor="red"> *</font></string>
     <string name="email">Email</string>
     <string name="add1">Address Line1</string>
     <string name="add2">Address Line2</string>
     <string name="city">City</string>
     <string name="state">State</string>
-    <string name="gst_no">GST No</string>
+    <string name="gst_no">GST Number</string>
 
     <string-array name="registration_name">
         <item>Regular</item>

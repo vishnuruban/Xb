@@ -59,7 +59,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     ListView listView;
     BillListAdapter badapter;
-    TextView cProducts, cPrice, cDate, cNetAmount, cPayment, tCash, tBalance;
+    TextView cProducts, cPrice, cDate, cNetAmount, cPayment, tCash, tBalance,cCustName,cBillNum;
     EditText cDiscount;
     String totalProducts, totalPrice;
     LinearLayout lNetAmt;
@@ -105,6 +105,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cPrice = (TextView) findViewById(R.id.cTotalPrice);
         cProducts = (TextView) findViewById(R.id.cTotalProducts);
         cDate = (TextView) findViewById(R.id.date);
+        cCustName = (TextView) findViewById(R.id.cCustname);
+        cBillNum = (TextView) findViewById(R.id.cBillNo);
         cPayment = (TextView) findViewById(R.id.cPayment);
         lNetAmt = (LinearLayout) findViewById(R.id.layout_Net);
         tCash = (TextView) findViewById(R.id.tCash);
@@ -119,6 +121,16 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         billPrint =new BillPrint(CheckoutActivity.this);
 
         dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
+
+        if(FragmentOne.customerDetails!=null) {
+            String customerName = FragmentOne.customerDetails.getName();
+            cCustName.setText(customerName);
+        }
+        else
+        {
+            cCustName.setText("-");
+        }
+
 
         mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
         ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,

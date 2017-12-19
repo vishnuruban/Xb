@@ -77,9 +77,9 @@ public class AddCustomer extends DialogFragment{
                         customer.setGstin(gstin);
                     }
                     if (address.isEmpty()){
-                        customer.setAddress("");
+                        customer.setAddress1("");
                     } else {
-                        customer.setAddress(address);
+                        customer.setAddress1(address);
                     }
                     addCustomer(customer);
                     if (updateAdapter) {

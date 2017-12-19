@@ -32,8 +32,11 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.Customer;
+import in.net.maitri.xb.db.DbHandler;
 
 /**
  * Created by SYSRAJ4 on 10/11/2017.
@@ -50,21 +53,19 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     static DecimalFormat df,df1;
     ImageButton imgCustomer;
 
-    AutoCompleteTextView  autoCustomer;
-
-
+    public static AutoCompleteTextView  autoCustomer;
+    CustomerAdapter customerAdapter;
+    DbHandler dbHandler;
     LinearLayout custScreen;
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
             btn_eight, btn_nine, btn_zero, btn_point, btn_clear;
     TextInputEditText eQty;
+    ArrayList<Customer> customerArrayList;
+    public static Customer customerDetails;
   static double a = 0;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
-
-
 
         billList = new ArrayList<BillItems>();
         View view = inflater.inflate(R.layout.fragment_one, container, false);
@@ -72,7 +73,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         bTotalProducts = (TextView) view.findViewById(R.id.bTotalProducts);
         bTotalPrice    = (TextView) view.findViewById(R.id.bTotalPrice);
         custScreen =(LinearLayout) view.findViewById(R.id.customerscrren);
-
+        dbHandler = new DbHandler(getActivity());
         mCheckout = (Button) view.findViewById(R.id.mCheckout);
         mclearBill = (Button) view.findViewById(R.id.mClearBill);
         billListView = (ListView) view.findViewById(R.id.bill_lv);
@@ -81,41 +82,23 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         billListView.setAdapter(billListAdapter);
         autoCustomer = (AutoCompleteTextView) view.findViewById(R.id.autoSearch);
        // populateList();
+       customerArrayList = new ArrayList<>();
+        customerArrayList = dbHandler.getAllCustomer();
 
 
-      ArrayList<CustomerList>  customerListArrayList = new ArrayList<>();
-        customerListArrayList.add(new CustomerList("ashok", "100"));
-        customerListArrayList.add(new CustomerList("balu", "200"));
-        customerListArrayList.add(new CustomerList("chandru", "300"));
-        customerListArrayList.add(new CustomerList("dinesh", "400"));
-        customerListArrayList.add(new CustomerList("elango", "500"));
-        customerListArrayList.add(new CustomerList("fazil", "600"));
-        customerListArrayList.add(new CustomerList("guru", "700"));
-        customerListArrayList.add(new CustomerList("hari", "800"));
-        customerListArrayList.add(new CustomerList("imad", "900"));
-        customerListArrayList.add(new CustomerList("jaya", "1000"));
-        customerListArrayList.add(new CustomerList("kumar", "1100"));
-        customerListArrayList.add(new CustomerList("lakshan", "1200"));
-        customerListArrayList.add(new CustomerList("mani", "1300"));
-        customerListArrayList.add(new CustomerList("nandha", "1400"));
-        customerListArrayList.add(new CustomerList("owl", "1500"));
-        customerListArrayList.add(new CustomerList("praveen", "1600"));
-        customerListArrayList.add(new CustomerList("jaya", "1000"));
-        customerListArrayList.add(new CustomerList("kumar", "1100"));
-        customerListArrayList.add(new CustomerList("lakshan", "1200"));
-        customerListArrayList.add(new CustomerList("mani", "1300"));
-        customerListArrayList.add(new CustomerList("nandha", "1400"));
-        customerListArrayList.add(new CustomerList("owl", "1500"));
-        customerListArrayList.add(new CustomerList("praveen", "1600"));
-        customerListArrayList.add(new CustomerList("jaya", "1000"));
-        customerListArrayList.add(new CustomerList("kumar", "1100"));
-        customerListArrayList.add(new CustomerList("lakshan", "1200"));
-        customerListArrayList.add(new CustomerList("mani", "1300"));
-        customerListArrayList.add(new CustomerList("nandha", "1400"));
-        customerListArrayList.add(new CustomerList("owl", "1500"));
-        customerListArrayList.add(new CustomerList("praveen", "1600"));
-       CustomerAdapter customerAdapter =new CustomerAdapter(getActivity(),customerListArrayList,"NAME");
+
+        customerAdapter =new CustomerAdapter(getActivity(),customerArrayList,"NAME");
         autoCustomer.setAdapter(customerAdapter);
+
+
+        autoCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                customerDetails = (Customer)customerAdapter.getItem(position);
+                autoCustomer.setText(customerDetails.getName());
+
+            }
+        });
 
         GradientDrawable bgShape = (GradientDrawable)mCheckout.getBackground();
         bgShape.setColor(getResources().getColor(R.color.dark_green));
@@ -141,7 +124,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             @Override
             public void onClick(View view) {
 
-                CustomerDialog customerDialog = new CustomerDialog(getActivity());
+                AddCustomerDialog customerDialog = new AddCustomerDialog(getActivity(),customerAdapter,customerArrayList);
                 customerDialog.show();
 
             }

@@ -134,7 +134,8 @@
                     android:background="@drawable/bg_edittext"
                     android:drawableLeft="@mipmap/ic_account_box_white_24dp"
                     android:drawablePadding="15dp"
-                    android:hint="Customer Name"
+                    android:theme="@style/auto_drop"
+                    android:hint="Customer Name /  Number"
                     android:padding="16dp"
                     android:textColor="#fff"
                     android:textColorHint="#F6F6F6" />
@@ -159,7 +160,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@color/colorCell">
+                android:background="@color/darkskyBlue">
 
                 <TextView
                     android:layout_width="0dp"
