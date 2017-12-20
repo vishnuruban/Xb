@@ -133,8 +133,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
 
         mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
-        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item,
-                getResources().getStringArray(R.array.search_mode));
+        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.search_mode));
         mEditSpinner.setAdapter(adapter);
         mEditSpinner.setEditable(false);
         mEditSpinner.setText("CASH");
