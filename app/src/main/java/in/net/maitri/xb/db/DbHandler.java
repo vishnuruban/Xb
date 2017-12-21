@@ -34,6 +34,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_CAT_ID = "id";
     private static final String KEY_CAT_NAME = "category_name";
     private static final String KEY_CAT_IMAGE_PATH = "category_image";
+    private static final String KEY_CAT_IS_ACTIVE = "cat_is_active";
     private static final String KEY_CAT_CREATED_AT = "category_createdAt";
     // item table name
     private static final String ITEM_TABLE_NAME = "ItemMst";
@@ -46,6 +47,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_ITEM_SP = "item_sp";
     private static final String KEY_ITEM_HSN = "item_hsn";
     private static final String KEY_ITEM_GST = "item_gst";
+    private static final String KEY_ITEM_IS_ACTIVE = "item_is_active";
     private static final String KEY_CATE_ID = "category_id";
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
     // customer table name
@@ -123,10 +125,12 @@ public class DbHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
 
-
         String CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS " + CATEGORY_TABLE_NAME + "("
-                + KEY_CAT_ID + " INTEGER PRIMARY KEY," + KEY_CAT_NAME + " TEXT,"
-                + KEY_CAT_IMAGE_PATH + " TEXT" + KEY_CAT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                + KEY_CAT_ID + " INTEGER PRIMARY KEY,"
+                + KEY_CAT_NAME + " TEXT,"
+                + KEY_CAT_IMAGE_PATH + " TEXT"
+                + KEY_CAT_IS_ACTIVE + " INTEGER "
+                + KEY_CAT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
 
         String CREATE_ITEM_TABLE = "CREATE TABLE IF NOT EXISTS " + ITEM_TABLE_NAME + "("
@@ -136,6 +140,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_ITEM_SP + " FLOAT,"
                 + KEY_ITEM_HSN + " TEXT,"
                 + KEY_ITEM_GST + " FLOAT,"
+                + KEY_ITEM_IS_ACTIVE + " INTEGER "
                 + KEY_CATE_ID + " INTEGER,"
                 + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_ITEM_TABLE);
@@ -184,31 +189,63 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SYS_COMMENT + " TEXT,"
                 + KEY_SYS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_SYSSPEC_TABLE);
+
+        String CREATE_CUSTOMER_TABLE = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_TABLE_NAME + "("
+                + KEY_CST_ID + " INTEGER PRIMARY KEY,"
+                + KEY_CST_NAME + " TEXT,"
+                + KEY_CST_NUMBER + " TEXT UNIQUE,"
+                + KEY_CST_EMAIL + " TEXT,"
+                + KEY_CST_GSTIN + " TEXT,"
+                + KEY_CST_ADDRESS1 + " TEXT,"
+                + KEY_CST_ADDRESS2 + " TEXT,"
+                + KEY_CST_CITY + " TEXT,"
+                + KEY_CST_STATE + " TEXT,"
+                + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_CUSTOMER_TABLE);
     }
 
 
     // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-          if (newVersion > oldVersion) {
-          // db.execSQL("ALTER TABLE " + UNIT_TABLE_NAME + " ADD COLUMN " +  KEY_UNIT_DECIMAL_ALLOWED + " INTEGER DEFAULT 0");
-              String CREATE_CUSTOMER_TABLE = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_TABLE_NAME + "("
-                      + KEY_CST_ID + " INTEGER PRIMARY KEY,"
-                      + KEY_CST_NAME + " TEXT,"
-                      + KEY_CST_NUMBER + " TEXT UNIQUE,"
-                      + KEY_CST_EMAIL + " TEXT,"
-                      + KEY_CST_GSTIN + " TEXT,"
-                      + KEY_CST_ADDRESS1 + " TEXT,"
-                      + KEY_CST_ADDRESS2 + " TEXT,"
-                      + KEY_CST_CITY + " TEXT,"
-                      + KEY_CST_STATE + " TEXT,"
-                      + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
-              db.execSQL(CREATE_CUSTOMER_TABLE);
 
-          }
+        switch (oldVersion) {
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                String CREATE_CUSTOMER_TABLE = "CREATE TABLE IF NOT EXISTS " + CUSTOMER_TABLE_NAME + "("
+                        + KEY_CST_ID + " INTEGER PRIMARY KEY,"
+                        + KEY_CST_NAME + " TEXT,"
+                        + KEY_CST_NUMBER + " TEXT UNIQUE,"
+                        + KEY_CST_EMAIL + " TEXT,"
+                        + KEY_CST_GSTIN + " TEXT,"
+                        + KEY_CST_ADDRESS1 + " TEXT,"
+                        + KEY_CST_ADDRESS2 + " TEXT,"
+                        + KEY_CST_CITY + " TEXT,"
+                        + KEY_CST_STATE + " TEXT,"
+                        + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                db.execSQL(CREATE_CUSTOMER_TABLE);
 
+            case 8:
+                String addCategoryIsActive = "ALTER TABLE " + CATEGORY_TABLE_NAME +
+                        " ADD COLUMN " + KEY_CAT_IS_ACTIVE + " INTEGER ";
+                db.execSQL(addCategoryIsActive);
+                String addValueToCategoryIsActive = "UPDATE " + CATEGORY_TABLE_NAME +
+                        " SET " + KEY_CAT_IS_ACTIVE + " = 1";
+                db.execSQL(addValueToCategoryIsActive);
+                String addItemIsActive = "ALTER TABLE " + ITEM_TABLE_NAME +
+                        " ADD COLUMN " + KEY_ITEM_IS_ACTIVE + " INTEGER ";
+                db.execSQL(addItemIsActive);
+                String addValueToItemIsActive = "UPDATE " + ITEM_TABLE_NAME +
+                        " SET " + KEY_ITEM_IS_ACTIVE + " = 1";
+                db.execSQL(addValueToItemIsActive);
+                break;
+        }
 
-        onCreate(db);
     }
 
     public void addCategory(Category category) {
@@ -443,7 +480,7 @@ public class DbHandler extends SQLiteOpenHelper {
         itemList.clear();
         // Select All Query
         try {
-            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME ;
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             // looping through all rows and adding to list
@@ -469,14 +506,13 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return itemList;
     }
-
 
 
     public List<Item> getAllitemC() {
         itemList.clear();
         // Select All Query
         try {
-            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME ;
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             // looping through all rows and adding to list
@@ -502,27 +538,6 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return itemList;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // Updating single item
@@ -573,18 +588,18 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_CST_NAME, customer.getName());
             cv.put(KEY_CST_NUMBER, customer.getMobileno());
             cv.put(KEY_CST_GSTIN, customer.getGstin());
-            cv.put(KEY_CST_EMAIL ,customer.getEmail());
+            cv.put(KEY_CST_EMAIL, customer.getEmail());
             cv.put(KEY_CST_ADDRESS1, customer.getAddress1());
             cv.put(KEY_CST_ADDRESS2, customer.getAddress2());
             cv.put(KEY_CST_CITY, customer.getCity());
             cv.put(KEY_CST_STATE, customer.getState());
-           result =  db.insert(CUSTOMER_TABLE_NAME, null, cv);
+            result = db.insert(CUSTOMER_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
         }
 
-        return  result;
+        return result;
     }
 
     public boolean updateCustomer(Customer customer) {
@@ -594,7 +609,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_CST_NAME, customer.getName());
             cv.put(KEY_CST_NUMBER, customer.getMobileno());
             cv.put(KEY_CST_GSTIN, customer.getGstin());
-            cv.put(KEY_CST_EMAIL ,customer.getEmail());
+            cv.put(KEY_CST_EMAIL, customer.getEmail());
             cv.put(KEY_CST_ADDRESS1, customer.getAddress1());
             cv.put(KEY_CST_ADDRESS2, customer.getAddress2());
             cv.put(KEY_CST_CITY, customer.getCity());

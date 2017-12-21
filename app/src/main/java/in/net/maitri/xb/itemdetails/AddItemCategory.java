@@ -101,9 +101,7 @@ public class AddItemCategory extends AppCompatActivity {
             mGetAllCategories.get(0).setSelected(true);
         }
         int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
-        /*if (columns > 1){
-            columns -= 1;
-        }*/
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
         itemView.setLayoutManager(gridLayoutManager);
         mGetAllItems = mDbHandler.getAllitems1() ;

@@ -1,12 +1,5 @@
 package in.net.maitri.xb.db;
 
-import android.support.annotation.NonNull;
-
-import java.util.Comparator;
-
-/**
- * Created by SYSRAJ4 on 06/11/2017.
- */
 
 public class Category  {
 
