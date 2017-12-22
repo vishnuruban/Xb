@@ -22,7 +22,7 @@
     <TextView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="bill no"
+    android:text="bill number"
     android:gravity="center"
     android:id ="@+id/rBillNo"
     android:layout_margin="5dp"
