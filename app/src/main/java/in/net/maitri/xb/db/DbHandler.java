@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import in.net.maitri.xb.billing.BillItems;
+import in.net.maitri.xb.billing.BillSeries;
 
 public class DbHandler extends SQLiteOpenHelper {
 
@@ -26,7 +27,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 9;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -108,6 +109,23 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SYS_CREATED_AT = "sd_createdAt";
 
 
+    //Bill series table name
+    private static final String  BILLSERIES_TABLE_NAME="BillSeries";
+    //Bill Series column names
+    private static  final String KEY_BS_ID ="bs_id";
+    private static  final String KEY_BS_NAME ="bs_name";
+    private static final String KEY_BS_SHORT_NAME ="bs_short_name";
+    private static  final String KEY_BS_RESET_TYPE ="bs_reset";
+    private static final String KEY_BS_PREFIX ="bs_prefix";
+    private static final  String KEY_BS_SEED ="bs_seed";
+    private static  final String KEY_BS_CURRENT_BILL ="bs_current_bill";
+    private static final String KEY_BS_CUSOMER_SELECTION ="bs_customer_selection";
+    private static  final String KEY_BS_ROUND_OFF = "bs_roundOff";
+    private static final String KEY_BS_CREATED_AT = "bs_createdAt";
+    private static final String KEY_BS_DEFAULT = "bs_default";
+
+
+
     private List<Item> itemList = new ArrayList<>();
     private List<Item> itemList1 = new ArrayList<>();
     private List<Category> categoryList = new ArrayList<>();
@@ -118,6 +136,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<ReportData> totalItem = new ArrayList<>();
     private List<ReportData> totalReport = new ArrayList<>();
     private List<ReportData> totalReport1 = new ArrayList<>();
+    private ArrayList<BillSeries> billListSeries = new ArrayList<>();
 
 
     // Creating Tables
@@ -202,6 +221,24 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_CST_STATE + " TEXT,"
                 + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CUSTOMER_TABLE);
+
+
+
+        String CREATE_BILL_SERIES_TABLE = "CREATE TABLE IF NOT EXISTS " + BILLSERIES_TABLE_NAME + "("
+                + KEY_BS_ID + " INTEGER PRIMARY KEY," + KEY_BS_NAME + " TEXT,"
+                + KEY_BS_SHORT_NAME + " TEXT,"
+                + KEY_BS_SEED + " INTEGER,"
+                + KEY_BS_CURRENT_BILL + " INTEGER,"
+                + KEY_BS_RESET_TYPE+ " TEXT,"
+                + KEY_BS_PREFIX+ " TEXT,"
+                + KEY_BS_CUSOMER_SELECTION + " TEXT,"
+                + KEY_BS_DEFAULT + " INTEGER,"
+                + KEY_BS_ROUND_OFF + " INTEGER,"
+                +KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_BILL_SERIES_TABLE);
+        addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES",0,1),db);
+
+
     }
 
 
@@ -243,6 +280,21 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addValueToItemIsActive = "UPDATE " + ITEM_TABLE_NAME +
                         " SET " + KEY_ITEM_IS_ACTIVE + " = 1";
                 db.execSQL(addValueToItemIsActive);
+            case 9:
+
+                String CREATE_BILL_SERIES_TABLE = "CREATE TABLE IF NOT EXISTS " + BILLSERIES_TABLE_NAME + "("
+                        + KEY_BS_ID + " INTEGER PRIMARY KEY," + KEY_BS_NAME + " TEXT,"
+                        + KEY_BS_SHORT_NAME + " TEXT,"
+                        + KEY_BS_SEED + " INTEGER,"
+                        + KEY_BS_CURRENT_BILL + " INTEGER,"
+                        + KEY_BS_RESET_TYPE+ " TEXT,"
+                        + KEY_BS_PREFIX+ " TEXT,"
+                        + KEY_BS_CUSOMER_SELECTION + " TEXT,"
+                        + KEY_BS_DEFAULT + " INTEGER,"
+                        + KEY_BS_ROUND_OFF + " INTEGER,"
+                        +KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                db.execSQL(CREATE_BILL_SERIES_TABLE);
+                addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES",0,1),db);
                 break;
         }
 
@@ -960,6 +1012,110 @@ public class DbHandler extends SQLiteOpenHelper {
             createErrorDialog(e.toString());
         }
         return totalItem;
+    }
+
+
+
+    public void addBillSeries0(BillSeries bill,SQLiteDatabase db) {
+        try {
+          //  SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_BS_NAME,bill.getBillName() );
+            cv.put(KEY_BS_SHORT_NAME,bill.getShortName() );
+            cv.put(KEY_BS_PREFIX,bill.getPrefix() );
+            cv.put(KEY_BS_RESET_TYPE,bill.getResetType() );
+            cv.put(KEY_BS_SEED, bill.getSeed());
+            cv.put(KEY_BS_CURRENT_BILL, bill.getCurrentBillNo());
+            cv.put(KEY_BS_CUSOMER_SELECTION, bill.getCustomerSelection());
+            cv.put(KEY_BS_ROUND_OFF, bill.getRoundOff());
+            cv.put(KEY_BS_DEFAULT,bill.getDefault_bill());
+            db.insert(BILLSERIES_TABLE_NAME, null, cv);
+
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+    }
+
+
+
+    public void addBillSeries(BillSeries bill) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_BS_NAME,bill.getBillName() );
+            cv.put(KEY_BS_SHORT_NAME,bill.getShortName() );
+            cv.put(KEY_BS_PREFIX,bill.getPrefix() );
+            cv.put(KEY_BS_RESET_TYPE,bill.getResetType() );
+            cv.put(KEY_BS_SEED, bill.getSeed());
+            cv.put(KEY_BS_CURRENT_BILL, bill.getCurrentBillNo());
+            cv.put(KEY_BS_CUSOMER_SELECTION, bill.getCustomerSelection());
+            cv.put(KEY_BS_ROUND_OFF, bill.getRoundOff());
+            cv.put(KEY_BS_DEFAULT,bill.getDefault_bill());
+            db.insert(BILLSERIES_TABLE_NAME, null, cv);
+            db.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+    }
+
+    public BillSeries getBillSeries(int id) {
+        try {
+            SQLiteDatabase db = this.getReadableDatabase();
+            String selectQuery = "SELECT  * FROM " + BILLSERIES_TABLE_NAME + " WHERE "
+                    + KEY_BS_ID + " = " + id;
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c != null)
+                c.moveToFirst();
+
+
+            BillSeries billSeries = new BillSeries();
+            billSeries.setBillName(c.getString(c.getColumnIndex(KEY_BS_NAME)));
+            billSeries.setShortName(c.getString(c.getColumnIndex(KEY_BS_SHORT_NAME)));
+            billSeries.setSeed(c.getInt(c.getColumnIndex(KEY_BS_SEED)));
+            billSeries.setCurrentBillNo(c.getInt(c.getColumnIndex(KEY_BS_CURRENT_BILL)));
+            billSeries.setCustomerSelection(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+            billSeries.setResetType(c.getString(c.getColumnIndex(KEY_BS_RESET_TYPE)));
+            billSeries.setRoundOff(c.getInt(c.getColumnIndex(KEY_BS_ROUND_OFF)));
+            billSeries.setPrefix(c.getString(c.getColumnIndex(KEY_BS_PREFIX)));
+            billSeries.setDefault_bill(c.getInt(c.getColumnIndex(KEY_BS_DEFAULT)));
+
+            c.close();
+            return billSeries;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return new BillSeries();
+    }
+
+
+    public ArrayList<BillSeries> getAllBillSeries() {
+        billListSeries.clear();
+        // Select All Query
+        try {
+            String selectQuery = "SELECT  * FROM " +BILLSERIES_TABLE_NAME;
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                do {
+                    BillSeries billSeries = new BillSeries();
+                    billSeries.setId(c.getInt(c.getColumnIndex(KEY_BS_ID)));
+                    billSeries.setBillName(c.getString(c.getColumnIndex(KEY_BS_NAME)));
+                    billSeries.setShortName(c.getString(c.getColumnIndex(KEY_BS_SHORT_NAME)));
+                    billSeries.setSeed(c.getInt(c.getColumnIndex(KEY_BS_SEED)));
+                    billSeries.setCurrentBillNo(c.getInt(c.getColumnIndex(KEY_BS_CURRENT_BILL)));
+                    billSeries.setCustomerSelection(c.getString(c.getColumnIndex(KEY_BS_CUSOMER_SELECTION)));
+                    billSeries.setResetType(c.getString(c.getColumnIndex(KEY_BS_RESET_TYPE)));
+                    billSeries.setRoundOff(c.getInt(c.getColumnIndex(KEY_BS_ROUND_OFF)));
+                    billSeries.setPrefix(c.getString(c.getColumnIndex(KEY_BS_PREFIX)));
+                    billSeries.setDefault_bill(c.getInt(c.getColumnIndex(KEY_BS_DEFAULT)));
+                    billListSeries.add(billSeries);
+                } while (c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return billListSeries;
     }
 
 

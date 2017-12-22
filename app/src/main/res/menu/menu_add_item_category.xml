@@ -29,6 +29,11 @@
         android:title="Backup Data" />
 
     <item
+        android:id="@+id/billSeries"
+        android:orderInCategory="103"
+        android:title="Bill Series " />
+
+    <item
         android:id="@+id/restore"
         android:orderInCategory="104"
         android:title="Restore Data" />

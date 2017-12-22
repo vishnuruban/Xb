@@ -29,6 +29,7 @@ import java.util.List;
 import in.net.maitri.xb.MainActivity;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billReports.BillReportActivity;
+import in.net.maitri.xb.billing.BillSeriesActivity;
 import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.customer.CustomerDetail;
@@ -341,6 +342,10 @@ public class AddItemCategory extends AppCompatActivity {
 
             case R.id.bill_report:
                 startActivity(new Intent(AddItemCategory.this, BillReportActivity.class));
+                break;
+
+            case R.id.billSeries:
+                startActivity(new Intent(AddItemCategory.this, BillSeriesActivity.class));
                 break;
 
             case R.id.reset:
