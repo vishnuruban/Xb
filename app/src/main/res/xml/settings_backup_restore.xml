@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Backup &amp; Restore"
+        android:key="key_settings_backupAndRestore">
+
+        <Preference
+            android:key="key_settings_backupAndRestore_backup"
+            android:title="Backup Data">
+        </Preference>
+
+        <Preference
+            android:key="key_settings_backupAndRestore_restore"
+            android:title="Restore Data">
+        </Preference>
+
+        <Preference
+            android:key="key_settings_backupAndRestore_delete"
+            android:title="Delete Data">
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

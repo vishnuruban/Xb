@@ -53,8 +53,8 @@ public class AddItemCategory extends AppCompatActivity {
     private int mCategoryId;
     private FloatingActionButton mAddItemBtn;
     private Button mProceed;
-    private static final int REQUEST_PICK_FILE = 1;
     private boolean isAll = true;
+
 
 
     @Override
@@ -105,7 +105,7 @@ public class AddItemCategory extends AppCompatActivity {
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
         itemView.setLayoutManager(gridLayoutManager);
-        mGetAllItems = mDbHandler.getAllitems1() ;
+        mGetAllItems = mDbHandler.getAllitems1();
         if (mGetAllItems.size() == 0) {
             mNoItem.setVisibility(View.VISIBLE);
         } else {
@@ -119,13 +119,13 @@ public class AddItemCategory extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
 
-                if (position == 0){
+                if (position == 0) {
                     mAddItemBtn.setVisibility(View.GONE);
                     mCategoryAdapter.setSelected(position);
                     isAll = true;
                     updateItem(0);
                     mSelectedCategory.setText("All");
-                }else {
+                } else {
                     mAddItemBtn.setVisibility(View.VISIBLE);
                     mCategoryAdapter.setSelected(position);
                     Category category = mGetAllCategories.get(position);
@@ -296,9 +296,9 @@ public class AddItemCategory extends AppCompatActivity {
         mCategoryAdapter.notifyDataSetChanged();
     }
 
-    void updateItem( int categoryId) {
+    void updateItem(int categoryId) {
         mGetAllItems.clear();
-        if (isAll){
+        if (isAll) {
             mGetAllItems = mDbHandler.getAllitems1();
             if (mGetAllItems.size() == 0) {
                 mNoItem.setVisibility(View.VISIBLE);
@@ -306,7 +306,7 @@ public class AddItemCategory extends AppCompatActivity {
                 mNoItem.setVisibility(View.GONE);
             }
             mItemAdapter.notifyDataSetChanged();
-        }else {
+        } else {
             mGetAllItems = mDbHandler.getAllitems(categoryId);
             if (mGetAllItems.size() == 0) {
                 mNoItem.setVisibility(View.VISIBLE);
@@ -348,67 +348,12 @@ public class AddItemCategory extends AppCompatActivity {
                 startActivity(new Intent(AddItemCategory.this, BillSeriesActivity.class));
                 break;
 
-            case R.id.reset:
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(AddItemCategory.this);
-                builder.setTitle("Are you sure you want to reset the app?");
-                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        reset();
-                        android.os.Process.killProcess(android.os.Process.myPid());
-                        System.exit(1);
-                    }
-                });
-                builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                builder.show();
-                break;
-
-            case R.id.backup:
-                new BackUpAndRestoreDb(AddItemCategory.this).exportDB();
-                break;
-
-            case R.id.restore:
-                Intent intent = new Intent(this, FilePicker.class);
-                startActivityForResult(intent, REQUEST_PICK_FILE);
-                break;
 
             case android.R.id.home:
                 finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    void reset() {
-        SharedPreferences preferences = getSharedPreferences(CheckoutActivity.mypreference, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.apply();
-        mDbHandler.resetData();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case REQUEST_PICK_FILE:
-                    if (data.hasExtra(FilePicker.EXTRA_FILE_PATH)) {
-                        File selectedFile = new File
-                                (data.getStringExtra(FilePicker.EXTRA_FILE_PATH));
-                        if (new BackUpAndRestoreDb(AddItemCategory.this).importDB(selectedFile)) {
-                            startActivity(new Intent(AddItemCategory.this, AddItemCategory.class));
-                            finish();
-                        }
-                    }
-                    break;
-            }
-        }
     }
 
 }

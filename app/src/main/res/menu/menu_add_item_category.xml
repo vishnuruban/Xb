@@ -23,25 +23,11 @@
         android:orderInCategory="102"
         android:title="Settings" />
 
-    <item
-        android:id="@+id/backup"
-        android:orderInCategory="103"
-        android:title="Backup Data" />
 
     <item
         android:id="@+id/billSeries"
         android:orderInCategory="103"
         android:title="Bill Series " />
-
-    <item
-        android:id="@+id/restore"
-        android:orderInCategory="104"
-        android:title="Restore Data" />
-
-    <item
-        android:id="@+id/reset"
-        android:orderInCategory="104"
-        android:title="Delete Data" />
 
 
 </menu>

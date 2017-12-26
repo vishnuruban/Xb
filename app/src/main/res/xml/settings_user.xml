@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="User Settings"
+        android:key="key_settings_user">
+
+        <Preference
+            android:key="key_settings_user_add_new_user"
+            android:title="Add New User">
+        </Preference>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

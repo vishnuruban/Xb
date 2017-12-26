@@ -20,13 +20,8 @@
         <activity android:name=".db.DbActivity" />
         <activity android:name=".customer.CustomerDetail" />
         <activity android:name=".itemdetails.AddItemCategory" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        <activity android:name=".MainActivity"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".settings.SettingsActivity" />
         <activity
             android:name=".billing.CheckoutActivity"
@@ -58,8 +53,14 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+        <activity android:name=".login.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <activity android:name=".billing.BillSeriesActivity"></activity>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

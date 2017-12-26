@@ -11,10 +11,20 @@
         android:title="Bill"
         android:summary="Bill details" />
 
-    <header
+       <header
         android:fragment="in.net.maitri.xb.settings.PrinterSettings"
         android:title="Printer"
         android:summary="Printer details" />
+
+    <header
+        android:fragment="in.net.maitri.xb.settings.UserSettings"
+        android:title="User"
+        android:summary="User details" />
+
+    <header
+        android:fragment="in.net.maitri.xb.settings.BackupAndRestore"
+        android:title="Backup &amp; Restore"
+        android:summary="" />
 
 
 </preference-headers>

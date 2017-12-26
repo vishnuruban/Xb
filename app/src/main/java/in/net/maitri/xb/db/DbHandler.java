@@ -108,7 +108,6 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SYS_COMMENT = "sd_item";
     private static final String KEY_SYS_CREATED_AT = "sd_createdAt";
 
-
     //Bill series table name
     private static final String  BILLSERIES_TABLE_NAME="BillSeries";
     //Bill Series column names
@@ -124,7 +123,14 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_BS_CREATED_AT = "bs_createdAt";
     private static final String KEY_BS_DEFAULT = "bs_default";
 
-
+    //User Master table name
+    private static final String  USER_MST_TABLE_NAME = "UserMst";
+    //Bill Series column names
+    private static  final String KEY_UM_ID ="um_id";
+    private static  final String KEY_UM_USER ="um_user";
+    private static final String KEY_UM_PASSWORD ="um_password";
+    private static final String KEY_UM_IS_ADMIN ="um_isAdmin";
+    private static final String KEY_UM_CREATED_AT = "um_createdAt";
 
     private List<Item> itemList = new ArrayList<>();
     private List<Item> itemList1 = new ArrayList<>();
@@ -138,11 +144,9 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<ReportData> totalReport1 = new ArrayList<>();
     private ArrayList<BillSeries> billListSeries = new ArrayList<>();
 
-
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-
 
         String CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS " + CATEGORY_TABLE_NAME + "("
                 + KEY_CAT_ID + " INTEGER PRIMARY KEY,"
@@ -163,7 +167,6 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_CATE_ID + " INTEGER,"
                 + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_ITEM_TABLE);
-
 
         String CREATE_UNIT_TABLE = "CREATE TABLE IF NOT EXISTS " + UNIT_TABLE_NAME + "("
                 + KEY_UNIT_ID + " INTEGER PRIMARY KEY,"
@@ -222,8 +225,6 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CUSTOMER_TABLE);
 
-
-
         String CREATE_BILL_SERIES_TABLE = "CREATE TABLE IF NOT EXISTS " + BILLSERIES_TABLE_NAME + "("
                 + KEY_BS_ID + " INTEGER PRIMARY KEY," + KEY_BS_NAME + " TEXT,"
                 + KEY_BS_SHORT_NAME + " TEXT,"
@@ -238,9 +239,14 @@ public class DbHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_BILL_SERIES_TABLE);
         addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES",0,1),db);
 
-
+        String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME+ "("
+                + KEY_UM_ID+ " INTEGER PRIMARY KEY,"
+                + KEY_UM_USER + " TEXT UNIQUE,"
+                + KEY_UM_PASSWORD + " TEXT,"
+                + KEY_UM_IS_ADMIN + " INTEGER,"
+                + KEY_UM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_USER_MASTER_TABLE);
     }
-
 
     // Upgrading database
     @Override
@@ -266,7 +272,6 @@ public class DbHandler extends SQLiteOpenHelper {
                         + KEY_CST_STATE + " TEXT,"
                         + KEY_CST_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
                 db.execSQL(CREATE_CUSTOMER_TABLE);
-
             case 8:
                 String addCategoryIsActive = "ALTER TABLE " + CATEGORY_TABLE_NAME +
                         " ADD COLUMN " + KEY_CAT_IS_ACTIVE + " INTEGER ";
@@ -281,7 +286,6 @@ public class DbHandler extends SQLiteOpenHelper {
                         " SET " + KEY_ITEM_IS_ACTIVE + " = 1";
                 db.execSQL(addValueToItemIsActive);
             case 9:
-
                 String CREATE_BILL_SERIES_TABLE = "CREATE TABLE IF NOT EXISTS " + BILLSERIES_TABLE_NAME + "("
                         + KEY_BS_ID + " INTEGER PRIMARY KEY," + KEY_BS_NAME + " TEXT,"
                         + KEY_BS_SHORT_NAME + " TEXT,"
@@ -295,9 +299,21 @@ public class DbHandler extends SQLiteOpenHelper {
                         +KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
                 db.execSQL(CREATE_BILL_SERIES_TABLE);
                 addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES",0,1),db);
+            case 10:
+                String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME+ "("
+                        + KEY_UM_ID+ " INTEGER PRIMARY KEY,"
+                        + KEY_UM_USER + " TEXT UNIQUE,"
+                        + KEY_UM_PASSWORD + " TEXT,"
+                        + KEY_UM_IS_ADMIN + " INTEGER,"
+                        + KEY_UM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                db.execSQL(CREATE_USER_MASTER_TABLE);
+                ContentValues cv = new ContentValues();
+                cv.put(KEY_UM_USER, "admin");
+                cv.put(KEY_UM_PASSWORD, "admin");
+                cv.put(KEY_UM_IS_ADMIN, 1);
+                db.insert(USER_MST_TABLE_NAME, null, cv);
                 break;
         }
-
     }
 
     public void addCategory(Category category) {
@@ -338,13 +354,10 @@ public class DbHandler extends SQLiteOpenHelper {
     // Getting All categorys
     public List<Category> getAllcategorys() {
         categoryList.clear();
-
         // Select All Query
         String selectQuery = "SELECT  * FROM " + CATEGORY_TABLE_NAME;
-
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
@@ -1146,6 +1159,40 @@ public class DbHandler extends SQLiteOpenHelper {
             createErrorDialog(e.toString());
         }
         return false;
+    }
+
+    public String getPassword(String userName) {
+
+        try {
+            String selectQuery = "SELECT  " + KEY_UM_PASSWORD + " FROM " + USER_MST_TABLE_NAME
+                    + " WHERE " + KEY_UM_USER + " = '" + userName + "'";
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                  return c.getString(c.getColumnIndex(KEY_UM_PASSWORD));
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+            return "";
+        }
+        return "";
+    }
+
+    public boolean addUser(User user) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_UM_USER, user.getUserName());
+            cv.put(KEY_UM_PASSWORD, user.getPassword());
+            cv.put(KEY_UM_IS_ADMIN, user.getIsAdmin());
+            db.insert(USER_MST_TABLE_NAME, null, cv);
+            db.close();
+            return true;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+            return false;
+        }
     }
 
     public void resetData() {

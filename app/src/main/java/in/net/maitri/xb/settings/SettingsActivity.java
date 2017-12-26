@@ -8,7 +8,7 @@ import com.cie.btp.CieBluetoothPrinter;
 import java.util.List;
 
 import in.net.maitri.xb.R;
-
+import in.net.maitri.xb.db.BackUpAndRestoreDb;
 
 
 public class SettingsActivity extends AppCompatPreferenceActivity {
@@ -23,7 +23,9 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
     protected boolean isValidFragment(String fragmentName) {
         return CompanySettings.class.getName().equals(fragmentName) ||
                 BillSettings.class.getName().equals(fragmentName) ||
-                PrinterSettings.class.getName().equals(fragmentName);
+                PrinterSettings.class.getName().equals(fragmentName) ||
+                UserSettings.class.getName().equals(fragmentName) ||
+                BackupAndRestore.class.getName().equals(fragmentName);
     }
 
     @Override
