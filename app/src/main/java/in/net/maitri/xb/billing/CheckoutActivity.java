@@ -85,6 +85,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     public static final String mypreference = "mypref";
     public static final String billNo = "billNo";
 
+    BillSeries bSeries;
 
     String[] pModes = {"CASH", "DEBIT CARD", "CREDIT CARD", "WALLET"};
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
@@ -143,6 +144,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         getSettings = new GetSettings(CheckoutActivity.this);
         dbHandler = new DbHandler(CheckoutActivity.this);
 
+        bSeries = dbHandler.getBillSeries(1);
+
+
+        Log.i("Bill Number ",String.valueOf(bSeries.getCurrentBillNo()));
+        cBillNum.setText(String.valueOf(bSeries.getCurrentBillNo()));
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -151,7 +157,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
             finish();
         }
-
         //un comment the line below to debug the print service
         //mPrinter.setDebugService(BuildConfig.DEBUG);
         try {
@@ -574,11 +579,16 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     public void saveBill() {
         long detInserted = 0, mstInserted = 0;
-        int billNum = sharedpreferences.getInt(billNo, 0);
-        SharedPreferences.Editor editor = sharedpreferences.edit();
-        editor.putInt(billNo, ++billNum);
-        editor.apply();
-        String billno = String.valueOf(++billNum);
+       // int billNum = sharedpreferences.getInt(billNo, 0);
+      //  SharedPreferences.Editor editor = sharedpreferences.edit();
+      //  editor.putInt(billNo, ++billNum);
+       // editor.apply();
+        String billno = cBillNum.getText().toString();
+
+        int bNo = Integer.parseInt(billno);
+
+        dbHandler.updateBillNo(++bNo);
+
         Log.i("BILL NO", billno);
         int quantity = 0;
         String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
@@ -769,6 +779,5 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         }
         return true;
     }
-
 
 }

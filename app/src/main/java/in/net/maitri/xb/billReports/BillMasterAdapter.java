@@ -39,8 +39,9 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
     BillMasterAdapter(Context context,List<SalesMst> mAllBills){
         mContext = context;
         this.mAllBills = mAllBills;
-    }
 
+
+    }
 
 
 

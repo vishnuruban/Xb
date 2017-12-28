@@ -259,7 +259,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.35"
                     android:drawablePadding="15dp"
-                    android:text="2"
+
                     android:padding="5dp"
                     android:maxLines="1"
                     android:textColor="#000"

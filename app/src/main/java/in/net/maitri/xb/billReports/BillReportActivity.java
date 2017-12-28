@@ -95,26 +95,17 @@ byte[] excelReport;
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bill_report);
-
-
-
-
         mGetBillMaster = new ArrayList<>();
-
 
         rs = "\u20B9";
         try{
             byte[] utf8 = rs.getBytes("UTF-8");
-
-
             rs = new String(utf8, "UTF-8");}
         catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
         }
         billView = (RecyclerView) findViewById(R.id.bill_view);
-
-
          tItems = (TextView)findViewById(R.id.tItems);
          tQty =(TextView)findViewById(R.id.tqty);
          tDiscount= (TextView) findViewById(R.id.tDiscount);
@@ -172,11 +163,11 @@ byte[] excelReport;
         mShowReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mGetFromDate.isEmpty() || mGetToDate.isEmpty()) {
+                if (mGetFromDate.isEmpty() || mGetToDate.isEmpty())
+                     {
                     Toast.makeText(BillReportActivity.this, "Select date range", Toast.LENGTH_SHORT).show();
-                } else {
-
-
+                     }
+                else {
                     mProgressDialog = new ProgressDialog(BillReportActivity.this);
                     mProgressDialog.setMessage("Getting Data...");
                     mProgressDialog.setCancelable(false);
@@ -232,9 +223,6 @@ byte[] excelReport;
       //  setHeader();
 
         df = new DecimalFormat("0.00");
-
-
-
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(BillReportActivity.this);
         billView.setLayoutManager(linearLayoutManager);
 //        mGetBillMaster.get(0).setSelected(true);
@@ -254,13 +242,8 @@ byte[] excelReport;
                 double subTotal = discount + netAmt;
                 double qty =mst.getQty();
 
-                 brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty);
+                brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty);
                 brd.show();
-
-
-
-
-
 
 
              //   selectedBill.setText("Bill No:"+String.valueOf(billNo));
@@ -268,7 +251,6 @@ byte[] excelReport;
              //   tDiscount.setText("Discount: "+rs+ df.format(mst.getDiscount()));
               //  tNetAmount.setText("Net Amount: "+rs+ df.format(mst.getNetAmt()));
               //  tPaymentStatus.setText("Payment mode : "+mst.getPaymentMode());
-
 
 /*
                 getBillDetails(billNo,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate));
@@ -279,8 +261,6 @@ byte[] excelReport;
                 editor.putInt("billNo", billNo);
                 editor.apply();
 */
-
-
             }
 
             @Override
@@ -429,22 +409,15 @@ byte[] excelReport;
 
 
     public byte[] convertToExcel(String dis,String netAmt,String items,String qty) {
-
-
         String[] headerColumns = {"SNo", "Bill No", "Date", "Items", "Qty", "Discount(" + rs + ")", "Net Amount(" + rs + ")", "Pay mode", "Customer Name", "Cashier Name"};
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
         String[] summaryColumns = {"From Date", "To Date", "Total bills", "Total Items", "Total Qty", "Total Discount", "Total NetAmt"};
         File sd = Environment.getExternalStorageDirectory();
       //  String csvFile = "v1.xls";
-
         File directory = new File(sd.getAbsolutePath());
         //create directory if not exist
-
         try {
-
-            //file path
-           // File file = new File(directory, csvFile);
+            // File file = new File(directory, csvFile);
             WorkbookSettings wbSettings = new WorkbookSettings();
             wbSettings.setLocale(new Locale("en", "EN"));
             WritableWorkbook workbook;
@@ -452,17 +425,12 @@ byte[] excelReport;
             //Excel sheet name. 0 represents first sheet
             WritableSheet sheet = workbook.createSheet("Bill Report", 0);
             WritableSheet sheet1 = workbook.createSheet("Summary", 1);
-
             WritableCellFormat cFormat = new WritableCellFormat();
-
             WritableFont font = new WritableFont(WritableFont.ARIAL, 10, WritableFont.BOLD);
             font.setColour(Colour.BLUE);
             for (int i = 0; i < headerColumns.length; i++) {
                 cFormat.setFont(font);
-
                 sheet.addCell(new Label(i, 0, headerColumns[i], cFormat));
-
-
             }
 
 
@@ -482,24 +450,19 @@ byte[] excelReport;
 
 
             for (int j = 0; j < mGetBillMaster.size(); j++)
-
             {
-
                 SalesMst mst = mGetBillMaster.get(j);
                 int k = j + 1;
-
                 sheet.addCell(new Label(0, k, String.valueOf(k)));
                 sheet.addCell(new Label(1, k, String.valueOf(mst.getBillNO())));
                 sheet.addCell(new Label(2, k, mst.getDateTime()));
                 sheet.addCell(new Label(3, k, String.valueOf(mst.getItems()), cFormat));
                 sheet.addCell(new Label(4, k, String.valueOf((int) mst.getQty()), cFormat));
-
                 sheet.addCell(new Label(5, k, df.format(mst.getDiscount()), cFormat));
                 sheet.addCell(new Label(6, k, df.format(mst.getNetAmt()), cFormat));
                 sheet.addCell(new Label(7, k, mst.getPaymentMode()));
                 sheet.addCell(new Label(8, k, ""));
                 sheet.addCell(new Label(9, k, ""));
-
             }
 
             WritableCellFormat cFormat1 = new WritableCellFormat();
@@ -507,10 +470,8 @@ byte[] excelReport;
             font1.setColour(Colour.RED);
 
             for (int k = 0; k < summaryColumns.length; k++) {
-
                 //int j = f+k;
                 cFormat1.setFont(font1);
-
                 sheet1.addCell(new Label(k, 0, summaryColumns[k], cFormat1));
             }
             sheet1.setColumnView(0, 17);
@@ -521,7 +482,6 @@ byte[] excelReport;
             sheet1.setColumnView(5, 17);
             sheet1.setColumnView(6, 17);
 
-
             sheet1.addCell(new Label(0, 1, mGetFromDate));
             sheet1.addCell(new Label(1, 1, mGetToDate));
             sheet1.addCell(new Label(2, 1, String.valueOf(mGetBillMaster.size())));
@@ -529,19 +489,8 @@ byte[] excelReport;
             sheet1.addCell(new Label(4, 1, qty));
             sheet1.addCell(new Label(5, 1, dis));
             sheet1.addCell(new Label(6, 1, netAmt));
-
-
             workbook.write();
             workbook.close();
-          //   Toast.makeText(getApplication(), "Data Exported in a Excel Sheet", Toast.LENGTH_SHORT).show();
-
-
-           // byte[] bytesArray = new byte[(int) file.length()];
-
-         //   FileInputStream fis = new FileInputStream(file);
-           // fis.read(bytesArray); //read file into bytes[]
-           // fis.close();
-
             return baos.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
