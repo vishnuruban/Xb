@@ -1,6 +1,8 @@
 package in.net.maitri.xb.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -76,12 +78,16 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             String pswd = new DbHandler(LoginActivity.this).getPassword(userName);
-            if (pswd.isEmpty()){
-                Toast.makeText(LoginActivity.this, "Invalid User.",Toast.LENGTH_SHORT).show();
-            } else if (!pswd.equals(enteredPassword)){
-                Toast.makeText(LoginActivity.this, "Invalid Password.",Toast.LENGTH_SHORT).show();
+            if (pswd.isEmpty()) {
+                Toast.makeText(LoginActivity.this, "Invalid User.", Toast.LENGTH_SHORT).show();
+            } else if (!pswd.equals(enteredPassword)) {
+                Toast.makeText(LoginActivity.this, "Invalid Password.", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(LoginActivity.this, "Login Success.",Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("current_user", userName);
+                editor.apply();
                 startActivity(new Intent(LoginActivity.this, AddItemCategory.class));
             }
         }

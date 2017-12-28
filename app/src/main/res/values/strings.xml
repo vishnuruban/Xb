@@ -20,6 +20,12 @@
     <string name="save">Save</string>
     <string name="add_user">Add User</string>
 
+    <!-- Strings related to change password -->
+    <string name="change_password">Change Password</string>
+    <string name="current_password">Current Password<font fgcolor="red"> *</font></string>
+    <string name="new_password">New Password<font fgcolor="red"> *</font></string>
+    <string name="conform_new_password">Confirm Password<font fgcolor="red"> *</font></string>
+
 
     <string-array name="registration_name">
         <item>Regular</item>

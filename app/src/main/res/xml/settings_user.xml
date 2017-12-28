@@ -10,6 +10,11 @@
             android:title="Add New User">
         </Preference>
 
+        <Preference
+            android:key="key_settings_user_change_password"
+            android:title="Change Password">
+        </Preference>
+
     </PreferenceCategory>
 
 </PreferenceScreen>
