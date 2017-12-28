@@ -87,6 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("current_user", userName);
+                editor.putBoolean("user_is_admin", new DbHandler(LoginActivity.this).isAdmin(userName));
                 editor.apply();
                 startActivity(new Intent(LoginActivity.this, AddItemCategory.class));
             }
