@@ -163,9 +163,9 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_ITEM_SP + " FLOAT,"
                 + KEY_ITEM_HSN + " TEXT,"
                 + KEY_ITEM_GST + " FLOAT,"
-                + KEY_ITEM_IS_ACTIVE + " INTEGER "
+                + KEY_ITEM_IS_ACTIVE + " INTEGER, "
                 + KEY_CATE_ID + " INTEGER,"
-                + KEY_IMAGE_PATH + " TEXT" + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                + KEY_IMAGE_PATH + " TEXT, " + KEY_ITEM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_ITEM_TABLE);
 
         String CREATE_UNIT_TABLE = "CREATE TABLE IF NOT EXISTS " + UNIT_TABLE_NAME + "("
@@ -246,6 +246,11 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_UM_IS_ADMIN + " INTEGER,"
                 + KEY_UM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_USER_MASTER_TABLE);
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_UM_USER, "admin");
+        cv.put(KEY_UM_PASSWORD, "admin");
+        cv.put(KEY_UM_IS_ADMIN, 1);
+        db.insert(USER_MST_TABLE_NAME, null, cv);
     }
 
     // Upgrading database
@@ -514,7 +519,7 @@ public class DbHandler extends SQLiteOpenHelper {
         itemList.clear();
         // Select All Query
         try {
-            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " = " + categoryId;
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " =  " + categoryId ;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             // looping through all rows and adding to list
@@ -1188,6 +1193,20 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_UM_IS_ADMIN, user.getIsAdmin());
             db.insert(USER_MST_TABLE_NAME, null, cv);
             db.close();
+            return true;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+            return false;
+        }
+    }
+
+    public boolean changePassword(String userName, String password){
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(KEY_UM_PASSWORD, password);
+            db.update(USER_MST_TABLE_NAME, values, KEY_UM_USER + " = ?",
+                    new String[]{userName});
             return true;
         } catch (SQLException e) {
             createErrorDialog(e.toString());
