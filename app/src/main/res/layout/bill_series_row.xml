@@ -10,10 +10,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:layout_margin="5dp"
-        card_view:cardCornerRadius="8dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,7 +19,7 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.4"
+                android:layout_weight="1.25"
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="SNo"
@@ -33,9 +30,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
+                android:layout_weight="1.25"
                 android:padding="10dp"
+                android:gravity="center"
                 android:text="Bill Name"
                 android:id="@+id/bsName"
                 android:textColor="#000" />
@@ -45,9 +42,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1.5"
-                android:gravity="center"
+                android:layout_weight="1.25"
                 android:padding="10dp"
+                android:gravity="center"
                 android:text="Bill Short Name"
                 android:id="@+id/bsShortName"
                 android:textColor="#000" />
@@ -56,10 +53,10 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.75"
-                android:gravity="center"
+                android:layout_weight="1.25"
                 android:padding="10dp"
                 android:text="Seed"
+                android:gravity="center"
                 android:id="@+id/bsSeed"
                 android:textColor="#000" />
 
@@ -67,9 +64,9 @@
 
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.75"
-                android:gravity="center"
+                android:layout_weight="1.25"
                 android:padding="10dp"
+                android:gravity="center"
                 android:text="Current Bill No."
                 android:id="@+id/bsCurrentBillNo"
                 android:textColor="#000" />
@@ -79,9 +76,9 @@
                 android:id="@+id/bsPrefix"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
+                android:layout_weight="1.25"
                 android:padding="10dp"
+                android:gravity="center"
                 android:text="Prefix"
                 android:textColor="#000" />
 
@@ -89,9 +86,9 @@
                 android:id="@+id/bsReset"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="right"
+                android:layout_weight="1.25"
                 android:padding="10dp"
+                android:gravity="center"
                 android:text="Reset Type"
                 android:textColor="#000" />
 
@@ -100,8 +97,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.25"
-                android:gravity="right"
                 android:padding="10dp"
+                android:gravity="center"
                 android:text="Customer Selection"
                 android:textColor="#000" />
 
@@ -110,7 +107,7 @@
                 android:id="@+id/bsRoundOff"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="1.25"
                 android:gravity="center"
                 android:padding="10dp"
                 android:text="Round Off"

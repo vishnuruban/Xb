@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,11 @@ public class BillSeriesAdapter extends RecyclerView.Adapter<BillSeriesAdapter.My
     BillSeriesAdapter(Context mContext, List<BillSeries> mAllBillSeries) {
         this.mContext = mContext;
         this.mAllBillSeries = mAllBillSeries;
+
     }
+
+
+
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -69,21 +74,23 @@ public class BillSeriesAdapter extends RecyclerView.Adapter<BillSeriesAdapter.My
         BillSeries billSeriesDetails = mAllBillSeries.get(position);
         //  Category categoryDetails = mAllCategories.get(position);
 
+
         DecimalFormat df = new DecimalFormat("0.00");
         DecimalFormat df1 = new DecimalFormat("0.00");
 
         System.out.println("BILL NA" + billSeriesDetails.getBillName());
         System.out.println("BILL NA" + billSeriesDetails.getShortName());
 
-        holder.bSno.setText(billSeriesDetails.getId());
+
+       holder.bSno.setText(String.valueOf(billSeriesDetails.getId()));
         holder.bName.setText(billSeriesDetails.getBillName());
         holder.bShortName.setText(billSeriesDetails.getShortName());
         holder.bResetType.setText(billSeriesDetails.getResetType());
         holder.bPrefix.setText(billSeriesDetails.getPrefix());
-        holder.bSeed.setText(billSeriesDetails.getSeed());
-        holder.bCurrentBillNo.setText(billSeriesDetails.getCurrentBillNo());
-        holder.bCustomerSelection.setText(billSeriesDetails.getCustomerSelection());
-        holder.bRoundOff.setText(billSeriesDetails.getRoundOff());
+        holder.bSeed.setText(String.valueOf(billSeriesDetails.getSeed()));
+        holder.bCurrentBillNo.setText(String.valueOf(billSeriesDetails.getCurrentBillNo()));
+        holder.bCustomerSelection.setText(String.valueOf(billSeriesDetails.getCustomerSelection()));
+        holder.bRoundOff.setText(String.valueOf(billSeriesDetails.getRoundOff()));
         //holder.rBillDate.setText("Date  : "+String.valueOf(billDetails.getDateTime()));
 
        /* if (billDetails.isSelected()) {

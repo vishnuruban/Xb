@@ -1080,7 +1080,7 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
             SQLiteDatabase db = this.getReadableDatabase();
             String selectQuery = "SELECT  * FROM " + BILLSERIES_TABLE_NAME + " WHERE "
-                    + KEY_BS_ID + " = " + id;
+                    + KEY_BS_DEFAULT + " = " + id;
             Cursor c = db.rawQuery(selectQuery, null);
             if (c != null)
                 c.moveToFirst();
@@ -1091,7 +1091,7 @@ public class DbHandler extends SQLiteOpenHelper {
             billSeries.setShortName(c.getString(c.getColumnIndex(KEY_BS_SHORT_NAME)));
             billSeries.setSeed(c.getInt(c.getColumnIndex(KEY_BS_SEED)));
             billSeries.setCurrentBillNo(c.getInt(c.getColumnIndex(KEY_BS_CURRENT_BILL)));
-            billSeries.setCustomerSelection(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
+            billSeries.setCustomerSelection(c.getString(c.getColumnIndex(KEY_BS_CUSOMER_SELECTION)));
             billSeries.setResetType(c.getString(c.getColumnIndex(KEY_BS_RESET_TYPE)));
             billSeries.setRoundOff(c.getInt(c.getColumnIndex(KEY_BS_ROUND_OFF)));
             billSeries.setPrefix(c.getString(c.getColumnIndex(KEY_BS_PREFIX)));
@@ -1104,6 +1104,29 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return new BillSeries();
     }
+
+
+
+
+
+    public boolean  updateBillNo(int num) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_BS_CURRENT_BILL,num);
+        long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
+
+        return rowid != -1;
+        // updating row
+
+    }
+
+
+
+
+
+
+
 
 
     public ArrayList<BillSeries> getAllBillSeries() {
