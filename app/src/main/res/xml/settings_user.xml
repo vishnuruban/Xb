@@ -15,6 +15,11 @@
             android:title="Change Password">
         </Preference>
 
+        <Preference
+            android:key="key_settings_user_delete_user"
+            android:title="Delete User">
+        </Preference>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

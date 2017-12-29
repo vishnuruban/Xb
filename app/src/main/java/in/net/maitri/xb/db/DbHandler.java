@@ -1214,6 +1214,25 @@ public class DbHandler extends SQLiteOpenHelper {
         return "";
     }
 
+
+    public boolean isAdmin(String userName) {
+
+        try {
+            String selectQuery = "SELECT  " + KEY_UM_IS_ADMIN + " FROM " + USER_MST_TABLE_NAME
+                    + " WHERE " + KEY_UM_USER + " = '" + userName + "'";
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                return c.getInt(c.getColumnIndex(KEY_UM_IS_ADMIN )) == 1;
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+            return false;
+        }
+       return false;
+    }
+
     public boolean addUser(User user) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
@@ -1222,6 +1241,33 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_UM_PASSWORD, user.getPassword());
             cv.put(KEY_UM_IS_ADMIN, user.getIsAdmin());
             db.insert(USER_MST_TABLE_NAME, null, cv);
+            db.close();
+            return true;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+            return false;
+        }
+    }
+
+    public List<String> getAllUsers() {
+        List<String> users = new ArrayList<>();
+        String selectQuery = "SELECT " + KEY_UM_USER + " FROM " + USER_MST_TABLE_NAME ;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                users.add(cursor.getString(cursor.getColumnIndex(KEY_UM_USER)));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return users;
+    }
+
+    public boolean deleteUser(int userId) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(USER_MST_TABLE_NAME, KEY_UM_ID + " = ?",
+                    new String[]{String.valueOf(userId)});
             db.close();
             return true;
         } catch (SQLException e) {

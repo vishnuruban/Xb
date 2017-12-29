@@ -1,16 +1,21 @@
 package in.net.maitri.xb.settings;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
+
+import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.user.AddNewUser;
-
+import in.net.maitri.xb.user.ChangePassword;
 
 public class UserSettings extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -19,18 +24,65 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_user);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
         Preference addNewUser = findPreference("key_settings_user_add_new_user");
         addNewUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 AddNewUser newFragment = new AddNewUser();
                 newFragment.setCancelable(false);
+                newFragment.show(getFragmentManager(), "");
+                return true;
+            }
+        });
+
+        Preference deleteUser = findPreference("key_settings_user_delete_user");
+        deleteUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                return true;
+            }
+        });
+       /* deleteUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                List<String> getAllUsers = new DbHandler(getActivity()).getAllUsers();
+                String[] users = new String[]
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Delete User");
+                builder.setItems(, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                return true;
+            }
+        });*/
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (!sharedPreferences.getBoolean("user_is_admin", false)){
+            addNewUser.setEnabled(false);
+            deleteUser.setEnabled(false);
+        }
+
+        Preference changePassword = findPreference("key_settings_user_change_password");
+        changePassword.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                ChangePassword newFragment = new ChangePassword();
+                newFragment.setCancelable(false);
                 newFragment.show(getFragmentManager(),"");
                 return true;
             }
         });
     }
-
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
