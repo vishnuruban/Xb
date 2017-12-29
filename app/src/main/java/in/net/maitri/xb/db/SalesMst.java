@@ -7,9 +7,51 @@ public class SalesMst {
     private String paymentMode;
     private String paymentDet;
     private String status;
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
+    private String prefix;
     private double qty;
     private int  items;
+
+    public int getInternalBillNo() {
+        return internalBillNo;
+    }
+
+    public void setInternalBillNo(int internalBillNo) {
+        this.internalBillNo = internalBillNo;
+    }
+
+    private int internalBillNo;
+
+    public SalesMst(int billNO, int date, int customerId, String salesPerson, String paymentMode, String paymentDet, String status, double qty, int items, int internalBillNo, double netAmt, boolean selected, double discount, String dateTime) {
+        this.billNO = billNO;
+        this.date = date;
+        this.customerId = customerId;
+        this.salesPerson = salesPerson;
+        this.paymentMode = paymentMode;
+        this.paymentDet = paymentDet;
+        this.status = status;
+        this.qty = qty;
+        this.items = items;
+        this.internalBillNo = internalBillNo;
+        this.netAmt = netAmt;
+        this.selected = selected;
+        this.discount = discount;
+        this.dateTime = dateTime;
+    }
+
+
+
+
     private double netAmt;
+    private int saleBillNo;
 
     public SalesMst(int billNO, int date, int customerId, String salesPerson, String paymentMode, String paymentDet, String status, double qty, int items, double netAmt, double discount, String dateTime) {
         this.billNO = billNO;

@@ -54,8 +54,9 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     double dQty;
     String rs;
     DecimalFormat df;
+    int internalBillNo;
 
-    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty)
+    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo)
     {
         super (context);
         this.context = context;
@@ -68,6 +69,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         this.netAmt = netAmt;
         this.subTotal = subTotal;
         this.dQty = dQty;
+        this.internalBillNo = internalBillNo;
     }
 
 
@@ -137,7 +139,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
 
         selectedBill.setText("Bill No: "+String.valueOf(billNo));
         selectedBillDate.setText(dateTime);
-        getBillDetails(billNo,fromDate,toDate);
+        getBillDetails(internalBillNo,fromDate,toDate,dateTime);
 
     }
 
@@ -154,9 +156,9 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
 
 
 
-    void getBillDetails(int billNo,int fromDate,int toDate) {
+    void getBillDetails(int billNo,int fromDate,int toDate,String billDateTime) {
 
-        mGetBillDetails = dbHandler.getBillDetails(billNo,fromDate,toDate);
+        mGetBillDetails = dbHandler.getBillDetails(billNo,fromDate,toDate,billDateTime);
         int quantity = 0;
         int items = 0;
 

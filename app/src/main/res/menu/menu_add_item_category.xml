@@ -16,18 +16,16 @@
     <item
         android:id="@+id/bill_report"
         android:orderInCategory="101"
-        android:title="Bill Report"/>
+        android:title="Sales Report"/>
+
+    <item
+        android:id="@+id/today_bill_report"
+        android:orderInCategory="101"
+        android:title="Today's Sales Report"/>
 
     <item
         android:id="@+id/settings"
         android:orderInCategory="102"
         android:title="Settings" />
-
-
-    <item
-        android:id="@+id/billSeries"
-        android:orderInCategory="103"
-        android:title="Bill Series " />
-
 
 </menu>

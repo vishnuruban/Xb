@@ -42,6 +42,13 @@
         <activity android:name="customer.CustomerDetail" />
         <activity android:name=".reports.TotalSales" />
         <activity android:name=".billReports.BillReportActivity" />
+        <activity android:name=".billReports.TodayBillReport" />
+        <activity android:name=".billing.BillSeriesActivity" >
+            <intent-filter>
+                <action android:name="in.net.maitri.xb.billing.BillSeriesActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            </activity>
         <activity android:name=".util.FilePicker" />
 
         <provider

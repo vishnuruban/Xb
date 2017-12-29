@@ -134,7 +134,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
 
         mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
-        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.search_mode));
+        ListAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.payment));
         mEditSpinner.setAdapter(adapter);
         mEditSpinner.setEditable(false);
         mEditSpinner.setText("CASH");
@@ -145,10 +145,19 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         dbHandler = new DbHandler(CheckoutActivity.this);
 
         bSeries = dbHandler.getBillSeries(1);
-
+       String bPrefix =  String.valueOf(bSeries.getPrefix());
+          if(bPrefix.isEmpty())
+            {
+           cBillNum.setText(String.valueOf(bSeries.getCurrentBillNo()));
+            }
+            else
+          {
+              cBillNum.setText(bPrefix+String.valueOf(bSeries.getCurrentBillNo()));
+          }
 
         Log.i("Bill Number ",String.valueOf(bSeries.getCurrentBillNo()));
-        cBillNum.setText(String.valueOf(bSeries.getCurrentBillNo()));
+        Log.i("Bill Prefix ",bPrefix);
+
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -563,10 +572,22 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
                 if (printSize.equals("1")) {
 
-                    billPrint.printTwoInch(mPrinter,FragmentOne.billList,sm.getNetAmt(),String.valueOf(sm.getBillNO()),totalPrice,String.valueOf(sm.getDiscount()),sm.getQty(),sm.getDateTime());
-                    System.out.println(mPrinter.toString());
+                    if(sm.getPrefix().isEmpty()) {
+                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                    }
+                    else
+                    {
+                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                    }
                 } else {
-                    billPrint.printThreeInch(mPrinter,FragmentOne.billList,sm.getNetAmt(),String.valueOf(sm.getBillNO()),totalPrice,String.valueOf(sm.getDiscount()),sm.getQty(),sm.getDateTime());
+
+                    if(sm.getPrefix().isEmpty()) {
+                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                    }
+                    else
+                    {
+                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                    }
                     System.out.println(mPrinter.toString());
                 }
                 Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
@@ -583,13 +604,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
       //  SharedPreferences.Editor editor = sharedpreferences.edit();
       //  editor.putInt(billNo, ++billNum);
        // editor.apply();
-        String billno = cBillNum.getText().toString();
 
-        int bNo = Integer.parseInt(billno);
+        String billwithPrefix = cBillNum.getText().toString();
+        int bNo =  bSeries.getCurrentBillNo();
 
-        dbHandler.updateBillNo(++bNo);
+        dbHandler.updateBillNo(++bNo,"");
 
-        Log.i("BILL NO", billno);
+        Log.i("BILL NO", billwithPrefix);
         int quantity = 0;
         String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
 
@@ -603,12 +624,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
             BillItems billItems = FragmentOne.billList.get(i);
             quantity = quantity + billItems.getQty();
-            sd = new SalesDet(Integer.parseInt(billno), billItems);
+            sd = new SalesDet( bSeries.getCurrentBillNo(), billItems);
             detInserted = dbHandler.addSalesDet(sd);
         }
 
         sm = new SalesMst();
-        sm.setBillNO(Integer.parseInt(billno));
+        sm.setBillNO( bSeries.getCurrentBillNo());
         sm.setCustomerId(0);
         sm.setQty(quantity);
         sm.setNetAmt(netAmt);
@@ -620,6 +641,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setPaymentDet("");
         sm.setSalesPerson("");
         sm.setStatus("SAVED");
+        sm.setPrefix(bSeries.getPrefix());
         sm.setDate(dateCount);
         sm.setDateTime(formattedDate);
         sm.setItems(FragmentOne.billList.size());

@@ -17,8 +17,6 @@
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="#F3F7F9">
-
-
             <LinearLayout
                 android:id="@+id/llHeader"
                 android:layout_width="match_parent"
@@ -224,9 +222,5 @@
                     android:textStyle="bold" />
             </LinearLayout>
         </RelativeLayout>
-
-
     </LinearLayout>
-
-
 </LinearLayout>

@@ -5,45 +5,45 @@
         android:title="Bill Settings"
         android:key="key_settings_bill">
 
-        <ListPreference
-            android:key="key_settings_bill_inclusive_exclusive"
-            android:summary="%s"
-            android:defaultValue="1"
-            android:entries="@array/tax_type_name"
-            android:entryValues="@array/tax_type_values"
-            android:title="Tax type" />
+
+
+        <Preference
+            android:key="key_settings_user_edit_bill_settings"
+            android:title="Edit Bill Settings">
+        </Preference>
+
+
+        <Preference
+            android:key="key_settings_company_bill_name"
+            android:title="Bill Name"
+            android:summary="anything_you_want" />
+
+        <Preference
+            android:key="key_settings_company_starting_bill_no"
+            android:title="Current bill no"
+            android:summary="anything_you_want" />
+
+
+        <Preference
+            android:key="key_settings_company_prefix"
+            android:title="Bill Prefix"
+            android:summary="anything_you_want" />
+
+
+        <Preference
+            android:key="key_settings_company_reset_type"
+            android:title="Reset Type"
+            android:summary="anything_you_want" />
 
         <SwitchPreference
-            android:key="key_settings_bill_sales_person_rqd"
             android:defaultValue="false"
-            android:title="Sales Person Required"/>
-
+            android:key="key_settings_bill_sales_person_rqd"
+            android:title="Customer Selection Required" />
 
         <SwitchPreference
             android:key="key_settings_bill_round_cash"
             android:defaultValue="false"
             android:title="Round of Bill"/>
-
-
-        <EditTextPreference
-            android:key="key_settings_bill_suffix_prefix_name"
-            android:title="Bill name" />
-
-        <ListPreference
-            android:key="key_settings_bill_suffix_prefix"
-            android:entries="@array/suffix_prefix_name"
-            android:summary="%s"
-            android:defaultValue="2"
-            android:entryValues="@array/suffix_prefix_values"
-            android:title="Add bill name as" />
-
-        <EditTextPreference
-            android:key="key_settings_company_starting_bill_no"
-            android:title="Starting bill no" />
-
-        <EditTextPreference
-            android:key="key_settings_bill_discount_percentage"
-            android:title="Maximum Discount Percentage" />
 
     </PreferenceCategory>
 

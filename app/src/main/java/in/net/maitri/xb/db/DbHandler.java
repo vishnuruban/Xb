@@ -75,6 +75,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String SALES_MST_TABLE_NAME = "SalesMst";
     // sales mst table column names
     private static final String KEY_SM_BILL_NO = "sm_billNo";
+    private static final String KEY_SM_SALE_BILL_NO = "sm_sale_billNo";
     private static final String KEY_SM_DATE = "sm_date";
     private static final String KEY_SM_QTY = "sm_qty";
     private static final String KEY_SM_NET_AMT = "sm_netAmt";
@@ -178,6 +179,7 @@ public class DbHandler extends SQLiteOpenHelper {
         String CREATE_SALES_MST_TABLE = "CREATE TABLE IF NOT EXISTS " + SALES_MST_TABLE_NAME + "("
                 + KEY_SM_BILL_NO + " INTEGER PRIMARY KEY,"
                 + KEY_SM_DATE + " INTEGER,"
+                + KEY_SM_SALE_BILL_NO + " INTEGER,"
                 + KEY_SM_QTY + " FLOAT,"
                 + KEY_SM_ITEM + " FLOAT,"
                 + KEY_SM_NET_AMT + " FLOAT,"
@@ -317,6 +319,10 @@ public class DbHandler extends SQLiteOpenHelper {
                 cv.put(KEY_UM_PASSWORD, "admin");
                 cv.put(KEY_UM_IS_ADMIN, 1);
                 db.insert(USER_MST_TABLE_NAME, null, cv);
+
+                String addSaleBillNo = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_SALE_BILL_NO + " INTEGER ";
+                db.execSQL(addSaleBillNo);
                 break;
         }
     }
@@ -725,7 +731,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
     // Getting All item
-    public List<SalesDet> getBillDetails(int billNo, int fromDate, int toDate) {
+    public List<SalesDet> getBillDetails(int billNo, int fromDate, int toDate,String dateTime) {
         //     sdList.clear();
         // Select All Query
 
@@ -733,7 +739,7 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
 
             String selectQuery = "select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
-                    "join SalesMst sm on sd.sd_billNo = sm.sm_billNo where sd.sd_billNo =" + billNo + " and SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
+                    "join SalesMst sm on sd.sd_billNo = sm.sm_sale_billNo where " + KEY_SM_BILL_NO +" = "+ billNo;
 
             System.out.println(selectQuery);
 
@@ -845,7 +851,8 @@ public class DbHandler extends SQLiteOpenHelper {
                 do {
                     SalesMst mst = new SalesMst();
 
-                    mst.setBillNO(c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
+                    mst.setInternalBillNo(c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
+                    mst.setBillNO(c.getInt(c.getColumnIndex(KEY_SM_SALE_BILL_NO)));
                     mst.setDateTime(c.getString(c.getColumnIndex(KEY_SM_DATETIME)));
                     mst.setNetAmt(c.getDouble(c.getColumnIndex(KEY_SM_NET_AMT)));
                     mst.setDiscount(c.getDouble(c.getColumnIndex(KEY_SM_DISCOUNT)));
@@ -869,7 +876,7 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(KEY_SM_BILL_NO, salesMst.getBillNO());
+            cv.put(KEY_SM_SALE_BILL_NO, salesMst.getBillNO());
             cv.put(KEY_SM_DATE, salesMst.getDate());
             cv.put(KEY_SM_DATETIME, salesMst.getDateTime());
             cv.put(KEY_SM_QTY, salesMst.getQty());
@@ -1084,8 +1091,6 @@ public class DbHandler extends SQLiteOpenHelper {
             Cursor c = db.rawQuery(selectQuery, null);
             if (c != null)
                 c.moveToFirst();
-
-
             BillSeries billSeries = new BillSeries();
             billSeries.setBillName(c.getString(c.getColumnIndex(KEY_BS_NAME)));
             billSeries.setShortName(c.getString(c.getColumnIndex(KEY_BS_SHORT_NAME)));
@@ -1109,11 +1114,13 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
 
-    public boolean  updateBillNo(int num) {
+    public boolean  updateBillNo(int num,String prefix) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_BS_CURRENT_BILL,num);
+            values.put(KEY_BS_PREFIX, prefix);
+
         long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
 
         return rowid != -1;

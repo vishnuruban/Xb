@@ -26,6 +26,7 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 PrinterSettings.class.getName().equals(fragmentName) ||
                 UserSettings.class.getName().equals(fragmentName) ||
                 BackupAndRestore.class.getName().equals(fragmentName);
+
     }
 
     @Override
