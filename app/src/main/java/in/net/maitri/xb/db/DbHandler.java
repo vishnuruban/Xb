@@ -1263,11 +1263,11 @@ public class DbHandler extends SQLiteOpenHelper {
         return users;
     }
 
-    public boolean deleteUser(int userId) {
+    public boolean deleteUser(String userName) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
-            db.delete(USER_MST_TABLE_NAME, KEY_UM_ID + " = ?",
-                    new String[]{String.valueOf(userId)});
+            db.delete(USER_MST_TABLE_NAME, KEY_UM_USER + " = ?",
+                    new String[]{String.valueOf(userName)});
             db.close();
             return true;
         } catch (SQLException e) {

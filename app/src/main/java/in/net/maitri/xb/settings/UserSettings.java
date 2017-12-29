@@ -9,6 +9,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -43,17 +44,22 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
                 return true;
             }
         });
-       /* deleteUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        deleteUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 List<String> getAllUsers = new DbHandler(getActivity()).getAllUsers();
-                String[] users = new String[]
+                final String[] users = getAllUsers.toArray(new String[getAllUsers.size()]);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setCancelable(false);
                 builder.setTitle("Delete User");
-                builder.setItems(, new DialogInterface.OnClickListener() {
+                builder.setItems(users, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        if (users[i].equals("admin")){
+                            Toast.makeText(getActivity(),"Admin user can't be deleted.",Toast.LENGTH_SHORT).show();
+                        } else {
+                          askConfirmation(users[i]);
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -62,9 +68,10 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
                         dialogInterface.cancel();
                     }
                 });
+                builder.create().show();
                 return true;
             }
-        });*/
+        });
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         if (!sharedPreferences.getBoolean("user_is_admin", false)){
@@ -95,6 +102,29 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
             EditTextPreference listPreference = (EditTextPreference) preference;
             listPreference.setSummary(listPreference.getText());
         }
-
     }
+
+     private void askConfirmation(final String userName){
+         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+         builder.setCancelable(false);
+         builder.setTitle("Are you sure to delete " + userName + "?");
+         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialogInterface, int i) {
+                 if (new DbHandler(getActivity()).deleteUser(userName)){
+                     Toast.makeText(getActivity(), userName + " deleted successfully.",Toast.LENGTH_SHORT).show();
+                 } else {
+                     Toast.makeText(getActivity(), userName + " deleting failed.",Toast.LENGTH_SHORT).show();
+                 }
+                 dialogInterface.cancel();
+             }
+         });
+         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialogInterface, int i) {
+                 dialogInterface.cancel();
+             }
+         });
+         builder.create().show();
+     }
 }

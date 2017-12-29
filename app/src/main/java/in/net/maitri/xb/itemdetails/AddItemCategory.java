@@ -313,6 +313,11 @@ public class AddItemCategory extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_add_item_category, menu);
+        MenuItem item = menu.findItem(R.id.bill_report);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AddItemCategory.this);
+        if (!sharedPreferences.getBoolean("user_is_admin",false)){
+            item.setVisible(false);
+        }
         return true;
     }
 
