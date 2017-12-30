@@ -20,8 +20,13 @@
         <activity android:name=".db.DbActivity" />
         <activity android:name=".customer.CustomerDetail" />
         <activity android:name=".itemdetails.AddItemCategory" />
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".settings.SettingsActivity" />
         <activity
             android:name=".billing.CheckoutActivity"
@@ -43,12 +48,12 @@
         <activity android:name=".reports.TotalSales" />
         <activity android:name=".billReports.BillReportActivity" />
         <activity android:name=".billReports.TodayBillReport" />
-        <activity android:name=".billing.BillSeriesActivity" >
+        <activity android:name=".billing.BillSeriesActivity">
             <intent-filter>
                 <action android:name="in.net.maitri.xb.billing.BillSeriesActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            </activity>
+        </activity>
         <activity android:name=".util.FilePicker" />
 
         <provider
@@ -60,13 +65,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name=".login.LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".login.LoginActivity" />
 
     </application>
 

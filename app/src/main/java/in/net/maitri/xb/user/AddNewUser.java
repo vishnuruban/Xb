@@ -32,6 +32,7 @@ public class AddNewUser extends DialogFragment {
         });
         final EditText userNameField = (EditText) view.findViewById(R.id.user_name);
         final EditText passwordField = (EditText) view.findViewById(R.id.password);
+        final EditText confirmPasswordField = (EditText) view.findViewById(R.id.confirm_password);
         final Switch isAdmin = (Switch) view.findViewById(R.id.isAdmin);
         Button save = (Button) view.findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
@@ -39,12 +40,15 @@ public class AddNewUser extends DialogFragment {
             public void onClick(View view) {
                 String userNameValue = userNameField.getText().toString();
                 String passwordValue = passwordField.getText().toString();
-                if (userNameValue.isEmpty() || passwordValue.isEmpty()){
-                    Toast.makeText(getActivity(), "Enter both username and password.", Toast.LENGTH_SHORT).show();
+                String confirmPasswordValue = confirmPasswordField.getText().toString();
+                if (userNameValue.isEmpty() || passwordValue.isEmpty() || confirmPasswordValue.isEmpty()){
+                    Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
                 } else if (userNameValue.length()< 4){
                     Toast.makeText(getActivity(), "Username is too short.", Toast.LENGTH_SHORT).show();
                 } else if (passwordValue.length()< 4){
                     Toast.makeText(getActivity(), "Password is too short.", Toast.LENGTH_SHORT).show();
+                } else if (!passwordValue.equals(confirmPasswordValue)){
+                    Toast.makeText(getActivity(), "Password and confirm password are not matching.", Toast.LENGTH_SHORT).show();
                 } else {
                     User user = new User();
                     user.setUserName(userNameValue);

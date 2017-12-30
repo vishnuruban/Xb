@@ -48,9 +48,9 @@ public class ChangePassword extends DialogFragment {
                     Toast.makeText(getActivity(), "Please enter all details.", Toast.LENGTH_SHORT).show();
                 } else if (isPasswordValid(getCurrentPassword) || isPasswordValid(getNewPassword) || isPasswordValid(getConfirmPassword)){
                     Toast.makeText(getActivity(), "Password can't be less than 4 digit.", Toast.LENGTH_SHORT).show();
-                } if (!getCurrentPassword.equals(pswd)){
+                } else if (!getCurrentPassword.equals(pswd)){
                     Toast.makeText(getActivity(), "Invalid current password.", Toast.LENGTH_SHORT).show();
-                } else if (!getCurrentPassword.equals(getConfirmPassword)){
+                } else if (!getNewPassword.equals(getConfirmPassword)){
                     Toast.makeText(getActivity(), "New password and confirm password not matching.", Toast.LENGTH_SHORT).show();
                 } else {
                     if (new DbHandler(getActivity()).changePassword(getUserName, getNewPassword)){

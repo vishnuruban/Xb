@@ -64,6 +64,20 @@
 
         <TextView
             style="@style/add_customer_text_view"
+            android:labelFor="@+id/confirm_password"
+            android:text="@string/conform_new_password" />
+
+        <EditText
+            android:id="@id/confirm_password"
+            style="@style/add_customer_edit_text"
+            android:inputType="textPassword" />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/horizontal_linear_layout">
+
+        <TextView
+            style="@style/add_customer_text_view"
             android:labelFor="@+id/password"
             android:text="@string/is_admin" />
 

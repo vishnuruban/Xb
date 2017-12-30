@@ -90,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 editor.putBoolean("user_is_admin", new DbHandler(LoginActivity.this).isAdmin(userName));
                 editor.apply();
                 startActivity(new Intent(LoginActivity.this, AddItemCategory.class));
+                finish();
             }
         }
     }

@@ -7,10 +7,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -28,15 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import in.net.maitri.xb.R;
-import in.net.maitri.xb.db.BackUpAndRestoreDb;
-import in.net.maitri.xb.itemdetails.AddItemCategory;
 
 public class FilePicker extends AppCompatActivity {
 
     public final static int PICKFILE_RESULT_CODE=1;
     public final static String EXTRA_FILE_PATH = "file_path";
-    public final static String EXTRA_SHOW_HIDDEN_FILES = "show_hidden_files";
-    public final static String EXTRA_ACCEPTED_FILE_EXTENSIONS = "accepted_file_extensions";
     protected File Directory;
     protected ArrayList<File> Files;
     protected FilePickerListAdapter Adapter;
@@ -58,21 +52,11 @@ public class FilePicker extends AppCompatActivity {
         ListView backupListView = (ListView) findViewById(R.id.backup_lv);
         mNoBackup = (TextView) findViewById(R.id.no_backup);
         String root = Environment.getExternalStorageDirectory().toString();
-        Directory = new File(root + "/Xb/Backup");
+        Directory = new File(root + "/XPand/Backup");
         Files = new ArrayList<>();
         Adapter = new FilePickerListAdapter(this, Files);
         backupListView.setAdapter(Adapter);
         acceptedFileExtensions = new String[]{};
-      /*  if(getIntent().hasExtra(EXTRA_FILE_PATH))
-            Directory = new File(getIntent().getStringExtra(EXTRA_FILE_PATH));
-        if(getIntent().hasExtra(EXTRA_SHOW_HIDDEN_FILES))
-            ShowHiddenFiles = getIntent().getBooleanExtra(EXTRA_SHOW_HIDDEN_FILES, false);
-        if(getIntent().hasExtra(EXTRA_ACCEPTED_FILE_EXTENSIONS)) {
-            ArrayList<String> collection =
-                    getIntent().getStringArrayListExtra(EXTRA_ACCEPTED_FILE_EXTENSIONS);
-            acceptedFileExtensions = (String[])
-                    collection.toArray(new String[collection.size()]);
-        }*/
         backupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -156,32 +140,6 @@ public class FilePicker extends AppCompatActivity {
         }
         Adapter.notifyDataSetChanged();
     }
-
- /*   @Override
-    public void onBackPressed() {
-        if(Directory.getParentFile() != null) {
-            Directory = Directory.getParentFile();
-            refreshFilesList();
-            return;
-        }
-        super.onBackPressed();
-    }*/
-
- /*   @Override
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        File newFile = (File)l.getItemAtPosition(position);
-        if(newFile.isFile()) {
-            Intent extra = new Intent();
-            extra.putExtra(EXTRA_FILE_PATH, newFile.getAbsolutePath());
-            setResult(RESULT_OK, extra);
-            finish();
-        }
-        else {
-            Directory = newFile;
-            refreshFilesList();
-        }
-        super.onListItemClick(l, v, position, id);
-    }*/
 
     private class FilePickerListAdapter extends ArrayAdapter<File> {
         private List<File> mObjects;

@@ -281,14 +281,14 @@ public class EditItem extends DialogFragment {
 
     private File createFile() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String name = "Xb_Img"+timeStamp + ".jpg";
+        String name = "XPand_img" + timeStamp + ".jpg";
         String root = Environment.getExternalStorageDirectory().toString();
-        File myDir = new File(root + "/Xb/Images");
+        File myDir = new File(root + "/XPand/Images");
         if (!myDir.exists()) {
             myDir.mkdirs();
         }
         myDir = new File(myDir, name);
-        return  myDir;
+        return myDir;
     }
 
 

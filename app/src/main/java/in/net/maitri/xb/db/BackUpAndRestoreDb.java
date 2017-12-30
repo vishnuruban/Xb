@@ -30,9 +30,6 @@ public class BackUpAndRestoreDb {
             DB_PATH = mContext.getFilesDir().getPath() + mContext.getPackageName() + "/databases/";
         }
         File sd = Environment.getExternalStorageDirectory();
-    /*    File myDir = new File(sd + "/Xb/Backup");
-        String backupDBPath = "Backup20171205_113033.db";
-        File currDB = new File(myDir, backupDBPath);*/
         try {
             if (sd.canWrite()) {
                 String restoreDBPath = "XposeBilling";
@@ -65,14 +62,14 @@ public class BackUpAndRestoreDb {
         }
         try {
             File sd = Environment.getExternalStorageDirectory();
-            File myDir = new File(sd + "/Xb/Backup");
+            File myDir = new File(sd + "/XPand/Backup");
             if (!myDir.exists()) {
                 myDir.mkdirs();
             }
             if (sd.canWrite()) {
                 String currentDBPath = "XposeBilling";
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-                String backupDBPath = "Backup" + timeStamp + ".db";
+                String backupDBPath = "XPand_bak" + timeStamp + ".db";
                 File currentDB = new File(DB_PATH, currentDBPath);
                 File backupDB = new File(myDir, backupDBPath);
                 FileChannel src = new FileInputStream(currentDB).getChannel();

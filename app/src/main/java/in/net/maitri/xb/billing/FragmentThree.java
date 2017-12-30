@@ -35,10 +35,6 @@ import in.net.maitri.xb.itemdetails.CalculateNoOfColumnsAccScreenSize;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
 
 
-/**
- * Created by SYSRAJ4 on 10/11/2017.
- */
-
 public class FragmentThree extends Fragment {
 
 
@@ -54,11 +50,10 @@ public class FragmentThree extends Fragment {
     private int mCategoryId;
 
     private TextInputEditText searchItems;
-   static KeypadDialog kpd;
+    static KeypadDialog kpd;
     RecyclerView categoryView;
     RecyclerView itemView;
     AppCompatTextView searchResults;
-
 
 
     @Override
@@ -72,16 +67,14 @@ public class FragmentThree extends Fragment {
         mGetAllItemsC = new ArrayList<Item>();
         mGetAllItems = new ArrayList<Item>();
 
-        for(int i =0;i<mGetAllCategories.size();i++)
-        {
+        for (int i = 0; i < mGetAllCategories.size(); i++) {
             Category c = mGetAllCategories.get(i);
-            System.out.println("catName "+c.getCategoryName());
+            System.out.println("catName " + c.getCategoryName());
         }
 
-      //  searchItems = (TextInputEditText)view.findViewById(R.id.search_Items);
+        //  searchItems = (TextInputEditText)view.findViewById(R.id.search_Items);
 
         setHasOptionsMenu(true);
-
 
 
         categoryView = (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
@@ -94,7 +87,7 @@ public class FragmentThree extends Fragment {
 
 
         if (mGetAllCategories.size() == 0) {
-            Toast.makeText(getActivity(),"No Categories Present",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No Categories Present", Toast.LENGTH_SHORT).show();
         } else {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -112,10 +105,10 @@ public class FragmentThree extends Fragment {
         categoryView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), categoryView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-               hCategoryAdapter.setSelected(position);
+                hCategoryAdapter.setSelected(position);
 
                 Category category = mGetAllCategories.get(position);
-              //  Toast.makeText(getActivity(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(getActivity(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
                 String categoryName = category.getCategoryName();
                 mCategoryId = category.getId();
                 updateItem(mCategoryId);
@@ -125,16 +118,17 @@ public class FragmentThree extends Fragment {
                 editor.putInt("catId", mCategoryId);
                 editor.apply();
             }
+
             @Override
             public void onLongClick(View view, int position) {
 
             }
         }));
 
-      //  int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
+        //  int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
         itemView.setLayoutManager(gridLayoutManager);
-     //   mGetAllItems = new ArrayList<Item>();
+        //   mGetAllItems = new ArrayList<Item>();
 
 
     /*    for(int i=0;i<mGetAllItemsC.size();i++)
@@ -146,7 +140,7 @@ public class FragmentThree extends Fragment {
             }
         }*/
 
-    mGetAllItems = mDbHandler.getAllitems(1);
+        mGetAllItems = mDbHandler.getAllitems(1);
 
         bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
 
@@ -156,8 +150,8 @@ public class FragmentThree extends Fragment {
             @Override
             public void onClick(View view, int position) {
 
-                if(mGetAllItems.size()!=0) {
-                    Item item = (Item)bItemAdapter.getItem(position);
+                if (mGetAllItems.size() != 0) {
+                    Item item = (Item) bItemAdapter.getItem(position);
                     kpd = new KeypadDialog(getActivity(), item);
                     kpd.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     kpd.show();
@@ -165,6 +159,7 @@ public class FragmentThree extends Fragment {
 
 
             }
+
             @Override
             public void onLongClick(View view, int position) {
 
@@ -172,10 +167,10 @@ public class FragmentThree extends Fragment {
         }));
 
 
-        return  view;
+        return view;
     }
 
-   @Override
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_search, menu);
         MenuItem search_item = menu.findItem(R.id.mi_search);
@@ -185,37 +180,32 @@ public class FragmentThree extends Fragment {
         searchView.setQueryHint("Search Items");
 
 
-
-        for(int i =0;i<mGetAllItemsC.size();i++)
-        {
+        for (int i = 0; i < mGetAllItemsC.size(); i++) {
             Item c = mGetAllItemsC.get(i);
-            System.out.println("itName "+c.getItemName());
+            System.out.println("itName " + c.getItemName());
         }
 
-     searchView.setOnSearchClickListener(new View.OnClickListener() {
-        @Override
-          public void onClick(View v) {
-              //do what you want when search view expended
-            System.out.println("EXPANDED");
-            //bItemAdapter.clear();
-            searchResults.setVisibility(View.VISIBLE);
-            mGetAllItemsC = mDbHandler.getAllitemC();
-            categoryView.setVisibility(View.GONE);
-            System.out.println("ONSEARCH "+mGetAllItemsC.size());
-            for(int i=0;i<mGetAllItemsC.size();i++)
-            {
-                System.out.println("ONSEARCH "+mGetAllItemsC.get(i).getItemName());
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //do what you want when search view expended
+                System.out.println("EXPANDED");
+                //bItemAdapter.clear();
+                searchResults.setVisibility(View.VISIBLE);
+                mGetAllItemsC = mDbHandler.getAllitemC();
+                categoryView.setVisibility(View.GONE);
+                System.out.println("ONSEARCH " + mGetAllItemsC.size());
+                for (int i = 0; i < mGetAllItemsC.size(); i++) {
+                    System.out.println("ONSEARCH " + mGetAllItemsC.get(i).getItemName());
+                }
+                bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItemsC);
+                itemView.setAdapter(bItemAdapter);
+                bItemAdapter.notifyDataSetChanged();
             }
-            bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItemsC);
-            itemView.setAdapter(bItemAdapter);
-            bItemAdapter.notifyDataSetChanged();
-         }
-         });
+        });
 
 
-
-
-       searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
 
@@ -223,12 +213,12 @@ public class FragmentThree extends Fragment {
                 searchResults.setVisibility(View.GONE);
 
 
-               // bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
-              //  itemView.setAdapter(bItemAdapter);
+                // bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
+                //  itemView.setAdapter(bItemAdapter);
 
-               mGetAllItems = mDbHandler.getAllitems(1);
-               bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
-              itemView.setAdapter(bItemAdapter);
+                mGetAllItems = mDbHandler.getAllitems(1);
+                bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
+                itemView.setAdapter(bItemAdapter);
 
 
                 return false;
@@ -250,13 +240,13 @@ public class FragmentThree extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
 
-                    categoryView.setVisibility(View.GONE);
-                  searchResults.setVisibility(View.VISIBLE);
-                    if (bItemAdapter != null) bItemAdapter.getFilter().filter(s);
-                    bItemAdapter.notifyDataSetChanged();
-                    return true;
+                categoryView.setVisibility(View.GONE);
+                searchResults.setVisibility(View.VISIBLE);
+                if (bItemAdapter != null) bItemAdapter.getFilter().filter(s);
+                bItemAdapter.notifyDataSetChanged();
+                return true;
 
-        }
+            }
 
         });
 
@@ -272,14 +262,13 @@ public class FragmentThree extends Fragment {
         switch (id) {
             case R.id.mi_search:
 
-                Toast.makeText(getActivity(),"Search Clicked",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Search Clicked", Toast.LENGTH_SHORT).show();
 
                 break;
 
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     void updateItem(int categoryId) {
@@ -299,9 +288,9 @@ public class FragmentThree extends Fragment {
 
         */
 
-       mGetAllItems = mDbHandler.getAllitems(categoryId);
+        mGetAllItems = mDbHandler.getAllitems(categoryId);
         if (mGetAllItems.size() == 0) {
-          Toast.makeText(getActivity(),"No Items found",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "No Items found", Toast.LENGTH_SHORT).show();
         } else {
             bItemAdapter.notifyDataSetChanged();
 
@@ -309,7 +298,7 @@ public class FragmentThree extends Fragment {
 
     }
 
-    public static void dismissDialog(){
+    public static void dismissDialog() {
         kpd.dismiss();
     }
 

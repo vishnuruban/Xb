@@ -249,10 +249,15 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_UM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_USER_MASTER_TABLE);
         ContentValues cv = new ContentValues();
-        cv.put(KEY_UM_USER, "admin");
-        cv.put(KEY_UM_PASSWORD, "admin");
+        cv.put(KEY_UM_USER, "maitri");
+        cv.put(KEY_UM_PASSWORD, "misplmca");
         cv.put(KEY_UM_IS_ADMIN, 1);
         db.insert(USER_MST_TABLE_NAME, null, cv);
+        ContentValues cv1 = new ContentValues();
+        cv1.put(KEY_UM_USER, "admin");
+        cv1.put(KEY_UM_PASSWORD, "admin");
+        cv1.put(KEY_UM_IS_ADMIN, 1);
+        db.insert(USER_MST_TABLE_NAME, null, cv1);
     }
 
     // Upgrading database
@@ -315,10 +320,15 @@ public class DbHandler extends SQLiteOpenHelper {
                         + KEY_UM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
                 db.execSQL(CREATE_USER_MASTER_TABLE);
                 ContentValues cv = new ContentValues();
-                cv.put(KEY_UM_USER, "admin");
-                cv.put(KEY_UM_PASSWORD, "admin");
+                cv.put(KEY_UM_USER, "maitri");
+                cv.put(KEY_UM_PASSWORD, "misplmca");
                 cv.put(KEY_UM_IS_ADMIN, 1);
                 db.insert(USER_MST_TABLE_NAME, null, cv);
+                ContentValues cv1 = new ContentValues();
+                cv1.put(KEY_UM_USER, "admin");
+                cv1.put(KEY_UM_PASSWORD, "admin");
+                cv1.put(KEY_UM_IS_ADMIN, 1);
+                db.insert(USER_MST_TABLE_NAME, null, cv1);
 
                 String addSaleBillNo = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                         " ADD COLUMN " + KEY_SM_SALE_BILL_NO + " INTEGER ";
@@ -1251,7 +1261,8 @@ public class DbHandler extends SQLiteOpenHelper {
 
     public List<String> getAllUsers() {
         List<String> users = new ArrayList<>();
-        String selectQuery = "SELECT " + KEY_UM_USER + " FROM " + USER_MST_TABLE_NAME ;
+        String selectQuery = "SELECT " + KEY_UM_USER + " FROM " + USER_MST_TABLE_NAME
+                + " WHERE " + KEY_UM_USER + " <> 'maitri'";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
