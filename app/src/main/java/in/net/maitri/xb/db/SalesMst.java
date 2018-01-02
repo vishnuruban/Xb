@@ -6,7 +6,24 @@ public class SalesMst {
     private String salesPerson;
     private String paymentMode;
     private String paymentDet;
+    private String custName;
     private String status;
+
+    public String getCustName() {
+        return custName;
+    }
+
+    public void setCustName(String custName) {
+        this.custName = custName;
+    }
+
+    public int getSaleBillNo() {
+        return saleBillNo;
+    }
+
+    public void setSaleBillNo(int saleBillNo) {
+        this.saleBillNo = saleBillNo;
+    }
 
     public String getPrefix() {
         return prefix;

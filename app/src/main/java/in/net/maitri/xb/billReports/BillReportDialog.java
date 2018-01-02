@@ -33,7 +33,7 @@ import static in.net.maitri.xb.billing.CheckoutActivity.mPrinter;
 
 public class BillReportDialog extends Dialog implements DialogInterface.OnClickListener{
 
-    TextView selectedBill,selectedBillDate,dSubTotal,dDiscount,dNetAmt;
+    TextView selectedBill,selectedBillDate,dSubTotal,dDiscount,dNetAmt,customerName,cashierName;
 
     Context context;
     int fromDate=0;int toDate=0;
@@ -55,8 +55,9 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     String rs;
     DecimalFormat df;
     int internalBillNo;
+    String custName;
 
-    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo)
+    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo,String custName)
     {
         super (context);
         this.context = context;
@@ -70,6 +71,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         this.subTotal = subTotal;
         this.dQty = dQty;
         this.internalBillNo = internalBillNo;
+        this.custName = custName;
     }
 
 
@@ -97,6 +99,8 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
        dSubTotal =(TextView)findViewById(R.id.dSubTotal);
         dDiscount =(TextView)findViewById(R.id.dSubDiscount);
         dNetAmt =(TextView)findViewById(R.id.dNetAmt);
+        customerName =(TextView)findViewById(R.id.custName);
+        cashierName = (TextView)findViewById(R.id.cashName);
         billListView = (ListView) findViewById(R.id.bill_lv);
         closeDialog =(Button)findViewById(R.id.closeDialog);
         printBill = (Button) findViewById(R.id.printBill);
@@ -105,23 +109,17 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         dNetAmt.setText("Net Amount:  "+rs+ df.format(netAmt));
         dSubTotal.setText("Subtotal:  "+rs+ subTotal);
         getSettings = new GetSettings(context);
-
+        customerName.setText(custName);
         printBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 String printSize = getSettings.getPrintingPaperSize();
                 // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
                 if (printSize.equals("1")) {
-
-                    billPrint.printTwoInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime);
+                    billPrint.printTwoInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,custName);
                 } else {
-                    billPrint.printThreeInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime);
-
+                    billPrint.printThreeInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,custName);
                 }
-
-
-
             }
         });
 

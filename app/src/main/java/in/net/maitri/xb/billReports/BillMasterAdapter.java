@@ -101,7 +101,7 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
         holder.rNetAmt.setText(df.format(billDetails.getNetAmt()));
         holder.rItems.setText(String.valueOf(billDetails.getItems()));
         holder.rPayment.setText(String.valueOf(billDetails.getPaymentMode()));
-        holder.rCustomer.setText("");
+        holder.rCustomer.setText(billDetails.getCustName());
         holder.rCashier.setText("");
       //  holder.rBillDate.setText("Date  : "+String.valueOf(billDetails.getDateTime()));
 

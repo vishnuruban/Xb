@@ -145,6 +145,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                     Bundle bundle = new Bundle();
                     bundle.putString("products", bTotalProducts.getText().toString());
                     bundle.putString("price",String.valueOf(df.format(a)));
+                    bundle.putString("customer",autoCustomer.getText().toString());
                     Intent intent = new Intent(getActivity(), CheckoutActivity.class);
                     intent.putExtras(bundle);
 

@@ -239,6 +239,7 @@ byte[] excelReport;
                 SalesMst mst = mGetBillMaster.get(position);
                 mProgressDialog.show();
                 int billNo = mst.getBillNO();
+                String custName = mst.getCustName();
                 int internalBillNo = mst.getInternalBillNo();
               String billDateTime =mst.getDateTime();
                 double discount = mst.getDiscount();
@@ -246,7 +247,7 @@ byte[] excelReport;
                 double subTotal = discount + netAmt;
                 double qty =mst.getQty();
 
-                brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo);
+                brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName);
                 brd.show();
 
 

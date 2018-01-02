@@ -3,10 +3,14 @@ package in.net.maitri.xb.billing;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.internal.TextScale;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +52,7 @@ public class FragmentThree extends Fragment {
     private BillItemAdapter bItemAdapter;
     private BillItemAdapter bItemAdapter1;
     private int mCategoryId;
+    TextView sCatName;
 
     private TextInputEditText searchItems;
     static KeypadDialog kpd;
@@ -79,6 +84,7 @@ public class FragmentThree extends Fragment {
 
         categoryView = (RecyclerView) view.findViewById(R.id.horizontal_recycler_view);
         itemView = (RecyclerView) view.findViewById(R.id.bill_item_view);
+        sCatName = (TextView)  view.findViewById(R.id.bill_text_view);
         searchResults = (AppCompatTextView) view.findViewById(R.id.searchResults);
         searchResults.setVisibility(View.GONE);
 
@@ -99,7 +105,14 @@ public class FragmentThree extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         categoryView.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration verticalDecoration = new DividerItemDecoration(categoryView.getContext(),
+                DividerItemDecoration.HORIZONTAL);
+        Drawable verticalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.recyview_divider);
+        verticalDecoration.setDrawable(verticalDivider);
+        categoryView.addItemDecoration(verticalDecoration);
+
         mGetAllCategories.get(0).setSelected(true);
+        sCatName.setText(  mGetAllCategories.get(0).getCategoryName());
         hCategoryAdapter = new HorizontalCategoryAdapter(getActivity(), mGetAllCategories);
         categoryView.setAdapter(hCategoryAdapter);
         categoryView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), categoryView, new RecyclerTouchListener.ClickListener() {
@@ -110,6 +123,7 @@ public class FragmentThree extends Fragment {
                 Category category = mGetAllCategories.get(position);
                 //  Toast.makeText(getActivity(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
                 String categoryName = category.getCategoryName();
+                sCatName.setText(categoryName);
                 mCategoryId = category.getId();
                 updateItem(mCategoryId);
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());

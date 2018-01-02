@@ -40,7 +40,7 @@ public class BillPrint {
 
 
 
-    public void printThreeInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate) {
+    public void printThreeInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate,String customerName) {
 
        // SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
       //  String formattedDate = dateFormat.format(new Date()).toString();
@@ -65,7 +65,8 @@ public class BillPrint {
             mPrinter.setAlignmentLeft();
             String billNo = String.format("%-10s%-8s%9s%15s\n", "Bill No", BillNo, "", formattedDate);
             mPrinter.printTextLine(billNo);
-            // mPrinter.printTextLine(" Customer Name  : " + custName + "\n");
+            if(!customerName.isEmpty())
+             mPrinter.printTextLine(" Customer Name  : " + customerName + "\n");
             //mPrinter.printTextLine(" Cashier Name   : " + cashName + "\n");
             mPrinter.printTextLine("------------------------------------------------\n");
             mPrinter.setBold();
@@ -158,7 +159,7 @@ public class BillPrint {
 
 
 
-    public void printTwoInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate) {
+    public void printTwoInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate,String customerName) {
        // SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
        // String formattedDate = dateFormat.format(new Date()).toString();
         Log.i("Net Amt" ,String.valueOf(netAmount));
@@ -219,7 +220,9 @@ public class BillPrint {
         mPrinter.setAlignmentLeft();
         mPrinter.printTextLine(billNo);
         System.out.println(billNo);
-        //mPrinter.printTextLine("            Customer Name  : " + custName + "\n");
+        if(!customerName.isEmpty())
+        mPrinter.printTextLine("            Customer Name  : " + customerName + "\n");
+        System.out.println("            Customer Name  : " + customerName + "\n");
         // mPrinter.printTextLine("            Cashier Name   : " + cashName + "\n");
       //  mPrinter.printLineFeed();
         mPrinter.setFontSizeSmall();

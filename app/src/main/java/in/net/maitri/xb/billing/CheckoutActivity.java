@@ -61,7 +61,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     BillListAdapter badapter;
     TextView cProducts, cPrice, cDate, cNetAmount, cPayment, tCash, tBalance,cCustName,cBillNum;
     EditText cDiscount;
-    String totalProducts, totalPrice;
+    String totalProducts, totalPrice,tCustName;
     LinearLayout lNetAmt;
     RadioGroup cDiscountType;
     String selectedButton;
@@ -123,14 +123,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
 
-        if(FragmentOne.customerDetails!=null) {
-            String customerName = FragmentOne.customerDetails.getName();
-            cCustName.setText(customerName);
-        }
-        else
-        {
-            cCustName.setText("-");
-        }
 
 
         mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
@@ -197,11 +189,25 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cDate.setText(date);
 
         Bundle bundle = getIntent().getExtras();
-
         if (bundle != null) {
             totalProducts = bundle.getString("products");
             totalPrice = bundle.getString("price");
+            tCustName = bundle.getString("customer");
         }
+
+
+        if(tCustName.isEmpty())
+        {
+            cCustName.setText("-");
+        }
+        else
+        {
+            cCustName.setText(tCustName);
+        }
+
+
+
+
         netAmt = Double.parseDouble(totalPrice);
         mEditSpinner.addTextChangedListener(paymentMode);
         cDiscount.addTextChangedListener(watch);
@@ -573,20 +579,20 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (printSize.equals("1")) {
 
                     if(sm.getPrefix().isEmpty()) {
-                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
                     }
                     else
                     {
-                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
                     }
                 } else {
 
                     if(sm.getPrefix().isEmpty()) {
-                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
                     }
                     else
                     {
-                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime());
+                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
                     }
                     System.out.println(mPrinter.toString());
                 }
@@ -645,6 +651,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setDate(dateCount);
         sm.setDateTime(formattedDate);
         sm.setItems(FragmentOne.billList.size());
+        sm.setCustName(tCustName);
         mstInserted = dbHandler.addSalesMst(sm);
 
         Log.i("MST", String.valueOf(mstInserted));

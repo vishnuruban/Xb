@@ -106,6 +106,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:padding="10dp"
+                        android:id ="@+id/custName"
                         android:text="Customer Name :"
                         android:textColor="#000" />
 
@@ -114,6 +115,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1.5"
                         android:padding="10dp"
+                        android:id ="@+id/cashName"
                         android:text="Cashier Name :"
                         android:textColor="#000" />
 

@@ -61,7 +61,7 @@ public class TodayBillReport extends AppCompatActivity {
     BillReportDialog brd;
 
     RecyclerView billView, billDetailsView;
-    TextView noBills,noBillDetails;
+    TextView noBills,noBillDetails,customerName;
     TextView selectedBill,selectedBillDate,tItems,tQty,tDiscount,tNetAmount,tPaymentStatus,tBillCount;
     BillMasterAdapter billMasterAdapter;
     private EditText mFromDate, mToDate;
@@ -112,6 +112,7 @@ public class TodayBillReport extends AppCompatActivity {
         dateLayout = (LinearLayout) findViewById(R.id.datelayout);
         dateLayout.setVisibility(View.GONE);
         dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        customerName =(TextView)findViewById(R.id.custName);
 
         formattedDate = dateFormat.format(new Date()).toString();
         Log.i("Formatted Date ",formattedDate);
@@ -177,8 +178,9 @@ public class TodayBillReport extends AppCompatActivity {
                 double discount = mst.getDiscount();
                 double netAmt = mst.getNetAmt();
                 double subTotal = discount + netAmt;
+                String custName = mst.getCustName();
                 double qty =mst.getQty();
-                brd = new BillReportDialog(TodayBillReport.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo);
+                brd = new BillReportDialog(TodayBillReport.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName);
                 brd.show();
 
                 //   selectedBill.setText("Bill No:"+String.valueOf(billNo));

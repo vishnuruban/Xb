@@ -56,11 +56,12 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
         holder.categoryName.setText(categoryDetails.getCategoryName());
 
         if (mAllCategories.get(position).isSelected()) {
-            holder.cardView.setBackgroundColor(Color.parseColor("#757575"));
+         holder.ind.setBackgroundColor(Color.parseColor("#757575"));
             mAllCategories.get(position).setSelected(false);
 
         } else {
-            holder.cardView.setBackgroundColor(Color.parseColor("#009688"));
+        //    holder.cardView.setBackgroundColor(Color.parseColor("#009688"));
+            holder.ind.setBackgroundColor(Color.parseColor("#f9f9d7"));
         }
     }
 
@@ -82,12 +83,14 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
         TextView categoryName;
         TextView categoryName2;
         CardView cardView;
+        View ind;
 
         MyViewHolder(View c) {
             super(c);
             categoryName = (TextView) c.findViewById(R.id.bCatName);
            // categoryName2 = (TextView) c.findViewById(R.id.bIemCount);
-            cardView  = (CardView) c.findViewById(R.id.card_view);
+          //  cardView  = (CardView) c.findViewById(R.id.card_view);
+              ind = c.findViewById(R.id.view);
         }
      }
 
