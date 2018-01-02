@@ -1,6 +1,5 @@
 package in.net.maitri.xb.itemdetails;
 
-
 import android.content.Context;
 import android.util.DisplayMetrics;
 

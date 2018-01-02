@@ -25,7 +25,6 @@ import java.util.List;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billReports.BillReportActivity;
 import in.net.maitri.xb.billReports.TodayBillReport;
-import in.net.maitri.xb.billing.BillSeriesActivity;
 import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.Category;
@@ -124,7 +123,6 @@ public class AddItemCategory extends AppCompatActivity {
                     isAll = false;
                     updateItem(category.getId());
                     view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                    //Toast.makeText(getApplicationContext(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
                     String categoryName = category.getCategoryName();
                     mSelectedCategory.setText(categoryName);
                     mCategoryId = category.getId();
