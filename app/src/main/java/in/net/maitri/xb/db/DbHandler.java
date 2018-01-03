@@ -338,7 +338,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addcashierName = "ALTER TABLE " + BILLSERIES_TABLE_NAME +
                         " ADD COLUMN " + KEY_BS_CASHIER_SELECTION + " TEXT ";
                 db.execSQL(addcashierName);
-                updateCashierRequired("NO");
+                updateCashierRequired("NO",db);
 
 
                 break;
@@ -1163,8 +1163,8 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-    public boolean  updateCashierRequired(String cashierReq) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public boolean  updateCashierRequired(String cashierReq,SQLiteDatabase db) {
+
         ContentValues values = new ContentValues();
         values.put(KEY_BS_CASHIER_SELECTION, cashierReq);
 
@@ -1308,6 +1308,40 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         cursor.close();
         return users;
+    }
+
+    public boolean updateUser(User user) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(KEY_UM_IS_ADMIN, user.getIsAdmin());
+            values.put(KEY_UM_USER, user.getUserName());
+            db.update(USER_MST_TABLE_NAME, values, KEY_UM_ID + " = ?",
+                    new String[]{String.valueOf(user.getUserId())});
+            return true;
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return false;
+    }
+
+    public User getUser(String userName) {
+        User user = new User();
+        try {
+            String selectQuery = "SELECT  * FROM " + USER_MST_TABLE_NAME +
+                    " WHERE " + KEY_UM_USER + " = '" + userName +"'";
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                user.setUserId(c.getInt(c.getColumnIndex(KEY_UM_ID)));
+                user.setUserName(c.getString(c.getColumnIndex(KEY_UM_USER)));
+                user.setIsAdmin(c.getInt(c.getColumnIndex(KEY_UM_IS_ADMIN)));
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return user;
     }
 
     public boolean deleteUser(String userName) {

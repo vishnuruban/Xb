@@ -17,6 +17,7 @@ import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.user.AddNewUser;
 import in.net.maitri.xb.user.ChangePassword;
+import in.net.maitri.xb.user.EditUser;
 
 public class UserSettings extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -25,6 +26,17 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_user);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        Preference modifyUser = findPreference("key_settings_user_modify_user");
+        modifyUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                EditUser newFragment = new EditUser();
+                newFragment.setCancelable(false);
+                newFragment.show(getFragmentManager(), "");
+                return true;
+            }
+        });
 
         Preference addNewUser = findPreference("key_settings_user_add_new_user");
         addNewUser.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -77,6 +89,7 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
         if (!sharedPreferences.getBoolean("user_is_admin", false)){
             addNewUser.setEnabled(false);
             deleteUser.setEnabled(false);
+            modifyUser.setEnabled(false);
         }
 
         Preference changePassword = findPreference("key_settings_user_change_password");
@@ -89,6 +102,9 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
                 return true;
             }
         });
+
+
+
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
