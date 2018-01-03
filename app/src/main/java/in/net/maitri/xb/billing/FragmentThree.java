@@ -267,6 +267,7 @@ public class FragmentThree extends Fragment {
                 sCatName.setVisibility(View.GONE);
                 searchResults.setVisibility(View.VISIBLE);
                 if (bItemAdapter != null) bItemAdapter.getFilter().filter(s);
+                itemView.getRecycledViewPool().clear();
                 bItemAdapter.notifyDataSetChanged();
                 return true;
 

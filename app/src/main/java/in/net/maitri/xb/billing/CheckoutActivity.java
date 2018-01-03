@@ -228,7 +228,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cPrice.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
         cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
 //        cPayment.setText("AMOUNT TO RECEIVE - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-        cCash.setText(FragmentOne.commaSeperated(netAmt));
+        cCash.setText(totalPrice);
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -690,7 +690,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         public void afterTextChanged(Editable s) {
             if (s.toString().equals("CASH")) {
                 tCash.setText("Cash (" + rs + ")");
-                cCash.setText(FragmentOne.commaSeperated(netAmt));
+                cCash.setText(df.format(netAmt));
                 cCash.selectAll();
                 cCash.setFocusable(true);
                 cCash.setFocusableInTouchMode(true);
@@ -698,7 +698,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
             } else {
                 tCash.setText("Amount (" + rs + ")");
-                cCash.setText(FragmentOne.commaSeperated(netAmt));
+                cCash.setText(df.format(netAmt));
                 cCash.setFocusable(false);
                 cCash.setClickable(false);
             }
