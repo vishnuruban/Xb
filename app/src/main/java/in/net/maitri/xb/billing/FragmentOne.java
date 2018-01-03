@@ -125,6 +125,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             public void onClick(View view) {
 
                 AddCustomerDialog customerDialog = new AddCustomerDialog(getActivity(),customerAdapter,customerArrayList);
+                customerDialog.setCancelable(false);
                 customerDialog.show();
 
             }

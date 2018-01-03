@@ -200,6 +200,8 @@ public class FragmentThree extends Fragment {
             System.out.println("itName " + c.getItemName());
         }
 
+
+
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -267,7 +269,7 @@ public class FragmentThree extends Fragment {
                 sCatName.setVisibility(View.GONE);
                 searchResults.setVisibility(View.VISIBLE);
                 if (bItemAdapter != null) bItemAdapter.getFilter().filter(s);
-                itemView.getRecycledViewPool().clear();
+        //        itemView.getRecycledViewPool().clear();
                 bItemAdapter.notifyDataSetChanged();
                 return true;
 
