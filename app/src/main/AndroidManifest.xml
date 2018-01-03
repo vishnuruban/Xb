@@ -54,7 +54,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".util.FilePicker" />
+        <activity android:name=".util.FilePicker"
+            android:label="XPand/Backup"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

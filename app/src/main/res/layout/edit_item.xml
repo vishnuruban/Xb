@@ -253,7 +253,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:text="Add"
+        android:text="@string/update"
         android:textColor="#FFFFFF" />
 
 </LinearLayout>

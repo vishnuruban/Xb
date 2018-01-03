@@ -59,6 +59,7 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+
 /**
  * Created by SYSRAJ4 on 27/11/2017.
  */
@@ -68,8 +69,8 @@ public class BillReportActivity extends AppCompatActivity {
     BillReportDialog brd;
 
     RecyclerView billView, billDetailsView;
-    TextView noBills,noBillDetails;
-    TextView selectedBill,selectedBillDate,tItems,tQty,tDiscount,tNetAmount,tPaymentStatus,tBillCount;
+    TextView noBills, noBillDetails;
+    TextView selectedBill, selectedBillDate, tItems, tQty, tDiscount, tNetAmount, tPaymentStatus, tBillCount;
     BillMasterAdapter billMasterAdapter;
 
     private EditText mFromDate, mToDate;
@@ -83,14 +84,14 @@ public class BillReportActivity extends AppCompatActivity {
     LinearLayout summaryLayout;
     private List<SalesMst> mGetBillMaster;
 
-byte[] excelReport;
+    byte[] excelReport;
     BillListAdapter billListAdapter;
 
     DecimalFormat df;
 
 
-
     String rs;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,20 +99,19 @@ byte[] excelReport;
         mGetBillMaster = new ArrayList<>();
 
         rs = "\u20B9";
-        try{
+        try {
             byte[] utf8 = rs.getBytes("UTF-8");
-            rs = new String(utf8, "UTF-8");}
-        catch (UnsupportedEncodingException e)
-        {
+            rs = new String(utf8, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         billView = (RecyclerView) findViewById(R.id.bill_view);
-         tItems = (TextView)findViewById(R.id.tItems);
-         tQty =(TextView)findViewById(R.id.tqty);
-         tDiscount= (TextView) findViewById(R.id.tDiscount);
-         tNetAmount=(TextView) findViewById(R.id.tNetAmt);
+        tItems = (TextView) findViewById(R.id.tItems);
+        tQty = (TextView) findViewById(R.id.tqty);
+        tDiscount = (TextView) findViewById(R.id.tDiscount);
+        tNetAmount = (TextView) findViewById(R.id.tNetAmt);
         // tPaymentStatus = (TextView)findViewById(R.id.t);
-        tBillCount = (TextView)findViewById(R.id.tBills);
+        tBillCount = (TextView) findViewById(R.id.tBills);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -159,48 +159,43 @@ byte[] excelReport;
         });
 
 
-
         mShowReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mGetFromDate.isEmpty() || mGetToDate.isEmpty())
-                     {
+                if (mGetFromDate.isEmpty() || mGetToDate.isEmpty()) {
                     Toast.makeText(BillReportActivity.this, "Select date range", Toast.LENGTH_SHORT).show();
-                     }
-                else {
+                } else {
                     mProgressDialog = new ProgressDialog(BillReportActivity.this);
                     mProgressDialog.setMessage("Getting Data...");
                     mProgressDialog.setCancelable(false);
                     mProgressDialog.show();
-                  //  getReportData(mDbHandeler.getDateCount(mGetFromDate), mDbHandeler.getDateCount(mGetToDate));
+                    //  getReportData(mDbHandeler.getDateCount(mGetFromDate), mDbHandeler.getDateCount(mGetToDate));
 
                     mGetBillMaster.clear();
 
-                    Log.i("mGetFromDate",mGetFromDate);
-                    Log.i("mGetToDate",mGetToDate);
+                    Log.i("mGetFromDate", mGetFromDate);
+                    Log.i("mGetToDate", mGetToDate);
 
                     dbHandler = new DbHandler(BillReportActivity.this);
-                    mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate));
+                    mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
 
-                    if(mGetBillMaster.size()==0)
-                    {
-                        Toast.makeText(BillReportActivity.this,"No Bills found",Toast.LENGTH_SHORT).show();
+                    if (mGetBillMaster.size() == 0) {
+                        Toast.makeText(BillReportActivity.this, "No Bills found", Toast.LENGTH_SHORT).show();
                         mProgressDialog.dismiss();
                         return;
                     }
-                  //  billLayout.setVisibility(View.VISIBLE);
+                    //  billLayout.setVisibility(View.VISIBLE);
                     summaryLayout.setVisibility(View.VISIBLE);
-                    int items = 0,qty=0;
+                    int items = 0, qty = 0;
                     double discount = 0;
-                    double netAm=0;
+                    double netAm = 0;
                     mProgressDialog.dismiss();
-                    for(int i =0;i<mGetBillMaster.size();i++)
-                    {
-                        SalesMst bm  = mGetBillMaster.get(i);
+                    for (int i = 0; i < mGetBillMaster.size(); i++) {
+                        SalesMst bm = mGetBillMaster.get(i);
                         items = items + bm.getItems();
-                        qty = qty +(int) bm.getQty();
-                        discount = discount+ bm.getDiscount();
-                        netAm = netAm +bm.getNetAmt();
+                        qty = qty + (int) bm.getQty();
+                        discount = discount + bm.getDiscount();
+                        netAm = netAm + bm.getNetAmt();
 
                     }
 
@@ -208,22 +203,22 @@ byte[] excelReport;
                     billView.setAdapter(billMasterAdapter);
 
 
-                     tBillCount.setText("Bills:  "+String.valueOf(mGetBillMaster.size()));
-                     tDiscount.setText("Discount:  "+rs+ df.format(discount));
-                     tNetAmount.setText("Net Amount:  "+rs+ df.format(netAm));
-                     tItems.setText("Items:  "+String.valueOf(items));
-                     tQty.setText("Qty:  "+String.valueOf(qty));
+                    tBillCount.setText("Bills:  " + String.valueOf(mGetBillMaster.size()));
+                    tDiscount.setText("Discount:  " + rs + df.format(discount));
+                    tNetAmount.setText("Net Amount:  " + rs + df.format(netAm));
+                    tItems.setText("Items:  " + String.valueOf(items));
+                    tQty.setText("Qty:  " + String.valueOf(qty));
 
 
                     isStoragePermissionGranted(BillReportActivity.this);
-                  excelReport = convertToExcel(df.format(discount),df.format(netAm),String.valueOf(items),String.valueOf(qty));
+                    excelReport = convertToExcel(df.format(discount), df.format(netAm), String.valueOf(items), String.valueOf(qty));
 
-                  //  AskPath ask = new AskPath(BillReportActivity.this,excelReport);
-                   // ask.show();
+                    //  AskPath ask = new AskPath(BillReportActivity.this,excelReport);
+                    // ask.show();
                 }
             }
         });
-      //  setHeader();
+        //  setHeader();
 
         df = new DecimalFormat("0.00");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(BillReportActivity.this);
@@ -234,28 +229,28 @@ byte[] excelReport;
         billView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), billView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-               billMasterAdapter.setSelected(position);
+                billMasterAdapter.setSelected(position);
 
                 SalesMst mst = mGetBillMaster.get(position);
                 mProgressDialog.show();
                 int billNo = mst.getBillNO();
                 String custName = mst.getCustName();
                 int internalBillNo = mst.getInternalBillNo();
-              String billDateTime =mst.getDateTime();
+                String billDateTime = mst.getDateTime();
                 double discount = mst.getDiscount();
                 double netAmt = mst.getNetAmt();
                 double subTotal = discount + netAmt;
-                double qty =mst.getQty();
+                double qty = mst.getQty();
 
-                brd = new BillReportDialog(BillReportActivity.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName);
+                brd = new BillReportDialog(BillReportActivity.this, dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate), billNo, billDateTime, mProgressDialog, df.format(discount), netAmt, df.format(subTotal), qty, internalBillNo, custName);
                 brd.show();
 
 
-             //   selectedBill.setText("Bill No:"+String.valueOf(billNo));
-             //   selectedBillDate.setText(billDateTime);
-             //   tDiscount.setText("Discount: "+rs+ df.format(mst.getDiscount()));
-              //  tNetAmount.setText("Net Amount: "+rs+ df.format(mst.getNetAmt()));
-              //  tPaymentStatus.setText("Payment mode : "+mst.getPaymentMode());
+                //   selectedBill.setText("Bill No:"+String.valueOf(billNo));
+                //   selectedBillDate.setText(billDateTime);
+                //   tDiscount.setText("Discount: "+rs+ df.format(mst.getDiscount()));
+                //  tNetAmount.setText("Net Amount: "+rs+ df.format(mst.getNetAmt()));
+                //  tPaymentStatus.setText("Payment mode : "+mst.getPaymentMode());
 
 /*
                 getBillDetails(billNo,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate));
@@ -277,13 +272,10 @@ byte[] excelReport;
     }
 
 
-
-
-
     public static boolean isStoragePermissionGranted(Activity activity) {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(activity ,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED){
+            if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
                 //Log.v(TAG, "Permission is granted");
                 return true;
             } else {
@@ -365,12 +357,9 @@ byte[] excelReport;
     }
 
 
-    public  void dismissDialog(){
+    public void dismissDialog() {
         brd.dismiss();
     }
-
-
-
 
 
     @Override
@@ -384,23 +373,20 @@ byte[] excelReport;
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-         //   FilterActivity.fad.clear();
+            //   FilterActivity.fad.clear();
             finish();
         }
 
-        if(item.getItemId() == R.id.action_excel)
-        {
+        if (item.getItemId() == R.id.action_excel) {
 
 
-            if(excelReport == null)
-            {
-                Toast.makeText(BillReportActivity.this,"Can't create Excel. No Reports found.",Toast.LENGTH_SHORT).show();
-            }
-            else {
+            if (excelReport == null) {
+                Toast.makeText(BillReportActivity.this, "Can't create Excel. No Reports found.", Toast.LENGTH_SHORT).show();
+            } else {
 
                 isStoragePermissionGranted(BillReportActivity.this);
 
-                new AskPath(BillReportActivity.this,excelReport).show();
+                new AskPath(BillReportActivity.this, excelReport).show();
 
                 Log.i("Success ", "yes");
             }
@@ -409,16 +395,12 @@ byte[] excelReport;
     }
 
 
-
-
-
-
-    public byte[] convertToExcel(String dis,String netAmt,String items,String qty) {
+    public byte[] convertToExcel(String dis, String netAmt, String items, String qty) {
         String[] headerColumns = {"SNo", "Bill No", "Date", "Items", "Qty", "Discount(" + rs + ")", "Net Amount(" + rs + ")", "Pay mode", "Customer Name", "Cashier Name"};
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         String[] summaryColumns = {"From Date", "To Date", "Total bills", "Total Items", "Total Qty", "Total Discount", "Total NetAmt"};
         File sd = Environment.getExternalStorageDirectory();
-      //  String csvFile = "v1.xls";
+        //  String csvFile = "v1.xls";
         File directory = new File(sd.getAbsolutePath());
         //create directory if not exist
         try {
@@ -426,7 +408,7 @@ byte[] excelReport;
             WorkbookSettings wbSettings = new WorkbookSettings();
             wbSettings.setLocale(new Locale("en", "EN"));
             WritableWorkbook workbook;
-            workbook = Workbook.createWorkbook(baos,wbSettings);
+            workbook = Workbook.createWorkbook(baos, wbSettings);
             //Excel sheet name. 0 represents first sheet
             WritableSheet sheet = workbook.createSheet("Bill Report", 0);
             WritableSheet sheet1 = workbook.createSheet("Summary", 1);
@@ -454,8 +436,7 @@ byte[] excelReport;
             cFormat.setAlignment(Alignment.RIGHT);
 
 
-            for (int j = 0; j < mGetBillMaster.size(); j++)
-            {
+            for (int j = 0; j < mGetBillMaster.size(); j++) {
                 SalesMst mst = mGetBillMaster.get(j);
                 int k = j + 1;
                 sheet.addCell(new Label(0, k, String.valueOf(k)));
@@ -504,7 +485,6 @@ byte[] excelReport;
 
         return null;
     }
-
 
 
 }

@@ -11,6 +11,9 @@
     <string name="city">City</string>
     <string name="state">State</string>
     <string name="gst_no">GST Number</string>
+    <string name="update">Update</string>
+    <string name="edit_category">Edit Category</string>
+    <string name="add_category">Add Category</string>
 
 
     <!-- Strings related to add user -->
@@ -25,6 +28,7 @@
     <string name="current_password">Current Password<font fgcolor="red"> *</font></string>
     <string name="new_password">New Password<font fgcolor="red"> *</font></string>
     <string name="conform_new_password">Confirm Password<font fgcolor="red"> *</font></string>
+    <string name="new_user_name">New User Name (Optional)</string>
 
 
     <string-array name="registration_name">

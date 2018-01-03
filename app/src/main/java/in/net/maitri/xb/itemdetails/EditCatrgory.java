@@ -58,10 +58,9 @@ public class EditCatrgory extends DialogFragment {
         SharedPreferences sharedPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final int catId = sharedPreference.getInt("catId", 0);
         String catName = sharedPreference.getString("catName", "");
-        final String getImgPath = mImagePath = sharedPreference.getString("catImg", "");
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
-        dialogHeader.setText("Edit Category");
+        dialogHeader.setText(R.string.edit_category);
 
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         File imgFile = new File(mImagePath);
@@ -86,6 +85,7 @@ public class EditCatrgory extends DialogFragment {
         final EditText categoryName = (EditText) view.findViewById(R.id.category_name);
         categoryName.setText(catName);
         Button addDetails = (Button) view.findViewById(R.id.add_details);
+        addDetails.setText(R.string.update);
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import java.io.File;
 import java.util.List;
 
@@ -52,10 +53,10 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(CategoryAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final CategoryAdapter.MyViewHolder holder, int position) {
         Category categoryDetails = mAllCategories.get(position);
         holder.categoryName.setText(categoryDetails.getCategoryName());
-        String imagePath = categoryDetails.getCategoryImage();
+        final String imagePath = categoryDetails.getCategoryImage();
         if (mAllCategories.get(position).isSelected()) {
             holder.cardView.setBackgroundColor(Color.parseColor("#0675AD"));
             holder.categoryName.setTextColor(Color.parseColor("#ffffff"));
@@ -72,8 +73,10 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
             if (imgFile.exists()) {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 holder.categoryImage.setImageBitmap(myBitmap);
+
             }
         }
+
     }
 
     @Override

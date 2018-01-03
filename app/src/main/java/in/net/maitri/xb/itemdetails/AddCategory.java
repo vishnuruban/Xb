@@ -53,7 +53,7 @@ public class AddCategory extends DialogFragment {
         View view = inflater.inflate(R.layout.add_category, container, false);
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
-        dialogHeader.setText("Add Category");
+        dialogHeader.setText(R.string.add_category);
 
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
         ImageView close = (ImageView) view.findViewById(R.id.close);

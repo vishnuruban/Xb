@@ -2,7 +2,6 @@ package in.net.maitri.xb.user;
 
 import android.support.annotation.Nullable;
 import android.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
