@@ -13,8 +13,17 @@ public class BillSeries {
     private String prefix;
     private int seed;
     private int CurrentBillNo;
-    private int default_bill;
 
+    public String getCashierSelection() {
+        return cashierSelection;
+    }
+
+    public void setCashierSelection(String cashierSelection) {
+        this.cashierSelection = cashierSelection;
+    }
+
+    private int default_bill;
+    private String cashierSelection;
 
     private String customerSelection;
 
@@ -33,7 +42,7 @@ public class BillSeries {
 
     }
 
-    public BillSeries(String billName, String shortName, String resetType, String prefix, int seed, int currentBillNo, String customerSelection, int roundOff,int default_bill) {
+    public BillSeries(String billName, String shortName, String resetType, String prefix, int seed, int currentBillNo, String customerSelection, String cashierSelection,int roundOff,int default_bill) {
 
         this.billName = billName;
         this.shortName = shortName;
@@ -42,6 +51,7 @@ public class BillSeries {
         this.seed = seed;
         CurrentBillNo = currentBillNo;
         this.customerSelection = customerSelection;
+        this.cashierSelection = cashierSelection;
         this.roundOff = roundOff;
         this.default_bill = default_bill;
     }

@@ -60,7 +60,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     ListView listView;
     BillListAdapter badapter;
     TextView cProducts, cPrice, cDate, cNetAmount, cPayment, tCash, tBalance,cCustName,cBillNum;
-    EditText cDiscount;
     String totalProducts, totalPrice,tCustName;
     LinearLayout lNetAmt;
     RadioGroup cDiscountType;
@@ -68,7 +67,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     double netAmt = 0;
     String rs = "\u20B9";
     TextView cPrintStatus;
-    EditText et_result, cCash;
+    EditText et_result, cCash,cDiscount,cCashierName;
     EditSpinner mEditSpinner;
     String cDiscountValue = "";
     DecimalFormat df;
@@ -79,6 +78,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     SalesDet sd;
     SalesMst sm;
      BillPrint billPrint;
+    LinearLayout cashierNameLayout;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
 
     SharedPreferences sharedpreferences;
@@ -107,8 +107,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cProducts = (TextView) findViewById(R.id.cTotalProducts);
         cDate = (TextView) findViewById(R.id.date);
         cCustName = (TextView) findViewById(R.id.cCustname);
+        cCashierName = (EditText) findViewById(R.id.cCashiername);
         cBillNum = (TextView) findViewById(R.id.cBillNo);
-        cPayment = (TextView) findViewById(R.id.cPayment);
+       // cPayment = (TextView) findViewById(R.id.cPayment);
         lNetAmt = (LinearLayout) findViewById(R.id.layout_Net);
         tCash = (TextView) findViewById(R.id.tCash);
         cCash = (EditText) findViewById(R.id.cCash);
@@ -120,6 +121,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cDiscountType = (RadioGroup) findViewById(R.id.discount_toggle);
         cCancel = (Button) findViewById(R.id.cCancel);
         billPrint =new BillPrint(CheckoutActivity.this);
+        cashierNameLayout = (LinearLayout) findViewById(R.id.cashierLayout) ;
 
         dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
 
@@ -137,7 +139,16 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         dbHandler = new DbHandler(CheckoutActivity.this);
 
         bSeries = dbHandler.getBillSeries(1);
-       String bPrefix =  String.valueOf(bSeries.getPrefix());
+
+
+        if( bSeries.getCashierSelection().equals("NO"))
+        {
+            cashierNameLayout.setVisibility(View.GONE);
+        }
+
+
+
+        String bPrefix =  String.valueOf(bSeries.getPrefix());
           if(bPrefix.isEmpty())
             {
            cBillNum.setText(String.valueOf(bSeries.getCurrentBillNo()));
@@ -180,8 +191,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cDiscount.setText(selectedButton);
         Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
 
-        GradientDrawable bgShape = (GradientDrawable) lNetAmt.getBackground();
-        bgShape.setColor(getResources().getColor(R.color.dark_green));
+
+//        GradientDrawable bgShape = (GradientDrawable) lNetAmt.getBackground();
+     //   bgShape.setColor(getResources().getColor(R.color.darkskyBlue));
         badapter = new BillListAdapter(CheckoutActivity.this, FragmentOne.billList);
         listView.setAdapter(badapter);
 
@@ -198,11 +210,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         if(tCustName.isEmpty())
         {
-            cCustName.setText("-");
+          cCustName.setText("-");
         }
         else
         {
-            cCustName.setText(tCustName);
+           cCustName.setText(tCustName);
         }
 
 
@@ -215,8 +227,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cProducts.setText(totalProducts);
         cPrice.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
         cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-        cPayment.setText("AMOUNT TO RECEIVE - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-
+//        cPayment.setText("AMOUNT TO RECEIVE - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+        cCash.setText(FragmentOne.commaSeperated(netAmt));
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -414,17 +426,18 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_zero = (Button) findViewById(R.id.btn_zero);
         btn_point = (Button) findViewById(R.id.btn_point);
         btn_clear = (Button) findViewById(R.id.btn_clear);
-        btn_100 = (Button) findViewById(R.id.btn_100);
+       /* btn_100 = (Button) findViewById(R.id.btn_100);
         btn_500 = (Button) findViewById(R.id.btn_500);
         btn_2000 = (Button) findViewById(R.id.btn_2000);
         btn_cash = (Button) findViewById(R.id.btn_cash);
         btn_dc = (Button) findViewById(R.id.btn_dc);
         btn_cc = (Button) findViewById(R.id.btn_cc);
-        btn_wallet = (Button) findViewById(R.id.btn_wallet);
+        btn_wallet = (Button) findViewById(R.id.btn_wallet);*/
       cPrint = (Button) findViewById(R.id.cPrint);
         cSave = (Button) findViewById(R.id.cSave);
         cCancel =(Button)findViewById(R.id.cCancel) ;
-        cPrint.setVisibility(View.INVISIBLE);
+        cPrint.setEnabled(false);
+        cPrint.setBackgroundColor(getResources().getColor(R.color.light_grey));
         btn_one.setOnClickListener(this);
         btn_two.setOnClickListener(this);
         btn_three.setOnClickListener(this);
@@ -437,13 +450,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_zero.setOnClickListener(this);
         btn_point.setOnClickListener(this);
         btn_clear.setOnClickListener(this);
-        btn_100.setOnClickListener(this);
+     /*   btn_100.setOnClickListener(this);
         btn_500.setOnClickListener(this);
         btn_2000.setOnClickListener(this);
         btn_cash.setOnClickListener(this);
         btn_dc.setOnClickListener(this);
         btn_cc.setOnClickListener(this);
-        btn_wallet.setOnClickListener(this);
+        btn_wallet.setOnClickListener(this);*/
       cPrint.setOnClickListener(this);
         cSave.setOnClickListener(this);
         cCancel.setOnClickListener(this);
@@ -497,7 +510,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_point:
                 et_result.setText(et_result.getText().toString() + btn_point.getText().toString());
                 break;
-            case R.id.btn_100:
+        /*    case R.id.btn_100:
 
                 et_result.setText(et_result.getText().toString() + btn_100.getText().toString());
                 break;
@@ -526,7 +539,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_wallet:
                 mEditSpinner.setText("WALLET");
 
-                break;
+                break;*/
 
             case R.id.cCancel:
 
@@ -575,26 +588,22 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             case R.id.cPrint:
 
                 String printSize = getSettings.getPrintingPaperSize();
+
+
+                String pBillno ="";
+                if(sm.getPrefix().isEmpty()) {
+
+                    pBillno =String.valueOf(sm.getBillNO());
+                }
+                else
+                {
+                    pBillno =sm.getPrefix()+String.valueOf(sm.getBillNO());
+                }
                 // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
                 if (printSize.equals("1")) {
-
-                    if(sm.getPrefix().isEmpty()) {
-                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
-                    }
-                    else
-                    {
-                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
-                    }
+                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(),sm.getCashName(),tCustName);
                 } else {
-
-                    if(sm.getPrefix().isEmpty()) {
-                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
-                    }
-                    else
-                    {
-                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), sm.getPrefix()+String.valueOf(sm.getBillNO()), totalPrice, String.valueOf(sm.getDiscount()), sm.getQty(), sm.getDateTime(),tCustName);
-                    }
-                    System.out.println(mPrinter.toString());
+                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(),sm.getCashName(),tCustName);
                 }
                 Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -614,7 +623,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         String billwithPrefix = cBillNum.getText().toString();
         int bNo =  bSeries.getCurrentBillNo();
 
-        dbHandler.updateBillNo(++bNo,"");
+        dbHandler.updateBillNo(++bNo);
 
         Log.i("BILL NO", billwithPrefix);
         int quantity = 0;
@@ -645,6 +654,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             sm.setDiscount(Double.parseDouble(cDiscountValue));
         sm.setPaymentMode(mEditSpinner.getText().toString());
         sm.setPaymentDet("");
+        sm.setCashName(cCashierName.getText().toString());
         sm.setSalesPerson("");
         sm.setStatus("SAVED");
         sm.setPrefix(bSeries.getPrefix());
@@ -658,8 +668,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         Log.i("DET", String.valueOf(detInserted));
 
         if (detInserted != -1 && mstInserted != -1) {
-           cPrint.setVisibility(View.VISIBLE);
-            cSave.setVisibility(View.INVISIBLE);
+           cPrint.setEnabled(true);
+            cPrint.setBackgroundColor(getResources().getColor(R.color.green));
+            cSave.setEnabled(false);
+            cSave.setBackgroundColor(getResources().getColor(R.color.light_grey));
             cCancel.setVisibility(View.VISIBLE);
             cCancel.setText("NEXT BILL");
             Toast.makeText(CheckoutActivity.this, "Bill Saved!", Toast.LENGTH_SHORT).show();
@@ -678,7 +690,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         public void afterTextChanged(Editable s) {
             if (s.toString().equals("CASH")) {
                 tCash.setText("Cash (" + rs + ")");
-                cCash.setText("");
+                cCash.setText(FragmentOne.commaSeperated(netAmt));
+                cCash.selectAll();
                 cCash.setFocusable(true);
                 cCash.setFocusableInTouchMode(true);
                 cCash.setClickable(true);
@@ -753,7 +766,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             if (s.toString().equals("") || s.toString().equals(rs) || s.toString().equals("%")) {
 
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+//                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
                 netAmt = Double.parseDouble(totalPrice);
                 cDiscountValue = "";
             } else {
@@ -782,7 +795,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     return;
                 }
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(netAmt));
-                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(netAmt));
+//                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(netAmt));
                 tCash.setText("Cash (" + rs + ")");
                 cCash.setText("");
                 mEditSpinner.setText("CASH");

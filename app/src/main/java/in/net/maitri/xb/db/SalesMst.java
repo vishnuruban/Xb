@@ -7,6 +7,16 @@ public class SalesMst {
     private String paymentMode;
     private String paymentDet;
     private String custName;
+    private String cashName;
+
+    public String getCashName() {
+        return cashName;
+    }
+
+    public void setCashName(String cashName) {
+        this.cashName = cashName;
+    }
+
     private String status;
 
     public String getCustName() {

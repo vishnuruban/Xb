@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -57,11 +58,13 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
 
         if (mAllCategories.get(position).isSelected()) {
          holder.ind.setBackgroundColor(Color.parseColor("#757575"));
+            holder.categoryName.setTypeface(null, Typeface.BOLD);
             mAllCategories.get(position).setSelected(false);
 
         } else {
         //    holder.cardView.setBackgroundColor(Color.parseColor("#009688"));
             holder.ind.setBackgroundColor(Color.parseColor("#f9f9d7"));
+            holder.categoryName.setTypeface(null, Typeface.NORMAL);
         }
     }
 

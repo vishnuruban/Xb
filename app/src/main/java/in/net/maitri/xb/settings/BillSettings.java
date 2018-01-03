@@ -33,13 +33,14 @@ public class BillSettings extends PreferenceFragment implements SharedPreference
         Preference getresetType = findPreference("key_settings_company_reset_type");
         final Preference getBillPrefix = findPreference("key_settings_company_prefix");
         Preference editBill = findPreference("key_settings_user_edit_bill_settings");
-
+        final Preference getCustomerSelection = findPreference("key_settings_bill_customer_selection_rqd");
+        final Preference getCashierSelection = findPreference("key_settings_bill_cashier_selection_rqd");
 
         editBill.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                ModifyBillSeries newFragment = new ModifyBillSeries(bm.getBillName(),String.valueOf(bm.getCurrentBillNo()),bm.getPrefix(),getBillNumber,getBillPrefix);
+                ModifyBillSeries newFragment = new ModifyBillSeries(bm.getBillName(),String.valueOf(bm.getCurrentBillNo()),bm.getPrefix(),bm.getCashierSelection(),bm.getCustomerSelection(),getBillNumber,getBillPrefix,getCashierSelection,getCustomerSelection);
                 newFragment.setCancelable(false);
                 newFragment.show(getFragmentManager(),"");
 
@@ -53,6 +54,8 @@ public class BillSettings extends PreferenceFragment implements SharedPreference
         getBillName.setSummary(bm.getBillName());
         getBillNumber.setSummary(String.valueOf(bm.getCurrentBillNo()));
         getresetType.setSummary(bm.getResetType());
+        getCashierSelection.setSummary(bm.getCashierSelection());
+        getCustomerSelection.setSummary(bm.getCustomerSelection());
         if(!bm.getPrefix().isEmpty())
         getBillPrefix.setSummary(bm.getPrefix());
         else

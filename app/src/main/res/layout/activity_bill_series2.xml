@@ -81,9 +81,33 @@
                 <EditText
                     android:id="@+id/billPrefix"
                     style="@style/add_customer_edit_text"
-                    android:inputType="textEmailAddress" />
+                    android:inputType="text" />
 
             </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/billCustSelection"
+                    android:text="Customer Selection" />
+                <com.reginald.editspinner.EditSpinner
+                    android:id="@+id/billCustSelection"
+                    style="@style/add_customer_edit_text"
+                    android:inputType="text" />
+            </LinearLayout>
+
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/billCashSelection"
+                    android:text="Cashier Selection" />
+                <com.reginald.editspinner.EditSpinner
+                    android:id="@+id/billCashSelection"
+                    style="@style/add_customer_edit_text"
+                    android:inputType="text" />
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>

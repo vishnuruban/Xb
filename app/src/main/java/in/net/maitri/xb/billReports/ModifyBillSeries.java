@@ -7,11 +7,15 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.reginald.editspinner.EditSpinner;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
@@ -29,17 +33,25 @@ public class ModifyBillSeries extends DialogFragment {
     private String bName;
     private String bNumber;
     private String bPrefix;
+    private String bCashier;
+    private String bCustomer;
+    Preference gCashier;
+    Preference gCustomer;
     Preference gBillNo;
     Preference gPrefix;
 
 
-      public ModifyBillSeries(String bName, String bNumber, String bPrefix, Preference gBillNo, Preference gPrefix)
+    public ModifyBillSeries(String bName, String bNumber, String bPrefix,String bCashier,String bCustomer, Preference gBillNo, Preference gPrefix,Preference gCashier,Preference gCustomer)
       {
           this.bName = bName;
           this.bNumber = bNumber;
           this.bPrefix = bPrefix;
           this.gBillNo = gBillNo;
           this.gPrefix = gPrefix;
+          this.bCashier = bCashier;
+          this.bCustomer = bCustomer;
+          this.gCashier = gCashier;
+          this.gCustomer = gCustomer;
       }
 
 
@@ -60,10 +72,18 @@ public class ModifyBillSeries extends DialogFragment {
         eBillName.setFocusableInTouchMode(false);
         final EditText eBillNumber = (EditText) view.findViewById(R.id.billNumber);
         final EditText ePrefix = (EditText) view.findViewById(R.id.billPrefix);
+        final EditSpinner eCustomer = (EditSpinner) view.findViewById(R.id.billCustSelection);
+        final EditSpinner eCashier = (EditSpinner) view.findViewById(R.id.billCashSelection);
         eBillName.setText(bName);
         eBillNumber.setText(bNumber);
         ePrefix.setText(bPrefix);
-
+        eCustomer.setText(bCustomer);
+        eCashier.setText(bCashier);
+        ListAdapter adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.yesno_mode));
+        eCustomer.setAdapter(adapter);
+        eCashier.setAdapter(adapter);
+        eCustomer.setEditable(false);
+        eCashier.setEditable(false);
 
         Button save = (Button) view.findViewById(R.id.save);
         save.setOnClickListener(new View.OnClickListener() {
@@ -71,6 +91,8 @@ public class ModifyBillSeries extends DialogFragment {
             public void onClick(View view) {
                 String billNumber = eBillNumber.getText().toString();
                 String prefix = ePrefix.getText().toString();
+                String cashName = eCashier.getText().toString();
+                String custName = eCustomer.getText().toString();
                 if(billNumber.isEmpty())
                 {
                     Toast.makeText(getActivity(),"Current Bill number field cant be empty",Toast.LENGTH_SHORT).show();
@@ -80,10 +102,12 @@ public class ModifyBillSeries extends DialogFragment {
 
                     dbHandler = new DbHandler(getActivity());
 
-                    if(dbHandler.updateBillNo(Integer.valueOf(billNumber),prefix))
+                    if(dbHandler.updateBillSeries(Integer.valueOf(billNumber),prefix,custName,cashName))
                     {
                         gBillNo.setSummary(billNumber);
                         gPrefix.setSummary(prefix);
+                        gCashier.setSummary(custName);
+                        gCustomer.setSummary(cashName);
                         Toast.makeText(getActivity(),"Updated Successfully",Toast.LENGTH_SHORT).show();
                         dismiss();
                     }

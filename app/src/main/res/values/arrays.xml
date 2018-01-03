@@ -12,4 +12,9 @@
         <item>NAME</item>
         <item>PHONE NUMBER</item>
     </array>
+
+    <array name="yesno_mode">
+        <item>YES</item>
+        <item>NO</item>
+    </array>
 </resources>

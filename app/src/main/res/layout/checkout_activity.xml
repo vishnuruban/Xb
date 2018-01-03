@@ -8,6 +8,8 @@
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:id="@+id/r1"
+        android:background="#F5F5F5"
         android:layout_weight="1">
 
 
@@ -17,6 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+
             android:layout_margin="5dp"
             android:orientation="vertical">
 
@@ -25,6 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bgedittext2"
+                android:layout_margin="5dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -61,13 +65,13 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
                     android:padding="15dp"
                     android:text="Discount"
                     android:textColor="@color/colorCell"
@@ -111,7 +115,6 @@
                         android:gravity="center"
                         android:background="@drawable/toggle_widget_background"
                         android:button="@null"
-
                         android:padding="5dp"
                         android:text="%"
                         android:textColor="@color/black"
@@ -135,8 +138,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#fff" />
+                android:layout_height="3dp"
+                android:background="#000" />
 
 
             <LinearLayout
@@ -144,20 +147,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/button_shape"
+                android:weightSum="1"
+                android:layout_margin="5dp"
+                android:layout_marginTop="5dp"
                 android:orientation="horizontal">
 
+
+
                 <TextView
-                    android:id="@+id/net"
+                    android:id="@+id/cTNetamount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:padding="15dp"
-                    android:text="Net Amount (\u20B9) "
-                    android:textColor="#fff"
-                    android:textSize="17dp" />
+                    android:layout_weight="0.5"
+                    android:paddingEnd="2dp"
+
+                    android:padding="10dp"
+                    android:text="Grand Total(\u20B9)"
+                    android:textColor="#000"
+                    android:textSize="22dp"
+                    android:textStyle="bold" />
+
 
 
                 <TextView
@@ -165,14 +175,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
+                    android:paddingEnd="2dp"
                     android:gravity="right"
-                    android:padding="15dp"
+                    android:padding="10dp"
                     android:text=" "
-                    android:textColor="#fff"
-                    android:textSize="20dp"
+                    android:textColor="#000"
+                    android:textSize="22dp"
                     android:textStyle="bold" />
-
 
             </LinearLayout>
 
@@ -194,30 +204,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:background="#f8bbd0"
+                android:layout_margin="5dp"
                 android:weightSum="1">
 
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:drawablePadding="15dp"
-                    android:text="Customer Name"
-                    android:padding="5dp"
-                    android:textColor="#000"
-                    android:textSize="15sp" />
-
-                <TextView
-
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.35"
-                    android:drawablePadding="15dp"
-                    android:text="Bill Number"
-                    android:padding="5dp"
-                    android:textColor="#000"
-                    android:textSize="15sp" />
 
 
                 <TextView
@@ -226,44 +215,37 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.25"
                     android:drawablePadding="15dp"
-                    android:text="Date"
+                    android:text="Bill Number :"
+                    android:textStyle="bold"
                     android:padding="5dp"
-                    android:textColor="#000"
-                    android:textSize="15sp" />
-            </LinearLayout>
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
 
-
-
-            <LinearLayout
-                android:id="@+id/customer"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:weightSum="1">
-
-                <TextView
-                    android:id="@+id/cCustname"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:drawablePadding="15dp"
-                    android:text="Vishnu"
-                    android:padding="5dp"
-                    android:maxLines="1"
-                    android:textColor="#000"
-                    android:textSize="15sp" />
 
                 <TextView
                     android:id="@+id/cBillNo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.35"
+                    android:layout_weight="0.25"
                     android:drawablePadding="15dp"
-
                     android:padding="5dp"
                     android:maxLines="1"
                     android:textColor="#000"
-                    android:textSize="15sp" />
+                    android:textSize="18sp" />
+
+
+                <TextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.25"
+                    android:drawablePadding="15dp"
+                    android:text="Date :"
+                    android:gravity="center"
+                    android:padding="5dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
 
 
                 <TextView
@@ -274,28 +256,34 @@
                     android:drawablePadding="15dp"
                     android:text="18-12-2017"
                     android:padding="5dp"
+                    android:gravity="left"
                     android:maxLines="1"
                     android:textColor="#000"
-                    android:textSize="15sp" />
-
+                    android:textSize="18sp" />
 
             </LinearLayout>
+
+
+
 
             <LinearLayout
                 android:id="@+id/linearL2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="#009688">
+                android:background="@color/darkskyBlue">
 
                 <TextView
+                    android:id="@+id/textView10"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.75"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Desc"
-                    android:textColor="#ffffff" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -304,7 +292,9 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Qty"
-                    android:textColor="#ffffff" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/textView"
@@ -314,7 +304,9 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Rate"
-                    android:textColor="#ffffff" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -324,7 +316,9 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Amount"
-                    android:textColor="#ffffff" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white" />
             </LinearLayout>
 
             <ListView
@@ -349,17 +343,15 @@
             android:id="@+id/grid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true">
+            android:layout_gravity="center"
+            android:layout_below="@+id/a1">
 
 
             <GridLayout
-                android:layout_width="wrap_content"
+                android:layout_width="640dp"
                 android:layout_height="wrap_content"
-
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:columnCount="5"
+                android:columnCount="3"
+                android:layout_gravity="center"
                 android:orientation="horizontal"
                 android:padding="5dp">
 
@@ -368,231 +360,174 @@
                     android:id="@+id/cPrintstatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_columnSpan="5"
+                    android:layout_columnSpan="3"
                     android:gravity="right"
                     android:text="prini status" />
 
                 <Button
                     android:id="@+id/btn_one"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="1"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="fill"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
 
                 <Button
                     android:id="@+id/btn_two"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="2"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="fill"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
 
                 <Button
                     android:id="@+id/btn_three"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="3"
+                    android:layout_columnSpan="1"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
+
+
 
                 <Button
                     android:id="@+id/btn_four"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="4"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="fill"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
 
                 <Button
                     android:id="@+id/btn_five"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="5"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="fill"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
 
                 <Button
                     android:id="@+id/btn_six"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="6"
+                    android:layout_columnSpan="1"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
+
+
 
                 <Button
                     android:id="@+id/btn_seven"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="7"
+                    android:layout_columnSpan="1"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
 
                 <Button
                     android:id="@+id/btn_eight"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="8"
+                    android:layout_columnSpan="1"
+                    android:layout_gravity="fill"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
 
                 <Button
                     android:id="@+id/btn_nine"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
+                    android:layout_columnSpan="1"
                     android:text="9"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
+
+
 
                 <Button
                     android:id="@+id/btn_zero"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="0"
+                    android:layout_columnSpan="1"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
+
 
                 <Button
                     android:id="@+id/btn_point"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
                     android:background="@color/keypad_colour"
                     android:text="."
+                    android:layout_columnSpan="1"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
+
+
 
                 <Button
                     android:id="@+id/btn_clear"
                     android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/keypad_colour"
-                    android:text="CLEAR"
-                    android:textColor="#fff"
-                    android:textSize="20dp" />
-
-                <Button
-                    android:id="@+id/btn_100"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/keypad_colour"
-                    android:text="00"
-                    android:textColor="#fff"
-                    android:textSize="20dp" />
-
-                <Button
-                    android:id="@+id/btn_500"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/keypad_colour"
-                    android:text="500"
-                    android:textColor="#fff"
-                    android:textSize="20dp" />
-
-                <Button
-                    android:id="@+id/btn_2000"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/keypad_colour"
-                    android:text="2000"
-                    android:textColor="#fff"
-                    android:textSize="20dp" />
-
-                <Button
-                    android:id="@+id/btn_cash"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#455A64"
-                    android:text="CASH"
-                    android:textColor="#fff"
-                    android:textSize="20dp" />
-
-
-                <Button
-                    android:id="@+id/btn_dc"
                     android:layout_columnSpan="1"
-                    android:layout_gravity="fill"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#455A64"
-                    android:text="DC"
+                    android:text="C"
+                    android:background="@color/keypad_colour"
                     android:textColor="#fff"
-                    android:textSize="20dp" />
-
-                <Button
-                    android:id="@+id/btn_cc"
-                    android:layout_columnSpan="1"
-                    android:layout_gravity="fill"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#455A64"
-                    android:text="CC"
-                    android:textColor="#fff"
-                    android:textSize="20dp" />
-
-                <Button
-                    android:id="@+id/btn_wallet"
-                    android:layout_columnSpan="2"
-                    android:layout_gravity="fill"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="#455A64"
-                    android:text="WALLET"
-                    android:textColor="#fff"
-                    android:textSize="20dp" />
+                    android:textSize="30dp" />
 
 
             </GridLayout>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/a1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -602,33 +537,81 @@
             android:layout_marginTop="5dp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_edittext"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/cPayment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:padding="15dp"
-                    android:text="AMOUNT"
-                    android:textColor="#fff"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
-
-
-            </LinearLayout>
-
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:background="#fff" />
 
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="12dp"
+                    android:text="Customer Name"
+                    android:textColor="@color/colorCell"
+                    android:textSize="15dp" />
+
+
+                <TextView
+                    android:id="@+id/cCustname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/checkout_edittext"
+                    android:padding="12dp"
+                    android:textColor="#000"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#fff" />
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/cashierLayout"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="12dp"
+                    android:text="Cashier Name"
+                    android:textColor="@color/colorCell"
+                    android:textSize="15dp" />
+
+
+                <EditText
+                    android:id="@+id/cCashiername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/checkout_edittext"
+                    android:padding="12dp"
+                    android:textColor="#000"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:background="#fff" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -726,59 +709,74 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/grid"
-            android:orientation="horizontal"
-          android:layout_margin="20dp" >
+            android:layout_above="@+id/chkButtons"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/bg_edittext"
+            android:orientation="horizontal">
+
 
             <Button
                 android:id="@+id/cSave"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#0091EA"
-                android:text="SAVE "
-                android:textColor="#fff"
-                android:textSize="15dp" />
+                android:layout_gravity="center"
+                android:layout_weight="0.5"
+                android:background="@color/ltSkyBlue"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="SAVE BILL"
+                android:textColor="#000"
+                android:textSize="20dp"
+                android:textStyle="bold" />
 
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="2dp"
-                android:layout_weight="0.1"
-              />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/chkButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp">
 
 
             <Button
                 android:id="@+id/cPrint"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:background="@color/ok"
-                android:text="PRINT "
+                android:text="PRINT BILL"
                 android:textColor="#fff"
-                android:textSize="15dp" />
+                android:textSize="20dp" />
 
 
             <View
                 android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:layout_weight="0.1"
-                />
+                android:layout_weight="0.1" />
 
 
             <Button
                 android:id="@+id/cCancel"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:background="#FF5252"
                 android:text="CANCEL"
                 android:textColor="#fff"
-                android:textSize="15dp" />
+                android:textSize="20dp" />
         </LinearLayout>
 
     </RelativeLayout>

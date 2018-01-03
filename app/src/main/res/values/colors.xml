@@ -21,6 +21,8 @@
     <color name="black"> #000</color>
     <color name="toggle"> #4FC3F7</color>
 
+    <color name="darkText"> #5d5d5d</color>
+
     <color name="keypad_colour">#78909C</color>
     <color name="dark_green">   #00695C</color>
     <color name="red"> #EF9A9A</color>
@@ -41,6 +43,7 @@
     <color name="darkBrown">#682903</color>
     <color name="lightBrown">#9F3F04</color>
     <color name="darkskyBlue">#18789F</color>
+    <color name="ltSkyBlue">#80DEEA</color>
     <color name="lightskyBlue">#1D94C5</color>
 
     <color name="longClick">#9BDEFA</color>
