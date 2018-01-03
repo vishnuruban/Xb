@@ -35,15 +35,15 @@
             android:title="Reset Type"
             android:summary="anything_you_want" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="key_settings_bill_sales_person_rqd"
+        <Preference
+            android:key="key_settings_bill_customer_selection_rqd"
+            android:summary="anything_you_want"
             android:title="Customer Selection Required" />
 
-        <SwitchPreference
-            android:key="key_settings_bill_round_cash"
-            android:defaultValue="false"
-            android:title="Round of Bill"/>
+        <Preference
+            android:key="key_settings_bill_cashier_selection_rqd"
+            android:summary="anything_you_want"
+            android:title="Cashier Selection Required"/>
 
     </PreferenceCategory>
 

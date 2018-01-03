@@ -31,7 +31,8 @@
         <activity
             android:name=".billing.CheckoutActivity"
             android:label="CHECKOUT"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"
+         />
         <activity
             android:name=".billing.BillingActivity"
             android:label="BILL SCREEN"

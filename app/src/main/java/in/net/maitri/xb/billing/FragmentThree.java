@@ -168,6 +168,7 @@ public class FragmentThree extends Fragment {
                     Item item = (Item) bItemAdapter.getItem(position);
                     kpd = new KeypadDialog(getActivity(), item);
                     kpd.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                    kpd.setCancelable(false);
                     kpd.show();
                 }
 
@@ -208,6 +209,7 @@ public class FragmentThree extends Fragment {
                 searchResults.setVisibility(View.VISIBLE);
                 mGetAllItemsC = mDbHandler.getAllitemC();
                 categoryView.setVisibility(View.GONE);
+                sCatName.setVisibility(View.GONE);
                 System.out.println("ONSEARCH " + mGetAllItemsC.size());
                 for (int i = 0; i < mGetAllItemsC.size(); i++) {
                     System.out.println("ONSEARCH " + mGetAllItemsC.get(i).getItemName());
@@ -224,6 +226,7 @@ public class FragmentThree extends Fragment {
             public boolean onClose() {
 
                 categoryView.setVisibility(View.VISIBLE);
+                sCatName.setVisibility(View.VISIBLE);
                 searchResults.setVisibility(View.GONE);
 
 
@@ -231,8 +234,14 @@ public class FragmentThree extends Fragment {
                 //  itemView.setAdapter(bItemAdapter);
 
                 mGetAllItems = mDbHandler.getAllitems(1);
+           //     sCatName.setText(mGetAllCategories.get(0).getCategoryName());
+                mGetAllCategories.get(0).setSelected(true);
+                sCatName.setText(  mGetAllCategories.get(0).getCategoryName());
+                hCategoryAdapter = new HorizontalCategoryAdapter(getActivity(), mGetAllCategories);
+                categoryView.setAdapter(hCategoryAdapter);
                 bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
                 itemView.setAdapter(bItemAdapter);
+                bItemAdapter.notifyDataSetChanged();
 
 
                 return false;
@@ -255,17 +264,15 @@ public class FragmentThree extends Fragment {
             public boolean onQueryTextChange(String s) {
 
                 categoryView.setVisibility(View.GONE);
+                sCatName.setVisibility(View.GONE);
                 searchResults.setVisibility(View.VISIBLE);
                 if (bItemAdapter != null) bItemAdapter.getFilter().filter(s);
                 bItemAdapter.notifyDataSetChanged();
                 return true;
 
             }
-
         });
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

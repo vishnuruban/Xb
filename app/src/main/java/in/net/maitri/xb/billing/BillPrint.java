@@ -40,7 +40,7 @@ public class BillPrint {
 
 
 
-    public void printThreeInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate,String customerName) {
+    public void printThreeInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate,String cashierName,String customerName) {
 
        // SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
       //  String formattedDate = dateFormat.format(new Date()).toString();
@@ -67,7 +67,8 @@ public class BillPrint {
             mPrinter.printTextLine(billNo);
             if(!customerName.isEmpty())
              mPrinter.printTextLine(" Customer Name  : " + customerName + "\n");
-            //mPrinter.printTextLine(" Cashier Name   : " + cashName + "\n");
+            if(!cashierName.isEmpty())
+            mPrinter.printTextLine(" Cashier Name   : " + cashierName + "\n");
             mPrinter.printTextLine("------------------------------------------------\n");
             mPrinter.setBold();
             mPrinter.printTextLine(s);
@@ -89,7 +90,7 @@ public class BillPrint {
             }
             String discount = "";
             String qtyNetAmt = String.format("%-15s%8s%10s%14s\n", "Items : " + bItems.size(), "", "Subtotal", tPrice);
-            if (tDiscount.equals("")) {
+            if (tDiscount.equals("0.00")) {
                 discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(tQty), "", "", "");
             } else {
                 discount = String.format("%-15s%8s%10s%14s\n", "Qty   : " + nf.format(tQty), "", "Discount", tDiscount);
@@ -159,7 +160,7 @@ public class BillPrint {
 
 
 
-    public void printTwoInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate,String customerName) {
+    public void printTwoInch(CieBluetoothPrinter mPrinter,ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty,String formattedDate,String cashierName,String customerName) {
        // SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
        // String formattedDate = dateFormat.format(new Date()).toString();
         Log.i("Net Amt" ,String.valueOf(netAmount));
@@ -220,10 +221,14 @@ public class BillPrint {
         mPrinter.setAlignmentLeft();
         mPrinter.printTextLine(billNo);
         System.out.println(billNo);
-        if(!customerName.isEmpty())
-        mPrinter.printTextLine("            Customer Name  : " + customerName + "\n");
-        System.out.println("            Customer Name  : " + customerName + "\n");
-        // mPrinter.printTextLine("            Cashier Name   : " + cashName + "\n");
+        if(!customerName.isEmpty()) {
+            mPrinter.printTextLine("            Customer Name  : " + customerName + "\n");
+            System.out.println("            Customer Name  : " + customerName + "\n");
+        }
+        if(!cashierName.isEmpty()) {
+            mPrinter.printTextLine("            Cashier Name   : " + cashierName + "\n");
+            System.out.println("            Cashier Name   : " + cashierName + "\n");
+        }
       //  mPrinter.printLineFeed();
         mPrinter.setFontSizeSmall();
         mPrinter.printTextLine("            ------------------------------------\n");
@@ -257,7 +262,7 @@ public class BillPrint {
         String discount = "";
         String qtyNetAmt = String.format("%12s%-10s%5s%9s%10s\n", "", "Items : " + bItems.size(), "", "Subtotal", tPrice);
         System.out.println("cDiscountValue " + tDiscount);
-        if (tDiscount.isEmpty()) {
+        if (tDiscount.equals("0.00")) {
             discount = String.format("%12s%-10s%5s%9s%10s\n", "", "Qty   : " + nf.format(tQty), "", "", "");
         } else {
             discount = String.format("%12s%-10s%5s%9s%10s\n", "", "Qty   : " + nf.format(tQty), "", "Discount", tDiscount);

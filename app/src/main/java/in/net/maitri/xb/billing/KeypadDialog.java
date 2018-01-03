@@ -56,15 +56,12 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         setContentView(R.layout.number_keypad_dialog);
 
         initializeVars();
-          disableSoftInputFromAppearing(et_result);
-
+        disableSoftInputFromAppearing(et_result);
         DecimalFormat df = new DecimalFormat("0.00");
         tv_itemName.setText(bItem.getItemName());
-
         et_result.setText(df.format(bItem.getItemSP()));
         et_result.addTextChangedListener(watch);
-
-
+        et_result.selectAll();
     }
 
     @Override
@@ -74,8 +71,6 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
 
 
     public void initializeVars() {
-
-
         tv_itemName = (TextView) findViewById(R.id.tv_itemName);
         et_result = (TextInputEditText) findViewById(R.id.et_result);
         btn_one = (Button) findViewById(R.id.btn_one);
@@ -91,11 +86,9 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         btn_point = (Button) findViewById(R.id.btn_point);
         btn_ok = (Button) findViewById(R.id.btn_ok);
         btn_cancel = (Button) findViewById(R.id.btn_cancel);
-
         btn_clear = (Button) findViewById(R.id.btn_clear);
         et_edit = (ImageButton) findViewById(R.id.et_edit);
         //et_result.set
-
         btn_one.setOnClickListener(this);
         btn_two.setOnClickListener(this);
         btn_three.setOnClickListener(this);
@@ -111,8 +104,8 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         btn_cancel.setOnClickListener(this);
         et_result.setOnClickListener(this);
         et_edit.setOnClickListener(this);
+        et_edit.setVisibility(View.GONE);
         btn_clear.setOnClickListener(this);
-
     }
 
 
@@ -207,7 +200,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
 
                 //  et_result.requestFocus();
 
-                et_result.selectAll();
+               // et_result.selectAll();
                 // et_result.setSelection(0,et_result.getText().toString().length());
                 //et_result.setSelectAllOnFocus(true);
                 //  et_result.selectAll();

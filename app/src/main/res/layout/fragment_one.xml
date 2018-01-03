@@ -155,21 +155,25 @@
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:id="@+id/linearL2"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="@color/darkskyBlue">
+                android:background="@drawable/bgedittext2">
 
                 <TextView
+                    android:id="@+id/textView10"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.75"
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Desc"
-                    android:textColor="#ffffff" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -178,7 +182,9 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="Qty"
-                    android:textColor="#ffffff" />
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
 
                 <TextView
                     android:id="@+id/textView"
@@ -187,8 +193,10 @@
                     android:layout_weight="1.5"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Rate(\u20B9)"
-                    android:textColor="#ffffff" />
+                    android:text="Rate"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -197,9 +205,12 @@
                     android:layout_weight="1.25"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Amount(\u20B9)"
-                    android:textColor="#ffffff" />
+                    android:text="Amount"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
             </LinearLayout>
+
 
             <ListView
                 android:id="@+id/bill_lv"

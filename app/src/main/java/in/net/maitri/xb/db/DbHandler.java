@@ -27,7 +27,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 10;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -120,6 +120,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final  String KEY_BS_SEED ="bs_seed";
     private static  final String KEY_BS_CURRENT_BILL ="bs_current_bill";
     private static final String KEY_BS_CUSOMER_SELECTION ="bs_customer_selection";
+    private static final String KEY_BS_CASHIER_SELECTION ="bs_cashier_selection";
     private static  final String KEY_BS_ROUND_OFF = "bs_roundOff";
     private static final String KEY_BS_CREATED_AT = "bs_createdAt";
     private static final String KEY_BS_DEFAULT = "bs_default";
@@ -235,11 +236,12 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_BS_RESET_TYPE+ " TEXT,"
                 + KEY_BS_PREFIX+ " TEXT,"
                 + KEY_BS_CUSOMER_SELECTION + " TEXT,"
+                + KEY_BS_CASHIER_SELECTION + " TEXT,"
                 + KEY_BS_DEFAULT + " INTEGER,"
                 + KEY_BS_ROUND_OFF + " INTEGER,"
                 +KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_BILL_SERIES_TABLE);
-        addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES",0,1),db);
+        addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES","NO",0,1),db);
 
         String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME+ "("
                 + KEY_UM_ID+ " INTEGER PRIMARY KEY,"
@@ -310,7 +312,7 @@ public class DbHandler extends SQLiteOpenHelper {
                         + KEY_BS_ROUND_OFF + " INTEGER,"
                         +KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
                 db.execSQL(CREATE_BILL_SERIES_TABLE);
-                addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES",0,1),db);
+                addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES","",0,1),db);
             case 10:
                 String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME+ "("
                         + KEY_UM_ID+ " INTEGER PRIMARY KEY,"
@@ -333,6 +335,12 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addSaleBillNo = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                         " ADD COLUMN " + KEY_SM_SALE_BILL_NO + " INTEGER ";
                 db.execSQL(addSaleBillNo);
+                String addcashierName = "ALTER TABLE " + BILLSERIES_TABLE_NAME +
+                        " ADD COLUMN " + KEY_BS_CASHIER_SELECTION + " TEXT ";
+                db.execSQL(addcashierName);
+                updateCashierRequired("NO");
+
+
                 break;
         }
     }
@@ -1062,6 +1070,9 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_BS_SEED, bill.getSeed());
             cv.put(KEY_BS_CURRENT_BILL, bill.getCurrentBillNo());
             cv.put(KEY_BS_CUSOMER_SELECTION, bill.getCustomerSelection());
+            if(!bill.getCashierSelection().isEmpty()) {
+                cv.put(KEY_BS_CASHIER_SELECTION, bill.getCashierSelection());
+            }
             cv.put(KEY_BS_ROUND_OFF, bill.getRoundOff());
             cv.put(KEY_BS_DEFAULT,bill.getDefault_bill());
             db.insert(BILLSERIES_TABLE_NAME, null, cv);
@@ -1107,6 +1118,7 @@ public class DbHandler extends SQLiteOpenHelper {
             billSeries.setSeed(c.getInt(c.getColumnIndex(KEY_BS_SEED)));
             billSeries.setCurrentBillNo(c.getInt(c.getColumnIndex(KEY_BS_CURRENT_BILL)));
             billSeries.setCustomerSelection(c.getString(c.getColumnIndex(KEY_BS_CUSOMER_SELECTION)));
+            billSeries.setCashierSelection(c.getString(c.getColumnIndex(KEY_BS_CASHIER_SELECTION)));
             billSeries.setResetType(c.getString(c.getColumnIndex(KEY_BS_RESET_TYPE)));
             billSeries.setRoundOff(c.getInt(c.getColumnIndex(KEY_BS_ROUND_OFF)));
             billSeries.setPrefix(c.getString(c.getColumnIndex(KEY_BS_PREFIX)));
@@ -1122,14 +1134,39 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
 
-
-
-    public boolean  updateBillNo(int num,String prefix) {
+    public boolean  updateBillNo(int num) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_BS_CURRENT_BILL,num);
-            values.put(KEY_BS_PREFIX, prefix);
+        long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
+
+        return rowid != -1;
+        // updating row
+    }
+
+
+
+
+    public boolean  updateBillSeries(int num,String prefix,String cust,String cash) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_BS_CURRENT_BILL,num);
+        values.put(KEY_BS_PREFIX, prefix);
+        values.put(KEY_BS_CASHIER_SELECTION, cash);
+        values.put(KEY_BS_CUSOMER_SELECTION, cust);
+        long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
+
+        return rowid != -1;
+        // updating row
+    }
+
+
+    public boolean  updateCashierRequired(String cashierReq) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_BS_CASHIER_SELECTION, cashierReq);
 
         long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
 
@@ -1137,8 +1174,6 @@ public class DbHandler extends SQLiteOpenHelper {
         // updating row
 
     }
-
-
 
 
 
@@ -1162,6 +1197,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     billSeries.setSeed(c.getInt(c.getColumnIndex(KEY_BS_SEED)));
                     billSeries.setCurrentBillNo(c.getInt(c.getColumnIndex(KEY_BS_CURRENT_BILL)));
                     billSeries.setCustomerSelection(c.getString(c.getColumnIndex(KEY_BS_CUSOMER_SELECTION)));
+                    billSeries.setCashierSelection(c.getString(c.getColumnIndex(KEY_BS_CASHIER_SELECTION)));
                     billSeries.setResetType(c.getString(c.getColumnIndex(KEY_BS_RESET_TYPE)));
                     billSeries.setRoundOff(c.getInt(c.getColumnIndex(KEY_BS_ROUND_OFF)));
                     billSeries.setPrefix(c.getString(c.getColumnIndex(KEY_BS_PREFIX)));
