@@ -79,9 +79,9 @@
                     android:id="@+id/category_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_margin="16dp"
-                    android:background="@drawable/spinner"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/spinner" />
 
             </LinearLayout>
 
@@ -103,7 +103,7 @@
                         android:layout_margin="8dp"
                         android:hint="Item"
                         android:imeOptions="actionDone"
-                        android:inputType="numberDecimal" />
+                        android:inputType="textCapWords" />
 
                 </android.support.design.widget.TextInputLayout>
 

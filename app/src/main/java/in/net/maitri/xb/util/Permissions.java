@@ -7,7 +7,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
+
+import in.net.maitri.xb.MainActivity;
 
 public class Permissions extends Activity {
 
@@ -40,38 +44,30 @@ public class Permissions extends Activity {
         }
     }
 
-    public void checkPhoneStatePermission() {
-        ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE);
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) context,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
-                    MY_PERMISSIONS_PHONE_STATE);
-        }
-    }
+
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
         switch (requestCode) {
+          /*  case MY_PERMISSIONS_PHONE_STATE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Permission", "Granted");
+                    ((MainActivity) context).checkValidity();
+                    Log.d("Permission", "Method executed");
 
-            case MY_PERMISSIONS_PHONE_STATE:
-               /* if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show();
-                }*/
-                break;
+                    Log.d("Permission", "Not Granted");
+                }
+               break;
+            }*/
 
-            case MY_PERMISSIONS_CAMERA:
-
-              /*  if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(context, "Permission Denied", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "Permission Granted", Toast.LENGTH_SHORT).show();
-                }*/
-                break;
 
         }
     }
+
+
 }

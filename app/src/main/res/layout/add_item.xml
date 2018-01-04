@@ -93,7 +93,7 @@
                         android:layout_margin="8dp"
                         android:imeOptions="actionNext"
                         android:hint="Item Name"
-                        android:inputType="text" />
+                        android:inputType="textCapWords" />
 
                 </android.support.design.widget.TextInputLayout>
 
