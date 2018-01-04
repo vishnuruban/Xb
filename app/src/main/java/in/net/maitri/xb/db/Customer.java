@@ -1,8 +1,9 @@
 package in.net.maitri.xb.db;
 
 
+import java.io.Serializable;
 
-public class Customer {
+public class Customer implements Serializable {
 
     private int id;
     private String mobileno;
@@ -18,7 +19,8 @@ public class Customer {
 
     }
 
-    public Customer(String name, String mobileno) {
+    public Customer(int id,String name, String mobileno) {
+        this.id = id;
         this.mobileno = mobileno;
         this.name = name;
     }

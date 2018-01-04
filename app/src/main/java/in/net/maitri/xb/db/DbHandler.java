@@ -27,7 +27,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 10;
+    private static final int DATABASE_VERSION = 11;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -84,6 +84,8 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_PAYMENT_DET = "sm_paymentDet";
     private static final String KEY_SM_STATUS = "sm_status";
     private static final String KEY_SM_CUSTOMER = "sm_customer";
+    private static final String KEY_SM_CUSTOMER_NAME = "sm_customer_name";
+    private static final String KEY_SM_CASHIER_NAME = "sm_cashier_name";
     private static final String KEY_SM_SALESMAN = "sm_salesman";
     private static final String KEY_SM_ITEM = "sm_item";
     private static final String KEY_SM_CREATED_AT = "sm_createdAt";
@@ -187,6 +189,8 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SM_DISCOUNT + " FLOAT,"
                 + KEY_SM_SALESMAN + " TEXT,"
                 + KEY_SM_CUSTOMER + " INTEGER,"
+                + KEY_SM_CUSTOMER_NAME + " TEXT,"
+                + KEY_SM_CASHIER_NAME + " TEXT,"
                 + KEY_SM_PAYMENT_MODE + " TEXT,"
                 + KEY_SM_PAYMENT_DET + " TEXT,"
                 + KEY_SM_STATUS + " TEXT,"
@@ -266,7 +270,7 @@ public class DbHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        switch (oldVersion) {
+        switch (oldVersion+1) {
             case 1:
             case 2:
             case 3:
@@ -339,8 +343,13 @@ public class DbHandler extends SQLiteOpenHelper {
                         " ADD COLUMN " + KEY_BS_CASHIER_SELECTION + " TEXT ";
                 db.execSQL(addcashierName);
                 updateCashierRequired("NO",db);
-
-
+            case 11:
+                String addcustName = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_CUSTOMER_NAME + " TEXT ";
+                db.execSQL(addcustName);
+                String addcashName = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_CASHIER_NAME + " TEXT ";
+                db.execSQL(addcashName);
                 break;
         }
     }
@@ -717,6 +726,25 @@ public class DbHandler extends SQLiteOpenHelper {
         return false;
     }
 
+
+
+
+    public String getCustomer(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String selectQuery = "SELECT " + KEY_CST_NUMBER + " FROM " + CUSTOMER_TABLE_NAME + " WHERE " + KEY_CST_ID + " = '" + id + "'";
+        Log.d("Query", selectQuery);
+        Cursor c = db.rawQuery(selectQuery, null);
+        c.moveToFirst();
+        String mobileNumber = c.getString(c.getColumnIndex(KEY_CST_NUMBER));
+        Log.d("Value", String.valueOf(mobileNumber));
+        c.close();
+        return mobileNumber;
+    }
+
+
+
+
+
     // Getting All Customer
     public ArrayList<Customer> getAllCustomer() {
         customerList.clear();
@@ -779,10 +807,6 @@ public class DbHandler extends SQLiteOpenHelper {
                     System.out.println("DBDESC " + c.getString(c.getColumnIndex("itm_name")));
 
                     SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)), bm);
-
-
-
-
                 /*
 
                     item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
@@ -877,6 +901,14 @@ public class DbHandler extends SQLiteOpenHelper {
                     mst.setPaymentMode(c.getString(c.getColumnIndex(KEY_SM_PAYMENT_MODE)));
                     mst.setQty(c.getInt(c.getColumnIndex(KEY_SM_QTY)));
                     mst.setItems(c.getInt(c.getColumnIndex(KEY_SM_ITEM)));
+                    mst.setCustomerId(c.getInt(c.getColumnIndex(KEY_SM_CUSTOMER)));
+                    mst.setCustName(c.getString(c.getColumnIndex(KEY_SM_CUSTOMER_NAME)));
+                    mst.setCashName(c.getString(c.getColumnIndex(KEY_SM_CASHIER_NAME)));
+                   int custId = c.getInt(c.getColumnIndex(KEY_SM_CUSTOMER));
+                    if(custId!=0)
+                    {
+                        mst.setCustomerNumber(getCustomer(custId));
+                    }
                     smList.add(mst);
                     System.out.println("dbBillNo " + c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
                 } while (c.moveToNext());
@@ -906,6 +938,8 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_PAYMENT_MODE, salesMst.getPaymentMode());
             cv.put(KEY_SM_PAYMENT_DET, salesMst.getPaymentDet());
             cv.put(KEY_SM_STATUS, salesMst.getStatus());
+            cv.put(KEY_SM_CASHIER_NAME,salesMst.getCashName());
+            cv.put(KEY_SM_CUSTOMER_NAME,salesMst.getCustName());
             result = db.insert(SALES_MST_TABLE_NAME, null, cv);
             db.close();
             return result;

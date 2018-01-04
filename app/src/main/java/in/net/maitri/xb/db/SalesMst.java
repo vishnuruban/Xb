@@ -8,6 +8,15 @@ public class SalesMst {
     private String paymentDet;
     private String custName;
     private String cashName;
+    private String customerNumber;
+
+    public String getCustomerNumber() {
+        return customerNumber;
+    }
+
+    public void setCustomerNumber(String customerNumber) {
+        this.customerNumber = customerNumber;
+    }
 
     public String getCashName() {
         return cashName;

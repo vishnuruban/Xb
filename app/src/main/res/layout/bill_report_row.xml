@@ -118,6 +118,16 @@
                 android:textColor="#000" />
 
             <TextView
+                android:id="@+id/reCustNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.25"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Customer Name"
+                android:textColor="#000" />
+
+            <TextView
                 android:id="@+id/reCashName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

@@ -2,6 +2,7 @@ package in.net.maitri.xb.billing;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,7 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
         }
         holder.cName.setText(mDisplayedValues.get(position).getName());
         holder.cMobileNumber.setText(mDisplayedValues.get(position).getMobileno()+"");
+        Log.i("CID " ,String.valueOf(mDisplayedValues.get(position).getId()));
 
 //        holder.llContainer.setOnClickListener(new View.OnClickListener() {
 //
@@ -151,7 +153,7 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
                             data = mOriginalValues.get(i).getMobileno();
                         }
                         if (data.toLowerCase().contains(constraint.toString()) ||data1.toLowerCase().contains(constraint.toString())) {
-                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getName(),mOriginalValues.get(i).getMobileno()));
+                            FilteredArrList.add(new Customer(mOriginalValues.get(i).getId(),mOriginalValues.get(i).getName(),mOriginalValues.get(i).getMobileno()));
                         }
                     }
                     // set the Filtered result to return

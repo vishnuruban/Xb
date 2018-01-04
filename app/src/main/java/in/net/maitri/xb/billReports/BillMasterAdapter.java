@@ -55,7 +55,7 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
     class MyViewHolder extends RecyclerView.ViewHolder {
 
 
-        TextView rBillNo,rQty,rItems,rDiscount,rNetAmt,rPayment,rSno,rDate,rCustomer,rCashier;
+        TextView rBillNo,rQty,rItems,rDiscount,rNetAmt,rPayment,rSno,rDate,rCustomer,rCashier,rCustomerNumber;
         TextView rBillDate;
         CardView cardView;
 
@@ -74,6 +74,7 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
             rCashier =(TextView) itemView.findViewById(R.id.reCashName);
             rBillDate = (TextView) itemView.findViewById(R.id.reDate);
             cardView  = (CardView) itemView.findViewById(R.id.card_view);
+            rCustomerNumber =(TextView) itemView.findViewById(R.id.reCustNumber);
         }
     }
 
@@ -102,7 +103,8 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
         holder.rItems.setText(String.valueOf(billDetails.getItems()));
         holder.rPayment.setText(String.valueOf(billDetails.getPaymentMode()));
         holder.rCustomer.setText(billDetails.getCustName());
-        holder.rCashier.setText("");
+        holder.rCustomerNumber.setText(billDetails.getCustomerNumber());
+        holder.rCashier.setText(billDetails.getCashName());
       //  holder.rBillDate.setText("Date  : "+String.valueOf(billDetails.getDateTime()));
 
         if (billDetails.isSelected()) {

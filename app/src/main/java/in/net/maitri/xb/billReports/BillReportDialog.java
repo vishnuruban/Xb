@@ -56,8 +56,9 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     DecimalFormat df;
     int internalBillNo;
     String custName;
+    String cashName;
 
-    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo,String custName)
+    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo,String custName,String cashName)
     {
         super (context);
         this.context = context;
@@ -72,6 +73,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         this.dQty = dQty;
         this.internalBillNo = internalBillNo;
         this.custName = custName;
+        this.cashName = cashName;
     }
 
 
@@ -109,16 +111,17 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         dNetAmt.setText("Net Amount:  "+rs+ df.format(netAmt));
         dSubTotal.setText("Subtotal:  "+rs+ subTotal);
         getSettings = new GetSettings(context);
-        customerName.setText("Customer Name :"+custName);
+        customerName.setText("Customer Name : "+custName);
+        cashierName.setText("Cashier Name : "+cashName);
         printBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String printSize = getSettings.getPrintingPaperSize();
                 // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
                 if (printSize.equals("1")) {
-                    billPrint.printTwoInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,"",custName);
+                    billPrint.printTwoInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,cashName,custName);
                 } else {
-                    billPrint.printThreeInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,"",custName);
+                    billPrint.printThreeInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,cashName,custName);
                 }
             }
         });

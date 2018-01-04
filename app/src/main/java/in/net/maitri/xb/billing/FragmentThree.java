@@ -270,7 +270,8 @@ public class FragmentThree extends Fragment {
                 searchResults.setVisibility(View.VISIBLE);
                 if (bItemAdapter != null) bItemAdapter.getFilter().filter(s);
         //        itemView.getRecycledViewPool().clear();
-                bItemAdapter.notifyDataSetChanged();
+          //      itemView.stopScroll();
+          //      bItemAdapter.notifyDataSetChanged();
                 return true;
 
             }
@@ -297,7 +298,6 @@ public class FragmentThree extends Fragment {
 
     void updateItem(int categoryId) {
         mGetAllItems.clear();
-
 
     /*
       for(int i=0;i<mGetAllItemsC.size();i++)

@@ -30,17 +30,11 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
     private Context mContext;
     private List<Item> mItemList;
     private List<Item> mFilteredList;
-
-
     BillItemAdapter(Context context, List<Item> mItemList) {
         mContext = context;
         this.mItemList = mItemList;
         this.mFilteredList = mItemList;
-
     }
-
-
-
     public Object getItem(int location) {
         return mFilteredList.get(location);
     }
@@ -52,30 +46,21 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
             protected FilterResults performFiltering(CharSequence charSequence) {
 
                 String charString = charSequence.toString().toLowerCase();
-
                 if (charString.isEmpty()) {
-
                     mFilteredList = mItemList;
                 } else {
-
                     ArrayList<Item> filteredList = new ArrayList<>();
-
                     for (Item item : mItemList) {
-
                         if (item.getItemName().toLowerCase().contains(charString) ) {
-
                             filteredList.add(item);
                         }
                     }
-
                     mFilteredList = filteredList;
                 }
-
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = mFilteredList;
                 return filterResults;
             }
-
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 mFilteredList = (ArrayList<Item>) filterResults.values;
@@ -86,10 +71,8 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-
         ImageView itemImage;
         TextView itemName, itemSp;
-
         MyViewHolder(View itemView) {
             super(itemView);
 
@@ -109,19 +92,15 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
 
     @Override
     public void onBindViewHolder(BillItemAdapter.MyViewHolder holder, int position) {
-
         Item item = mFilteredList.get(position);
-
         String rs = "\u20B9";
         try{
             byte[] utf8 = rs.getBytes("UTF-8");
-
             rs = new String(utf8, "UTF-8");}
         catch(UnsupportedEncodingException e)
         {
             e.printStackTrace();
         }
-
         holder.itemName.setText(item.getItemName());
         String sp = rs+" " + FragmentOne.df.format(item.getItemSP());
         holder.itemSp.setText(sp);
@@ -133,22 +112,12 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
             holder.itemImage.setImageBitmap(myBitmap);
         }
     }
-
     @Override
     public int getItemCount() {
         return mFilteredList.size();
     }
-
     public void clear()
     {
-       mFilteredList.clear();
+        mFilteredList.clear();
     }
-
-
-
-
-
-
-
-
 }

@@ -48,6 +48,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.Customer;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesDet;
 import in.net.maitri.xb.db.SalesMst;
@@ -87,6 +88,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     BillSeries bSeries;
 
+    Customer chkCustomer;
+
     String[] pModes = {"CASH", "DEBIT CARD", "CREDIT CARD", "WALLET"};
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
             btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear, btn_100, btn_500, btn_2000, btn_cash, btn_dc, btn_cc, btn_wallet, cPrint, cSave,cCancel;
@@ -124,7 +127,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cashierNameLayout = (LinearLayout) findViewById(R.id.cashierLayout) ;
 
         dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
-
 
 
         mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
@@ -204,10 +206,14 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (bundle != null) {
             totalProducts = bundle.getString("products");
             totalPrice = bundle.getString("price");
-            tCustName = bundle.getString("customer");
+           // tCustName = bundle.getString("customer");
         }
+         chkCustomer = (Customer) getIntent().getSerializableExtra("customer");
 
+        Log.i("CustomerName1",chkCustomer.getName());
+        Log.i("CustomerId1",String.valueOf(chkCustomer.getId()));
 
+        tCustName = chkCustomer.getName();
         if(tCustName.isEmpty())
         {
           cCustName.setText("-");
@@ -216,9 +222,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         {
            cCustName.setText(tCustName);
         }
-
-
-
 
         netAmt = Double.parseDouble(totalPrice);
         mEditSpinner.addTextChangedListener(paymentMode);
@@ -662,6 +665,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setDateTime(formattedDate);
         sm.setItems(FragmentOne.billList.size());
         sm.setCustName(tCustName);
+        sm.setCustomerId(chkCustomer.getId());
         mstInserted = dbHandler.addSalesMst(sm);
 
         Log.i("MST", String.valueOf(mstInserted));
@@ -819,7 +823,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (item.getItemId() == android.R.id.home) {
             finish();
         }
+
         return true;
     }
+
 
 }

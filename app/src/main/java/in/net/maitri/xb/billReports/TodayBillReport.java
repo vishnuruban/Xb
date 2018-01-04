@@ -179,8 +179,9 @@ public class TodayBillReport extends AppCompatActivity {
                 double netAmt = mst.getNetAmt();
                 double subTotal = discount + netAmt;
                 String custName = mst.getCustName();
+                String cashName = mst.getCashName();
                 double qty =mst.getQty();
-                brd = new BillReportDialog(TodayBillReport.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName);
+                brd = new BillReportDialog(TodayBillReport.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName,cashName);
                 brd.show();
 
                 //   selectedBill.setText("Bill No:"+String.valueOf(billNo));

@@ -15,6 +15,7 @@ import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,10 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     ArrayList<Customer> customerArrayList;
     public static Customer customerDetails;
   static double a = 0;
+
+    Customer customer;
+    int customerId = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -82,8 +87,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         billListView.setAdapter(billListAdapter);
         autoCustomer = (AutoCompleteTextView) view.findViewById(R.id.autoSearch);
        // populateList();
-       customerArrayList = new ArrayList<>();
+        customerArrayList = new ArrayList<>();
         customerArrayList = dbHandler.getAllCustomer();
+        customer =new Customer();
 
 
 
@@ -96,6 +102,11 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 customerDetails = (Customer)customerAdapter.getItem(position);
                 autoCustomer.setText(customerDetails.getName());
+                customerId = customerDetails.getId();
+                System.out.println("CUSTID "+customerId);
+                customer.setId(customerId);
+                customer.setName(customerDetails.getName());
+                customer.setMobileno(customerDetails.getMobileno());
 
             }
         });
@@ -135,27 +146,32 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         mCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if(billList.size()==0)
                 {
                     Toast.makeText(getActivity(),"Bill is empty",Toast.LENGTH_SHORT).show();
                 }
-                else {
 
+                else
+                    {
                     Bundle bundle = new Bundle();
                     bundle.putString("products", bTotalProducts.getText().toString());
                     bundle.putString("price",String.valueOf(df.format(a)));
-                    bundle.putString("customer",autoCustomer.getText().toString());
+                        if(customerId == 0) {
+                           customer.setId(0);
+                            customer.setName(autoCustomer.getText().toString());
+                        }
+
                     Intent intent = new Intent(getActivity(), CheckoutActivity.class);
                     intent.putExtras(bundle);
-
+                        Log.i("CustomerName",customer.getName());
+                        Log.i("CustomerId",String.valueOf(customer.getId()));
+                        intent.putExtra("customer",customer);
                     startActivity(intent);
-
                 }
-
             }
         });
+
+
 
         mclearBill.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -236,24 +252,19 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         String rs = "\u20B9";
         try{
         byte[] utf8 = rs.getBytes("UTF-8");
-
-
         rs = new String(utf8, "UTF-8");}
         catch (UnsupportedEncodingException e)
         {
             e.printStackTrace();
         }
-
         bTotalProducts.setText("");
         bTotalProducts.setText("Products   "+billList.size());
-
         for(int i =0;i<billList.size();i++)
         {
             BillItems bi= billList.get(i);
 
              b  = b + bi.getAmount();
         }
-
         if(b==0)
         {
             bTotalPrice.setText("Price("+rs+")   "+"");
@@ -262,7 +273,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             a=b;
             bTotalPrice.setText("Price(" + rs + ")   " + commaSeperated(b));
         }
-
     }
 
 
@@ -271,7 +281,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
       public static String commaSeperated(double s)
       {
-
           DecimalFormat formatter = new DecimalFormat("#,###.00");
             return  formatter.format(s);
       }
@@ -291,43 +300,39 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
         // You have to list down your form elements
 
-        final RadioGroup billModifyGroup = (RadioGroup) formElementsView
-                .findViewById(R.id.billModifyGroup);
-       final LinearLayout lGrid = (LinearLayout) formElementsView.findViewById(R.id.grid);
-        eQty = (TextInputEditText) formElementsView
-                .findViewById(R.id.eQty);
+        final RadioGroup billModifyGroup = (RadioGroup) formElementsView.findViewById(R.id.billModifyGroup);
+        final LinearLayout lGrid = (LinearLayout) formElementsView.findViewById(R.id.grid);
+        eQty = (TextInputEditText) formElementsView.findViewById(R.id.eQty);
         eQty.addTextChangedListener(watch);
         eQty.requestFocus();
 
+         btn_one = (Button) formElementsView.findViewById(R.id.btn_one);
+         btn_two = (Button) formElementsView.findViewById(R.id.btn_two);
+         btn_three = (Button) formElementsView.findViewById(R.id.btn_three);
+         btn_four = (Button) formElementsView.findViewById(R.id.btn_four);
+         btn_five = (Button) formElementsView.findViewById(R.id.btn_five);
+         btn_six = (Button) formElementsView.findViewById(R.id.btn_six);
+         btn_seven = (Button) formElementsView.findViewById(R.id.btn_seven);
+         btn_eight = (Button) formElementsView.findViewById(R.id.btn_eight);
+         btn_nine = (Button) formElementsView.findViewById(R.id.btn_nine);
+         btn_zero = (Button) formElementsView.findViewById(R.id.btn_zero);
+         btn_point = (Button) formElementsView.findViewById(R.id.btn_point);
+         btn_clear = (Button) formElementsView.findViewById(R.id.btn_clear);
 
+         btn_one.setOnClickListener(this);
+         btn_two.setOnClickListener(this);
+         btn_three.setOnClickListener(this);
+         btn_four.setOnClickListener(this);
+         btn_five.setOnClickListener(this);
+         btn_six.setOnClickListener(this);
+         btn_seven.setOnClickListener(this);
+         btn_eight.setOnClickListener(this);
+         btn_nine.setOnClickListener(this);
+         btn_zero.setOnClickListener(this);
+         btn_point.setOnClickListener(this);
 
-        btn_one = (Button) formElementsView.findViewById(R.id.btn_one);
-        btn_two = (Button) formElementsView.findViewById(R.id.btn_two);
-        btn_three = (Button) formElementsView.findViewById(R.id.btn_three);
-        btn_four = (Button) formElementsView.findViewById(R.id.btn_four);
-        btn_five = (Button) formElementsView.findViewById(R.id.btn_five);
-        btn_six = (Button) formElementsView.findViewById(R.id.btn_six);
-        btn_seven = (Button) formElementsView.findViewById(R.id.btn_seven);
-        btn_eight = (Button) formElementsView.findViewById(R.id.btn_eight);
-        btn_nine = (Button) formElementsView.findViewById(R.id.btn_nine);
-        btn_zero = (Button) formElementsView.findViewById(R.id.btn_zero);
-        btn_point = (Button) formElementsView.findViewById(R.id.btn_point);
-        btn_clear = (Button) formElementsView.findViewById(R.id.btn_clear);
-
-        btn_one.setOnClickListener(this);
-        btn_two.setOnClickListener(this);
-        btn_three.setOnClickListener(this);
-        btn_four.setOnClickListener(this);
-        btn_five.setOnClickListener(this);
-        btn_six.setOnClickListener(this);
-        btn_seven.setOnClickListener(this);
-        btn_eight.setOnClickListener(this);
-        btn_nine.setOnClickListener(this);
-        btn_zero.setOnClickListener(this);
-        btn_point.setOnClickListener(this);
-
-        btn_point.setFocusable(false);
-        btn_point.setFocusableInTouchMode(false);
+         btn_point.setFocusable(false);
+         btn_point.setFocusableInTouchMode(false);
 
         btn_clear.setOnClickListener(this);
         eQty.setVisibility(View.GONE);
@@ -381,11 +386,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                         double a = Integer.parseInt(qtyString) * bi.getRate();
                         bi.setAmount(a);
                         bi.setQty(Integer.parseInt(qtyString));
-
                     }
                     else {
                         bi.setQty(Integer.parseInt(qtyString));
-
                     }
                 }
                 UpdateProdPriceList();
@@ -397,19 +400,12 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         alertDialogBuilder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @TargetApi(11)
             public void onClick(DialogInterface dialog, int id) {
-
-
                 dialog.dismiss();
             }
 
         });
        alertDialogBuilder.show();
-
-
     }
-
-
-
 
 
 
@@ -522,20 +518,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
         }
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
