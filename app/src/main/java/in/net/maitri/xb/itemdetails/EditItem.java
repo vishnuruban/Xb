@@ -98,11 +98,11 @@ public class EditItem extends DialogFragment {
         }
         final EditText costPriceField = (EditText) view.findViewById(R.id.cp);
         if (item != null) {
-            costPriceField.setText(String.valueOf(item.getItemCP()));
+            costPriceField.setText(String.valueOf((float)item.getItemCP()));
         }
         final EditText sellingPriceField = (EditText) view.findViewById(R.id.sp);
         if (item != null) {
-            sellingPriceField.setText(String.valueOf(item.getItemSP()));
+            sellingPriceField.setText(String.valueOf((float) item.getItemSP()));
         }
         final Spinner categoryField = (Spinner) view.findViewById(R.id.category_name);
         categoryList = dbHandler.getAllcategorys();
@@ -178,7 +178,9 @@ public class EditItem extends DialogFragment {
                         || cp.isEmpty()
                         || sp.isEmpty())){
                     Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                }else{
+                } else if (Double.valueOf(cp) > Double.valueOf(sp)) {
+                    Toast.makeText(getActivity(), "Cost Price can't be greater than selling price.", Toast.LENGTH_SHORT).show();
+                } else{
                     if (mSelectedImage != null) {
                         copyImage();
                     }
@@ -209,12 +211,12 @@ public class EditItem extends DialogFragment {
                     item1.setCategoryId(getCategoryId(catName));
                     item1.setItemImage(mImagePath);
                     item1.setItemName(iteName);
-                    item1.setItemCP(Float.parseFloat(cp));
-                    item1.setItemSP(Float.parseFloat(sp));
+                    item1.setItemCP(Double.valueOf(cp));
+                    item1.setItemSP(Double.valueOf(sp));
                     item1.setItemUOM(uomValue);
                     Log.d("UOM", uoM);
                     item1.setItemHSNcode(hsn);
-                    item1.setItemGST(Float.parseFloat(gsT));
+                    item1.setItemGST(Double.valueOf(gsT));
                     editItem(item1);
                     mAddItemCategory.updateItem(item.getCategoryId());
                 }
@@ -335,7 +337,7 @@ public class EditItem extends DialogFragment {
                 return categoryList.get(i).getCategoryName();
             }
         }
-        return "--Select Categoty--";
+        return "--Select Category--";
     }
 
     private int getCategoryId(String categoryName){

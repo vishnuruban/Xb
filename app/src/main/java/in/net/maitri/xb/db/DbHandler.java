@@ -551,12 +551,12 @@ public class DbHandler extends SQLiteOpenHelper {
                 do {
                     Item item = new Item();
                     item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
-                    item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
-                    item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
+                    item.setItemCP(c.getDouble(c.getColumnIndex(KEY_ITEM_CP)));
+                    item.setItemSP(c.getDouble(c.getColumnIndex(KEY_ITEM_SP)));
                     item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
                     item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
                     item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
-                    item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
+                    item.setItemGST(c.getDouble(c.getColumnIndex(KEY_ITEM_GST)));
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
                     // Adding item to list

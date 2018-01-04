@@ -224,7 +224,11 @@ public class AddItemCategory extends AppCompatActivity {
             switch (menuItem.getItemId()) {
                 case R.id.edit:
                     if (isCategory) {
-                        showFragment(new EditCatrgory());
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("catObj", mCategory);
+                        DialogFragment newFragment = new EditCatrgory();
+                        newFragment.setArguments(bundle);
+                        showFragment(newFragment);
                     } else {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("itemObj", mItem);

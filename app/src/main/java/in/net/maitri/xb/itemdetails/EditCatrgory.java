@@ -35,6 +35,7 @@ import java.util.Locale;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
+import in.net.maitri.xb.db.Item;
 
 public class EditCatrgory extends DialogFragment {
 
@@ -58,6 +59,12 @@ public class EditCatrgory extends DialogFragment {
         SharedPreferences sharedPreference = PreferenceManager.getDefaultSharedPreferences(getActivity());
         final int catId = sharedPreference.getInt("catId", 0);
         String catName = sharedPreference.getString("catName", "");
+
+        Bundle bundle = getArguments();
+        final Category category = (Category) bundle.getSerializable("catObj");
+        if (category != null) {
+            mImagePath = category.getCategoryImage();
+        }
 
         TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
         dialogHeader.setText(R.string.edit_category);

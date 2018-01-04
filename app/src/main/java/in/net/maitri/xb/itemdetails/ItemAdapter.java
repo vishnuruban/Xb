@@ -54,7 +54,7 @@ class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.MyViewHolder> {
         Item item = mItemList.get(position);
 
         holder.itemName.setText(item.getItemName());
-        String sp = "Rs. " + String.valueOf((int) item.getItemSP());
+        String sp = "Rs. " + String.valueOf((float) item.getItemSP());
         holder.itemSp.setText(sp);
         String imagePath = item.getItemImage();
         File imgFile = new File(imagePath);

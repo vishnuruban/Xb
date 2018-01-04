@@ -146,7 +146,9 @@ public class AddItem extends DialogFragment {
                         || cp.isEmpty()
                         || sp.isEmpty()))) {
                     Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                }  else {
+                }  else if (Double.valueOf(cp) > Double.valueOf(sp)) {
+                    Toast.makeText(getActivity(), "Cost Price can't be greater than selling price.", Toast.LENGTH_SHORT).show();
+                } else {
                     if (newUomField.isEnabled()) {
                         Unit unit = new Unit();
                         unit.setDesc(uoM);
@@ -165,7 +167,7 @@ public class AddItem extends DialogFragment {
                         uomValue = String.valueOf(dbHandler.getUomId(uoM));
                     }
                     copyImage();
-                    addItem(iteName, uomValue, Float.valueOf(cp), Float.valueOf(sp), hsn, Float.valueOf(gsT), selectedCategoryId);
+                    addItem(iteName, uomValue, Double.valueOf(cp), Double.valueOf(sp), hsn, Double.valueOf(gsT), selectedCategoryId);
                     mAddItemCategory.updateItem(selectedCategoryId);
                 }
             }
@@ -242,7 +244,7 @@ public class AddItem extends DialogFragment {
     }
 
 
-    private void addItem(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode, float itemGST, int categoryId) {
+    private void addItem(String itemName, String itemUOM, double itemCP, double itemSP, String itemHSNcode, double itemGST, int categoryId) {
         Item item = new Item(itemName, itemUOM, itemCP, itemSP, itemHSNcode, itemGST, categoryId, mImagePath);
         dbHandler.addItem(item);
         dismiss();
