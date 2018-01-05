@@ -15,23 +15,39 @@ import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.login.LoginActivity;
-import in.net.maitri.xb.util.Permissions;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int MY_PERMISSIONS_PHONE_STATE = 0;
+    private DbHandler mDbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED) {
-          checkValidity();
+        Log.d("Date", getCurrentDate());
+        mDbHandler = new DbHandler(MainActivity.this);
+        int currentDateCount = mDbHandler.getDateCount(getCurrentDate());
+        String sysDateCount = mDbHandler.getSysValue("SYS_LOCK_DATE");
+        Log.d("currentDateCount", String.valueOf(currentDateCount));
+        Log.d("sysDateCount",sysDateCount);
+        if ( currentDateCount >= Integer.parseInt(sysDateCount)){
+            createErrorDialog("Registration Error","Your application license has expired. Contact Maitri.");
         } else {
-            checkPhoneStatePermission();
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                checkValidity();
+            } else {
+                checkPhoneStatePermission();
+            }
         }
     }
 
@@ -109,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE);
         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions((Activity) MainActivity.this,
+            ActivityCompat.requestPermissions( MainActivity.this,
                     new String[]{Manifest.permission.READ_PHONE_STATE},
                     MY_PERMISSIONS_PHONE_STATE);
         }
@@ -132,5 +148,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+    }
+
+    private String getCurrentDate() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }
