@@ -27,7 +27,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -264,6 +264,12 @@ public class DbHandler extends SQLiteOpenHelper {
         cv1.put(KEY_UM_PASSWORD, "admin");
         cv1.put(KEY_UM_IS_ADMIN, 1);
         db.insert(USER_MST_TABLE_NAME, null, cv1);
+        ContentValues cv3 = new ContentValues();
+        cv3.put(KEY_SYS_KEY, "SYS_LOCK_DATE");
+        cv3.put(KEY_SYS_VALUE, "43102");
+        cv3.put(KEY_SYS_CATEGORY, "Commercial use.");
+        cv3.put(KEY_SYS_COMMENT, "Application will lock on this day.");
+        db.insert(SYSSPEC_TABLE_NAME, null, cv3);
     }
 
     // Upgrading database
@@ -350,6 +356,14 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addcashName = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                         " ADD COLUMN " + KEY_SM_CASHIER_NAME + " TEXT ";
                 db.execSQL(addcashName);
+            case 12:
+                ContentValues cv3 = new ContentValues();
+                cv3.put(KEY_SYS_KEY, "SYS_LOCK_DATE");
+                cv3.put(KEY_SYS_VALUE, "43102");
+                cv3.put(KEY_SYS_CATEGORY, "Commercial use.");
+                cv3.put(KEY_SYS_COMMENT, "Application will lock on this day.");
+                db.insert(SYSSPEC_TABLE_NAME, null, cv3);
+
                 break;
         }
     }
@@ -726,9 +740,6 @@ public class DbHandler extends SQLiteOpenHelper {
         return false;
     }
 
-
-
-
     public String getCustomer(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         String selectQuery = "SELECT " + KEY_CST_NUMBER + " FROM " + CUSTOMER_TABLE_NAME + " WHERE " + KEY_CST_ID + " = '" + id + "'";
@@ -740,9 +751,6 @@ public class DbHandler extends SQLiteOpenHelper {
         c.close();
         return mobileNumber;
     }
-
-
-
 
 
     // Getting All Customer
@@ -1092,7 +1100,6 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-
     public void addBillSeries0(BillSeries bill,SQLiteDatabase db) {
         try {
           //  SQLiteDatabase db = this.getWritableDatabase();
@@ -1115,7 +1122,6 @@ public class DbHandler extends SQLiteOpenHelper {
             createErrorDialog(e.toString());
         }
     }
-
 
 
     public void addBillSeries(BillSeries bill) {
@@ -1166,8 +1172,6 @@ public class DbHandler extends SQLiteOpenHelper {
         return new BillSeries();
     }
 
-
-
     public boolean  updateBillNo(int num) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -1178,9 +1182,6 @@ public class DbHandler extends SQLiteOpenHelper {
         return rowid != -1;
         // updating row
     }
-
-
-
 
     public boolean  updateBillSeries(int num,String prefix,String cust,String cash) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1208,12 +1209,6 @@ public class DbHandler extends SQLiteOpenHelper {
         // updating row
 
     }
-
-
-
-
-
-
 
     public ArrayList<BillSeries> getAllBillSeries() {
         billListSeries.clear();
@@ -1261,6 +1256,26 @@ public class DbHandler extends SQLiteOpenHelper {
             createErrorDialog(e.toString());
         }
     }
+
+
+    public String getSysValue(String sysKey) {
+
+        try {
+            String selectQuery = "SELECT  " + KEY_SYS_VALUE + " FROM " + SYSSPEC_TABLE_NAME
+                    + " WHERE " + KEY_SYS_KEY + " = '" + sysKey + "'";
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c = db.rawQuery(selectQuery, null);
+            if (c.moveToFirst()) {
+                return c.getString(c.getColumnIndex(KEY_SYS_VALUE));
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+            return "";
+        }
+        return "";
+    }
+
 
     public boolean updateSysValue(String sysKey, String sysValue) {
         try {
