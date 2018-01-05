@@ -604,6 +604,7 @@
                     android:padding="12dp"
                     android:textColor="#000"
                     android:imeOptions="actionDone"
+                    android:inputType="textCapWords"
                     android:singleLine="true"
                     android:textSize="15dp" />
             </LinearLayout>

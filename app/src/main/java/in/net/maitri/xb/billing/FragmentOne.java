@@ -16,9 +16,13 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -91,7 +95,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         customerArrayList = dbHandler.getAllCustomer();
         customer =new Customer();
 
-
+        autoCustomer.setOnEditorActionListener(new DoneOnEditorActionListener());
 
         customerAdapter =new CustomerAdapter(getActivity(),customerArrayList,"NAME");
         autoCustomer.setAdapter(customerAdapter);
@@ -123,10 +127,8 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
         billListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-
                 BillItems bi = billList.get(position);
                 modifyItem(bi,billListAdapter);
-
             }
         });
 
@@ -134,11 +136,11 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         imgCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                AddCustomerDialog customerDialog = new AddCustomerDialog(getActivity(),customerAdapter,customerArrayList);
+                AddCustomerDialog customerDialog = new AddCustomerDialog(getActivity(),customerAdapter,customerArrayList,autoCustomer.getText().toString());
                 customerDialog.setCancelable(false);
+                customerDialog.getWindow().setSoftInputMode(
+                        WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
                 customerDialog.show();
-
             }
         });
 
@@ -150,7 +152,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 {
                     Toast.makeText(getActivity(),"Bill is empty",Toast.LENGTH_SHORT).show();
                 }
-
                 else
                     {
                     Bundle bundle = new Bundle();
@@ -160,14 +161,12 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                            customer.setId(0);
                             customer.setName(autoCustomer.getText().toString());
                         }
-
-                    Intent intent = new Intent(getActivity(), CheckoutActivity.class);
-                    intent.putExtras(bundle);
+                        Intent intent = new Intent(getActivity(), CheckoutActivity.class);
+                        intent.putExtras(bundle);
                         Log.i("CustomerName",customer.getName());
                         Log.i("CustomerId",String.valueOf(customer.getId()));
                         intent.putExtra("customer",customer);
-                    startActivity(intent);
-                }
+                    startActivity(intent);}
             }
         });
 
@@ -176,10 +175,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         mclearBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                AlertDialog.Builder dialog =new AlertDialog.Builder(getActivity());
-                dialog.setTitle("Are you sure you want to clear the bill?");
-                dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                 AlertDialog.Builder dialog =new AlertDialog.Builder(getActivity());
+                 dialog.setTitle("Are you sure you want to clear the bill?");
+                 dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -190,19 +188,15 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
                     }
                 });
-                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                 dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
                     }
                 });
-
-                dialog.show();
+                 dialog.show();
             }
         });
-
-
-
         return  view;
     }
 
@@ -299,12 +293,16 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 null, false);
 
         // You have to list down your form elements
-
         final RadioGroup billModifyGroup = (RadioGroup) formElementsView.findViewById(R.id.billModifyGroup);
         final LinearLayout lGrid = (LinearLayout) formElementsView.findViewById(R.id.grid);
         eQty = (TextInputEditText) formElementsView.findViewById(R.id.eQty);
-        eQty.addTextChangedListener(watch);
-        eQty.requestFocus();
+        eQty.setInputType(InputType.TYPE_NULL);
+
+
+         eQty.setText(String.valueOf(bi.getQty()));
+        // eQty.setSelection(eQty.getText().length());
+         eQty.addTextChangedListener(watch);
+         eQty.selectAll();
 
          btn_one = (Button) formElementsView.findViewById(R.id.btn_one);
          btn_two = (Button) formElementsView.findViewById(R.id.btn_two);
@@ -330,22 +328,11 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
          btn_nine.setOnClickListener(this);
          btn_zero.setOnClickListener(this);
          btn_point.setOnClickListener(this);
-
-         btn_point.setFocusable(false);
-         btn_point.setFocusableInTouchMode(false);
-
-        btn_clear.setOnClickListener(this);
-        eQty.setVisibility(View.GONE);
-        lGrid.setVisibility(View.GONE);
-        disableSoftInputFromAppearing(eQty);
-
-
-        billModifyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
+        btn_point.setEnabled(false);
+         btn_clear.setOnClickListener(this);
+         billModifyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-
                         if (checkedId == R.id.delete) {
                             eQty.setVisibility(View.GONE);
                             lGrid.setVisibility(View.GONE);
@@ -372,8 +359,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 RadioButton selectedRadioButton = (RadioButton) formElementsView
                         .findViewById(selectedId);
                 String selectedButton = selectedRadioButton.getText().toString();
-
-
                 if (selectedButton.equals("Delete Item")) {
                     billList.remove(bi);
                 }
@@ -402,7 +387,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.dismiss();
             }
-
         });
        alertDialogBuilder.show();
     }
@@ -425,57 +409,71 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch(view.getId()) {
-
             case R.id.btn_one:
-
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_one.getText().toString());
                 break;
 
             case R.id.btn_two:
-
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_two.getText().toString());
                 break;
 
             case R.id.btn_three:
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_three.getText().toString());
                 break;
 
             case R.id.btn_four:
-
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_four.getText().toString());
                 break;
 
             case R.id.btn_five:
-
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_five.getText().toString());
                 break;
 
             case R.id.btn_six:
-
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_six.getText().toString());
                 break;
 
             case R.id.btn_seven:
-
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_seven.getText().toString());
                 break;
 
             case R.id.btn_eight:
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_eight.getText().toString());
                 break;
 
             case R.id.btn_nine:
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
 
                 eQty.setText(eQty.getText().toString() + btn_nine.getText().toString());
                 break;
 
             case R.id.btn_zero:
+                if (!getSelectedText().isEmpty())
+                    eQty.setText("");
 
                 eQty.setText(eQty.getText().toString() + btn_zero.getText().toString());
                 break;
 
             case R.id.btn_point:
-
+                if (!getSelectedText().isEmpty())
+                eQty.setText("");
                 eQty.setText(eQty.getText().toString() + btn_point.getText().toString());
                 break;
 
@@ -488,36 +486,51 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 break;
     }}
 
-
-
-
-
-
     TextWatcher watch = new TextWatcher() {
-
         @Override
         public void afterTextChanged(Editable s) {
             // TODO Auto-generated method stub
-
             String searchString = s.toString();
             int textLength = searchString.length();
             eQty.setSelection(textLength);
         }
-
         @Override
         public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
                                       int arg3) {
             // TODO Auto-generated method stub
-
         }
-
         @Override
         public void onTextChanged(CharSequence s, int a, int b, int c) {
             // TODO Auto-generated method stub
-
-
         }
     };
+
+    public String getSelectedText() {
+        int startSelection = eQty.getSelectionStart();
+        int endSelection = eQty.getSelectionEnd();
+        String selectedText = eQty.getText().toString().substring(startSelection, endSelection);
+        return selectedText;
+    }
+
+
+
+    class DoneOnEditorActionListener implements TextView.OnEditorActionListener {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return true;
+            }
+            return false;
+        }
+    }
+
+
+
+
+
+
 
 
 }

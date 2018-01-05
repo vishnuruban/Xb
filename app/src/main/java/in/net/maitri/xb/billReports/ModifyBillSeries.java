@@ -1,9 +1,12 @@
 package in.net.maitri.xb.billReports;
 
 import android.app.DialogFragment;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,4 +129,12 @@ public class ModifyBillSeries extends DialogFragment {
     private boolean doLogin(User user){
         return new DbHandler(getActivity()).addUser(user);
     }
+
+
+
+
+
+
+
+
 }

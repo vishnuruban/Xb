@@ -40,6 +40,8 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
     int indicator = 0;
     //String bItemName;
     Item bItem;
+    TextView tQty,tRate,tAmt;
+    int code;
 
     BillItems billItems;
 
@@ -47,7 +49,21 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         super(c);
         this.c = c;
         this.bItem = bItem;
+        this.code = code;
     }
+
+
+    public KeypadDialog(Activity c, Item bItem,TextView tQty,TextView tRate,TextView tAmt,int code) {
+        super(c);
+        this.c = c;
+        this.bItem = bItem;
+        this.tQty = tQty;
+        this.tRate = tRate;
+        this.tAmt =tAmt;
+        this.code = code;
+    }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

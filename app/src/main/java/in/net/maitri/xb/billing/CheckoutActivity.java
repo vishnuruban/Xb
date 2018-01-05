@@ -513,6 +513,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_point:
                 et_result.setText(et_result.getText().toString() + btn_point.getText().toString());
                 break;
+            case R.id.btn_clear:
+                et_result.setText("");
+                break;
         /*    case R.id.btn_100:
 
                 et_result.setText(et_result.getText().toString() + btn_100.getText().toString());
@@ -525,9 +528,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 et_result.setText("");
                 et_result.setText(et_result.getText().toString() + btn_2000.getText().toString());
                 break;
-            case R.id.btn_clear:
-                et_result.setText("");
-                break;
+
             case R.id.btn_cash:
                 mEditSpinner.setText("CASH");
                 break;
@@ -541,7 +542,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.btn_wallet:
                 mEditSpinner.setText("WALLET");
-
                 break;*/
 
             case R.id.cCancel:

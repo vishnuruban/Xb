@@ -34,10 +34,6 @@
         android:layout_height="wrap_content"
         android:background="#EFF0EF">
 
-
-
-
-
         <LinearLayout
             android:id="@+id/item_layout"
             android:layout_width="match_parent"
@@ -46,62 +42,49 @@
             android:background="#EFF0EF"
             android:padding="8dp">
 
-
-
-
-
             <LinearLayout style="@style/horizontal_linear_layout">
-
                 <TextView
                     style="@style/add_customer_text_view"
                     android:labelFor="@+id/name"
                     android:text="@string/name" />
-
                 <EditText
                     android:id="@+id/name"
+                    android:inputType="textCapWords"
                     style="@style/add_customer_edit_text" />
-
             </LinearLayout>
 
             <LinearLayout style="@style/horizontal_linear_layout">
-
                 <TextView
                     style="@style/add_customer_text_view"
                     android:labelFor="@+id/mobile"
                     android:text="@string/mob_number" />
-
                 <EditText
                     android:id="@+id/mobile"
                     style="@style/add_customer_edit_text"
+                    android:maxLength="10"
                     android:inputType="phone" />
-
             </LinearLayout>
 
             <LinearLayout style="@style/horizontal_linear_layout">
-
                 <TextView
                     style="@style/add_customer_text_view"
                     android:labelFor="@+id/email"
                     android:text="@string/email" />
-
                 <EditText
                     android:id="@+id/email"
                     style="@style/add_customer_edit_text"
                     android:inputType="textEmailAddress" />
-
             </LinearLayout>
 
             <LinearLayout style="@style/horizontal_linear_layout">
-
                 <TextView
                     style="@style/add_customer_text_view"
                     android:labelFor="@+id/add1"
+                    android:inputType="textCapWords"
                     android:text="@string/add1" />
-
                 <EditText
                     android:id="@+id/add1"
                     style="@style/add_customer_edit_text" />
-
             </LinearLayout>
 
             <LinearLayout style="@style/horizontal_linear_layout">
@@ -109,6 +92,7 @@
                 <TextView
                     style="@style/add_customer_text_view"
                     android:labelFor="@+id/add2"
+                    android:inputType="textCapWords"
                     android:text="@string/add2" />
 
                 <EditText
@@ -126,6 +110,8 @@
 
                 <EditText
                     android:id="@+id/city"
+                    android:inputType="textCapWords"
+
                     style="@style/add_customer_edit_text" />
 
             </LinearLayout>
@@ -135,10 +121,12 @@
                 <TextView
                     style="@style/add_customer_text_view"
                     android:labelFor="@+id/state"
+                    android:inputType="textCapWords"
                     android:text="@string/state" />
 
                 <EditText
                     android:id="@+id/state"
+                    android:inputType="textCapWords"
                     style="@style/add_customer_edit_text" />
 
             </LinearLayout>
@@ -155,27 +143,23 @@
                     style="@style/add_customer_edit_text" />
 
             </LinearLayout>
+            <LinearLayout style="@style/horizontal_linear_layout">
+                <Button
+                    android:id="@+id/clearCustomer"
+                    style="@style/add_customer_edit_text"
+                    android:background="@color/cancel"
+                    android:text="CLEAR"
+                    android:textColor="#FFFFFF" />
 
+                <Button
+                    android:id="@+id/addCustomer"
+                    style="@style/add_customer_edit_text"
+                    android:background="@color/green"
+                    android:text="Add"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
            </LinearLayout>
     </ScrollView>
-
-    <LinearLayout style="@style/horizontal_linear_layout">
-        <Button
-            android:id="@+id/clearCustomer"
-            style="@style/add_customer_edit_text"
-            android:background="@color/cancel"
-            android:text="CLEAR"
-            android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/addCustomer"
-            style="@style/add_customer_edit_text"
-            android:background="@color/green"
-            android:text="Add"
-            android:textColor="#FFFFFF" />
-    </LinearLayout>
-
-
 </LinearLayout>
 
 

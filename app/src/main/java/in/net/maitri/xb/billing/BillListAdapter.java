@@ -66,35 +66,29 @@ public class BillListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
-
-        ViewHolder holder;
-
+    public View getView(final int position, View view, ViewGroup viewGroup) {
+        final ViewHolder holder;
         if(view == null)
         {
-         view = inflater.inflate(R.layout.bill_row,null);
-            holder = new ViewHolder();
-            holder.mDesc = (TextView) view.findViewById(R.id.desc);
-            holder.mQty  = (TextView) view.findViewById(R.id.qty);
-            holder.mRate = (TextView) view.findViewById(R.id.rate);
-            holder.mAmt  = (TextView) view.findViewById(R.id.amt);
-            view.setTag(holder);
+             view = inflater.inflate(R.layout.bill_row,null);
+             holder = new ViewHolder();
+             holder.mDesc = (TextView) view.findViewById(R.id.desc);
+             holder.mQty  = (TextView) view.findViewById(R.id.qty);
+             holder.mRate = (TextView) view.findViewById(R.id.rate);
+             holder.mAmt  = (TextView) view.findViewById(R.id.amt);
+             view.setTag(holder);
         }
         else
         {
-
             holder = (ViewHolder) view.getTag();
         }
-
-       DecimalFormat df = new DecimalFormat("0.00");
-           BillItems biItems = billItems.get(position);
+            DecimalFormat df = new DecimalFormat("0.00");
+            BillItems biItems = billItems.get(position);
             holder.mDesc.setText(biItems.getDesc());
             holder.mQty.setText(String.valueOf(biItems.getQty()));
             holder.mAmt.setText(df.format(biItems.getAmount()));
             holder.mRate.setText(df.format(biItems.getRate()));
-
-
-        return view;
+            return view;
     }
 
 

@@ -3,6 +3,8 @@ package in.net.maitri.xb.billing;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -31,15 +33,17 @@ public class AddCustomerDialog extends Dialog {
     ImageView close;
     CustomerAdapter customerAdapter;
     ArrayList<Customer> customerArrayList;
+    String name;
 
 
 
-    public AddCustomerDialog (Context context,CustomerAdapter customerAdapter,ArrayList<Customer> customerArrayList)
+    public AddCustomerDialog (Context context,CustomerAdapter customerAdapter,ArrayList<Customer> customerArrayList,String name)
     {
         super(context);
         this.context = context;
         this.customerAdapter = customerAdapter;
         this.customerArrayList = customerArrayList;
+        this.name = name;
     }
 
 
@@ -63,10 +67,15 @@ public class AddCustomerDialog extends Dialog {
         close = (ImageView) findViewById(R.id.close);
         dbHandler = new DbHandler(context);
 
+        cName.addTextChangedListener(customerWatcher);
 
         addCustomer = (Button)findViewById(R.id.addCustomer);
         clearCusData = (Button)findViewById(R.id.clearCustomer);
 
+        if(!name.isEmpty()) {
+            cName.setText(name);
+            cNumber.requestFocus();
+        }
 
 
         addCustomer.setOnClickListener(new View.OnClickListener() {
@@ -134,5 +143,35 @@ public class AddCustomerDialog extends Dialog {
         });
 
     }
+
+
+
+
+
+
+
+    TextWatcher customerWatcher = new TextWatcher() {
+        @Override
+        public void afterTextChanged(Editable s) {
+            String searchString = s.toString();
+            int textLength = searchString.length();
+
+            if (s.toString().matches("[0-9]+") && textLength > 2 && textLength <=10) {
+             cNumber.setText(s.toString());
+            }
+            else if(s.toString().matches("[0-9]+") && textLength < 2)
+            {
+                cNumber.setText("");
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+                                      int arg3) {
+        }
+        @Override
+        public void onTextChanged(CharSequence s, int a, int b, int c) {
+        }
+    };
 
 }
