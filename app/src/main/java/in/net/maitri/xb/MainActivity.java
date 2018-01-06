@@ -1,80 +1,70 @@
 package in.net.maitri.xb;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.login.LoginActivity;
+import in.net.maitri.xb.registration.Registration;
+import in.net.maitri.xb.util.ConnectionDetector;
+import in.net.maitri.xb.util.NoInternetConnDialog;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MY_PERMISSIONS_PHONE_STATE = 0;
-    private DbHandler mDbHandler;
+    private String mMobNo, mVerificationCode;
+    private ConnectionDetector mConnectionDetector = new ConnectionDetector(MainActivity.this);
+    private NoInternetConnDialog mNoInternetConnDialog0 = new NoInternetConnDialog(MainActivity.this, 0);
+    private NoInternetConnDialog mNoInternetConnDialog1 = new NoInternetConnDialog(MainActivity.this, 1);
+    private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Log.d("Date", getCurrentDate());
-        mDbHandler = new DbHandler(MainActivity.this);
-        int currentDateCount = mDbHandler.getDateCount(getCurrentDate());
-        String sysDateCount = mDbHandler.getSysValue("SYS_LOCK_DATE");
-        Log.d("currentDateCount", String.valueOf(currentDateCount));
-        Log.d("sysDateCount",sysDateCount);
-        if ( currentDateCount >= Integer.parseInt(sysDateCount)){
-            createErrorDialog("Registration Error","Your application license has expired. Contact Maitri.");
+        checkIfFirstTym();
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        if (sharedPreferences.getBoolean("KEY_IS_LOGIN", false)) {
+            mMobNo = sharedPreferences.getString("KEY_MOBILE_NO", "");
+            mVerificationCode = sharedPreferences.getString("KEY_VERIFICATION_CODE", "");
+            mDialog = new ProgressDialog(MainActivity.this);
+            mDialog.setMessage("Validating...");
+            mDialog.setIndeterminate(false);
+            mDialog.setCancelable(false);
+            mDialog.show();
+            postProject();
         } else {
-            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                checkValidity();
-            } else {
-                checkPhoneStatePermission();
-
-            }
-        }
-    }
-
-    public void checkValidity(){
-        String[] imeiList = {"911431850362828", "911431850362836", "351558073207583",
-                "351558071729646", "911528701045419", "911367106180517","354115076530193"};
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String imei = telephonyManager.getDeviceId();
-
-        if (isIMEIRegistered(imei, imeiList)) {
-            checkIfFirstTym();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            startActivity(new Intent(MainActivity.this, Registration.class));
             finish();
-        } else {
-            createErrorDialog("Registration Error","This device is not registered with us.");
         }
-    }
-
-
-    private boolean isIMEIRegistered(String imei, String[] imeiList) {
-        for (String anImeiList : imeiList) {
-            if (imei.equals(anImeiList)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void createErrorDialog(String title, String msg) {
@@ -92,26 +82,6 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
-    private void createPermissionDialog() {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Permission Required")
-                .setMessage("Application need phone state permission to check your registration validity.")
-                .setCancelable(false)
-                .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        checkPhoneStatePermission();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        finish();
-                    }
-                });
-        android.support.v7.app.AlertDialog alert = builder.create();
-        alert.show();
-    }
 
     private void checkIfFirstTym() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -122,38 +92,111 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void checkPhoneStatePermission() {
-        ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE);
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions( MainActivity.this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
-                    MY_PERMISSIONS_PHONE_STATE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_PHONE_STATE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkValidity();
-                } else {
-                    createPermissionDialog();
-                }
-                break;
-            }
-
-
-        }
-    }
 
     private String getCurrentDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+    private void postProject() {
+        String PROJECT_URL = "http://103.228.249.46:8082/XpandLogin/GetLoginStatus";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, PROJECT_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Json", response);
+                        try {
+                            JSONArray mJSONArray =  new JSONArray(response);
+                            JSONObject mJsonObj = (JSONObject) mJSONArray.get(0);
+                            String isActive = mJsonObj.getString("cancel_regd");
+                            String lockDate =  mJsonObj.getString("lock_date");
+                            String status = mJsonObj.getString("status");
+                            String message = mJsonObj.getString("message");
+                            int lockDateCount = new DbHandler(MainActivity.this).getDateCount(lockDate);
+                            int currentDateCount =  new DbHandler(MainActivity.this).getDateCount(getCurrentDate());
+                            if (status.equals("true")) {
+                                if (isActive.equals("1") || (currentDateCount >= lockDateCount)) {
+                                    mDialog.cancel();
+                                    createErrorDialog("Registration Error", "Your application license has expired. Contact Maitri.");
+                                } else {
+                                    prepareData(status, message);
+                                }
+                            } else {
+                                prepareData(status, message);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            prepareData("Error", "Json error");
+                        }
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mDialog.cancel();
+                        if (mConnectionDetector.isOnline()) {
+                            mDialog.cancel();
+                            mNoInternetConnDialog1.createDialog();
+                        } else {
+                            mDialog.cancel();
+                            mNoInternetConnDialog0.createDialog();
+                        }
+                    }
+                }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+
+                HashMap<String, String> headers = new HashMap<>();
+                headers.put("mobileNumber", mMobNo);
+                headers.put("verificationCode", mVerificationCode);
+                return headers;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        int socketTimeout = 300000;//30 seconds - change to what you want
+        RetryPolicy policy = new DefaultRetryPolicy(socketTimeout, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(policy);
+        requestQueue.add(stringRequest);
+    }
+
+    private void prepareData(String status, String msg) {
+        switch (status) {
+            case "true":
+                mDialog.cancel();
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+                break;
+            case "false":
+                mDialog.cancel();
+                AlertDialog b = new AlertDialog.Builder(MainActivity.this).create();
+                b.setTitle("Login Error");
+                b.setMessage("Mobile no " + mMobNo + " is not registered with XPand.");
+                b.setButton("Ok",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                SharedPreferences sharedPreferences = PreferenceManager
+                                        .getDefaultSharedPreferences(MainActivity.this);
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putBoolean("KEY_IS_LOGIN", false);
+                                editor.apply();
+                                startActivity(new Intent(MainActivity.this, Registration.class));
+                                dialog.dismiss();
+                            }
+                        }
+                );
+                b.show();
+                break;
+            case "Error":
+                mDialog.cancel();
+                Toast.makeText(MainActivity.this, "json error", Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+    }
+
 }

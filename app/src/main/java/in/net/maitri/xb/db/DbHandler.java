@@ -1,10 +1,8 @@
 package in.net.maitri.xb.db;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import in.net.maitri.xb.billing.BillItems;
@@ -264,12 +261,7 @@ public class DbHandler extends SQLiteOpenHelper {
         cv1.put(KEY_UM_PASSWORD, "admin");
         cv1.put(KEY_UM_IS_ADMIN, 1);
         db.insert(USER_MST_TABLE_NAME, null, cv1);
-        ContentValues cv3 = new ContentValues();
-        cv3.put(KEY_SYS_KEY, "SYS_LOCK_DATE");
-        cv3.put(KEY_SYS_VALUE, "43102");
-        cv3.put(KEY_SYS_CATEGORY, "Commercial use.");
-        cv3.put(KEY_SYS_COMMENT, "Application will lock on this day.");
-        db.insert(SYSSPEC_TABLE_NAME, null, cv3);
+
     }
 
     // Upgrading database
@@ -357,13 +349,6 @@ public class DbHandler extends SQLiteOpenHelper {
                         " ADD COLUMN " + KEY_SM_CASHIER_NAME + " TEXT ";
                 db.execSQL(addcashName);
             case 12:
-                ContentValues cv3 = new ContentValues();
-                cv3.put(KEY_SYS_KEY, "SYS_LOCK_DATE");
-                cv3.put(KEY_SYS_VALUE, "43102");
-                cv3.put(KEY_SYS_CATEGORY, "Commercial use.");
-                cv3.put(KEY_SYS_COMMENT, "Application will lock on this day.");
-                db.insert(SYSSPEC_TABLE_NAME, null, cv3);
-
                 break;
         }
     }
