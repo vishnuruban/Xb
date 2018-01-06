@@ -1,5 +1,6 @@
 package in.net.maitri.xb.settings;
 
+import android.app.DialogFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -40,9 +41,27 @@ public class BillSettings extends PreferenceFragment implements SharedPreference
             @Override
             public boolean onPreferenceClick(Preference preference) {
 
-                ModifyBillSeries newFragment = new ModifyBillSeries(bm.getBillName(),String.valueOf(bm.getCurrentBillNo()),bm.getPrefix(),bm.getCashierSelection(),bm.getCustomerSelection(),getBillNumber,getBillPrefix,getCashierSelection,getCustomerSelection);
+                Bundle bundle = new Bundle();
+                BillSeriesData data = new BillSeriesData();
+                data.setbName(bm.getBillName());
+                data.setbNumber(String.valueOf(bm.getCurrentBillNo()));
+                data.setbPrefix(bm.getPrefix());
+                data.setbCashier(bm.getCashierSelection());
+                data.setbCustomer(bm.getCustomerSelection());
+                data.setgBillNo(getBillNumber);
+                data.setgPrefix(getBillPrefix);
+                data.setgCashier(getCashierSelection);
+                data.setgCustomer(getCustomerSelection);
+                bundle.putSerializable("billSeriesObj", data);
+                ModifyBillSeries newFragment = new ModifyBillSeries();
+                newFragment.setArguments(bundle);
                 newFragment.setCancelable(false);
                 newFragment.show(getFragmentManager(),"");
+               /* ModifyBillSeries newFragment = new ModifyBillSeries(bm.getBillName(),
+                        String.valueOf(bm.getCurrentBillNo()),bm.getPrefix(),
+                        bm.getCashierSelection(),bm.getCustomerSelection(),
+                        getBillNumber,getBillPrefix,getCashierSelection,getCustomerSelection);*/
+
 
                 return true;
             }

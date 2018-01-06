@@ -32,14 +32,14 @@ import in.net.maitri.xb.R;
 import in.net.maitri.xb.login.LoginActivity;
 
 
-class OtpVerification extends Dialog {
+public class OtpVerification extends Dialog {
 
     private Context mContext;
     static EditText mOtpField;
     private String mMobNo, mOtp;
     private static final String URL = "http://smsc2.jaamoon.com/MsgBroadcast?wsdl";
 
-     OtpVerification(Context mContext, String mMobNo) {
+     public OtpVerification(Context mContext, String mMobNo) {
         super(mContext);
         this.setCanceledOnTouchOutside(false);
         this.setCancelable(false);

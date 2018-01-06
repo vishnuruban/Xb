@@ -92,16 +92,6 @@
             android:layout_margin="16dp"
             android:src="@android:drawable/ic_input_add" />
 
-        <Button
-            android:id="@+id/billScreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="5dp"
-            android:background="@drawable/bgedittext2"
-            android:drawableStart="@mipmap/ic_arrow_forward_black_24dp"
-            android:gravity="center"
-            android:text="PROCEED" />
 
     </RelativeLayout>
 

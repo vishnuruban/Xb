@@ -33,17 +33,19 @@ import java.util.Map;
 
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.login.LoginActivity;
+import in.net.maitri.xb.registration.OtpVerification;
 import in.net.maitri.xb.registration.Registration;
 import in.net.maitri.xb.util.ConnectionDetector;
 import in.net.maitri.xb.util.NoInternetConnDialog;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String mMobNo, mVerificationCode;
+    private String mMobNo, mVerificationCode, mLockDate;
     private ConnectionDetector mConnectionDetector = new ConnectionDetector(MainActivity.this);
     private NoInternetConnDialog mNoInternetConnDialog0 = new NoInternetConnDialog(MainActivity.this, 0);
     private NoInternetConnDialog mNoInternetConnDialog1 = new NoInternetConnDialog(MainActivity.this, 1);
     private ProgressDialog mDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +57,15 @@ public class MainActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean("KEY_IS_LOGIN", false)) {
             mMobNo = sharedPreferences.getString("KEY_MOBILE_NO", "");
             mVerificationCode = sharedPreferences.getString("KEY_VERIFICATION_CODE", "");
-            mDialog = new ProgressDialog(MainActivity.this);
-            mDialog.setMessage("Validating...");
-            mDialog.setIndeterminate(false);
-            mDialog.setCancelable(false);
-            mDialog.show();
-            postProject();
+            String mLockDate = sharedPreferences.getString("KEY_LOCK_DATE", "");
+            int lockDateCount = new DbHandler(MainActivity.this).getDateCount(mLockDate);
+            int currentDateCount = new DbHandler(MainActivity.this).getDateCount(getCurrentDate());
+            if (currentDateCount >= lockDateCount) {
+                createErrorDialog("Registration Error", "Your application license has expired. Contact Maitri.");
+            } else {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+            }
         } else {
             startActivity(new Intent(MainActivity.this, Registration.class));
             finish();
@@ -72,10 +77,22 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(title)
                 .setMessage(msg)
                 .setCancelable(false)
-                .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                         finish();
+                    }
+                })
+                .setNegativeButton("Verify again", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mDialog = new ProgressDialog(MainActivity.this);
+                        mDialog.setMessage("Validating...");
+                        mDialog.setIndeterminate(false);
+                        mDialog.setCancelable(false);
+                        mDialog.show();
+                        Log.d("code", mVerificationCode);
+                        postProject();
+                        dialog.cancel();
                     }
                 });
         android.support.v7.app.AlertDialog alert = builder.create();
@@ -111,12 +128,12 @@ public class MainActivity extends AppCompatActivity {
                             JSONArray mJSONArray =  new JSONArray(response);
                             JSONObject mJsonObj = (JSONObject) mJSONArray.get(0);
                             String isActive = mJsonObj.getString("cancel_regd");
-                            String lockDate =  mJsonObj.getString("lock_date");
+                            mLockDate =  mJsonObj.getString("lock_date");
                             String status = mJsonObj.getString("status");
                             String message = mJsonObj.getString("message");
-                            int lockDateCount = new DbHandler(MainActivity.this).getDateCount(lockDate);
-                            int currentDateCount =  new DbHandler(MainActivity.this).getDateCount(getCurrentDate());
                             if (status.equals("true")) {
+                                int lockDateCount = new DbHandler(MainActivity.this).getDateCount(mLockDate);
+                                int currentDateCount =  new DbHandler(MainActivity.this).getDateCount(getCurrentDate());
                                 if (isActive.equals("1") || (currentDateCount >= lockDateCount)) {
                                     mDialog.cancel();
                                     createErrorDialog("Registration Error", "Your application license has expired. Contact Maitri.");
@@ -165,9 +182,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void prepareData(String status, String msg) {
+
         switch (status) {
             case "true":
                 mDialog.cancel();
+                SharedPreferences sharedPreferences = PreferenceManager
+                        .getDefaultSharedPreferences(MainActivity.this);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("KEY_LOCK_DATE", mLockDate);
+                editor.apply();
+                Toast.makeText(MainActivity.this, msg, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
                 break;
@@ -179,12 +203,6 @@ public class MainActivity extends AppCompatActivity {
                 b.setButton("Ok",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                SharedPreferences sharedPreferences = PreferenceManager
-                                        .getDefaultSharedPreferences(MainActivity.this);
-                                SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putBoolean("KEY_IS_LOGIN", false);
-                                editor.apply();
-                                startActivity(new Intent(MainActivity.this, Registration.class));
                                 dialog.dismiss();
                             }
                         }
@@ -196,7 +214,5 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "json error", Toast.LENGTH_SHORT).show();
                 break;
         }
-
     }
-
 }

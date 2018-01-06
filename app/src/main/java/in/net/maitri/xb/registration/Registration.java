@@ -51,7 +51,7 @@ import in.net.maitri.xb.util.NoInternetConnDialog;
 
 public class Registration extends AppCompatActivity {
 
-    private String mMobNo, IMEI = "", mVerificationCode;
+    private String mMobNo, IMEI = "", mVerificationCode, mLockDate;
     private ConnectionDetector mConnectionDetector = new ConnectionDetector(Registration.this);
     private NoInternetConnDialog mNoInternetConnDialog0 = new NoInternetConnDialog(Registration.this, 0);
     private NoInternetConnDialog mNoInternetConnDialog1 = new NoInternetConnDialog(Registration.this, 1);
@@ -124,12 +124,12 @@ public class Registration extends AppCompatActivity {
                             JSONArray mJSONArray =  new JSONArray(response);
                             JSONObject mJsonObj = (JSONObject) mJSONArray.get(0);
                             String isActive = mJsonObj.getString("cancel_regd");
-                            String lockDate =  mJsonObj.getString("lock_date");
+                            mLockDate =  mJsonObj.getString("lock_date");
                             String status = mJsonObj.getString("status");
                             String message = mJsonObj.getString("message");
-                            int lockDateCount = new DbHandler(Registration.this).getDateCount(lockDate);
-                            int currentDateCount =  new DbHandler(Registration.this).getDateCount(getCurrentDate());
                             if (status.equals("true")) {
+                                int lockDateCount = new DbHandler(Registration.this).getDateCount(mLockDate);
+                                int currentDateCount =  new DbHandler(Registration.this).getDateCount(getCurrentDate());
                                 if (isActive.equals("1") || (currentDateCount >= lockDateCount)) {
                                     mDialog.cancel();
                                     createErrorDialog("Registration Error", "Your application license has expired. Contact Maitri.");
@@ -187,6 +187,7 @@ public class Registration extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("KEY_VERIFICATION_CODE", mVerificationCode);
                 editor.putString("KEY_MOBILE_NO", mMobNo);
+                editor.putString("KEY_LOCK_DATE", mLockDate);
                 editor.apply();
                 Toast.makeText(Registration.this, msg, Toast.LENGTH_SHORT).show();
                 smsReadPermission();
@@ -196,8 +197,7 @@ public class Registration extends AppCompatActivity {
                 mDialog.cancel();
                 mMobTextField.setText("");
                 AlertDialog b = new AlertDialog.Builder(Registration.this).create();
-                b.setTitle("Login Error");
-                b.setMessage("Mobile no " + mMobNo + " is not registered with XPand.");
+                b.setMessage(msg);
                 b.setButton("Ok",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {

@@ -111,6 +111,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cDate = (TextView) findViewById(R.id.date);
         cCustName = (TextView) findViewById(R.id.cCustname);
         cCashierName = (EditText) findViewById(R.id.cCashiername);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        cCashierName.setText(sharedPreferences.getString("current_user",""));
         cBillNum = (TextView) findViewById(R.id.cBillNo);
        // cPayment = (TextView) findViewById(R.id.cPayment);
         lNetAmt = (LinearLayout) findViewById(R.id.layout_Net);

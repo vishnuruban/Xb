@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
 
@@ -83,13 +84,12 @@ public class LoginActivity extends AppCompatActivity {
             } else if (!pswd.equals(enteredPassword)) {
                 Toast.makeText(LoginActivity.this, "Invalid Password.", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(LoginActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("current_user", userName);
                 editor.putBoolean("user_is_admin", new DbHandler(LoginActivity.this).isAdmin(userName));
                 editor.apply();
-                startActivity(new Intent(LoginActivity.this, AddItemCategory.class));
+                startActivity(new Intent(LoginActivity.this, BillingActivity.class));
                 finish();
             }
         }
