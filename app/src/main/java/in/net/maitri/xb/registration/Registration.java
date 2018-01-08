@@ -42,10 +42,12 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.util.ConnectionDetector;
 import in.net.maitri.xb.util.NoInternetConnDialog;
+
 
 public class Registration extends AppCompatActivity {
 

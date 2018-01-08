@@ -1,16 +1,21 @@
 package in.net.maitri.xb.settings;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 import java.io.File;
 
@@ -19,14 +24,17 @@ import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.db.BackUpAndRestoreDb;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
+import in.net.maitri.xb.registration.Registration;
 import in.net.maitri.xb.user.AddNewUser;
 import in.net.maitri.xb.util.FilePicker;
+import in.net.maitri.xb.util.Permissions;
 
 import static android.app.Activity.RESULT_OK;
 
 public class BackupAndRestore extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final int REQUEST_PICK_FILE = 1;
+    private static final int MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,8 +57,13 @@ public class BackupAndRestore extends PreferenceFragment implements SharedPrefer
         restore.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(getActivity(), FilePicker.class);
-                startActivityForResult(intent, REQUEST_PICK_FILE);
+                if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(getActivity(), FilePicker.class);
+                    startActivityForResult(intent, REQUEST_PICK_FILE);
+                } else {
+                    createPermissionDialog("Application need Storage permission to search backup db.");
+                }
                 return true;
             }
         });
@@ -123,5 +136,54 @@ public class BackupAndRestore extends PreferenceFragment implements SharedPrefer
         editor.clear();
         editor.apply();
         new DbHandler(getActivity()).resetData();
+    }
+
+    private void createPermissionDialog(String msg) {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setTitle("Permission Required")
+                .setMessage(msg)
+                .setCancelable(false)
+                .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                       checkWriteExternalStoragePermission();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        android.support.v7.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private void checkWriteExternalStoragePermission() {
+        ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((getActivity()),
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(getActivity(), FilePicker.class);
+                    startActivityForResult(intent, REQUEST_PICK_FILE);
+                } else {
+                    createPermissionDialog("Application need Storage permission to search backup db.");
+                }
+                break;
+
+
+
+        }
     }
 }
