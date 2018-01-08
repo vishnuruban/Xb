@@ -2,11 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="in.net.maitri.xb">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
@@ -27,12 +30,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".settings.SettingsActivity" />
         <activity
             android:name=".billing.CheckoutActivity"
             android:label="CHECKOUT"
-            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"
-         />
+            android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" />
         <activity
             android:name=".billing.BillingActivity"
             android:label="BILL SCREEN"
@@ -52,11 +55,13 @@
         <activity android:name=".billing.BillSeriesActivity">
             <intent-filter>
                 <action android:name="in.net.maitri.xb.billing.BillSeriesActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".util.FilePicker"
-            android:label="XPand/Backup"/>
+        <activity
+            android:name=".util.FilePicker"
+            android:label="XPand/Backup" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -67,7 +72,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
+
         <activity android:name=".login.LoginActivity" />
+        <activity android:name=".registration.Registration"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="orientation|screenSize"/>
 
     </application>
 

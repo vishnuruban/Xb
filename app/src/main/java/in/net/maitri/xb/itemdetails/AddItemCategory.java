@@ -44,7 +44,6 @@ public class AddItemCategory extends AppCompatActivity {
     private TextView mNoItem, mNoCategory, mSelectedCategory;
     private int mCategoryId;
     private FloatingActionButton mAddItemBtn;
-    private Button mProceed;
     private boolean isAll = true;
 
 
@@ -53,25 +52,17 @@ public class AddItemCategory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_item_category);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
 
 
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
         mSelectedCategory = (TextView) findViewById(R.id.selected_category_name);
-        mProceed = (Button) findViewById(R.id.billScreen);
-
-        mProceed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mGetAllItems.size() != 0) {
-                    Intent intent = new Intent(AddItemCategory.this, BillingActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(AddItemCategory.this, "No Items Present", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         mDbHandler = new DbHandler(AddItemCategory.this);
         mGetAllCategories = mDbHandler.getAllcategorys1();
@@ -311,48 +302,15 @@ public class AddItemCategory extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_add_item_category, menu);
-        MenuItem item = menu.findItem(R.id.bill_report);
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AddItemCategory.this);
-        if (!sharedPreferences.getBoolean("user_is_admin",false)){
-            item.setVisible(false);
-        }
-        return true;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.settings:
-                startActivity(new Intent(AddItemCategory.this, SettingsActivity.class));
-                break;
-
-            case R.id.customers:
-                startActivity(new Intent(AddItemCategory.this, CustomerDetail.class));
-                break;
-
-            case R.id.sales_report:
-                startActivity(new Intent(AddItemCategory.this, TotalSales.class));
-                break;
-
-            case R.id.bill_report:
-                startActivity(new Intent(AddItemCategory.this, BillReportActivity.class));
-                break;
-
-
-            case R.id.today_bill_report:
-                startActivity(new Intent(AddItemCategory.this, TodayBillReport.class));
-                break;
-
-            case android.R.id.home:
-                finish();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            finish();
         }
-        return super.onOptionsItemSelected(item);
+
+        return true;
     }
 
 }

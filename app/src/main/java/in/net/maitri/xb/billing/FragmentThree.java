@@ -2,6 +2,8 @@ package in.net.maitri.xb.billing;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -37,6 +39,7 @@ import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
 import in.net.maitri.xb.itemdetails.CalculateNoOfColumnsAccScreenSize;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
+import in.net.maitri.xb.registration.Registration;
 
 
 public class FragmentThree extends Fragment {
@@ -93,56 +96,56 @@ public class FragmentThree extends Fragment {
 
 
         if (mGetAllCategories.size() == 0) {
-            Toast.makeText(getActivity(), "No Categories Present", Toast.LENGTH_SHORT).show();
+            addItemDialog();
         } else {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("catName", mGetAllCategories.get(0).getCategoryName());
             editor.putInt("catId", mGetAllCategories.get(0).getId());
             editor.apply();
-        }
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        categoryView.setLayoutManager(linearLayoutManager);
-        DividerItemDecoration verticalDecoration = new DividerItemDecoration(categoryView.getContext(),
-                DividerItemDecoration.HORIZONTAL);
-        Drawable verticalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.recyview_divider);
-        verticalDecoration.setDrawable(verticalDivider);
-        categoryView.addItemDecoration(verticalDecoration);
 
-        mGetAllCategories.get(0).setSelected(true);
-        sCatName.setText(  mGetAllCategories.get(0).getCategoryName());
-        hCategoryAdapter = new HorizontalCategoryAdapter(getActivity(), mGetAllCategories);
-        categoryView.setAdapter(hCategoryAdapter);
-        categoryView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), categoryView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                hCategoryAdapter.setSelected(position);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            categoryView.setLayoutManager(linearLayoutManager);
+            DividerItemDecoration verticalDecoration = new DividerItemDecoration(categoryView.getContext(),
+                    DividerItemDecoration.HORIZONTAL);
+            Drawable verticalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.recyview_divider);
+            verticalDecoration.setDrawable(verticalDivider);
+            categoryView.addItemDecoration(verticalDecoration);
 
-                Category category = mGetAllCategories.get(position);
-                //  Toast.makeText(getActivity(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
-                String categoryName = category.getCategoryName();
-                sCatName.setText(categoryName);
-                mCategoryId = category.getId();
-                updateItem(mCategoryId);
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("catName", categoryName);
-                editor.putInt("catId", mCategoryId);
-                editor.apply();
-            }
+            mGetAllCategories.get(0).setSelected(true);
+            sCatName.setText(mGetAllCategories.get(0).getCategoryName());
+            hCategoryAdapter = new HorizontalCategoryAdapter(getActivity(), mGetAllCategories);
+            categoryView.setAdapter(hCategoryAdapter);
+            categoryView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), categoryView, new RecyclerTouchListener.ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
+                    hCategoryAdapter.setSelected(position);
 
-            @Override
-            public void onLongClick(View view, int position) {
+                    Category category = mGetAllCategories.get(position);
+                    //  Toast.makeText(getActivity(), category.getCategoryName() + " is selected!", Toast.LENGTH_SHORT).show();
+                    String categoryName = category.getCategoryName();
+                    sCatName.setText(categoryName);
+                    mCategoryId = category.getId();
+                    updateItem(mCategoryId);
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("catName", categoryName);
+                    editor.putInt("catId", mCategoryId);
+                    editor.apply();
+                }
 
-            }
-        }));
+                @Override
+                public void onLongClick(View view, int position) {
 
-        //  int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
-        itemView.setLayoutManager(gridLayoutManager);
-        //   mGetAllItems = new ArrayList<Item>();
+                }
+            }));
+
+            //  int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
+            itemView.setLayoutManager(gridLayoutManager);
+            //   mGetAllItems = new ArrayList<Item>();
 
 
     /*    for(int i=0;i<mGetAllItemsC.size();i++)
@@ -154,33 +157,33 @@ public class FragmentThree extends Fragment {
             }
         }*/
 
-        mGetAllItems = mDbHandler.getAllitems(1);
+            mGetAllItems = mDbHandler.getAllitems(1);
 
-        bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
+            bItemAdapter = new BillItemAdapter(getActivity(), mGetAllItems);
 
-        itemView.setAdapter(bItemAdapter);
+            itemView.setAdapter(bItemAdapter);
 
-        itemView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), categoryView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, int position) {
+            itemView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), categoryView, new RecyclerTouchListener.ClickListener() {
+                @Override
+                public void onClick(View view, int position) {
 
-                if (mGetAllItems.size() != 0) {
-                    Item item = (Item) bItemAdapter.getItem(position);
-                    kpd = new KeypadDialog(getActivity(), item);
-                    kpd.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-                    kpd.setCancelable(false);
-                    kpd.show();
+                    if (mGetAllItems.size() != 0) {
+                        Item item = (Item) bItemAdapter.getItem(position);
+                        kpd = new KeypadDialog(getActivity(), item);
+                        kpd.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        kpd.setCancelable(false);
+                        kpd.show();
+                    }
+
+
                 }
 
+                @Override
+                public void onLongClick(View view, int position) {
 
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        }));
-
+                }
+            }));
+        }
 
         return view;
     }
@@ -326,5 +329,22 @@ public class FragmentThree extends Fragment {
         kpd.dismiss();
     }
 
-
+    private void addItemDialog() {
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(getActivity());
+        builder.setMessage("Category and item's are empty.")
+                .setCancelable(false)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startActivity(new Intent(getActivity(), AddItemCategory.class));
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        android.support.v7.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
 }

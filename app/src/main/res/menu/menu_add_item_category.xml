@@ -2,30 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/customers"
-        android:visible="false"
+        android:id="@+id/add_item"
         android:orderInCategory="100"
-        android:title="Customers" />
+        android:title="Add Item" />
 
     <item
-        android:id="@+id/sales_report"
+        android:id="@+id/customers"
         android:visible="false"
         android:orderInCategory="101"
-        android:title="Sales Report"/>
+        android:title="Customers" />
+
 
     <item
         android:id="@+id/bill_report"
-        android:orderInCategory="101"
+        android:orderInCategory="102"
         android:title="Sales Report"/>
 
     <item
         android:id="@+id/today_bill_report"
-        android:orderInCategory="101"
+        android:orderInCategory="103"
         android:title="Today's Sales Report"/>
 
     <item
         android:id="@+id/settings"
-        android:orderInCategory="102"
+        android:orderInCategory="104"
         android:title="Settings" />
 
 </menu>
