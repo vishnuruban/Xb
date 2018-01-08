@@ -61,7 +61,9 @@ public class MainActivity extends AppCompatActivity {
             int lockDateCount = new DbHandler(MainActivity.this).getDateCount(mLockDate);
             int currentDateCount = new DbHandler(MainActivity.this).getDateCount(getCurrentDate());
             if (currentDateCount >= lockDateCount) {
-                createErrorDialog("Registration Error", "Your application license has expired. Contact Maitri.");
+                createErrorDialog( "Your application license has expired. Contact Maitri.", false);
+            } else if ((lockDateCount - currentDateCount) <= 3 && (lockDateCount - currentDateCount) >= 1) {
+                createErrorDialog( "Your application license will expired on " + mLockDate +". Contact Maitri.", true);
             } else {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
@@ -72,15 +74,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void createErrorDialog(String title, String msg) {
+    private void createErrorDialog( String msg, final boolean allowApp) {
         android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(title)
-                .setMessage(msg)
+        builder.setMessage(msg)
                 .setCancelable(false)
                 .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
+                        if (allowApp) {
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        }
                         dialog.cancel();
                         finish();
+
                     }
                 })
                 .setNegativeButton("Verify again", new DialogInterface.OnClickListener() {
@@ -125,18 +130,18 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         Log.d("Json", response);
                         try {
-                            JSONArray mJSONArray =  new JSONArray(response);
+                            JSONArray mJSONArray = new JSONArray(response);
                             JSONObject mJsonObj = (JSONObject) mJSONArray.get(0);
                             String isActive = mJsonObj.getString("cancel_regd");
-                            mLockDate =  mJsonObj.getString("lock_date");
+                            mLockDate = mJsonObj.getString("lock_date");
                             String status = mJsonObj.getString("status");
                             String message = mJsonObj.getString("message");
                             if (status.equals("true")) {
                                 int lockDateCount = new DbHandler(MainActivity.this).getDateCount(mLockDate);
-                                int currentDateCount =  new DbHandler(MainActivity.this).getDateCount(getCurrentDate());
+                                int currentDateCount = new DbHandler(MainActivity.this).getDateCount(getCurrentDate());
                                 if (isActive.equals("1") || (currentDateCount >= lockDateCount)) {
                                     mDialog.cancel();
-                                    createErrorDialog("Registration Error", "Your application license has expired. Contact Maitri.");
+                                    createErrorDialog("Your application license has expired. Contact Maitri.", false);
                                 } else {
                                     prepareData(status, message);
                                 }

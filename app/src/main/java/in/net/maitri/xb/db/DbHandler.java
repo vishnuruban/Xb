@@ -349,6 +349,15 @@ public class DbHandler extends SQLiteOpenHelper {
                         " ADD COLUMN " + KEY_SM_CASHIER_NAME + " TEXT ";
                 db.execSQL(addcashName);
             case 12:
+                String updateSaleBill = "Update " + SALES_MST_TABLE_NAME + " SET " +
+                        KEY_SM_SALE_BILL_NO + " = " + KEY_SM_BILL_NO;
+                db.execSQL(updateSaleBill);
+                String updateCashier = "Update " + SALES_MST_TABLE_NAME + " SET " +
+                        KEY_SM_CASHIER_NAME + " =  ''";
+                db.execSQL(updateCashier);
+                String updateCustomer = "Update " + SALES_MST_TABLE_NAME + " SET " +
+                        KEY_SM_CUSTOMER_NAME + " =  ''";
+                db.execSQL(updateCustomer);
                 break;
         }
     }
