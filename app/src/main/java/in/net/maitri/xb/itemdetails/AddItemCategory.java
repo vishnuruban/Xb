@@ -6,32 +6,26 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
 import in.net.maitri.xb.R;
-import in.net.maitri.xb.billReports.BillReportActivity;
-import in.net.maitri.xb.billReports.TodayBillReport;
 import in.net.maitri.xb.billing.BillingActivity;
-import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
-import in.net.maitri.xb.reports.TotalSales;
-import in.net.maitri.xb.settings.SettingsActivity;
 import in.net.maitri.xb.util.Permissions;
 
 public class AddItemCategory extends AppCompatActivity {
@@ -46,7 +40,6 @@ public class AddItemCategory extends AppCompatActivity {
     private FloatingActionButton mAddItemBtn;
     private boolean isAll = true;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +49,7 @@ public class AddItemCategory extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
         new Permissions(AddItemCategory.this).checkWriteExternalStoragePermission();
-
 
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
@@ -106,14 +97,14 @@ public class AddItemCategory extends AppCompatActivity {
                     mCategoryAdapter.setSelected(position);
                     isAll = true;
                     updateItem(0);
-                    mSelectedCategory.setText("All");
+                    mSelectedCategory.setText(R.string.all);
                 } else {
                     mAddItemBtn.setVisibility(View.VISIBLE);
                     mCategoryAdapter.setSelected(position);
                     Category category = mGetAllCategories.get(position);
                     isAll = false;
                     updateItem(category.getId());
-                    view.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                    view.setBackgroundColor(ContextCompat.getColor(AddItemCategory.this, R.color.colorPrimary));
                     String categoryName = category.getCategoryName();
                     mSelectedCategory.setText(categoryName);
                     mCategoryId = category.getId();
@@ -302,15 +293,12 @@ public class AddItemCategory extends AppCompatActivity {
         }
     }
 
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
+            startActivity(new Intent(AddItemCategory.this, BillingActivity.class));
             finish();
         }
-
         return true;
     }
-
 }

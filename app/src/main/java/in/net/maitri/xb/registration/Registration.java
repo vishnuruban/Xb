@@ -42,12 +42,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import in.net.maitri.xb.MainActivity;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.util.ConnectionDetector;
 import in.net.maitri.xb.util.NoInternetConnDialog;
-
 
 public class Registration extends AppCompatActivity {
 
@@ -58,8 +56,7 @@ public class Registration extends AppCompatActivity {
     private EditText mMobTextField;
     private ProgressDialog mDialog;
     private static final int MY_PERMISSIONS_PHONE_STATE = 0,
-            MY_PERMISSIONS_READ_SMS = 1,
-            MY_PERMISSIONS_RECEIVE_SMS = 2;
+            MY_PERMISSIONS_READ_SMS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
