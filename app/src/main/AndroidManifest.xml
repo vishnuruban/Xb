@@ -78,6 +78,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize"/>
 
+        <receiver android:name=".registration.SmsListener">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

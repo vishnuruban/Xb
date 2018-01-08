@@ -5,6 +5,9 @@
 
     <string name="add_Customer">Add Customer</string>
 
+    <string name="all">ALL</string>
+
+
     <string name="name">Name<font fgcolor="red"> *</font></string>
     <string name="mob_number">Mobile<font fgcolor="red"> *</font></string>
     <string name="email">Email</string>

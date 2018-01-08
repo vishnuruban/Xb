@@ -66,6 +66,7 @@ public class BillingActivity extends AppCompatActivity {
 
             case R.id.add_item:
                 startActivity(new Intent(BillingActivity.this, AddItemCategory.class));
+                finish();
                 break;
 
             case R.id.settings:
