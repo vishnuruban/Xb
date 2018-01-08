@@ -148,14 +148,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
 
     @Override
     public void onClick(DialogInterface dialogInterface, int i) {
-
     }
-
-
-
-
-
-
 
     void getBillDetails(int billNo,int fromDate,int toDate,String billDateTime) {
 

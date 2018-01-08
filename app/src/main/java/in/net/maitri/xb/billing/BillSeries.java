@@ -13,6 +13,7 @@ public class BillSeries {
     private String prefix;
     private int seed;
     private int CurrentBillNo;
+    private int internalBillNo;
 
     public String getCashierSelection() {
         return cashierSelection;

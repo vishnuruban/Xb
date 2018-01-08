@@ -24,7 +24,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -98,6 +98,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SD_NET_RATE = "sd_net_rate";
     private static final String KEY_SD_RATE = "sd_rate";
     private static final String KEY_SD_AMOUNT = "sd_amount";
+    private static final String KEY_SD_DATETIME = "sd_datetime";
     private static final String KEY_SD_CREATED_AT = "sd_createdAt";
     // sales mst table name
     private static final String SYSSPEC_TABLE_NAME = "SysSpec";
@@ -204,6 +205,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_SD_NET_RATE + " FLOAT,"
                 + KEY_SD_RATE + " FLOAT,"
                 + KEY_SD_AMOUNT + " FLOAT,"
+                + KEY_SD_DATETIME + " TEXT,"
                 + KEY_SD_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
                 + " FOREIGN KEY (" + KEY_SD_BILL_NO + ") REFERENCES " + SALES_DET_TABLE_NAME + "(" + KEY_SM_BILL_NO + "))";
         db.execSQL(CREATE_SALES_DET_TABLE);
@@ -358,6 +360,15 @@ public class DbHandler extends SQLiteOpenHelper {
                 String updateCustomer = "Update " + SALES_MST_TABLE_NAME + " SET " +
                         KEY_SM_CUSTOMER_NAME + " =  ''";
                 db.execSQL(updateCustomer);
+            case 13:
+                String addDateColumn = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_DATETIME + " TEXT ";
+                db.execSQL(addDateColumn);
+                String dateInSalesDet = "UPDATE SalesDet \n" +
+                        "SET  sd_datetime = (SELECT sm_datetime\n" +
+                        "                  FROM SalesMst\n" +
+                        "                  WHERE  sm_Sale_billNo = salesDet.sd_billNo)";
+                db.execSQL(dateInSalesDet);
                 break;
         }
     }
@@ -787,7 +798,7 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
 
             String selectQuery = "select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
-                    "join SalesMst sm on sd.sd_billNo = sm.sm_sale_billNo where " + KEY_SM_BILL_NO +" = "+ billNo;
+                    "join SalesMst sm on sd.sd_billNo = sm.sm_sale_billNo and sd.sd_datetime = sm.sm_datetime where " + KEY_SM_BILL_NO +" = "+ billNo +" and "+KEY_SD_DATETIME +"='"+dateTime+"'";
 
             System.out.println(selectQuery);
 
@@ -808,7 +819,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
                     System.out.println("DBDESC " + c.getString(c.getColumnIndex("itm_name")));
 
-                    SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)), bm);
+                    SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)), bm,dateTime);
                 /*
 
                     item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
@@ -965,6 +976,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SD_RATE, salesDet.billItems.getRate());
             cv.put(KEY_SD_NET_RATE, salesDet.billItems.getNet_rate());
             cv.put(KEY_SD_AMOUNT, salesDet.billItems.getAmount());
+            cv.put(KEY_SD_DATETIME,salesDet.getDateTime());
             result = db.insert(SALES_DET_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
@@ -1168,11 +1180,9 @@ public class DbHandler extends SQLiteOpenHelper {
 
     public boolean  updateBillNo(int num) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
         values.put(KEY_BS_CURRENT_BILL,num);
         long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
-
         return rowid != -1;
         // updating row
     }

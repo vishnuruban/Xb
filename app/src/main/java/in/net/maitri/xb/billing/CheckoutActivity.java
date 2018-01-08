@@ -645,6 +645,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             BillItems billItems = FragmentOne.billList.get(i);
             quantity = quantity + billItems.getQty();
             sd = new SalesDet( bSeries.getCurrentBillNo(), billItems);
+            sd.setDateTime(formattedDate);
             detInserted = dbHandler.addSalesDet(sd);
         }
 

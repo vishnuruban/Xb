@@ -6,6 +6,21 @@ public class SalesDet {
 
     private int id, billNo, category, item;
     private float qty;
+    private String dateTime;
+
+    public SalesDet(int billNo, BillItems billItems,String dateTime) {
+        this.billNo = billNo;
+        this.dateTime = dateTime;
+        this.billItems = billItems;
+    }
+
+    public String getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
 
     public BillItems billItems;
 
