@@ -35,6 +35,7 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
         this.mItemList = mItemList;
         this.mFilteredList = mItemList;
     }
+
     public Object getItem(int location) {
         return mFilteredList.get(location);
     }
