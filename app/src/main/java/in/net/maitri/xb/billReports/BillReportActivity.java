@@ -83,7 +83,7 @@ public class BillReportActivity extends AppCompatActivity {
     LinearLayout summaryLayout;
     private List<SalesMst> mGetBillMaster;
 
-byte[] excelReport;
+    byte[] excelReport;
     BillListAdapter billListAdapter;
 
     DecimalFormat df;
