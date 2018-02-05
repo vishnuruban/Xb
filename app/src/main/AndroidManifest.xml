@@ -75,7 +75,6 @@
 
         <activity android:name=".login.LoginActivity" />
         <activity android:name=".registration.Registration"
-            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|screenSize"/>
 
         <receiver android:name=".registration.SmsListener">

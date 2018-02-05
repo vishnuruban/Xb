@@ -4,10 +4,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -23,6 +28,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.cie.btp.CieBluetoothPrinter;
+import com.cie.btp.DebugLog;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -80,6 +88,7 @@ public class TodayBillReport extends AppCompatActivity {
     SimpleDateFormat dateFormat;
     String formattedDate;
     String rs;
+    public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
 
 
 
@@ -96,6 +105,19 @@ public class TodayBillReport extends AppCompatActivity {
             rs = new String(utf8, "UTF-8");}
         catch (UnsupportedEncodingException e)
         {
+            e.printStackTrace();
+        }
+
+        BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mAdapter == null) {
+            Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        //un comment the line below to debug the print service
+        //mPrinter.setDebugService(BuildConfig.DEBUG);
+        try {
+            mPrinter.initService(TodayBillReport.this, mMessenger);
+        } catch (Exception e) {
             e.printStackTrace();
         }
         billView = (RecyclerView) findViewById(R.id.bill_view);
@@ -181,7 +203,7 @@ public class TodayBillReport extends AppCompatActivity {
                 String custName = mst.getCustName();
                 String cashName = mst.getCashName();
                 double qty =mst.getQty();
-                brd = new BillReportDialog(TodayBillReport.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName,cashName);
+                brd = new BillReportDialog(TodayBillReport.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName,cashName,mMessenger,mPrinter);
                 brd.show();
 
                 //   selectedBill.setText("Bill No:"+String.valueOf(billNo));
@@ -264,6 +286,111 @@ public class TodayBillReport extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+
+
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPrinter.onActivityResult(requestCode, resultCode, this);
+    }
+
+    @Override
+    protected void onResume() {
+        mPrinter.onActivityResume();
+        //  printerSelection();
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onPause() {
+        mPrinter.onActivityPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mPrinter.onActivityDestroy();
+        super.onDestroy();
+    }
+
+
+    final Messenger mMessenger = new Messenger(new PrintSrvMsgHandler());
+    private String mConnectedDeviceName = "";
+    public static final String title_connecting = "connecting...";
+    public static final String title_connected_to = "connected: ";
+    public static final String title_not_connected = "not connected";
+
+
+    class PrintSrvMsgHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CieBluetoothPrinter.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case CieBluetoothPrinter.STATE_CONNECTED:
+                            //  setStatusMsg("Printer Status :"+title_connected_to + mConnectedDeviceName);
+                            Toast.makeText(TodayBillReport.this,title_connected_to + mConnectedDeviceName,Toast.LENGTH_SHORT).show();
+                            //    tbPrinter.setText("ON");
+                            //  tbPrinter.setChecked(true);
+                            break;
+                        case CieBluetoothPrinter.STATE_CONNECTING:
+                            //  setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
+                            Toast.makeText(TodayBillReport.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
+                            try {
+                                //    tbPrinter.setText("...");
+                                //   tbPrinter.setChecked(false);
+                            } catch (NullPointerException e) {
+                                DebugLog.logTrace("Fragment creating");
+                            }
+                            break;
+                        case CieBluetoothPrinter.STATE_LISTEN:
+                            // setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
+                            //  Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
+
+                        case CieBluetoothPrinter.STATE_NONE:
+                            //    setStatusMsg("Printer Status :"+title_not_connected);
+                            //   Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
+                            try {
+                                // tbPrinter.setText("OFF");
+                                // tbPrinter.setChecked(false);
+                            } catch (NullPointerException n) {
+                                DebugLog.logTrace("Fragment creating");
+                            }
+                            break;
+                    }
+                    break;
+                case CieBluetoothPrinter.MESSAGE_DEVICE_NAME:
+                    //  mConnectedDeviceName = msg.getData().getString(
+                    //    CieBluetoothPrinter.DEVICE_NAME);
+                    break;
+                case CieBluetoothPrinter.MESSAGE_STATUS:
+                    DebugLog.logTrace("Message Status Received");
+                    Toast.makeText(TodayBillReport.this,msg.getData().getString(
+                            CieBluetoothPrinter.STATUS_TEXT),Toast.LENGTH_SHORT).show();
+                    //   setStatusMsg(msg.getData().getString(CieBluetoothPrinter.STATUS_TEXT));
+                    break;
+                case CieBluetoothPrinter.PRINT_COMPLETE:
+                    Toast.makeText(TodayBillReport.this,"PRINT OK",Toast.LENGTH_SHORT).show();
+                    //setStatusMsg("PRINT OK");
+                    break;
+                case CieBluetoothPrinter.PRINTER_CONNECTION_CLOSED:
+                    // setStatusMsg("PRINT CONN CLOSED");
+                    Toast.makeText(TodayBillReport.this,"PRINT CONN CLOSED",Toast.LENGTH_SHORT).show();
+                    break;
+                case CieBluetoothPrinter.PRINTER_DISCONNECTED:
+                    //  setStatusMsg("PRINT CONN FAILED");
+                    Toast.makeText(TodayBillReport.this,"PRINT CONN FAILED",Toast.LENGTH_SHORT).show();
+                    break;
+                default:
+                    DebugLog.logTrace("Some un handled message : " + msg.what);
+                    super.handleMessage(msg);
+            }
+        }
     }
 
 

@@ -2,14 +2,19 @@ package in.net.maitri.xb.billReports;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Messenger;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.cie.btp.CieBluetoothPrinter;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -20,12 +25,12 @@ import in.net.maitri.xb.R;
 import in.net.maitri.xb.billing.BillItems;
 import in.net.maitri.xb.billing.BillListAdapter;
 import in.net.maitri.xb.billing.BillPrint;
+import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.billing.FragmentOne;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesDet;
 import in.net.maitri.xb.settings.GetSettings;
 
-import static in.net.maitri.xb.billing.CheckoutActivity.mPrinter;
 
 /**
  * Created by SYSRAJ4 on 29/11/2017.
@@ -57,6 +62,9 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     int internalBillNo;
     String custName;
     String cashName;
+    Messenger messenger;
+    CieBluetoothPrinter bluetoothPrinter;
+
 
     BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo,String custName,String cashName)
     {
@@ -74,6 +82,27 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         this.internalBillNo = internalBillNo;
         this.custName = custName;
         this.cashName = cashName;
+
+    }
+
+    BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo,String custName,String cashName,Messenger messenger,CieBluetoothPrinter bluetoothPrinter)
+    {
+        super (context);
+        this.context = context;
+        this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.billNo = billNo;
+        this.mDialog = mDialog;
+        this.dateTime = dateTime;
+        this.discount = discount;
+        this.netAmt = netAmt;
+        this.subTotal = subTotal;
+        this.dQty = dQty;
+        this.internalBillNo = internalBillNo;
+        this.custName = custName;
+        this.cashName = cashName;
+        this.messenger = messenger;
+        this.bluetoothPrinter = bluetoothPrinter;
     }
 
 
@@ -82,6 +111,20 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.bill_report_dialog);
+
+        BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mAdapter == null) {
+            Toast.makeText(context, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
+
+        }
+        //un comment the line below to debug the print service
+        //mPrinter.setDebugService(BuildConfig.DEBUG);
+        if (mAdapter == null) {
+            Toast.makeText(context, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
+          //  finish();
+        }
+        //un comment the line below to debug the print service
+        //mPrinter.setDebugService(BuildConfig.DEBUG);
 
         rs = "\u20B9";
         try{
@@ -119,9 +162,9 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
                 String printSize = getSettings.getPrintingPaperSize();
                 // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
                 if (printSize.equals("1")) {
-                    billPrint.printTwoInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,cashName,custName);
+                    billPrint.printTwoInch(bluetoothPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,cashName,custName);
                 } else {
-                    billPrint.printThreeInch(mPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,cashName,custName);
+                    billPrint.printThreeInch(bluetoothPrinter,billItems,netAmt,String.valueOf(billNo),subTotal,discount,dQty,dateTime,cashName,custName);
                 }
             }
         });

@@ -148,6 +148,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if( bSeries.getCashierSelection().equals("NO"))
         {
             cashierNameLayout.setVisibility(View.GONE);
+            cCashierName.setText("");
         }
 
 
