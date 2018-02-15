@@ -537,7 +537,6 @@ byte[] excelReport;
     }
 
 
-
     public byte[] convertToExcel(String dis,String netAmt,String items,String qty) {
         String[] headerColumns = {"SNo", "Bill No", "Date", "Items", "Qty", "Discount(" + rs + ")", "Net Amount(" + rs + ")", "Pay mode", "Customer Name", "Cashier Name"};
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
