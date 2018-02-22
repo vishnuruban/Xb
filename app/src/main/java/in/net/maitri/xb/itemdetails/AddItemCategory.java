@@ -1,8 +1,10 @@
 package in.net.maitri.xb.itemdetails;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
@@ -39,6 +41,8 @@ public class AddItemCategory extends AppCompatActivity {
     private int mCategoryId;
     private FloatingActionButton mAddItemBtn;
     private boolean isAll = true;
+    private RecyclerView categoryView,itemView;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,38 +58,11 @@ public class AddItemCategory extends AppCompatActivity {
         mNoItem = (TextView) findViewById(R.id.no_item);
         mNoCategory = (TextView) findViewById(R.id.no_category);
         mSelectedCategory = (TextView) findViewById(R.id.selected_category_name);
-
+        categoryView = (RecyclerView) findViewById(R.id.category_view);
+        itemView = (RecyclerView) findViewById(R.id.item_view);
         mDbHandler = new DbHandler(AddItemCategory.this);
-        mGetAllCategories = mDbHandler.getAllcategorys1();
-        final RecyclerView categoryView = (RecyclerView) findViewById(R.id.category_view);
-        RecyclerView itemView = (RecyclerView) findViewById(R.id.item_view);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
-        categoryView.setLayoutManager(linearLayoutManager);
-        mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, mGetAllCategories);
-        categoryView.setAdapter(mCategoryAdapter);
-        if (mGetAllCategories.size() == 0) {
-            mNoCategory.setVisibility(View.VISIBLE);
-        } else {
-            mSelectedCategory.setText(mGetAllCategories.get(0).getCategoryName());
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("catName", mGetAllCategories.get(0).getCategoryName());
-            editor.putInt("catId", mGetAllCategories.get(0).getId());
-            editor.apply();
-            mGetAllCategories.get(0).setSelected(true);
-        }
-        int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
-        itemView.setLayoutManager(gridLayoutManager);
-        mGetAllItems = mDbHandler.getAllitems1();
-        if (mGetAllItems.size() == 0) {
-            mNoItem.setVisibility(View.VISIBLE);
-        } else {
-            mNoItem.setVisibility(View.GONE);
-        }
-        mItemAdapter = new ItemAdapter(AddItemCategory.this, mGetAllItems);
-        itemView.setAdapter(mItemAdapter);
+        new GetCategories().execute();
 
         // category click and ong click
         categoryView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), categoryView, new RecyclerTouchListener.ClickListener() {
@@ -309,4 +286,69 @@ public class AddItemCategory extends AppCompatActivity {
         }
         return true;
     }
+
+    private class GetCategories extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(AddItemCategory.this);
+            progressDialog.setMessage("Getting items...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mGetAllCategories = mDbHandler.getAllcategorys1();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
+            categoryView.setLayoutManager(linearLayoutManager);
+            mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, mGetAllCategories);
+            categoryView.setAdapter(mCategoryAdapter);
+            if (mGetAllCategories.size() == 0) {
+                mNoCategory.setVisibility(View.VISIBLE);
+            } else {
+                mSelectedCategory.setText(mGetAllCategories.get(0).getCategoryName());
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("catName", mGetAllCategories.get(0).getCategoryName());
+                editor.putInt("catId", mGetAllCategories.get(0).getId());
+                editor.apply();
+                mGetAllCategories.get(0).setSelected(true);
+            }
+            int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
+
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
+            itemView.setLayoutManager(gridLayoutManager);
+            new GetItems().execute();
+        }
+    }
+
+    private class GetItems extends AsyncTask<Void, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mGetAllItems = mDbHandler.getAllitems1();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+
+            if (mGetAllItems.size() == 0) {
+                mNoItem.setVisibility(View.VISIBLE);
+            } else {
+                mNoItem.setVisibility(View.GONE);
+            }
+            mItemAdapter = new ItemAdapter(AddItemCategory.this, mGetAllItems);
+            itemView.setAdapter(mItemAdapter);
+            progressDialog.cancel();
+        }
+    }
+
 }
