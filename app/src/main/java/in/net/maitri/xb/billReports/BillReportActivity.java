@@ -130,7 +130,7 @@ public class BillReportActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        billView = (RecyclerView) findViewById(R.id.bill_view);
+         billView = (RecyclerView) findViewById(R.id.bill_view);
          tItems = (TextView)findViewById(R.id.tItems);
          tQty =(TextView)findViewById(R.id.tqty);
          tDiscount= (TextView) findViewById(R.id.tDiscount);
@@ -149,6 +149,11 @@ public class BillReportActivity extends AppCompatActivity {
         mFromDate = (EditText) findViewById(R.id.from_date);
         mToDate = (EditText) findViewById(R.id.to_date);
         mFromDate.setClickable(true);
+
+
+
+
+
         mFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

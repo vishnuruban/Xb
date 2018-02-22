@@ -14,6 +14,8 @@ import android.view.MenuItem;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billReports.BillReportActivity;
+import in.net.maitri.xb.billReports.CustomerReportActivity;
+import in.net.maitri.xb.billReports.ItemReportActivity;
 import in.net.maitri.xb.billReports.TodayBillReport;
 import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
@@ -85,6 +87,15 @@ public class BillingActivity extends AppCompatActivity {
             case R.id.today_bill_report:
                 startActivity(new Intent(BillingActivity.this, TodayBillReport.class));
                 break;
+
+            case R.id.bill_item_report:
+                startActivity(new Intent(BillingActivity.this, ItemReportActivity.class));
+                break;
+
+            case R.id.bill_customer_report:
+                startActivity(new Intent(BillingActivity.this, CustomerReportActivity.class));
+                break;
+
 
         }
         return super.onOptionsItemSelected(item);

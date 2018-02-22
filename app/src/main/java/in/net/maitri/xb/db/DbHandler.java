@@ -144,6 +144,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<ReportData> totalItem = new ArrayList<>();
     private List<ReportData> totalReport = new ArrayList<>();
     private List<ReportData> totalReport1 = new ArrayList<>();
+    private List<CustomerReport> customerReport = new ArrayList<>();
     private ArrayList<BillSeries> billListSeries = new ArrayList<>();
 
     // Creating Tables
@@ -1080,7 +1081,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
                     + " INNER JOIN " + CATEGORY_TABLE_NAME + " AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
                     + " INNER JOIN " + ITEM_TABLE_NAME + " AS ITM ON ITM." + KEY_ITEM_ID + " = SD." + KEY_SD_ITEM
-                    + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_BILL_NO + " = SD." + KEY_SD_BILL_NO
+                    + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_SALE_BILL_NO + " = SD." + KEY_SD_BILL_NO + " AND SM."+KEY_SM_DATETIME +" = SD."+KEY_SD_DATETIME
                     + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate
                     + " GROUP BY CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME;
             Log.d("Query", selectQuery);
@@ -1104,6 +1105,41 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return totalItem;
     }
+
+
+
+
+    public List<CustomerReport> getTotalCustomerReport(int fromDate, int toDate) {
+        customerReport.clear();
+        try {
+
+
+        String query ="select  sum("+KEY_SM_DISCOUNT+") as tDiscount,sum("+KEY_SM_QTY+") as tQty,sum("+KEY_SM_NET_AMT+") as tNetAmt,sum("+KEY_SM_ITEM+") as tItem,"+KEY_SM_CUSTOMER_NAME+" ,ifnull(cst_number,'') as cst_number    from " +
+                SALES_MST_TABLE_NAME+"   LEFT join CustomerMst1 on sm_customer = id   where "+KEY_SM_DATE +" between "+ fromDate +" and " +toDate +
+                " group by "+ KEY_SM_CUSTOMER_NAME;
+            Log.d("CustomerReportQuery",query);
+            SQLiteDatabase db = this.getWritableDatabase();
+            Cursor c =db.rawQuery(query,null);
+            if(c.moveToFirst())
+            {
+                do
+                {
+                    Log.i("cNetAmt",String.valueOf(c.getInt(c.getColumnIndex("tNetAmt"))));
+                    CustomerReport cReport = new CustomerReport();
+                    cReport.setcName(c.getString(c.getColumnIndex(KEY_SM_CUSTOMER_NAME)));
+                    cReport.setcNumber(c.getString(c.getColumnIndex("cst_number")));
+                    cReport.setcItemCount(c.getInt(c.getColumnIndex("tItem")));
+                    cReport.setcNetAmt(c.getInt(c.getColumnIndex("tNetAmt")));
+                    cReport.setcQtyCount(c.getInt(c.getColumnIndex("tQty")));
+                    customerReport.add(cReport);
+                }while(c.moveToNext());
+            }
+            c.close();
+        } catch (SQLException e) {
+            createErrorDialog(e.toString());
+        }
+        return customerReport;
+        }
 
 
     public void addBillSeries0(BillSeries bill,SQLiteDatabase db) {

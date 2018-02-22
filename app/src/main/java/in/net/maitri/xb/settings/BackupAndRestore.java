@@ -49,6 +49,8 @@ public class BackupAndRestore extends PreferenceFragment implements SharedPrefer
         backup.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
+
+
                 new BackUpAndRestoreDb(getActivity()).exportDB();
                 return true;
             }

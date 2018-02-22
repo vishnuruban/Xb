@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="in.net.maitri.xb">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="in.net.maitri.xb">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,7 +10,6 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <application
         android:name=".db.CustomApplication"
         android:allowBackup="true"
@@ -26,11 +24,9 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".settings.SettingsActivity" />
         <activity
             android:name=".billing.CheckoutActivity"
@@ -43,7 +39,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -51,6 +46,8 @@
         <activity android:name="customer.CustomerDetail" />
         <activity android:name=".reports.TotalSales" />
         <activity android:name=".billReports.BillReportActivity" />
+        <activity android:name=".billReports.ItemReportActivity" />
+        <activity android:name=".billReports.CustomerReportActivity" />
         <activity android:name=".billReports.TodayBillReport" />
         <activity android:name=".billing.BillSeriesActivity">
             <intent-filter>
@@ -62,7 +59,6 @@
         <activity
             android:name=".util.FilePicker"
             android:label="XPand/Backup" />
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -82,7 +78,5 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
-
     </application>
-
 </manifest>

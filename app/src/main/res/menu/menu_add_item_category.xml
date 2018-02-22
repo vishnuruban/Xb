@@ -24,6 +24,17 @@
         android:title="Today's Sales Report"/>
 
     <item
+        android:id="@+id/bill_item_report"
+        android:orderInCategory="103"
+        android:title="Itemwise Sales Report"/>
+
+    <item
+        android:id="@+id/bill_customer_report"
+        android:orderInCategory="103"
+        android:title="Customerwise Sales Report"/>
+
+
+    <item
         android:id="@+id/settings"
         android:orderInCategory="104"
         android:title="Settings" />
