@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="8dp">
+        <LinearLayout
+            android:id="@+id/linearL3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="SNo"
+                android:id="@+id/cSno"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:id="@+id/cCusName"
+                android:text="Customer Name"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:id="@+id/cCusNumber"
+                android:text="Customer number"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Item Name"
+                android:id="@+id/cItemCount"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:id="@+id/cQtyCount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="right"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:id="@+id/cTotalNetAmt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:padding="10dp"
+                android:text=" Net Amount(\u20B9)"
+                android:textColor="#000" />
+
+
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>
