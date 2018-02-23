@@ -2,20 +2,20 @@ package in.net.maitri.xb.billReports;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.cie.btp.CieBluetoothPrinter;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -25,24 +25,16 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import in.net.maitri.xb.R;
-import in.net.maitri.xb.billing.BillListAdapter;
+import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.ReportData;
 import in.net.maitri.xb.db.SalesMst;
-import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
-
-/**
- * Created by SYSRAJ4 on 17/02/2018.
- */
 
 public class ItemReportActivity extends AppCompatActivity {
 
-    BillReportDialog brd;
 
-    RecyclerView billView, billDetailsView;
-    TextView noBills,noBillDetails;
-    TextView selectedBill,selectedBillDate,tItems,tQty,tDiscount,tNetAmount,tPaymentStatus,tBillCount;
-    BillMasterAdapter billMasterAdapter;
+    private RecyclerView billView;
+    private TextView tItems, tQty, tDiscount, tNetAmount, tBillCount;
 
     private EditText mFromDate, mToDate;
     private int mYear, mMonth, mDay, mMinYear, mMinMonth, mMinDay;
@@ -50,16 +42,14 @@ public class ItemReportActivity extends AppCompatActivity {
     private String[] mDayOfWeak = {"Monday", "Tuesday", "Wednesday", "Thursday",
             "Friday", "Saturday", "Sunday"};
 
-    DbHandler dbHandler;
-    ProgressDialog mProgressDialog;
-    LinearLayout summaryLayout;
+    private DbHandler dbHandler;
+    private ProgressDialog mProgressDialog;
+    private LinearLayout summaryLayout;
     private List<ReportData> mGetItemMaster;
-
-    byte[] excelReport;
-    BillItemReportAdapter billItemReportAdapter;
+    private BillItemReportAdapter billItemReportAdapter;
     private List<SalesMst> mGetBillMaster;
-    DecimalFormat df;
-    String rs;
+    private DecimalFormat df;
+    private String rs;
 
 
     @Override
@@ -67,28 +57,26 @@ public class ItemReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_report);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         mGetBillMaster = new ArrayList<>();
         billView = (RecyclerView) findViewById(R.id.bill_view);
-        tItems = (TextView)findViewById(R.id.tItems);
-        tQty =(TextView)findViewById(R.id.tqty);
-        tDiscount= (TextView) findViewById(R.id.tDiscount);
-        tNetAmount=(TextView) findViewById(R.id.tNetAmt);
-        // tPaymentStatus = (TextView)findViewById(R.id.t);
-        tBillCount = (TextView)findViewById(R.id.tBills);
+        tItems = (TextView) findViewById(R.id.tItems);
+        tQty = (TextView) findViewById(R.id.tqty);
+        tDiscount = (TextView) findViewById(R.id.tDiscount);
+        tNetAmount = (TextView) findViewById(R.id.tNetAmt);
+        tBillCount = (TextView) findViewById(R.id.tBills);
         mGetItemMaster = new ArrayList<>();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         rs = "\u20B9";
-        try{
+        try {
             byte[] utf8 = rs.getBytes("UTF-8");
-            rs = new String(utf8, "UTF-8");}
-        catch (UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
+            rs = new String(utf8, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            rs = "Rs.";
         }
-
-
         summaryLayout = (LinearLayout) findViewById(R.id.summaryLayout);
         summaryLayout.setVisibility(View.GONE);
         LinearLayout mShowReport = (LinearLayout) findViewById(R.id.showReport);
@@ -132,77 +120,59 @@ public class ItemReportActivity extends AppCompatActivity {
         });
 
 
-
         mShowReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mGetFromDate.isEmpty() || mGetToDate.isEmpty())
-                {
+                if (mGetFromDate.isEmpty() || mGetToDate.isEmpty()) {
                     Toast.makeText(ItemReportActivity.this, "Select date range", Toast.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     mProgressDialog = new ProgressDialog(ItemReportActivity.this);
                     mProgressDialog.setMessage("Getting Data...");
                     mProgressDialog.setCancelable(false);
                     mProgressDialog.show();
-                    //  getReportData(mDbHandeler.getDateCount(mGetFromDate), mDbHandeler.getDateCount(mGetToDate));
 
                     mGetBillMaster.clear();
 
-                    Log.i("mGetFromDate",mGetFromDate);
-                    Log.i("mGetToDate",mGetToDate);
-
                     dbHandler = new DbHandler(ItemReportActivity.this);
-                    mGetItemMaster = dbHandler.getTotalItemReport(dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate));
-                    mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate));
+                    mGetItemMaster = dbHandler.getTotalItemReport(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
+                    mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
 
-                    if(mGetItemMaster.size()==0 || mGetBillMaster.size()==0)
-                    {
-                        Toast.makeText(ItemReportActivity.this,"No Records found",Toast.LENGTH_SHORT).show();
-                        mProgressDialog.dismiss();
-                        return;
+                    if (mGetItemMaster.size() == 0 || mGetBillMaster.size() == 0) {
+                        Toast.makeText(ItemReportActivity.this, "No Records found", Toast.LENGTH_SHORT).show();
+                    } else {
+                        summaryLayout.setVisibility(View.VISIBLE);
+                        int items = 0, qty = 0;
+                        double discount = 0;
+                        double netAm = 0;
+                        for (int i = 0; i < mGetBillMaster.size(); i++) {
+                            SalesMst bm = mGetBillMaster.get(i);
+                            qty = qty + (int) bm.getQty();
+                            discount = discount + bm.getDiscount();
+                            netAm = netAm + bm.getNetAmt();
+                            items = items + bm.getItems();
+                        }
+
+                        billItemReportAdapter = new BillItemReportAdapter(mGetItemMaster);
+                        billView.setAdapter(billItemReportAdapter);
+
+                        String text = "Bills:  " + String.valueOf(mGetBillMaster.size());
+                        tBillCount.setText(text);
+                        text = "Discount:  " + rs + df.format(discount);
+                        tDiscount.setText(text);
+                        text = "Net Amount:  " + rs + df.format(netAm);
+                        tNetAmount.setText(text);
+                        text = "Items:  " + String.valueOf(items);
+                        tItems.setText(text);
+                        text = "Qty:  " + String.valueOf(qty);
+                        tQty.setText(text);
                     }
-                    //  billLayout.setVisibility(View.VISIBLE);
-                    summaryLayout.setVisibility(View.VISIBLE);
-                    int items = 0,qty=0;
-                    double discount = 0;
-                    double netAm=0;
                     mProgressDialog.dismiss();
-                   for(int i =0;i<mGetBillMaster.size();i++)
-                    {
-                        SalesMst bm  = mGetBillMaster.get(i);
-                        qty = qty +(int) bm.getQty();
-                        discount = discount+ bm.getDiscount();
-                        netAm = netAm +bm.getNetAmt();
-                        items = items + bm.getItems();
-
-                    }
-
-                    billItemReportAdapter = new BillItemReportAdapter(ItemReportActivity.this, mGetItemMaster);
-                    billView.setAdapter(billItemReportAdapter);
-
-
-                   tBillCount.setText("Bills:  "+String.valueOf(mGetBillMaster.size()));
-                   tDiscount.setText("Discount:  "+rs+ df.format(discount));
-                    tNetAmount.setText("Net Amount:  "+rs+ df.format(netAm));
-                    tItems.setText("Items:  "+String.valueOf(items));
-                    tQty.setText("Qty:  "+String.valueOf(qty));
-
-                    //  AskPath ask = new AskPath(BillReportActivity.this,excelReport);
-                    // ask.show();
                 }
             }
         });
-        //  setHeader();
-
         df = new DecimalFormat("0.00");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ItemReportActivity.this);
         billView.setLayoutManager(linearLayoutManager);
-//        mGetBillMaster.get(0).setSelected(true);
-
-
-
-
     }
 
 
@@ -271,5 +241,12 @@ public class ItemReportActivity extends AppCompatActivity {
         dpd.show();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
 
 }

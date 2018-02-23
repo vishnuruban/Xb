@@ -2,20 +2,20 @@ package in.net.maitri.xb.billReports;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.cie.btp.CieBluetoothPrinter;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
@@ -25,48 +25,40 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import in.net.maitri.xb.R;
-import in.net.maitri.xb.billing.BillListAdapter;
+import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.db.CustomerReport;
 import in.net.maitri.xb.db.DbHandler;
-import in.net.maitri.xb.db.ReportData;
 import in.net.maitri.xb.db.SalesMst;
-import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
-
-/**
- * Created by SYSRAJ4 on 17/02/2018.
- */
 
 public class CustomerReportActivity extends AppCompatActivity {
 
-    BillReportDialog brd;
-
-    RecyclerView billView, billDetailsView;
-    TextView noBills,noBillDetails;
-    TextView selectedBill,selectedBillDate,tItems,tQty,tDiscount,tNetAmount,tPaymentStatus,tBillCount;
-    BillMasterAdapter billMasterAdapter;
-
+    private RecyclerView billView;
+    private TextView tItems,tQty,tDiscount,tNetAmount,tBillCount;
     private EditText mFromDate, mToDate;
     private int mYear, mMonth, mDay, mMinYear, mMinMonth, mMinDay;
     private String thisDate, mDate, mGetToDate = "", mGetFromDate = "";
     private String[] mDayOfWeak = {"Monday", "Tuesday", "Wednesday", "Thursday",
             "Friday", "Saturday", "Sunday"};
 
-    DbHandler dbHandler;
-    ProgressDialog mProgressDialog;
-    LinearLayout summaryLayout;
+    private DbHandler dbHandler;
+    private ProgressDialog mProgressDialog;
+    private LinearLayout summaryLayout;
     private List<CustomerReport> mGetCustomerMaster;
-
-    byte[] excelReport;
-    BillCustomerReportAdapter billCustomerReportAdapter;
+    private BillCustomerReportAdapter billCustomerReportAdapter;
     private List<SalesMst> mGetBillMaster;
-    DecimalFormat df;
-    String rs;
+    private DecimalFormat df;
+    private String rs;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_report);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
 
         mGetBillMaster = new ArrayList<>();
@@ -78,15 +70,13 @@ public class CustomerReportActivity extends AppCompatActivity {
         // tPaymentStatus = (TextView)findViewById(R.id.t);
         tBillCount = (TextView)findViewById(R.id.tBills);
         mGetCustomerMaster = new ArrayList<>();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         rs = "\u20B9";
         try{
             byte[] utf8 = rs.getBytes("UTF-8");
             rs = new String(utf8, "UTF-8");}
         catch (UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            rs = "RS.";
         }
 
 
@@ -194,16 +184,9 @@ public class CustomerReportActivity extends AppCompatActivity {
                 }
             }
         });
-        //  setHeader();
-
         df = new DecimalFormat("0.00");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CustomerReportActivity.this);
         billView.setLayoutManager(linearLayoutManager);
-//        mGetBillMaster.get(0).setSelected(true);
-
-
-
-
     }
 
 
@@ -272,5 +255,12 @@ public class CustomerReportActivity extends AppCompatActivity {
         dpd.show();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
+        return true;
+    }
 
 }

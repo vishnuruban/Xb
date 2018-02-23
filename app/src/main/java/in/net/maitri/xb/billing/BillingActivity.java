@@ -54,9 +54,13 @@ public class BillingActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_add_item_category, menu);
         MenuItem item = menu.findItem(R.id.bill_report);
+        MenuItem item1 = menu.findItem(R.id.bill_item_report);
+        MenuItem item2 = menu.findItem(R.id.bill_customer_report);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(BillingActivity.this);
         if (!sharedPreferences.getBoolean("user_is_admin",false)){
             item.setVisible(false);
+            item1.setVisible(false);
+            item2.setVisible(false);
         }
         return true;
     }

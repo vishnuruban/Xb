@@ -110,28 +110,28 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SYS_CREATED_AT = "sd_createdAt";
 
     //Bill series table name
-    private static final String  BILLSERIES_TABLE_NAME="BillSeries";
+    private static final String BILLSERIES_TABLE_NAME = "BillSeries";
     //Bill Series column names
-    private static  final String KEY_BS_ID ="bs_id";
-    private static  final String KEY_BS_NAME ="bs_name";
-    private static final String KEY_BS_SHORT_NAME ="bs_short_name";
-    private static  final String KEY_BS_RESET_TYPE ="bs_reset";
-    private static final String KEY_BS_PREFIX ="bs_prefix";
-    private static final  String KEY_BS_SEED ="bs_seed";
-    private static  final String KEY_BS_CURRENT_BILL ="bs_current_bill";
-    private static final String KEY_BS_CUSOMER_SELECTION ="bs_customer_selection";
-    private static final String KEY_BS_CASHIER_SELECTION ="bs_cashier_selection";
-    private static  final String KEY_BS_ROUND_OFF = "bs_roundOff";
+    private static final String KEY_BS_ID = "bs_id";
+    private static final String KEY_BS_NAME = "bs_name";
+    private static final String KEY_BS_SHORT_NAME = "bs_short_name";
+    private static final String KEY_BS_RESET_TYPE = "bs_reset";
+    private static final String KEY_BS_PREFIX = "bs_prefix";
+    private static final String KEY_BS_SEED = "bs_seed";
+    private static final String KEY_BS_CURRENT_BILL = "bs_current_bill";
+    private static final String KEY_BS_CUSOMER_SELECTION = "bs_customer_selection";
+    private static final String KEY_BS_CASHIER_SELECTION = "bs_cashier_selection";
+    private static final String KEY_BS_ROUND_OFF = "bs_roundOff";
     private static final String KEY_BS_CREATED_AT = "bs_createdAt";
     private static final String KEY_BS_DEFAULT = "bs_default";
 
     //User Master table name
-    private static final String  USER_MST_TABLE_NAME = "UserMst";
+    private static final String USER_MST_TABLE_NAME = "UserMst";
     //Bill Series column names
-    private static  final String KEY_UM_ID ="um_id";
-    private static  final String KEY_UM_USER ="um_user";
-    private static final String KEY_UM_PASSWORD ="um_password";
-    private static final String KEY_UM_IS_ADMIN ="um_isAdmin";
+    private static final String KEY_UM_ID = "um_id";
+    private static final String KEY_UM_USER = "um_user";
+    private static final String KEY_UM_PASSWORD = "um_password";
+    private static final String KEY_UM_IS_ADMIN = "um_isAdmin";
     private static final String KEY_UM_CREATED_AT = "um_createdAt";
 
     private List<Item> itemList = new ArrayList<>();
@@ -237,18 +237,18 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_BS_SHORT_NAME + " TEXT,"
                 + KEY_BS_SEED + " INTEGER,"
                 + KEY_BS_CURRENT_BILL + " INTEGER,"
-                + KEY_BS_RESET_TYPE+ " TEXT,"
-                + KEY_BS_PREFIX+ " TEXT,"
+                + KEY_BS_RESET_TYPE + " TEXT,"
+                + KEY_BS_PREFIX + " TEXT,"
                 + KEY_BS_CUSOMER_SELECTION + " TEXT,"
                 + KEY_BS_CASHIER_SELECTION + " TEXT,"
                 + KEY_BS_DEFAULT + " INTEGER,"
                 + KEY_BS_ROUND_OFF + " INTEGER,"
-                +KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                + KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_BILL_SERIES_TABLE);
-        addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES","NO",0,1),db);
+        addBillSeries0(new BillSeries("GENERAL", "GEN", "YEARLY", "", 1, 1, "YES", "NO", 0, 1), db);
 
-        String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME+ "("
-                + KEY_UM_ID+ " INTEGER PRIMARY KEY,"
+        String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME + "("
+                + KEY_UM_ID + " INTEGER PRIMARY KEY,"
                 + KEY_UM_USER + " TEXT UNIQUE,"
                 + KEY_UM_PASSWORD + " TEXT,"
                 + KEY_UM_IS_ADMIN + " INTEGER,"
@@ -271,7 +271,7 @@ public class DbHandler extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        switch (oldVersion+1) {
+        switch (oldVersion + 1) {
             case 1:
             case 2:
             case 3:
@@ -310,17 +310,17 @@ public class DbHandler extends SQLiteOpenHelper {
                         + KEY_BS_SHORT_NAME + " TEXT,"
                         + KEY_BS_SEED + " INTEGER,"
                         + KEY_BS_CURRENT_BILL + " INTEGER,"
-                        + KEY_BS_RESET_TYPE+ " TEXT,"
-                        + KEY_BS_PREFIX+ " TEXT,"
+                        + KEY_BS_RESET_TYPE + " TEXT,"
+                        + KEY_BS_PREFIX + " TEXT,"
                         + KEY_BS_CUSOMER_SELECTION + " TEXT,"
                         + KEY_BS_DEFAULT + " INTEGER,"
                         + KEY_BS_ROUND_OFF + " INTEGER,"
-                        +KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                        + KEY_BS_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
                 db.execSQL(CREATE_BILL_SERIES_TABLE);
-                addBillSeries0(new BillSeries("GENERAL","GEN","YEARLY","",1,1,"YES","",0,1),db);
+                addBillSeries0(new BillSeries("GENERAL", "GEN", "YEARLY", "", 1, 1, "YES", "", 0, 1), db);
             case 10:
-                String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME+ "("
-                        + KEY_UM_ID+ " INTEGER PRIMARY KEY,"
+                String CREATE_USER_MASTER_TABLE = "CREATE TABLE IF NOT EXISTS " + USER_MST_TABLE_NAME + "("
+                        + KEY_UM_ID + " INTEGER PRIMARY KEY,"
                         + KEY_UM_USER + " TEXT UNIQUE,"
                         + KEY_UM_PASSWORD + " TEXT,"
                         + KEY_UM_IS_ADMIN + " INTEGER,"
@@ -343,7 +343,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addcashierName = "ALTER TABLE " + BILLSERIES_TABLE_NAME +
                         " ADD COLUMN " + KEY_BS_CASHIER_SELECTION + " TEXT ";
                 db.execSQL(addcashierName);
-                updateCashierRequired("NO",db);
+                updateCashierRequired("NO", db);
             case 11:
                 String addcustName = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                         " ADD COLUMN " + KEY_SM_CUSTOMER_NAME + " TEXT ";
@@ -572,7 +572,7 @@ public class DbHandler extends SQLiteOpenHelper {
         itemList.clear();
         // Select All Query
         try {
-            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " =  " + categoryId ;
+            String selectQuery = "SELECT  * FROM " + ITEM_TABLE_NAME + " WHERE " + KEY_CATE_ID + " =  " + categoryId;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             // looping through all rows and adding to list
@@ -791,7 +791,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
 
     // Getting All item
-    public List<SalesDet> getBillDetails(int billNo, int fromDate, int toDate,String dateTime) {
+    public List<SalesDet> getBillDetails(int billNo, int fromDate, int toDate, String dateTime) {
         //     sdList.clear();
         // Select All Query
 
@@ -799,7 +799,7 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
 
             String selectQuery = "select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
-                    "join SalesMst sm on sd.sd_billNo = sm.sm_sale_billNo and sd.sd_datetime = sm.sm_datetime where " + KEY_SM_BILL_NO +" = "+ billNo +" and "+KEY_SD_DATETIME +"='"+dateTime+"'";
+                    "join SalesMst sm on sd.sd_billNo = sm.sm_sale_billNo and sd.sd_datetime = sm.sm_datetime where " + KEY_SM_BILL_NO + " = " + billNo + " and " + KEY_SD_DATETIME + "='" + dateTime + "'";
 
             System.out.println(selectQuery);
 
@@ -820,7 +820,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
                     System.out.println("DBDESC " + c.getString(c.getColumnIndex("itm_name")));
 
-                    SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)), bm,dateTime);
+                    SalesDet sd = new SalesDet(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)), bm, dateTime);
                 /*
 
                     item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
@@ -901,6 +901,7 @@ public class DbHandler extends SQLiteOpenHelper {
 
         try {
             String selectQuery = "SELECT  * FROM " + SALES_MST_TABLE_NAME + " WHERE " + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate;
+            Log.d("Query", selectQuery);
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             if (c.moveToFirst()) {
@@ -918,9 +919,8 @@ public class DbHandler extends SQLiteOpenHelper {
                     mst.setCustomerId(c.getInt(c.getColumnIndex(KEY_SM_CUSTOMER)));
                     mst.setCustName(c.getString(c.getColumnIndex(KEY_SM_CUSTOMER_NAME)));
                     mst.setCashName(c.getString(c.getColumnIndex(KEY_SM_CASHIER_NAME)));
-                   int custId = c.getInt(c.getColumnIndex(KEY_SM_CUSTOMER));
-                    if(custId!=0)
-                    {
+                    int custId = c.getInt(c.getColumnIndex(KEY_SM_CUSTOMER));
+                    if (custId != 0) {
                         mst.setCustomerNumber(getCustomer(custId));
                     }
                     smList.add(mst);
@@ -952,8 +952,8 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_PAYMENT_MODE, salesMst.getPaymentMode());
             cv.put(KEY_SM_PAYMENT_DET, salesMst.getPaymentDet());
             cv.put(KEY_SM_STATUS, salesMst.getStatus());
-            cv.put(KEY_SM_CASHIER_NAME,salesMst.getCashName());
-            cv.put(KEY_SM_CUSTOMER_NAME,salesMst.getCustName());
+            cv.put(KEY_SM_CASHIER_NAME, salesMst.getCashName());
+            cv.put(KEY_SM_CUSTOMER_NAME, salesMst.getCustName());
             result = db.insert(SALES_MST_TABLE_NAME, null, cv);
             db.close();
             return result;
@@ -977,7 +977,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SD_RATE, salesDet.billItems.getRate());
             cv.put(KEY_SD_NET_RATE, salesDet.billItems.getNet_rate());
             cv.put(KEY_SD_AMOUNT, salesDet.billItems.getAmount());
-            cv.put(KEY_SD_DATETIME,salesDet.getDateTime());
+            cv.put(KEY_SD_DATETIME, salesDet.getDateTime());
             result = db.insert(SALES_DET_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
@@ -1076,14 +1076,14 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
             String selectQuery = "SELECT CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME
                     + ", cast(SUM(SD." + KEY_SD_QTY + ")as text) AS sQTY, "
-                    + "cast(SUM(SD." + KEY_SD_RATE + ")as text) AS sRATE, "
+                    + "cast(SD." + KEY_SD_RATE + " as text) AS sRATE, "
                     + "cast(SUM(SD." + KEY_SD_AMOUNT + ")as text) AS sAMT "
                     + "FROM " + SALES_DET_TABLE_NAME + " AS SD "
                     + " INNER JOIN " + CATEGORY_TABLE_NAME + " AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
                     + " INNER JOIN " + ITEM_TABLE_NAME + " AS ITM ON ITM." + KEY_ITEM_ID + " = SD." + KEY_SD_ITEM
-                    + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_SALE_BILL_NO + " = SD." + KEY_SD_BILL_NO + " AND SM."+KEY_SM_DATETIME +" = SD."+KEY_SD_DATETIME
+                    + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_SALE_BILL_NO + " = SD." + KEY_SD_BILL_NO + " AND SM." + KEY_SM_DATETIME + " = SD." + KEY_SD_DATETIME
                     + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate
-                    + " GROUP BY CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME;
+                    + " GROUP BY CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME + ",SD." + KEY_SD_RATE;
             Log.d("Query", selectQuery);
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
@@ -1107,24 +1107,20 @@ public class DbHandler extends SQLiteOpenHelper {
     }
 
 
-
-
     public List<CustomerReport> getTotalCustomerReport(int fromDate, int toDate) {
         customerReport.clear();
         try {
 
 
-        String query ="select  sum("+KEY_SM_DISCOUNT+") as tDiscount,sum("+KEY_SM_QTY+") as tQty,sum("+KEY_SM_NET_AMT+") as tNetAmt,sum("+KEY_SM_ITEM+") as tItem,"+KEY_SM_CUSTOMER_NAME+" ,ifnull(cst_number,'') as cst_number    from " +
-                SALES_MST_TABLE_NAME+"   LEFT join CustomerMst1 on sm_customer = id   where "+KEY_SM_DATE +" between "+ fromDate +" and " +toDate +
-                " group by "+ KEY_SM_CUSTOMER_NAME;
-            Log.d("CustomerReportQuery",query);
+            String query = "select  sum(" + KEY_SM_DISCOUNT + ") as tDiscount,sum(" + KEY_SM_QTY + ") as tQty,sum(" + KEY_SM_NET_AMT + ") as tNetAmt,sum(" + KEY_SM_ITEM + ") as tItem," + KEY_SM_CUSTOMER_NAME + " ,ifnull(cst_number,'') as cst_number    from " +
+                    SALES_MST_TABLE_NAME + "   LEFT join CustomerMst1 on sm_customer = id   where " + KEY_SM_DATE + " between " + fromDate + " and " + toDate +
+                    " group by " + KEY_SM_CUSTOMER_NAME;
+            Log.d("CustomerReportQuery", query);
             SQLiteDatabase db = this.getWritableDatabase();
-            Cursor c =db.rawQuery(query,null);
-            if(c.moveToFirst())
-            {
-                do
-                {
-                    Log.i("cNetAmt",String.valueOf(c.getInt(c.getColumnIndex("tNetAmt"))));
+            Cursor c = db.rawQuery(query, null);
+            if (c.moveToFirst()) {
+                do {
+                    Log.i("cNetAmt", String.valueOf(c.getInt(c.getColumnIndex("tNetAmt"))));
                     CustomerReport cReport = new CustomerReport();
                     cReport.setcName(c.getString(c.getColumnIndex(KEY_SM_CUSTOMER_NAME)));
                     cReport.setcNumber(c.getString(c.getColumnIndex("cst_number")));
@@ -1132,32 +1128,32 @@ public class DbHandler extends SQLiteOpenHelper {
                     cReport.setcNetAmt(c.getInt(c.getColumnIndex("tNetAmt")));
                     cReport.setcQtyCount(c.getInt(c.getColumnIndex("tQty")));
                     customerReport.add(cReport);
-                }while(c.moveToNext());
+                } while (c.moveToNext());
             }
             c.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
         }
         return customerReport;
-        }
+    }
 
 
-    public void addBillSeries0(BillSeries bill,SQLiteDatabase db) {
+    public void addBillSeries0(BillSeries bill, SQLiteDatabase db) {
         try {
-          //  SQLiteDatabase db = this.getWritableDatabase();
+            //  SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(KEY_BS_NAME,bill.getBillName() );
-            cv.put(KEY_BS_SHORT_NAME,bill.getShortName() );
-            cv.put(KEY_BS_PREFIX,bill.getPrefix() );
-            cv.put(KEY_BS_RESET_TYPE,bill.getResetType() );
+            cv.put(KEY_BS_NAME, bill.getBillName());
+            cv.put(KEY_BS_SHORT_NAME, bill.getShortName());
+            cv.put(KEY_BS_PREFIX, bill.getPrefix());
+            cv.put(KEY_BS_RESET_TYPE, bill.getResetType());
             cv.put(KEY_BS_SEED, bill.getSeed());
             cv.put(KEY_BS_CURRENT_BILL, bill.getCurrentBillNo());
             cv.put(KEY_BS_CUSOMER_SELECTION, bill.getCustomerSelection());
-            if(!bill.getCashierSelection().isEmpty()) {
+            if (!bill.getCashierSelection().isEmpty()) {
                 cv.put(KEY_BS_CASHIER_SELECTION, bill.getCashierSelection());
             }
             cv.put(KEY_BS_ROUND_OFF, bill.getRoundOff());
-            cv.put(KEY_BS_DEFAULT,bill.getDefault_bill());
+            cv.put(KEY_BS_DEFAULT, bill.getDefault_bill());
             db.insert(BILLSERIES_TABLE_NAME, null, cv);
 
         } catch (SQLException e) {
@@ -1170,15 +1166,15 @@ public class DbHandler extends SQLiteOpenHelper {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
-            cv.put(KEY_BS_NAME,bill.getBillName() );
-            cv.put(KEY_BS_SHORT_NAME,bill.getShortName() );
-            cv.put(KEY_BS_PREFIX,bill.getPrefix() );
-            cv.put(KEY_BS_RESET_TYPE,bill.getResetType() );
+            cv.put(KEY_BS_NAME, bill.getBillName());
+            cv.put(KEY_BS_SHORT_NAME, bill.getShortName());
+            cv.put(KEY_BS_PREFIX, bill.getPrefix());
+            cv.put(KEY_BS_RESET_TYPE, bill.getResetType());
             cv.put(KEY_BS_SEED, bill.getSeed());
             cv.put(KEY_BS_CURRENT_BILL, bill.getCurrentBillNo());
             cv.put(KEY_BS_CUSOMER_SELECTION, bill.getCustomerSelection());
             cv.put(KEY_BS_ROUND_OFF, bill.getRoundOff());
-            cv.put(KEY_BS_DEFAULT,bill.getDefault_bill());
+            cv.put(KEY_BS_DEFAULT, bill.getDefault_bill());
             db.insert(BILLSERIES_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
@@ -1214,36 +1210,36 @@ public class DbHandler extends SQLiteOpenHelper {
         return new BillSeries();
     }
 
-    public boolean  updateBillNo(int num) {
+    public boolean updateBillNo(int num) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_BS_CURRENT_BILL,num);
-        long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
+        values.put(KEY_BS_CURRENT_BILL, num);
+        long rowid = db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[]{"1"});
         return rowid != -1;
         // updating row
     }
 
-    public boolean  updateBillSeries(int num,String prefix,String cust,String cash) {
+    public boolean updateBillSeries(int num, String prefix, String cust, String cash) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_BS_CURRENT_BILL,num);
+        values.put(KEY_BS_CURRENT_BILL, num);
         values.put(KEY_BS_PREFIX, prefix);
         values.put(KEY_BS_CASHIER_SELECTION, cash);
         values.put(KEY_BS_CUSOMER_SELECTION, cust);
-        long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
+        long rowid = db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[]{"1"});
 
         return rowid != -1;
         // updating row
     }
 
 
-    public boolean  updateCashierRequired(String cashierReq,SQLiteDatabase db) {
+    public boolean updateCashierRequired(String cashierReq, SQLiteDatabase db) {
 
         ContentValues values = new ContentValues();
         values.put(KEY_BS_CASHIER_SELECTION, cashierReq);
 
-        long rowid =db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[] {"1"});
+        long rowid = db.update(BILLSERIES_TABLE_NAME, values, KEY_BS_DEFAULT + "= ?", new String[]{"1"});
 
         return rowid != -1;
         // updating row
@@ -1254,7 +1250,7 @@ public class DbHandler extends SQLiteOpenHelper {
         billListSeries.clear();
         // Select All Query
         try {
-            String selectQuery = "SELECT  * FROM " +BILLSERIES_TABLE_NAME;
+            String selectQuery = "SELECT  * FROM " + BILLSERIES_TABLE_NAME;
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             if (c.moveToFirst()) {
@@ -1339,7 +1335,7 @@ public class DbHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             if (c.moveToFirst()) {
-                  return c.getString(c.getColumnIndex(KEY_UM_PASSWORD));
+                return c.getString(c.getColumnIndex(KEY_UM_PASSWORD));
             }
             c.close();
         } catch (SQLException e) {
@@ -1358,14 +1354,14 @@ public class DbHandler extends SQLiteOpenHelper {
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             if (c.moveToFirst()) {
-                return c.getInt(c.getColumnIndex(KEY_UM_IS_ADMIN )) == 1;
+                return c.getInt(c.getColumnIndex(KEY_UM_IS_ADMIN)) == 1;
             }
             c.close();
         } catch (SQLException e) {
             createErrorDialog(e.toString());
             return false;
         }
-       return false;
+        return false;
     }
 
     public boolean addUser(User user) {
@@ -1418,7 +1414,7 @@ public class DbHandler extends SQLiteOpenHelper {
         User user = new User();
         try {
             String selectQuery = "SELECT  * FROM " + USER_MST_TABLE_NAME +
-                    " WHERE " + KEY_UM_USER + " = '" + userName +"'";
+                    " WHERE " + KEY_UM_USER + " = '" + userName + "'";
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             if (c.moveToFirst()) {
@@ -1446,7 +1442,7 @@ public class DbHandler extends SQLiteOpenHelper {
         }
     }
 
-    public boolean changePassword(String userName, String password){
+    public boolean changePassword(String userName, String password) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();

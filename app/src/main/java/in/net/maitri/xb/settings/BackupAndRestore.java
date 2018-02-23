@@ -122,6 +122,8 @@ public class BackupAndRestore extends PreferenceFragment implements SharedPrefer
                         if (new BackUpAndRestoreDb(getActivity()).importDB(selectedFile)) {
                             Intent intent = new Intent(getActivity(), AddItemCategory.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             getActivity().finish();
                         }
