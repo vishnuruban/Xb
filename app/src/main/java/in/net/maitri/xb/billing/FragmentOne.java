@@ -175,6 +175,14 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         mclearBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(billList.size()==0)
+                {
+                    Toast.makeText(getActivity(),"No Bills Found!",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+
                  AlertDialog.Builder dialog =new AlertDialog.Builder(getActivity());
                  dialog.setTitle("Are you sure you want to clear the bill?");
                  dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {

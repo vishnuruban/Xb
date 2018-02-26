@@ -300,13 +300,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         super.onResume();
     }
 
-
     @Override
     protected void onPause() {
         mPrinter.onActivityPause();
         super.onPause();
     }
-
     @Override
     protected void onDestroy() {
         mPrinter.onActivityDestroy();
@@ -432,14 +430,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_zero = (Button) findViewById(R.id.btn_zero);
         btn_point = (Button) findViewById(R.id.btn_point);
         btn_clear = (Button) findViewById(R.id.btn_clear);
-       /* btn_100 = (Button) findViewById(R.id.btn_100);
-        btn_500 = (Button) findViewById(R.id.btn_500);
-        btn_2000 = (Button) findViewById(R.id.btn_2000);
-        btn_cash = (Button) findViewById(R.id.btn_cash);
-        btn_dc = (Button) findViewById(R.id.btn_dc);
-        btn_cc = (Button) findViewById(R.id.btn_cc);
-        btn_wallet = (Button) findViewById(R.id.btn_wallet);*/
-      cPrint = (Button) findViewById(R.id.cPrint);
+        cPrint = (Button) findViewById(R.id.cPrint);
         cSave = (Button) findViewById(R.id.cSave);
         cCancel =(Button)findViewById(R.id.cCancel) ;
         cPrint.setEnabled(false);
@@ -775,7 +766,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
 //                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+
                 netAmt = Double.parseDouble(totalPrice);
+                cCash.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
                 cDiscountValue = "";
             } else {
                 char disSymbl = s.charAt(0);
