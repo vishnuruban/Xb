@@ -41,7 +41,7 @@ public class AddItemCategory extends AppCompatActivity {
     private int mCategoryId;
     private FloatingActionButton mAddItemBtn;
     private boolean isAll = true;
-    private RecyclerView categoryView,itemView;
+    private RecyclerView categoryView, itemView;
     private ProgressDialog progressDialog;
 
     @Override
@@ -70,11 +70,7 @@ public class AddItemCategory extends AppCompatActivity {
             public void onClick(View view, int position) {
 
                 if (position == 0) {
-                    mAddItemBtn.setVisibility(View.GONE);
-                    mCategoryAdapter.setSelected(position);
-                    isAll = true;
-                    updateItem(0);
-                    mSelectedCategory.setText(R.string.all);
+                    selectAll();
                 } else {
                     mAddItemBtn.setVisibility(View.VISIBLE);
                     mCategoryAdapter.setSelected(position);
@@ -95,17 +91,19 @@ public class AddItemCategory extends AppCompatActivity {
 
             @Override
             public void onLongClick(View view, int position) {
-                Category category = mGetAllCategories.get(position);
-                showPopupMenu(view, category, new Item(), true);
-                String categoryName = category.getCategoryName();
-                String catImgPath = category.getCategoryImage();
-                mCategoryId = category.getId();
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("catName", categoryName);
-                editor.putInt("catId", mCategoryId);
-                editor.putString("catImg", catImgPath);
-                editor.apply();
+                if (position != 0) {
+                    Category category = mGetAllCategories.get(position);
+                    showPopupMenu(view, category, new Item(), true);
+                    String categoryName = category.getCategoryName();
+                    String catImgPath = category.getCategoryImage();
+                    mCategoryId = category.getId();
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("catName", categoryName);
+                    editor.putInt("catId", mCategoryId);
+                    editor.putString("catImg", catImgPath);
+                    editor.apply();
+                }
             }
         }));
 
@@ -222,6 +220,7 @@ public class AddItemCategory extends AppCompatActivity {
                         if (isCategory) {
                             mDbHandler.deletecategory(id);
                             updateCategoryAdapter();
+                            selectAll();
                         } else {
                             mDbHandler.deleteItem(id);
                             updateItem(mCategoryId);
@@ -349,6 +348,14 @@ public class AddItemCategory extends AppCompatActivity {
             itemView.setAdapter(mItemAdapter);
             progressDialog.cancel();
         }
+    }
+
+    private void selectAll() {
+        mAddItemBtn.setVisibility(View.GONE);
+        mCategoryAdapter.setSelected(0);
+        isAll = true;
+        updateItem(0);
+        mSelectedCategory.setText(R.string.all);
     }
 
 }

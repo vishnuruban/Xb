@@ -1110,10 +1110,11 @@ public class DbHandler extends SQLiteOpenHelper {
     public List<CustomerReport> getTotalCustomerReport(int fromDate, int toDate) {
         customerReport.clear();
         try {
-
-
-            String query = "select  sum(" + KEY_SM_DISCOUNT + ") as tDiscount,sum(" + KEY_SM_QTY + ") as tQty,sum(" + KEY_SM_NET_AMT + ") as tNetAmt,sum(" + KEY_SM_ITEM + ") as tItem," + KEY_SM_CUSTOMER_NAME + " ,ifnull(cst_number,'') as cst_number    from " +
-                    SALES_MST_TABLE_NAME + "   LEFT join CustomerMst1 on sm_customer = id   where " + KEY_SM_DATE + " between " + fromDate + " and " + toDate +
+            String query = "select  sum(" + KEY_SM_DISCOUNT + ") as tDiscount,sum(" + KEY_SM_QTY +
+                    ") as tQty,sum(" + KEY_SM_NET_AMT + ") as tNetAmt,sum(" + KEY_SM_ITEM +
+                    ") as tItem," + KEY_SM_CUSTOMER_NAME + " ,ifnull(cst_number,'') as cst_number from " +
+                    SALES_MST_TABLE_NAME + "   LEFT join CustomerMst1 on sm_customer = id   where " +
+                    KEY_SM_DATE + " between " + fromDate + " and " + toDate +
                     " group by " + KEY_SM_CUSTOMER_NAME;
             Log.d("CustomerReportQuery", query);
             SQLiteDatabase db = this.getWritableDatabase();
@@ -1383,7 +1384,8 @@ public class DbHandler extends SQLiteOpenHelper {
     public List<String> getAllUsers() {
         List<String> users = new ArrayList<>();
         String selectQuery = "SELECT " + KEY_UM_USER + " FROM " + USER_MST_TABLE_NAME
-                + " WHERE " + KEY_UM_USER + " <> 'maitri'";
+                + " WHERE " + KEY_UM_USER + " NOT IN  ('maitri' , 'admin')";
+        Log.d("DU", selectQuery);
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {

@@ -1,6 +1,7 @@
 package in.net.maitri.xb.settings;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -15,6 +16,8 @@ import java.util.List;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
+import in.net.maitri.xb.itemdetails.AddItemCategory;
+import in.net.maitri.xb.login.LoginActivity;
 import in.net.maitri.xb.user.AddNewUser;
 import in.net.maitri.xb.user.ChangePassword;
 import in.net.maitri.xb.user.EditUser;
@@ -103,8 +106,6 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
             }
         });
 
-
-
     }
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -129,6 +130,15 @@ public class UserSettings extends PreferenceFragment implements SharedPreference
              public void onClick(DialogInterface dialogInterface, int i) {
                  if (new DbHandler(getActivity()).deleteUser(userName)){
                      Toast.makeText(getActivity(), userName + " deleted successfully.",Toast.LENGTH_SHORT).show();
+                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                     String currentUserName = sharedPreferences.getString("current_user","");
+                     if (currentUserName.equals(userName)){
+                         Intent intent = new Intent(getActivity(), LoginActivity.class);
+                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                         startActivity(intent);
+                     }
                  } else {
                      Toast.makeText(getActivity(), userName + " deleting failed.",Toast.LENGTH_SHORT).show();
                  }

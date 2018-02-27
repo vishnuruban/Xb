@@ -1,8 +1,10 @@
 package in.net.maitri.xb.user;
 
 import android.app.DialogFragment;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import java.util.List;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.User;
+
 
 public class EditUser extends DialogFragment {
 
@@ -70,9 +73,17 @@ public class EditUser extends DialogFragment {
 
                 if (new DbHandler(getActivity()).updateUser(mSelectedUser)) {
                     Toast.makeText(getActivity(), "User updated successfully", Toast.LENGTH_SHORT).show();
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    String currentUserName = sharedPreferences.getString("current_user","");
+                    if(!currentUserName.equals(getNewUserName)){
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("current_user", getNewUserName);
+                        editor.putBoolean("user_is_admin", new DbHandler(getActivity()).isAdmin(getNewUserName));
+                        editor.apply();
+                    }
                     dismiss();
                 } else {
-                    Toast.makeText(getActivity(), "User updated successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Failed to update user.", Toast.LENGTH_SHORT).show();
                     dismiss();
                 }
 
