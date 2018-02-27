@@ -24,7 +24,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -370,6 +370,9 @@ public class DbHandler extends SQLiteOpenHelper {
                         "                  FROM SalesMst\n" +
                         "                  WHERE  sm_Sale_billNo = salesDet.sd_billNo)";
                 db.execSQL(dateInSalesDet);
+            case 14:
+                String updateCustomer1 = "update salesmst set sm_customer_name = '' where sm_customer_name like '% '";
+                db.execSQL(updateCustomer1);
                 break;
         }
     }

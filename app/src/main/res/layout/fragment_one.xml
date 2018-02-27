@@ -113,9 +113,11 @@
             android:id="@+id/l1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/bottom_menu"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/bottom_menu">
 
 
             <LinearLayout

@@ -6,12 +6,10 @@
     android:orientation="vertical"
     tools:context="in.net.maitri.xb.itemdetails.AddItemCategory">
 
-
     <LinearLayout
         android:id="@+id/date_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:orientation="vertical">
 
         <LinearLayout
@@ -28,7 +26,7 @@
                 android:id="@+id/from_date_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.33"
+                android:layout_weight="0.25"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin">
@@ -64,7 +62,7 @@
                 android:id="@+id/to_date_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.33"
+                android:layout_weight="0.25"
                 android:orientation="vertical"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:paddingStart="@dimen/activity_horizontal_margin">
@@ -96,12 +94,34 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorAccent" />
 
+            <LinearLayout
+                android:id="@+id/filter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@mipmap/ic_filter_list_black_24dp"
+                    android:text="Filter"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/text_size"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent" />
 
             <LinearLayout
                 android:id="@+id/showReport"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.34"
+                android:layout_weight="0.25"
                 android:gravity="center">
 
                 <TextView
@@ -115,7 +135,9 @@
 
             </LinearLayout>
 
+
         </LinearLayout>
+
 
         <View
             android:layout_width="match_parent"
@@ -225,7 +247,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Category Name"
+                    android:text="Category"
                     android:textColor="#ffffff" />
 
 
@@ -235,7 +257,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Item Name"
+                    android:text="Item"
                     android:textColor="#ffffff" />
 
                 <TextView

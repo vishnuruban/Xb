@@ -32,16 +32,13 @@ import in.net.maitri.xb.db.SalesMst;
 
 public class ItemReportActivity extends AppCompatActivity {
 
-
     private RecyclerView billView;
     private TextView tItems, tQty, tDiscount, tNetAmount, tBillCount;
-
     private EditText mFromDate, mToDate;
     private int mYear, mMonth, mDay, mMinYear, mMinMonth, mMinDay;
     private String thisDate, mDate, mGetToDate = "", mGetFromDate = "";
     private String[] mDayOfWeak = {"Monday", "Tuesday", "Wednesday", "Thursday",
             "Friday", "Saturday", "Sunday"};
-
     private DbHandler dbHandler;
     private ProgressDialog mProgressDialog;
     private LinearLayout summaryLayout;
@@ -82,6 +79,7 @@ public class ItemReportActivity extends AppCompatActivity {
         LinearLayout mShowReport = (LinearLayout) findViewById(R.id.showReport);
         LinearLayout mFromDateLayout = (LinearLayout) findViewById(R.id.from_date_layout);
         LinearLayout mToDateLayout = (LinearLayout) findViewById(R.id.to_date_layout);
+        LinearLayout mFilter = (LinearLayout) findViewById(R.id.filter);
         mFromDate = (EditText) findViewById(R.id.from_date);
         mToDate = (EditText) findViewById(R.id.to_date);
         mFromDate.setClickable(true);

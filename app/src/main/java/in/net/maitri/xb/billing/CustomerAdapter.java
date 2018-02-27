@@ -1,7 +1,6 @@
 package in.net.maitri.xb.billing;
 
-import android.content.Context;
-import android.support.v7.widget.RecyclerView;
+import android.content.Context;;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,17 +10,11 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import in.net.maitri.xb.MainActivity;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Customer;
-
-/**
- * Created by SYSRAJ4 on 23/11/2017.
- */
 
 public class CustomerAdapter extends BaseAdapter implements Filterable {
 
@@ -38,14 +31,8 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
         this.mDisplayedValues = customerLists;
         this.mode = mode;
         inflater = LayoutInflater.from(context);
-
         System.out.println("MODE "+mode);
-
-
-
     }
-
-
 
     @Override
     public int getCount() {
@@ -99,12 +86,6 @@ public class CustomerAdapter extends BaseAdapter implements Filterable {
 
         return convertView;
     }
-
-
-
-
-
-
 
     @Override
     public Filter getFilter() {
