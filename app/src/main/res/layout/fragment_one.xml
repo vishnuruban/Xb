@@ -87,7 +87,7 @@
                     android:drawableLeft="@mipmap/ic_add_shopping_cart_white_24dp"
                     android:background="@drawable/button_shape"
                     android:padding="16dp"
-                  />
+                    />
             </LinearLayout>
 
         </LinearLayout>
@@ -113,11 +113,9 @@
             android:id="@+id/l1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/bottom_menu">
+            android:layout_above="@id/bottom_menu"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
 
 
             <LinearLayout
@@ -139,6 +137,7 @@
                     android:theme="@style/auto_drop"
                     android:hint="Customer Name /  Number"
                     android:padding="16dp"
+                    android:inputType="textCapWords"
                     android:textColor="#fff"
                     android:textColorHint="#F6F6F6" />
 

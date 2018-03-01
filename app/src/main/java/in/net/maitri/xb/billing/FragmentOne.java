@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -36,22 +37,28 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Customer;
 import in.net.maitri.xb.db.DbHandler;
 
+/**
+ * Created by SYSRAJ4 on 10/11/2017.
+ */
+
 public class FragmentOne extends Fragment implements View.OnClickListener {
 
 
-    Button mCheckout, mclearBill;
+    Button mCheckout,mclearBill;
     public static ArrayList<BillItems> billList;
     private ListView billListView;
     private static BillListAdapter billListAdapter;
-    private static TextView bTotalProducts, bTotalPrice;
-    static DecimalFormat df, df1;
+    private static TextView bTotalProducts,bTotalPrice;
+    static DecimalFormat df,df1;
     ImageButton imgCustomer;
-    public static AutoCompleteTextView autoCustomer;
+
+    public static AutoCompleteTextView  autoCustomer;
     CustomerAdapter customerAdapter;
     DbHandler dbHandler;
     LinearLayout custScreen;
@@ -61,6 +68,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     ArrayList<Customer> customerArrayList;
     public static Customer customerDetails;
     static double a = 0;
+
     Customer customer;
     int customerId = 0;
 
@@ -72,34 +80,34 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_one, container, false);
 
         bTotalProducts = (TextView) view.findViewById(R.id.bTotalProducts);
-        bTotalPrice = (TextView) view.findViewById(R.id.bTotalPrice);
-        custScreen = (LinearLayout) view.findViewById(R.id.customerscrren);
+        bTotalPrice    = (TextView) view.findViewById(R.id.bTotalPrice);
+        custScreen =(LinearLayout) view.findViewById(R.id.customerscrren);
         dbHandler = new DbHandler(getActivity());
         mCheckout = (Button) view.findViewById(R.id.mCheckout);
         mclearBill = (Button) view.findViewById(R.id.mClearBill);
         billListView = (ListView) view.findViewById(R.id.bill_lv);
-        imgCustomer = (ImageButton) view.findViewById(R.id.selectCustomer);
-        billListAdapter = new BillListAdapter(getActivity(), billList);
+        imgCustomer = (ImageButton)view.findViewById(R.id.selectCustomer);
+        billListAdapter = new BillListAdapter(getActivity(),billList);
         billListView.setAdapter(billListAdapter);
         autoCustomer = (AutoCompleteTextView) view.findViewById(R.id.autoSearch);
         // populateList();
         customerArrayList = new ArrayList<>();
         customerArrayList = dbHandler.getAllCustomer();
-        customer = new Customer();
+        customer =new Customer();
 
         autoCustomer.setOnEditorActionListener(new DoneOnEditorActionListener());
 
-        customerAdapter = new CustomerAdapter(getActivity(), customerArrayList, "NAME");
+        customerAdapter =new CustomerAdapter(getActivity(),customerArrayList,"NAME");
         autoCustomer.setAdapter(customerAdapter);
 
 
         autoCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                customerDetails = (Customer) customerAdapter.getItem(position);
+                customerDetails = (Customer)customerAdapter.getItem(position);
                 autoCustomer.setText(customerDetails.getName());
                 customerId = customerDetails.getId();
-                System.out.println("CUSTID " + customerId);
+                System.out.println("CUSTID "+customerId);
                 customer.setId(customerId);
                 customer.setName(customerDetails.getName());
                 customer.setMobileno(customerDetails.getMobileno());
@@ -107,20 +115,20 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             }
         });
 
-        GradientDrawable bgShape = (GradientDrawable) mCheckout.getBackground();
+        GradientDrawable bgShape = (GradientDrawable)mCheckout.getBackground();
         bgShape.setColor(getResources().getColor(R.color.dark_green));
-        GradientDrawable bgShape1 = (GradientDrawable) mclearBill.getBackground();
+        GradientDrawable bgShape1 = (GradientDrawable)mclearBill.getBackground();
         bgShape1.setColor(getResources().getColor(R.color.red));
 
 
-        df = new DecimalFormat("0.00");
-        df1 = new DecimalFormat("#,###");
+        df  =  new DecimalFormat("0.00");
+        df1 =  new DecimalFormat("#,###");
 
 
         billListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> a, View v, int position, long id) {
                 BillItems bi = billList.get(position);
-                modifyItem(bi, billListAdapter);
+                modifyItem(bi,billListAdapter);
             }
         });
 
@@ -128,7 +136,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         imgCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddCustomerDialog customerDialog = new AddCustomerDialog(getActivity(), customerAdapter, customerArrayList, autoCustomer.getText().toString());
+                AddCustomerDialog customerDialog = new AddCustomerDialog(getActivity(),customerAdapter,customerArrayList,autoCustomer.getText().toString());
                 customerDialog.setCancelable(false);
                 customerDialog.getWindow().setSoftInputMode(
                         WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -140,40 +148,44 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         mCheckout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (billList.size() == 0) {
-                    Toast.makeText(getActivity(), "Bill is empty", Toast.LENGTH_SHORT).show();
-                } else {
+                if(billList.size()==0)
+                {
+                    Toast.makeText(getActivity(),"Bill is empty",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
                     Bundle bundle = new Bundle();
                     bundle.putString("products", bTotalProducts.getText().toString());
-                    bundle.putString("price", String.valueOf(df.format(a)));
-                    if (customerId == 0) {
+                    bundle.putString("price",String.valueOf(df.format(a)));
+                    if(customerId == 0) {
                         customer.setId(0);
-                        customer.setName(autoCustomer.getText().toString().trim());
+                        customer.setName(autoCustomer.getText().toString());
                     }
                     Intent intent = new Intent(getActivity(), CheckoutActivity.class);
                     intent.putExtras(bundle);
-                    Log.i("CustomerName", customer.getName());
-                    Log.i("CustomerId", String.valueOf(customer.getId()));
-                    intent.putExtra("customer", customer);
-                    startActivity(intent);
-                }
+                    Log.i("CustomerName",customer.getName());
+                    Log.i("CustomerId",String.valueOf(customer.getId()));
+                    intent.putExtra("customer",customer);
+                    startActivity(intent);}
             }
         });
+
 
 
         mclearBill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if (billList.size() == 0) {
-                    Toast.makeText(getActivity(), "No Bills Found!", Toast.LENGTH_SHORT).show();
+                if(billList.size()==0)
+                {
+                    Toast.makeText(getActivity(),"No Bills Found!",Toast.LENGTH_SHORT).show();
                     return;
                 }
 
 
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder dialog =new AlertDialog.Builder(getActivity());
                 dialog.setTitle("Are you sure you want to clear the bill?");
-                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -184,7 +196,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
                     }
                 });
-                dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -193,19 +205,26 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 dialog.show();
             }
         });
-        return view;
+        return  view;
     }
 
 
-    public static void populateList(BillItems be) {
-
-        if (billList.size() != 0) {
 
 
-            for (int i = 0; i < billList.size(); i++) {
+
+    public static void populateList(BillItems be)
+    {
+
+        if(billList.size()!=0)
+        {
+
+
+            for(int i=0;i<billList.size();i++)
+            {
                 BillItems bItm = billList.get(i);
 
-                if (bItm.getDesc().equals(be.getDesc()) && bItm.getRate() == be.getRate()) {
+                if(bItm.getDesc().equals(be.getDesc()) && bItm.getRate() == be.getRate())
+                {
                     System.out.println("Items Equalled");
                     int qty = bItm.getQty() + be.getQty();
                     double amt = bItm.getAmount() + be.getAmount();
@@ -218,7 +237,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             }
             billList.add(be);
             billListAdapter.notifyDataSetChanged();
-        } else {
+        }
+        else
+        {
             billList.add(be);
             billListAdapter.notifyDataSetChanged();
         }
@@ -227,35 +248,46 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     }
 
 
-    private static void UpdateProdPriceList() {
-        double b = 0;
+
+    private static void UpdateProdPriceList(){
+        double b =0;
         String rs = "\u20B9";
-        try {
+        try{
             byte[] utf8 = rs.getBytes("UTF-8");
-            rs = new String(utf8, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+            rs = new String(utf8, "UTF-8");}
+        catch (UnsupportedEncodingException e)
+        {
             e.printStackTrace();
         }
         bTotalProducts.setText("");
-        bTotalProducts.setText("Products   " + billList.size());
-        for (int i = 0; i < billList.size(); i++) {
-            BillItems bi = billList.get(i);
+        bTotalProducts.setText("Products   "+billList.size());
+        for(int i =0;i<billList.size();i++)
+        {
+            BillItems bi= billList.get(i);
 
-            b = b + bi.getAmount();
+            b  = b + bi.getAmount();
         }
-        if (b == 0) {
-            bTotalPrice.setText("Price(" + rs + ")   " + "");
-        } else {
-            a = b;
+        if(b==0)
+        {
+            bTotalPrice.setText("Price("+rs+")   "+"");
+        }
+        else {
+            a=b;
             bTotalPrice.setText("Price(" + rs + ")   " + commaSeperated(b));
         }
     }
 
 
-    public static String commaSeperated(double s) {
+
+
+
+    public static String commaSeperated(double s)
+    {
         DecimalFormat formatter = new DecimalFormat("#,###.00");
-        return formatter.format(s);
+        return  formatter.format(s);
     }
+
+
 
 
     public void modifyItem(final BillItems bi, BillListAdapter adapter) {
@@ -324,7 +356,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         });
 
         // the alert dialog
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity()).setView(formElementsView);
+        AlertDialog.Builder alertDialogBuilder =new AlertDialog.Builder(getActivity()).setView(formElementsView);
         alertDialogBuilder.setTitle("Select Action");
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @TargetApi(11)
@@ -351,7 +383,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                         dialog.cancel();
                         bi.setQty(0);
                         modifyItem(bi, billListAdapter);
-                    }else{
+                    } else {
                         if (Integer.parseInt(qtyString) != bi.getQty()) {
                             double a = Integer.parseInt(qtyString) * bi.getRate();
                             bi.setAmount(a);
@@ -364,7 +396,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                         dialog.cancel();
                     }
                 }
-
             }
 
         });
@@ -377,10 +408,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         alertDialogBuilder.show();
     }
 
-
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
+        switch(view.getId()) {
             case R.id.btn_one:
                 if (!getSelectedText().isEmpty())
                     eQty.setText("");
@@ -456,24 +486,24 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 }
                 //  et_result.setText("");
                 break;
-        }
-    }
+        }}
 
     TextWatcher watch = new TextWatcher() {
         @Override
         public void afterTextChanged(Editable s) {
+            // TODO Auto-generated method stub
             String searchString = s.toString();
             int textLength = searchString.length();
             eQty.setSelection(textLength);
         }
-
         @Override
         public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
                                       int arg3) {
+            // TODO Auto-generated method stub
         }
-
         @Override
         public void onTextChanged(CharSequence s, int a, int b, int c) {
+            // TODO Auto-generated method stub
         }
     };
 
@@ -485,17 +515,24 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     }
 
 
+
     class DoneOnEditorActionListener implements TextView.OnEditorActionListener {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager)v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 return true;
             }
             return false;
         }
     }
+
+
+
+
+
+
 
 
 }
