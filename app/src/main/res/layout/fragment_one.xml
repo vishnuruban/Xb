@@ -139,7 +139,6 @@
                     android:theme="@style/auto_drop"
                     android:hint="Customer Name /  Number"
                     android:padding="16dp"
-                    android:inputType="textCapWords"
                     android:textColor="#fff"
                     android:textColorHint="#F6F6F6" />
 

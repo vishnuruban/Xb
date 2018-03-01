@@ -38,7 +38,7 @@
         <activity
             android:name=".billing.BillingActivity"
             android:label="BILL SCREEN"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>

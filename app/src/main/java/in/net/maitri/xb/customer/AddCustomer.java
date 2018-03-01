@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Customer;
 import in.net.maitri.xb.db.DbHandler;
 
-public class AddCustomer extends DialogFragment{
+public class AddCustomer extends DialogFragment {
 
     private CustomerDetail mCustomerDetail;
 
@@ -56,27 +57,27 @@ public class AddCustomer extends DialogFragment{
                 String name = customerName.getText().toString();
                 String mob = customerMobile.getText().toString();
                 String gstin = customerGstin.getText().toString();
-                String address = customerAddress .getText().toString();
-                if (name.isEmpty() || mob.isEmpty()){
+                String address = customerAddress.getText().toString();
+                if (name.isEmpty() || mob.isEmpty()) {
                     Toast.makeText(getActivity(), "Enter customer name or mobile no.", Toast.LENGTH_SHORT).show();
                 } else {
                     Customer customer = new Customer();
-                    if (name.isEmpty()){
+                    if (name.isEmpty()) {
                         customer.setName("");
                     } else {
                         customer.setName(name);
                     }
-                    if (mob.isEmpty()){
+                    if (mob.isEmpty()) {
                         customer.setMobileno("");
                     } else {
                         customer.setMobileno(mob);
                     }
-                    if (gstin.isEmpty()){
+                    if (gstin.isEmpty()) {
                         customer.setGstin("");
                     } else {
                         customer.setGstin(gstin);
                     }
-                    if (address.isEmpty()){
+                    if (address.isEmpty()) {
                         customer.setAddress1("");
                     } else {
                         customer.setAddress1(address);
@@ -100,9 +101,10 @@ public class AddCustomer extends DialogFragment{
         return dialog;
     }
 
-    private void addCustomer(Customer customer){
+    private void addCustomer(Customer customer) {
         DbHandler dbHandler = new DbHandler(getActivity());
         dbHandler.addCustomer(customer);
         dismiss();
     }
+
 }

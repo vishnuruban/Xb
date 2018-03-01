@@ -60,15 +60,15 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     ListView listView;
     BillListAdapter badapter;
-    TextView cProducts, cPrice, cDate, cNetAmount, cPayment, tCash, tBalance,cCustName,cBillNum;
-    String totalProducts, totalPrice,tCustName;
+    TextView cProducts, cPrice, cDate, cNetAmount, cPayment, tCash, tBalance, cCustName, cBillNum;
+    String totalProducts, totalPrice, tCustName;
     LinearLayout lNetAmt;
     RadioGroup cDiscountType;
     String selectedButton;
     double netAmt = 0;
     String rs = "\u20B9";
     TextView cPrintStatus;
-    EditText et_result, cCash,cDiscount,cCashierName;
+    EditText et_result, cCash, cDiscount, cCashierName;
     EditSpinner mEditSpinner;
     String cDiscountValue = "";
     DecimalFormat df;
@@ -78,7 +78,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     String formattedDate;
     SalesDet sd;
     SalesMst sm;
-     BillPrint billPrint;
+    BillPrint billPrint;
     LinearLayout cashierNameLayout;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
 
@@ -92,7 +92,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     String[] pModes = {"CASH", "DEBIT CARD", "CREDIT CARD", "WALLET"};
     Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
-            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear, btn_100, btn_500, btn_2000, btn_cash, btn_dc, btn_cc, btn_wallet, cPrint, cSave,cCancel;
+            btn_eight, btn_nine, btn_zero, btn_point, btn_ok, btn_cancel, btn_clear, btn_100, btn_500, btn_2000, btn_cash, btn_dc, btn_cc, btn_wallet, cPrint, cSave, cCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,21 +112,21 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cCustName = (TextView) findViewById(R.id.cCustname);
         cCashierName = (EditText) findViewById(R.id.cCashiername);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        cCashierName.setText(sharedPreferences.getString("current_user",""));
+        cCashierName.setText(sharedPreferences.getString("current_user", ""));
         cBillNum = (TextView) findViewById(R.id.cBillNo);
-       // cPayment = (TextView) findViewById(R.id.cPayment);
+        // cPayment = (TextView) findViewById(R.id.cPayment);
         lNetAmt = (LinearLayout) findViewById(R.id.layout_Net);
         tCash = (TextView) findViewById(R.id.tCash);
         cCash = (EditText) findViewById(R.id.cCash);
         tBalance = (TextView) findViewById(R.id.cBalance);
-      //  cPrint = (Button) findViewById(R.id.cPrint);
+        //  cPrint = (Button) findViewById(R.id.cPrint);
         cPrintStatus = (TextView) findViewById(R.id.cPrintstatus);
         tBalance.setVisibility(View.INVISIBLE);
         mPrinter.connectToPrinter();
         cDiscountType = (RadioGroup) findViewById(R.id.discount_toggle);
         cCancel = (Button) findViewById(R.id.cCancel);
-        billPrint =new BillPrint(CheckoutActivity.this);
-        cashierNameLayout = (LinearLayout) findViewById(R.id.cashierLayout) ;
+        billPrint = new BillPrint(CheckoutActivity.this);
+        cashierNameLayout = (LinearLayout) findViewById(R.id.cashierLayout);
 
         dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
 
@@ -145,26 +145,21 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         bSeries = dbHandler.getBillSeries(1);
 
 
-        if( bSeries.getCashierSelection().equals("NO"))
-        {
+        if (bSeries.getCashierSelection().equals("NO")) {
             cashierNameLayout.setVisibility(View.GONE);
             cCashierName.setText("");
         }
 
 
+        String bPrefix = String.valueOf(bSeries.getPrefix());
+        if (bPrefix.isEmpty()) {
+            cBillNum.setText(String.valueOf(bSeries.getCurrentBillNo()));
+        } else {
+            cBillNum.setText(bPrefix + String.valueOf(bSeries.getCurrentBillNo()));
+        }
 
-        String bPrefix =  String.valueOf(bSeries.getPrefix());
-          if(bPrefix.isEmpty())
-            {
-           cBillNum.setText(String.valueOf(bSeries.getCurrentBillNo()));
-            }
-            else
-          {
-              cBillNum.setText(bPrefix+String.valueOf(bSeries.getCurrentBillNo()));
-          }
-
-        Log.i("Bill Number ",String.valueOf(bSeries.getCurrentBillNo()));
-        Log.i("Bill Prefix ",bPrefix);
+        Log.i("Bill Number ", String.valueOf(bSeries.getCurrentBillNo()));
+        Log.i("Bill Prefix ", bPrefix);
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -198,7 +193,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
 
 //        GradientDrawable bgShape = (GradientDrawable) lNetAmt.getBackground();
-     //   bgShape.setColor(getResources().getColor(R.color.darkskyBlue));
+        //   bgShape.setColor(getResources().getColor(R.color.darkskyBlue));
         badapter = new BillListAdapter(CheckoutActivity.this, FragmentOne.billList);
         listView.setAdapter(badapter);
 
@@ -209,21 +204,18 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (bundle != null) {
             totalProducts = bundle.getString("products");
             totalPrice = bundle.getString("price");
-           // tCustName = bundle.getString("customer");
+            // tCustName = bundle.getString("customer");
         }
-         chkCustomer = (Customer) getIntent().getSerializableExtra("customer");
+        chkCustomer = (Customer) getIntent().getSerializableExtra("customer");
 
-        Log.i("CustomerName1",chkCustomer.getName());
-        Log.i("CustomerId1",String.valueOf(chkCustomer.getId()));
+        Log.i("CustomerName1", chkCustomer.getName());
+        Log.i("CustomerId1", String.valueOf(chkCustomer.getId()));
 
         tCustName = chkCustomer.getName();
-        if(tCustName.isEmpty())
-        {
-          cCustName.setText("-");
-        }
-        else
-        {
-           cCustName.setText(tCustName);
+        if (tCustName.isEmpty()) {
+            cCustName.setText("-");
+        } else {
+            cCustName.setText(tCustName);
         }
 
         netAmt = Double.parseDouble(totalPrice);
@@ -305,6 +297,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.onActivityPause();
         super.onPause();
     }
+
     @Override
     protected void onDestroy() {
         mPrinter.onActivityDestroy();
@@ -350,13 +343,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 case CieBluetoothPrinter.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case CieBluetoothPrinter.STATE_CONNECTED:
-                            setStatusMsg("Printer Status :"+title_connected_to + mConnectedDeviceName);
+                            setStatusMsg("Printer Status :" + title_connected_to + mConnectedDeviceName);
                             //Toast.makeText(CheckoutActivity.this,title_connected_to + mConnectedDeviceName,Toast.LENGTH_SHORT).show();
                             //    tbPrinter.setText("ON");
                             //  tbPrinter.setChecked(true);
                             break;
                         case CieBluetoothPrinter.STATE_CONNECTING:
-                            setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
+                            setStatusMsg("Printer Status :" + title_connected_to + title_connecting);
                             //Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
                             try {
                                 //    tbPrinter.setText("...");
@@ -366,12 +359,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                             }
                             break;
                         case CieBluetoothPrinter.STATE_LISTEN:
-                            setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
+                            setStatusMsg("Printer Status :" + title_connected_to + title_connecting);
                             //  Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
 
                         case CieBluetoothPrinter.STATE_NONE:
-                            setStatusMsg("Printer Status :"+title_not_connected);
-                         //   Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
+                            setStatusMsg("Printer Status :" + title_not_connected);
+                            //   Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
                             try {
                                 // tbPrinter.setText("OFF");
                                 // tbPrinter.setChecked(false);
@@ -412,7 +405,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-
     public void setStatusMsg(String msg) {
         cPrintStatus.setText(msg);
     }
@@ -432,7 +424,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_clear = (Button) findViewById(R.id.btn_clear);
         cPrint = (Button) findViewById(R.id.cPrint);
         cSave = (Button) findViewById(R.id.cSave);
-        cCancel =(Button)findViewById(R.id.cCancel) ;
+        cCancel = (Button) findViewById(R.id.cCancel);
         cPrint.setEnabled(false);
         cPrint.setBackgroundColor(getResources().getColor(R.color.light_grey));
         btn_one.setOnClickListener(this);
@@ -454,7 +446,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         btn_dc.setOnClickListener(this);
         btn_cc.setOnClickListener(this);
         btn_wallet.setOnClickListener(this);*/
-      cPrint.setOnClickListener(this);
+        cPrint.setOnClickListener(this);
         cSave.setOnClickListener(this);
         cCancel.setOnClickListener(this);
     }
@@ -540,14 +532,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.cCancel:
 
-                if(cCancel.getText().toString().equals("NEXT BILL"))
-                {
+                if (cCancel.getText().toString().equals("NEXT BILL")) {
                     Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
-                }
-                else {
+                } else {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(CheckoutActivity.this);
                     builder.setTitle("Are you sure you want to cancel the bill?");
@@ -581,26 +571,24 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     editor.apply();
                     mPrinter.showDeviceList(CheckoutActivity.this);
                 }
-               break;
+                break;
             case R.id.cPrint:
 
                 String printSize = getSettings.getPrintingPaperSize();
 
 
-                String pBillno ="";
-                if(sm.getPrefix().isEmpty()) {
+                String pBillno = "";
+                if (sm.getPrefix().isEmpty()) {
 
-                    pBillno =String.valueOf(sm.getBillNO());
-                }
-                else
-                {
-                    pBillno =sm.getPrefix()+String.valueOf(sm.getBillNO());
+                    pBillno = String.valueOf(sm.getBillNO());
+                } else {
+                    pBillno = sm.getPrefix() + String.valueOf(sm.getBillNO());
                 }
                 // String printSize1 = getResources().getString((R.array.paper_size_name)[printSize]);
                 if (printSize.equals("1")) {
-                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(),sm.getCashName(),tCustName);
+                    billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
                 } else {
-                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(),sm.getCashName(),tCustName);
+                    billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
                 }
                 Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -612,13 +600,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     public void saveBill() {
         long detInserted = 0, mstInserted = 0;
-       // int billNum = sharedpreferences.getInt(billNo, 0);
-      //  SharedPreferences.Editor editor = sharedpreferences.edit();
-      //  editor.putInt(billNo, ++billNum);
-       // editor.apply();
+        // int billNum = sharedpreferences.getInt(billNo, 0);
+        //  SharedPreferences.Editor editor = sharedpreferences.edit();
+        //  editor.putInt(billNo, ++billNum);
+        // editor.apply();
 
         String billwithPrefix = cBillNum.getText().toString();
-        int bNo =  bSeries.getCurrentBillNo();
+        int bNo = bSeries.getCurrentBillNo();
 
         dbHandler.updateBillNo(++bNo);
 
@@ -636,13 +624,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
             BillItems billItems = FragmentOne.billList.get(i);
             quantity = quantity + billItems.getQty();
-            sd = new SalesDet( bSeries.getCurrentBillNo(), billItems);
+            sd = new SalesDet(bSeries.getCurrentBillNo(), billItems);
             sd.setDateTime(formattedDate);
             detInserted = dbHandler.addSalesDet(sd);
         }
 
         sm = new SalesMst();
-        sm.setBillNO( bSeries.getCurrentBillNo());
+        sm.setBillNO(bSeries.getCurrentBillNo());
         sm.setCustomerId(0);
         sm.setQty(quantity);
         sm.setNetAmt(netAmt);
@@ -667,7 +655,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         Log.i("DET", String.valueOf(detInserted));
 
         if (detInserted != -1 && mstInserted != -1) {
-           cPrint.setEnabled(true);
+            cPrint.setEnabled(true);
             cPrint.setBackgroundColor(getResources().getColor(R.color.green));
             cSave.setEnabled(false);
             cSave.setBackgroundColor(getResources().getColor(R.color.light_grey));
@@ -731,10 +719,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     } else {
                         tBalance.setVisibility(View.INVISIBLE);
                     }
-                }
-
-                else
-                {
+                } else {
                     tBalance.setVisibility(View.INVISIBLE);
                 }
             }

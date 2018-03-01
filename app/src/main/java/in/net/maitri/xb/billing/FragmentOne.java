@@ -173,7 +173,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
                 AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
                 dialog.setTitle("Are you sure you want to clear the bill?");
-                dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -184,7 +184,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
                     }
                 });
-                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                dialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
@@ -337,20 +337,34 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 String selectedButton = selectedRadioButton.getText().toString();
                 if (selectedButton.equals("Delete Item")) {
                     billList.remove(bi);
+                    UpdateProdPriceList();
+                    billListAdapter.notifyDataSetChanged();
+                    dialog.cancel();
                 } else {
                     if (qtyString.isEmpty()) {
                         Toast.makeText(getActivity(), "Enter Qty", Toast.LENGTH_SHORT).show();
-                    } else if (Integer.parseInt(qtyString) != bi.getQty()) {
-                        double a = Integer.parseInt(qtyString) * bi.getRate();
-                        bi.setAmount(a);
-                        bi.setQty(Integer.parseInt(qtyString));
-                    } else {
-                        bi.setQty(Integer.parseInt(qtyString));
+                        dialog.cancel();
+                        bi.setQty(0);
+                        modifyItem(bi, billListAdapter);
+                    } else if (qtyString.equals("0")) {
+                        Toast.makeText(getActivity(), "Qty can't be zero.", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                        bi.setQty(0);
+                        modifyItem(bi, billListAdapter);
+                    }else{
+                        if (Integer.parseInt(qtyString) != bi.getQty()) {
+                            double a = Integer.parseInt(qtyString) * bi.getRate();
+                            bi.setAmount(a);
+                            bi.setQty(Integer.parseInt(qtyString));
+                        } else {
+                            bi.setQty(Integer.parseInt(qtyString));
+                        }
+                        UpdateProdPriceList();
+                        billListAdapter.notifyDataSetChanged();
+                        dialog.cancel();
                     }
                 }
-                UpdateProdPriceList();
-                billListAdapter.notifyDataSetChanged();
-                dialog.cancel();
+
             }
 
         });
@@ -361,17 +375,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             }
         });
         alertDialogBuilder.show();
-    }
-
-
-    public static void disableSoftInputFromAppearing(TextInputEditText editText) {
-        if (Build.VERSION.SDK_INT >= 11) {
-            editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
-            editText.setTextIsSelectable(true);
-        } else {
-            editText.setRawInputType(InputType.TYPE_NULL);
-            editText.setFocusable(true);
-        }
     }
 
 
