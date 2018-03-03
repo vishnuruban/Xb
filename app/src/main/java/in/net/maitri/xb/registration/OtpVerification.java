@@ -64,7 +64,8 @@ public class OtpVerification extends Dialog {
             @Override
             public void onClick(View v) {
                 if (mOtpField.getText().toString().isEmpty()) {
-                    Toast.makeText(mContext, "Enter OTP", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mOtp.toString(),Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(mContext, "Enter OTP", Toast.LENGTH_SHORT).show();
                 } else if (mOtpField.getText().toString().equals(mOtp)) {
                     SharedPreferences sharedPreferences = PreferenceManager
                             .getDefaultSharedPreferences(mContext);
@@ -155,6 +156,7 @@ public class OtpVerification extends Dialog {
                 androidHttpTransport.call(SOAP_ACTION, envelope);
                 Object result = envelope.getResponse();
                 Log.d("WS", String.valueOf(result));
+
                 System.out.println("Result :" + result.toString());
             } catch (IOException | XmlPullParserException e) {
                 e.printStackTrace();

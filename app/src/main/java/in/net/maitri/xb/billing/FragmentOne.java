@@ -62,13 +62,11 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     CustomerAdapter customerAdapter;
     DbHandler dbHandler;
     LinearLayout custScreen;
-    Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
-            btn_eight, btn_nine, btn_zero, btn_point, btn_clear;
+    Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven, btn_eight, btn_nine, btn_zero, btn_point, btn_clear;
     TextInputEditText eQty;
     ArrayList<Customer> customerArrayList;
     public static Customer customerDetails;
     static double a = 0;
-
     Customer customer;
     int customerId = 0;
 
@@ -163,10 +161,11 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                     }
                     Intent intent = new Intent(getActivity(), CheckoutActivity.class);
                     intent.putExtras(bundle);
-                    Log.i("CustomerName",customer.getName());
+                    Log.i("CustomerName",autoCustomer.getText().toString());
                     Log.i("CustomerId",String.valueOf(customer.getId()));
                     intent.putExtra("customer",customer);
-                    startActivity(intent);}
+                    startActivity(intent);
+                }
             }
         });
 

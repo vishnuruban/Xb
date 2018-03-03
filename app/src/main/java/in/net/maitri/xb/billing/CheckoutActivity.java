@@ -199,7 +199,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
         cDate.setText(date);
-
+        cCustName.setText("");
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             totalProducts = bundle.getString("products");
@@ -226,7 +226,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cPrice.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
         cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
 //        cPayment.setText("AMOUNT TO RECEIVE - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-        cCash.setText(totalPrice);
+        cCash.setText(df.format(netAmt));
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
@@ -712,9 +712,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 tBalance.setVisibility(View.INVISIBLE);
             } else {
                 if (mEditSpinner.getText().toString().equals("CASH")) {
-                    if (Double.parseDouble(s.toString()) > netAmt) {
+                    if (Double.parseDouble(s.toString()) > netAmt ) {
                         tBalance.setVisibility(View.VISIBLE);
-                        double balance = Double.parseDouble(s.toString()) - netAmt;
+                        double balance = Double.parseDouble(s.toString()) - Double.parseDouble(totalPrice);
                         tBalance.setText("Balance  " + rs + " " + FragmentOne.commaSeperated(balance));
                     } else {
                         tBalance.setVisibility(View.INVISIBLE);
@@ -753,7 +753,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 //                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
 
                 netAmt = Double.parseDouble(totalPrice);
-                cCash.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+                cCash.setText(String.valueOf(netAmt));
                 cDiscountValue = "";
             } else {
                 char disSymbl = s.charAt(0);
@@ -772,6 +772,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     double discount = (Double.parseDouble(disPrice.toString()) / 100.0) * Double.parseDouble(totalPrice);
                     cDiscountValue = df.format(discount);
                     netAmt = Double.parseDouble(totalPrice) - discount;
+
                 }
                 if (netAmt <= 0) {
                     Toast.makeText(CheckoutActivity.this, "Please enter valid discount", Toast.LENGTH_SHORT).show();
@@ -783,7 +784,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(netAmt));
 //                cPayment.setText("PAYMENT - " + rs + " " + FragmentOne.commaSeperated(netAmt));
                 tCash.setText("Cash (" + rs + ")");
-                cCash.setText("");
+
+
+                cCash.setText(String.valueOf(netAmt));
                 mEditSpinner.setText("CASH");
             }
         }
@@ -808,6 +811,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
         return true;
     }
+
 
 
 }
