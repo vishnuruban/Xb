@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
@@ -80,6 +79,13 @@ public class ItemReportActivity extends AppCompatActivity {
         LinearLayout mFromDateLayout = (LinearLayout) findViewById(R.id.from_date_layout);
         LinearLayout mToDateLayout = (LinearLayout) findViewById(R.id.to_date_layout);
         LinearLayout mFilter = (LinearLayout) findViewById(R.id.filter);
+        mFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Toast.makeText(ItemReportActivity.this,"Feature under development.", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(ItemReportActivity.this, FilterActivity.class));
+            }
+        });
         mFromDate = (EditText) findViewById(R.id.from_date);
         mToDate = (EditText) findViewById(R.id.to_date);
         mFromDate.setClickable(true);
@@ -116,7 +122,6 @@ public class ItemReportActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         mShowReport.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,5 +251,4 @@ public class ItemReportActivity extends AppCompatActivity {
         }
         return true;
     }
-
 }

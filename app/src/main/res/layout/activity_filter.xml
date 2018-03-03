@@ -3,19 +3,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:orientation="horizontal"
+
     tools:context="in.net.maitri.xb.billReports.FilterActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/category_view"
+        android:id="@+id/filter_name"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="3.5" />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/item_view"
+        android:id="@+id/filter_value"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="6.5" />
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="#000000"/>
 
 </LinearLayout>

@@ -369,12 +369,10 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                     if (qtyString.isEmpty()) {
                         Toast.makeText(getActivity(), "Enter Qty", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
-                        bi.setQty(0);
                         modifyItem(bi, billListAdapter);
                     } else if (qtyString.equals("0")) {
                         Toast.makeText(getActivity(), "Qty can't be zero.", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
-                        bi.setQty(0);
                         modifyItem(bi, billListAdapter);
                     } else {
                         if (Integer.parseInt(qtyString) != bi.getQty()) {

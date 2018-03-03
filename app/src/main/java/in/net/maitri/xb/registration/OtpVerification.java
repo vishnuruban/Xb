@@ -54,6 +54,7 @@ public class OtpVerification extends Dialog {
         setContentView(R.layout.otplayout);
 
         mOtp = String.valueOf(getOtp(100000, 999999));
+        Log.d("Otp", mOtp);
         System.out.println(mOtp);
         String[] data = {mMobNo, mOtp};
         new ConnectSMSGateway().execute(data);
