@@ -29,11 +29,7 @@ public class BillingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billing);
 
-       /* getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);*/
-
         if (savedInstanceState == null) {
-
             FragmentOne filterFirstFragment = new FragmentOne();
             FragmentManager fm = getFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
@@ -45,7 +41,6 @@ public class BillingActivity extends AppCompatActivity {
             FragmentTransaction ft3 = fm3.beginTransaction();
             ft3.add(R.id.frameLayout2, filterThirdFragment, "TAG1 FRAGMENT");
             ft3.commit();
-
         }
     }
 
@@ -86,7 +81,6 @@ public class BillingActivity extends AppCompatActivity {
             case R.id.bill_report:
                 startActivity(new Intent(BillingActivity.this, BillReportActivity.class));
                 break;
-
 
             case R.id.today_bill_report:
                 startActivity(new Intent(BillingActivity.this, TodayBillReport.class));

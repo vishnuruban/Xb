@@ -6,10 +6,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
@@ -37,15 +35,11 @@ import android.widget.Toast;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Customer;
 import in.net.maitri.xb.db.DbHandler;
 
-/**
- * Created by SYSRAJ4 on 10/11/2017.
- */
 
 public class FragmentOne extends Fragment implements View.OnClickListener {
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,7 +13,6 @@ import android.os.Messenger;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.Selection;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -33,17 +31,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cie.btp.BtpConsts;
 import com.cie.btp.CieBluetoothPrinter;
 import com.cie.btp.DebugLog;
-import com.cie.btp.PrinterWidth;
 import com.reginald.editspinner.EditSpinner;
 
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
