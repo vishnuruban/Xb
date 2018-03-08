@@ -232,6 +232,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 selectedButton = selectedRadioButton.getText().toString();
                 cDiscount.setText(selectedButton);
                 Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
+                getWindow().getDecorView().clearFocus();
                 cDiscount.requestFocus();
             }
         });

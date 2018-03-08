@@ -19,17 +19,15 @@ import java.util.List;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Category;
 
-
 class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
 
     private Context mContext;
     private List<Category> mAllCategories;
 
-    CategoryAdapter(Context context, List<Category> getAllCategories){
+    CategoryAdapter(Context context, List<Category> getAllCategories) {
         mContext = context;
         mAllCategories = getAllCategories;
     }
-
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -37,14 +35,13 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
         TextView categoryName;
         CardView cardView;
 
-         MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
-             categoryImage = (ImageView) itemView.findViewById(R.id.category_img);
-             categoryName = (TextView) itemView.findViewById(R.id.category_name);
-             cardView  = (CardView) itemView.findViewById(R.id.card_view);
-         }
+            categoryImage = (ImageView) itemView.findViewById(R.id.category_img);
+            categoryName = (TextView) itemView.findViewById(R.id.category_name);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
+        }
     }
-
 
     @Override
     public CategoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -87,7 +84,6 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
 
     public void setSelected(int pos) {
         try {
-
             mAllCategories.get(pos).setSelected(true);
             notifyDataSetChanged();
         } catch (Exception e) {

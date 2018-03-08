@@ -47,6 +47,14 @@ class FilterNameAdapter extends RecyclerView.Adapter<FilterNameAdapter.MyViewHol
         return filterName.size();
     }
 
+    public void setSelected(int pos) {
+        try {
+         /*   filterName.get(pos).setSelected(true);
+            notifyDataSetChanged();*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
 

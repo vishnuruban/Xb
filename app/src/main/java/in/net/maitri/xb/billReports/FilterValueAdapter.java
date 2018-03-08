@@ -12,19 +12,20 @@ import in.net.maitri.xb.R;
 
 class FilterValueAdapter extends RecyclerView.Adapter<FilterValueAdapter.MyViewHolder> {
 
-    private ArrayList<String> filterValue;
 
-    FilterValueAdapter(ArrayList<String> filterValue) {
+    private ArrayList<FilterModel> filterValue;
+
+    FilterValueAdapter(ArrayList<FilterModel> filterValue) {
         this.filterValue = filterValue;
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView filterValue;
+        TextView filterValueView;
 
         MyViewHolder(View itemView) {
             super(itemView);
-            filterValue = (TextView) itemView.findViewById(R.id.filter_value);
+            filterValueView = (TextView) itemView.findViewById(R.id.filter_value);
         }
     }
 
@@ -36,8 +37,8 @@ class FilterValueAdapter extends RecyclerView.Adapter<FilterValueAdapter.MyViewH
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        String name = filterValue.get(position);
-        holder.filterValue.setText(name);
+        FilterModel fm = filterValue.get(position);
+        holder.filterValueView.setText(fm.getName());
     }
 
     @Override

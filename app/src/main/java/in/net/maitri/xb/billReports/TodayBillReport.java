@@ -450,8 +450,8 @@ public class TodayBillReport extends AppCompatActivity {
                 sheet.addCell(new Label(5, k, df.format(mst.getDiscount()), cFormat));
                 sheet.addCell(new Label(6, k, df.format(mst.getNetAmt()), cFormat));
                 sheet.addCell(new Label(7, k, mst.getPaymentMode()));
-                sheet.addCell(new Label(8, k, ""));
-                sheet.addCell(new Label(9, k, ""));
+                sheet.addCell(new Label(8, k, mst.getCustName()));
+                sheet.addCell(new Label(9, k, mst.getCashName()));
             }
 
             WritableCellFormat cFormat1 = new WritableCellFormat();

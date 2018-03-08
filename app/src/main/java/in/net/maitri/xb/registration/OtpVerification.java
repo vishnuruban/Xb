@@ -56,6 +56,7 @@ public class OtpVerification extends Dialog {
         mOtp = String.valueOf(getOtp(100000, 999999));
         Log.d("Otp", mOtp);
         System.out.println(mOtp);
+        Toast.makeText(mContext,mOtp, Toast.LENGTH_LONG).show();
         String[] data = {mMobNo, mOtp};
         new ConnectSMSGateway().execute(data);
         final ImageView mClose = (ImageView) findViewById(R.id.close);
