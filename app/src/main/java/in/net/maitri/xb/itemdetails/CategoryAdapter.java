@@ -58,22 +58,18 @@ class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder>
             holder.cardView.setBackgroundColor(Color.parseColor("#0675AD"));
             holder.categoryName.setTextColor(Color.parseColor("#ffffff"));
             mAllCategories.get(position).setSelected(false);
-
         } else {
             holder.cardView.setBackgroundColor(Color.parseColor("#B3E5FC"));
             holder.categoryName.setTextColor(Color.parseColor("#000000"));
         }
-//         Log.i("Image Path",imagePath);
 
         if (imagePath != null) {
             File imgFile = new File(imagePath);
             if (imgFile.exists()) {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 holder.categoryImage.setImageBitmap(myBitmap);
-
             }
         }
-
     }
 
     @Override

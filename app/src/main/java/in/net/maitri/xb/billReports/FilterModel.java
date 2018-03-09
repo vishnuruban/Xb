@@ -5,7 +5,16 @@ class FilterModel {
 
     private String name;
     private int catId, itmId;
+    private boolean isSelected;
 
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getName() {
         return name;

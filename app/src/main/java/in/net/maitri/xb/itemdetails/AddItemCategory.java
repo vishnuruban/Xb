@@ -271,7 +271,6 @@ public class AddItemCategory extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
         startActivity(new Intent(AddItemCategory.this, BillingActivity.class));
         finish();
 

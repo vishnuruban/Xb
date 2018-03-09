@@ -6,6 +6,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.CheckBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class FilterActivity extends AppCompatActivity {
     private HashMap<String, ArrayList<FilterModel>> mFilterValueData;
     private DbHandler mDbHandler;
     private ArrayList<FilterModel>  mFilterValueAdapterData;
+    private String[] filterName = {"Category", "Item"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +34,13 @@ public class FilterActivity extends AppCompatActivity {
         mFilterValueAdapterData = new ArrayList<>();
         getData();
         RecyclerView filterNameView = (RecyclerView) findViewById(R.id.filter_name);
-        final ArrayList<String> filterNameData = new ArrayList<>();
-        filterNameData.add("Category");
-        filterNameData.add("Item");
+        final ArrayList<FilterModel> filterNameData = new ArrayList<>();
+        for(String i : filterName){
+            FilterModel fm = new FilterModel();
+            fm.setSelected(false);
+            fm.setName(i);
+            filterNameData.add(fm);
+        }
         final FilterNameAdapter filterNameAdapter = new FilterNameAdapter(filterNameData);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FilterActivity.this);
         filterNameView.setLayoutManager(layoutManager);
@@ -42,7 +48,7 @@ public class FilterActivity extends AppCompatActivity {
         filterNameView.setAdapter(filterNameAdapter);
 
         RecyclerView filterValueView = (RecyclerView) findViewById(R.id.filter_value);
-        FilterValueAdapter filterValueAdapter = new FilterValueAdapter(mFilterValueAdapterData);
+        final FilterValueAdapter filterValueAdapter = new FilterValueAdapter(mFilterValueAdapterData);
         RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(FilterActivity.this);
         filterValueView.setLayoutManager(layoutManager1);
         filterValueView.setItemAnimator(new DefaultItemAnimator());
@@ -52,7 +58,7 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 mFilterValueAdapterData.clear();
-                switch (filterNameData.get(position)){
+                switch (filterName[position]){
                     case "Category":
                         mFilterValueAdapterData.addAll( mFilterValueData.get("Category"));
                         break;
@@ -60,7 +66,21 @@ public class FilterActivity extends AppCompatActivity {
                         mFilterValueAdapterData.addAll( mFilterValueData.get("Item"));
                         break;
                 }
-                filterNameAdapter.notifyDataSetChanged();
+                filterNameAdapter.setSelected(position);
+                filterValueAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+
+        filterValueView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), filterValueView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+                filterValueAdapter.setSelected(position, checkBox);
             }
 
             @Override
@@ -77,6 +97,7 @@ public class FilterActivity extends AppCompatActivity {
             FilterModel filterModel = new FilterModel();
             filterModel.setName(categoryList.get(i).getCategoryName());
             filterModel.setCatId(categoryList.get(i).getId());
+            filterModel.setSelected(false);
             categoryArrayList.add(filterModel);
         }
         mFilterValueData.put("Category", categoryArrayList);
@@ -88,6 +109,7 @@ public class FilterActivity extends AppCompatActivity {
             filterModel.setName(itemList.get(i).getItemName());
             filterModel.setCatId(itemList.get(i).getCategoryId());
             filterModel.setItmId(itemList.get(i).getId());
+            filterModel.setSelected(false);
             itemArrayList.add(filterModel);
         }
         mFilterValueData.put("Item", itemArrayList);
