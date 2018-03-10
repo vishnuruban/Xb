@@ -49,11 +49,11 @@
             style="?android:attr/buttonBarButtonStyle"/>
 
         <Button
-            android:id="@+id/save"
+            android:id="@+id/apply"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Save"
+            android:text="Apply"
             android:textColor="@color/white"
             style="?android:attr/buttonBarButtonStyle"/>
 

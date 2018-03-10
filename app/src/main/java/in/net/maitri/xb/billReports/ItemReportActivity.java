@@ -1,5 +1,6 @@
 package in.net.maitri.xb.billReports;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -45,7 +46,7 @@ public class ItemReportActivity extends AppCompatActivity {
     private BillItemReportAdapter billItemReportAdapter;
     private List<SalesMst> mGetBillMaster;
     private DecimalFormat df;
-    private String rs;
+    private String rs, mFilterQuery;
 
 
     @Override
@@ -57,7 +58,7 @@ public class ItemReportActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-
+        mFilterQuery = "";
         mGetBillMaster = new ArrayList<>();
         billView = (RecyclerView) findViewById(R.id.bill_view);
         tItems = (TextView) findViewById(R.id.tItems);
@@ -83,7 +84,7 @@ public class ItemReportActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // Toast.makeText(ItemReportActivity.this,"Feature under development.", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(ItemReportActivity.this, FilterActivity.class));
+                startActivityForResult(new Intent(ItemReportActivity.this, FilterActivity.class),1);
             }
         });
         mFromDate = (EditText) findViewById(R.id.from_date);
@@ -137,7 +138,7 @@ public class ItemReportActivity extends AppCompatActivity {
                     mGetBillMaster.clear();
 
                     dbHandler = new DbHandler(ItemReportActivity.this);
-                    mGetItemMaster = dbHandler.getTotalItemReport(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
+                    mGetItemMaster = dbHandler.getTotalItemReport(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate), mFilterQuery);
                     mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
 
                     if (mGetItemMaster.size() == 0 || mGetBillMaster.size() == 0) {
@@ -176,6 +177,16 @@ public class ItemReportActivity extends AppCompatActivity {
         df = new DecimalFormat("0.00");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ItemReportActivity.this);
         billView.setLayoutManager(linearLayoutManager);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                mFilterQuery = data.getStringExtra("query");
+            }
+        }
     }
 
 

@@ -1,12 +1,16 @@
 package in.net.maitri.xb.billReports;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.CheckBox;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Switch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,9 +25,11 @@ import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
 public class FilterActivity extends AppCompatActivity {
 
     private HashMap<String, ArrayList<FilterModel>> mFilterValueData;
+    private HashMap<String, ArrayList<Integer>> mSelectedFilterValue;
     private DbHandler mDbHandler;
-    private ArrayList<FilterModel>  mFilterValueAdapterData;
+    private ArrayList<FilterModel> mFilterValueAdapterData;
     private String[] filterName = {"Category", "Item"};
+    private int mSelectedFilterPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,11 +37,14 @@ public class FilterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_filter);
         mDbHandler = new DbHandler(FilterActivity.this);
         mFilterValueData = new HashMap<>();
+        mSelectedFilterValue = new HashMap<>();
+        mSelectedFilterValue.put("Category", new ArrayList<Integer>());
+        mSelectedFilterValue.put("Item", new ArrayList<Integer>());
         mFilterValueAdapterData = new ArrayList<>();
         getData();
         RecyclerView filterNameView = (RecyclerView) findViewById(R.id.filter_name);
         final ArrayList<FilterModel> filterNameData = new ArrayList<>();
-        for(String i : filterName){
+        for (String i : filterName) {
             FilterModel fm = new FilterModel();
             fm.setSelected(false);
             fm.setName(i);
@@ -58,12 +67,29 @@ public class FilterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
                 mFilterValueAdapterData.clear();
-                switch (filterName[position]){
+                mSelectedFilterPosition = position;
+                switch (filterName[position]) {
                     case "Category":
-                        mFilterValueAdapterData.addAll( mFilterValueData.get("Category"));
+                        mFilterValueAdapterData.addAll(mFilterValueData.get("Category"));
                         break;
                     case "Item":
-                        mFilterValueAdapterData.addAll( mFilterValueData.get("Item"));
+                        ArrayList<FilterModel> filterModelArrayList = mFilterValueData.get("Item");
+                        ArrayList<Integer> selectedCategory = mSelectedFilterValue.get("Category");
+                        if (!selectedCategory.isEmpty()) {
+                            for (int i = 0; i < selectedCategory.size(); i++) {
+
+                                for (int j = 0; j < filterModelArrayList.size(); j++) {
+                                    if (filterModelArrayList.get(j).getCatId() == selectedCategory.get(i)) {
+                                        mFilterValueAdapterData.add(filterModelArrayList.get(j));
+                                    } else {
+                                        mFilterValueData.get("Item").get(j).setSelected(false);
+                                    }
+                                }
+
+                            }
+                        } else {
+                            mFilterValueAdapterData.addAll(filterModelArrayList);
+                        }
                         break;
                 }
                 filterNameAdapter.setSelected(position);
@@ -79,8 +105,38 @@ public class FilterActivity extends AppCompatActivity {
         filterValueView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), filterValueView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkbox);
+                ImageView checkBox = (ImageView) view.findViewById(R.id.checkbox);
                 filterValueAdapter.setSelected(position, checkBox);
+                String filter = filterName[mSelectedFilterPosition];
+                ArrayList<Integer> selectedList = mSelectedFilterValue.get(filter);
+                switch (filter) {
+                    case "Category":
+                        int catCode = mFilterValueData.get(filter).get(position).getCatId();
+                        if (selectedList.contains(catCode)) {
+                            selectedList.remove(selectedList.indexOf(catCode));
+                        } else {
+                            selectedList.add(catCode);
+                        }
+                        break;
+
+                    case "Item":
+                        if(!mSelectedFilterValue.get("Category").isEmpty()){
+                            int itmCode = mFilterValueAdapterData.get(position).getItmId();
+                            if (selectedList.contains(itmCode)) {
+                                selectedList.remove(selectedList.indexOf(itmCode));
+                            } else {
+                                selectedList.add(itmCode);
+                            }
+                        } else {
+                            int itmCode = mFilterValueData.get(filter).get(position).getItmId();
+                            if (selectedList.contains(itmCode)) {
+                                selectedList.remove(selectedList.indexOf(itmCode));
+                            } else {
+                                selectedList.add(itmCode);
+                            }
+                        }
+                        break;
+                }
             }
 
             @Override
@@ -88,12 +144,35 @@ public class FilterActivity extends AppCompatActivity {
 
             }
         }));
+
+        Button applyFilter = (Button) findViewById(R.id.apply);
+        applyFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StringBuilder sb = new StringBuilder();
+                ArrayList<Integer> selectedCategory = mSelectedFilterValue.get("Category");
+                if (!selectedCategory.isEmpty()) {
+                    String text = android.text.TextUtils.join(",", selectedCategory);
+                    sb.append(" and CAT.id in (").append(text).append(")");
+                }
+                ArrayList<Integer> selectedItem = mSelectedFilterValue.get("Item");
+                if (!selectedItem.isEmpty()) {
+                    String text = android.text.TextUtils.join(",", selectedItem);
+                    sb.append(" and ITM.id in (").append(text).append(")");
+                }
+                String query = sb.toString();
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("query", query);
+                setResult(Activity.RESULT_OK, returnIntent);
+                finish();
+            }
+        });
     }
 
-    private void getData(){
+    private void getData() {
         ArrayList<FilterModel> categoryArrayList = new ArrayList<>();
         List<Category> categoryList = mDbHandler.getAllcategorys();
-        for (int i = 0; i < categoryList.size(); i++){
+        for (int i = 0; i < categoryList.size(); i++) {
             FilterModel filterModel = new FilterModel();
             filterModel.setName(categoryList.get(i).getCategoryName());
             filterModel.setCatId(categoryList.get(i).getId());
@@ -104,7 +183,7 @@ public class FilterActivity extends AppCompatActivity {
 
         ArrayList<FilterModel> itemArrayList = new ArrayList<>();
         List<Item> itemList = mDbHandler.getAllitems1();
-        for (int i = 0; i < itemList.size(); i++){
+        for (int i = 0; i < itemList.size(); i++) {
             FilterModel filterModel = new FilterModel();
             filterModel.setName(itemList.get(i).getItemName());
             filterModel.setCatId(itemList.get(i).getCategoryId());

@@ -210,7 +210,7 @@ public class TotalSales extends AppCompatActivity {
             Toast.makeText(TotalSales.this, "No record found", Toast.LENGTH_SHORT).show();
             mProgressDialog.cancel();
         } else {
-            List<ReportData> itmData = mDbHandeler.getTotalItemReport(fromDate, toDate);
+            List<ReportData> itmData = mDbHandeler.getTotalItemReport(fromDate, toDate, "");
             createItemData(mCategoryLevelData, itmData);
             if (isAdapterEnabled) {
                 mTotalSalesAdapter.notifyDataSetChanged();

@@ -1074,7 +1074,7 @@ public class DbHandler extends SQLiteOpenHelper {
         return totalCategory;
     }
 
-    public List<ReportData> getTotalItemReport(int fromDate, int toDate) {
+    public List<ReportData> getTotalItemReport(int fromDate, int toDate, String filter) {
         totalItem.clear();
         try {
             String selectQuery = "SELECT CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME
@@ -1085,9 +1085,10 @@ public class DbHandler extends SQLiteOpenHelper {
                     + " INNER JOIN " + CATEGORY_TABLE_NAME + " AS CAT ON CAT." + KEY_CAT_ID + " = SD." + KEY_SD_CATEGORY
                     + " INNER JOIN " + ITEM_TABLE_NAME + " AS ITM ON ITM." + KEY_ITEM_ID + " = SD." + KEY_SD_ITEM
                     + " INNER JOIN " + SALES_MST_TABLE_NAME + " AS SM ON SM." + KEY_SM_SALE_BILL_NO + " = SD." + KEY_SD_BILL_NO + " AND SM." + KEY_SM_DATETIME + " = SD." + KEY_SD_DATETIME
-                    + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate
+                    + " WHERE SM." + KEY_SM_DATE + " BETWEEN " + fromDate + " AND " + toDate + filter
                     + " GROUP BY CAT." + KEY_CAT_NAME + " ,ITM." + KEY_ITEM_NAME + ",SD." + KEY_SD_RATE;
             Log.d("Query", selectQuery);
+            Log.e("Query", selectQuery);
             SQLiteDatabase db = this.getWritableDatabase();
             Cursor c = db.rawQuery(selectQuery, null);
             if (c.moveToFirst()) {
