@@ -22,6 +22,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 import in.net.maitri.xb.R;
@@ -47,6 +48,7 @@ public class ItemReportActivity extends AppCompatActivity {
     private List<SalesMst> mGetBillMaster;
     private DecimalFormat df;
     private String rs, mFilterQuery;
+    private HashMap<String, ArrayList<Integer>> mSelectedFilterValue;
 
 
     @Override
@@ -59,6 +61,10 @@ public class ItemReportActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
         mFilterQuery = "";
+        mSelectedFilterValue = new HashMap<>();
+        mSelectedFilterValue.put("Category", new ArrayList<Integer>());
+        mSelectedFilterValue.put("Item", new ArrayList<Integer>());
+
         mGetBillMaster = new ArrayList<>();
         billView = (RecyclerView) findViewById(R.id.bill_view);
         tItems = (TextView) findViewById(R.id.tItems);
@@ -83,8 +89,9 @@ public class ItemReportActivity extends AppCompatActivity {
         mFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Toast.makeText(ItemReportActivity.this,"Feature under development.", Toast.LENGTH_SHORT).show();
-                startActivityForResult(new Intent(ItemReportActivity.this, FilterActivity.class),1);
+                startActivityForResult(new Intent(ItemReportActivity.this, FilterActivity.class)
+                        .putExtra("filter", mSelectedFilterValue)
+                        .putExtra("filter", mSelectedFilterValue),1);
             }
         });
         mFromDate = (EditText) findViewById(R.id.from_date);
@@ -184,7 +191,8 @@ public class ItemReportActivity extends AppCompatActivity {
 
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                mFilterQuery = data.getStringExtra("query");
+                mSelectedFilterValue = (HashMap<String, ArrayList<Integer>>) data.getSerializableExtra("filter");
+                mFilterQuery  = data.getStringExtra("query");
             }
         }
     }

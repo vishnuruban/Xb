@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,9 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.itemdetails.AddItemCategory;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
 
 public class FilterActivity extends AppCompatActivity {
@@ -35,11 +39,17 @@ public class FilterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        mSelectedFilterValue = (HashMap<String, ArrayList<Integer>>) bundle.getSerializable("filter");
         mDbHandler = new DbHandler(FilterActivity.this);
         mFilterValueData = new HashMap<>();
-        mSelectedFilterValue = new HashMap<>();
-        mSelectedFilterValue.put("Category", new ArrayList<Integer>());
-        mSelectedFilterValue.put("Item", new ArrayList<Integer>());
         mFilterValueAdapterData = new ArrayList<>();
         getData();
         RecyclerView filterNameView = (RecyclerView) findViewById(R.id.filter_name);
@@ -85,7 +95,6 @@ public class FilterActivity extends AppCompatActivity {
                                         mFilterValueData.get("Item").get(j).setSelected(false);
                                     }
                                 }
-
                             }
                         } else {
                             mFilterValueAdapterData.addAll(filterModelArrayList);
@@ -120,7 +129,7 @@ public class FilterActivity extends AppCompatActivity {
                         break;
 
                     case "Item":
-                        if(!mSelectedFilterValue.get("Category").isEmpty()){
+                        if (!mSelectedFilterValue.get("Category").isEmpty()) {
                             int itmCode = mFilterValueAdapterData.get(position).getItmId();
                             if (selectedList.contains(itmCode)) {
                                 selectedList.remove(selectedList.indexOf(itmCode));
@@ -149,48 +158,105 @@ public class FilterActivity extends AppCompatActivity {
         applyFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StringBuilder sb = new StringBuilder();
-                ArrayList<Integer> selectedCategory = mSelectedFilterValue.get("Category");
-                if (!selectedCategory.isEmpty()) {
-                    String text = android.text.TextUtils.join(",", selectedCategory);
-                    sb.append(" and CAT.id in (").append(text).append(")");
-                }
-                ArrayList<Integer> selectedItem = mSelectedFilterValue.get("Item");
-                if (!selectedItem.isEmpty()) {
-                    String text = android.text.TextUtils.join(",", selectedItem);
-                    sb.append(" and ITM.id in (").append(text).append(")");
-                }
-                String query = sb.toString();
-                Intent returnIntent = new Intent();
-                returnIntent.putExtra("query", query);
-                setResult(Activity.RESULT_OK, returnIntent);
-                finish();
+                returnFilter();
             }
         });
     }
 
-    private void getData() {
-        ArrayList<FilterModel> categoryArrayList = new ArrayList<>();
-        List<Category> categoryList = mDbHandler.getAllcategorys();
-        for (int i = 0; i < categoryList.size(); i++) {
-            FilterModel filterModel = new FilterModel();
-            filterModel.setName(categoryList.get(i).getCategoryName());
-            filterModel.setCatId(categoryList.get(i).getId());
-            filterModel.setSelected(false);
-            categoryArrayList.add(filterModel);
-        }
-        mFilterValueData.put("Category", categoryArrayList);
+    @Override
+    public void onBackPressed() {
+        returnFilter();
 
-        ArrayList<FilterModel> itemArrayList = new ArrayList<>();
-        List<Item> itemList = mDbHandler.getAllitems1();
-        for (int i = 0; i < itemList.size(); i++) {
-            FilterModel filterModel = new FilterModel();
-            filterModel.setName(itemList.get(i).getItemName());
-            filterModel.setCatId(itemList.get(i).getCategoryId());
-            filterModel.setItmId(itemList.get(i).getId());
-            filterModel.setSelected(false);
-            itemArrayList.add(filterModel);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            returnFilter();
         }
-        mFilterValueData.put("Item", itemArrayList);
+        return true;
+    }
+
+    private void returnFilter(){
+        String query ="";
+        if (!mSelectedFilterValue.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            ArrayList<Integer> selectedCategory = mSelectedFilterValue.get("Category");
+            if (!selectedCategory.isEmpty()) {
+                String text = android.text.TextUtils.join(",", selectedCategory);
+                sb.append(" and CAT.id in (").append(text).append(")");
+            }
+            ArrayList<Integer> selectedItem = mSelectedFilterValue.get("Item");
+            if (!selectedItem.isEmpty()) {
+                String text = android.text.TextUtils.join(",", selectedItem);
+                sb.append(" and ITM.id in (").append(text).append(")");
+            }
+            query = sb.toString();
+        }
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("filter", mSelectedFilterValue);
+        returnIntent.putExtra("query", query);
+        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
+    }
+
+    private void getData() {
+        if (mSelectedFilterValue.isEmpty()) {
+            ArrayList<FilterModel> categoryArrayList = new ArrayList<>();
+            List<Category> categoryList = mDbHandler.getAllcategorys();
+            for (int i = 0; i < categoryList.size(); i++) {
+                FilterModel filterModel = new FilterModel();
+                filterModel.setName(categoryList.get(i).getCategoryName());
+                filterModel.setCatId(categoryList.get(i).getId());
+                filterModel.setSelected(false);
+                categoryArrayList.add(filterModel);
+            }
+            mFilterValueData.put("Category", categoryArrayList);
+
+            ArrayList<FilterModel> itemArrayList = new ArrayList<>();
+            List<Item> itemList = mDbHandler.getAllitems1();
+            for (int i = 0; i < itemList.size(); i++) {
+                FilterModel filterModel = new FilterModel();
+                filterModel.setName(itemList.get(i).getItemName());
+                filterModel.setCatId(itemList.get(i).getCategoryId());
+                filterModel.setItmId(itemList.get(i).getId());
+                filterModel.setSelected(false);
+                itemArrayList.add(filterModel);
+            }
+            mFilterValueData.put("Item", itemArrayList);
+        } else {
+            ArrayList<Integer> selectedCategory = mSelectedFilterValue.get("Category");
+            ArrayList<FilterModel> categoryArrayList = new ArrayList<>();
+            List<Category> categoryList = mDbHandler.getAllcategorys();
+            for (int i = 0; i < categoryList.size(); i++) {
+                FilterModel filterModel = new FilterModel();
+                if (selectedCategory.contains(categoryList.get(i).getId())) {
+                    filterModel.setSelected(true);
+                } else {
+                    filterModel.setSelected(false);
+                }
+                filterModel.setName(categoryList.get(i).getCategoryName());
+                filterModel.setCatId(categoryList.get(i).getId());
+                categoryArrayList.add(filterModel);
+            }
+            mFilterValueData.put("Category", categoryArrayList);
+
+            ArrayList<Integer> selectedItem = mSelectedFilterValue.get("Item");
+            ArrayList<FilterModel> itemArrayList = new ArrayList<>();
+            List<Item> itemList = mDbHandler.getAllitems1();
+            for (int i = 0; i < itemList.size(); i++) {
+                FilterModel filterModel = new FilterModel();
+                if (selectedItem.contains(itemList.get(i).getId())) {
+                    filterModel.setSelected(true);
+                } else {
+                    filterModel.setSelected(false);
+                }
+                filterModel.setName(itemList.get(i).getItemName());
+                filterModel.setCatId(itemList.get(i).getCategoryId());
+                filterModel.setItmId(itemList.get(i).getId());
+                itemArrayList.add(filterModel);
+            }
+            mFilterValueData.put("Item", itemArrayList);
+        }
     }
 }
