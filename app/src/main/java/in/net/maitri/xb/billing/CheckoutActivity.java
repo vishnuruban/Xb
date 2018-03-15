@@ -234,6 +234,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
                 getWindow().getDecorView().clearFocus();
                 cDiscount.requestFocus();
+                et_result = cDiscount;
             }
         });
 
@@ -708,7 +709,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (mEditSpinner.getText().toString().equals("CASH")) {
                     if (Double.parseDouble(s.toString()) > netAmt ) {
                         tBalance.setVisibility(View.VISIBLE);
-                        double balance = Double.parseDouble(s.toString()) - Double.parseDouble(totalPrice);
+                        double balance = Double.parseDouble(s.toString()) - netAmt      ;
                         tBalance.setText("Balance  " + rs + " " + FragmentOne.commaSeperated(balance));
                     } else {
                         tBalance.setVisibility(View.INVISIBLE);

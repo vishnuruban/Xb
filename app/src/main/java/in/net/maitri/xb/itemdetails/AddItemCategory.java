@@ -68,7 +68,10 @@ public class AddItemCategory extends AppCompatActivity {
         categoryView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), categoryView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-
+                progressDialog = new ProgressDialog(AddItemCategory.this);
+                progressDialog.setMessage("Getting items...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
                 if (position == 0) {
                     selectAll();
                 } else {
@@ -87,6 +90,7 @@ public class AddItemCategory extends AppCompatActivity {
                     editor.putInt("catId", mCategoryId);
                     editor.apply();
                 }
+                progressDialog.cancel();
             }
 
             @Override
