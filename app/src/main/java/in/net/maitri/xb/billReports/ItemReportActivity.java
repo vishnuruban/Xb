@@ -33,7 +33,6 @@ import in.net.maitri.xb.db.SalesMst;
 
 public class ItemReportActivity extends AppCompatActivity {
 
-    private RecyclerView billView;
     private TextView tItems, tQty, tDiscount, tNetAmount, tBillCount;
     private EditText mFromDate, mToDate;
     private int mYear, mMonth, mDay, mMinYear, mMinMonth, mMinDay;
@@ -66,7 +65,7 @@ public class ItemReportActivity extends AppCompatActivity {
         mSelectedFilterValue.put("Item", new ArrayList<Integer>());
 
         mGetBillMaster = new ArrayList<>();
-        billView = (RecyclerView) findViewById(R.id.bill_view);
+        RecyclerView billView = (RecyclerView) findViewById(R.id.bill_view);
         tItems = (TextView) findViewById(R.id.tItems);
         tQty = (TextView) findViewById(R.id.tqty);
         tDiscount = (TextView) findViewById(R.id.tDiscount);
@@ -134,6 +133,7 @@ public class ItemReportActivity extends AppCompatActivity {
         mShowReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                summaryLayout.setVisibility(View.GONE);
                 if (mGetFromDate.isEmpty() || mGetToDate.isEmpty()) {
                     Toast.makeText(ItemReportActivity.this, "Select date range", Toast.LENGTH_SHORT).show();
                 } else {
@@ -143,9 +143,12 @@ public class ItemReportActivity extends AppCompatActivity {
                     mProgressDialog.show();
 
                     mGetBillMaster.clear();
+                    mGetItemMaster.clear();
 
                     dbHandler = new DbHandler(ItemReportActivity.this);
-                    mGetItemMaster = dbHandler.getTotalItemReport(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate), mFilterQuery);
+                    List<ReportData> list = dbHandler.getTotalItemReport(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate), mFilterQuery);
+                    mGetItemMaster.addAll(list);
+                    billItemReportAdapter.notifyDataSetChanged();
                     mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
 
                     if (mGetItemMaster.size() == 0 || mGetBillMaster.size() == 0) {
@@ -163,8 +166,8 @@ public class ItemReportActivity extends AppCompatActivity {
                             items = items + bm.getItems();
                         }
 
-                        billItemReportAdapter = new BillItemReportAdapter(mGetItemMaster);
-                        billView.setAdapter(billItemReportAdapter);
+                       /* billItemReportAdapter = new BillItemReportAdapter(mGetItemMaster);
+                        billView.setAdapter(billItemReportAdapter);*/
 
                         String text = "Bills:  " + String.valueOf(mGetBillMaster.size());
                         tBillCount.setText(text);
@@ -184,6 +187,8 @@ public class ItemReportActivity extends AppCompatActivity {
         df = new DecimalFormat("0.00");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ItemReportActivity.this);
         billView.setLayoutManager(linearLayoutManager);
+        billItemReportAdapter = new BillItemReportAdapter(mGetItemMaster);
+        billView.setAdapter(billItemReportAdapter);
     }
 
     @Override

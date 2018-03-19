@@ -121,6 +121,7 @@ public class CustomerReportActivity extends AppCompatActivity {
         mShowReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                summaryLayout.setVisibility(View.GONE);
                 if (mGetFromDate.isEmpty() || mGetToDate.isEmpty()) {
                     Toast.makeText(CustomerReportActivity.this, "Select date range", Toast.LENGTH_SHORT).show();
                 } else {
@@ -129,9 +130,12 @@ public class CustomerReportActivity extends AppCompatActivity {
                     mProgressDialog.setCancelable(false);
                     mProgressDialog.show();
                     mGetBillMaster.clear();
+                    mGetCustomerMaster.clear();
 
                     dbHandler = new DbHandler(CustomerReportActivity.this);
-                    mGetCustomerMaster = dbHandler.getTotalCustomerReport(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
+                    List<CustomerReport> list = dbHandler.getTotalCustomerReport(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
+                    mGetCustomerMaster.addAll(list);
+                    billCustomerReportAdapter.notifyDataSetChanged();
                     mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
 
                     if (mGetCustomerMaster.size() == 0 || mGetBillMaster.size() == 0) {
@@ -154,8 +158,8 @@ public class CustomerReportActivity extends AppCompatActivity {
 
                     }
 
-                    billCustomerReportAdapter = new BillCustomerReportAdapter(mGetCustomerMaster);
-                    billView.setAdapter(billCustomerReportAdapter);
+                   /* billCustomerReportAdapter = new BillCustomerReportAdapter(mGetCustomerMaster);
+                    billView.setAdapter(billCustomerReportAdapter);*/
 
 
                     String text = "Bills:  " + String.valueOf(mGetBillMaster.size());
@@ -173,6 +177,8 @@ public class CustomerReportActivity extends AppCompatActivity {
         df = new DecimalFormat("0.00");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CustomerReportActivity.this);
         billView.setLayoutManager(linearLayoutManager);
+        billCustomerReportAdapter = new BillCustomerReportAdapter(mGetCustomerMaster);
+        billView.setAdapter(billCustomerReportAdapter);
     }
 
 

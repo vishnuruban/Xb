@@ -162,6 +162,7 @@ public class BillReportActivity extends AppCompatActivity {
         mShowReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                summaryLayout.setVisibility(View.GONE);
                 if (mGetFromDate.isEmpty() || mGetToDate.isEmpty()) {
                     Toast.makeText(BillReportActivity.this, "Select date range", Toast.LENGTH_SHORT).show();
                 } else {
@@ -171,7 +172,9 @@ public class BillReportActivity extends AppCompatActivity {
                     mProgressDialog.show();
                     mGetBillMaster.clear();
                     dbHandler = new DbHandler(BillReportActivity.this);
-                    mGetBillMaster = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
+                    List<SalesMst> list = dbHandler.getAllBills(dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate));
+                    mGetBillMaster.addAll(list);
+                    billMasterAdapter.notifyDataSetChanged();
 
                     if (mGetBillMaster.size() == 0) {
                         Toast.makeText(BillReportActivity.this, "No Bills found", Toast.LENGTH_SHORT).show();
@@ -192,10 +195,6 @@ public class BillReportActivity extends AppCompatActivity {
 
                     }
 
-                    billMasterAdapter = new BillMasterAdapter(BillReportActivity.this, mGetBillMaster);
-                    billView.setAdapter(billMasterAdapter);
-
-
                     String text = "Bills:  " + String.valueOf(mGetBillMaster.size());
                     tBillCount.setText(text);
                     tDiscount.setText("Discount:  " + rs + df.format(discount));
@@ -215,6 +214,8 @@ public class BillReportActivity extends AppCompatActivity {
         df = new DecimalFormat("0.00");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(BillReportActivity.this);
         billView.setLayoutManager(linearLayoutManager);
+        billMasterAdapter = new BillMasterAdapter(BillReportActivity.this, mGetBillMaster);
+        billView.setAdapter(billMasterAdapter);
         billView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), billView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {

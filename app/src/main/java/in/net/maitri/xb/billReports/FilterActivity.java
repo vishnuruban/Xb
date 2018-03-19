@@ -1,6 +1,7 @@
 package in.net.maitri.xb.billReports;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +35,9 @@ public class FilterActivity extends AppCompatActivity {
     private ArrayList<FilterModel> mFilterValueAdapterData;
     private String[] filterName = {"Category", "Item"};
     private int mSelectedFilterPosition;
+    private FilterValueAdapter filterValueAdapter;
+    private FilterNameAdapter filterNameAdapter;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,6 @@ public class FilterActivity extends AppCompatActivity {
         mDbHandler = new DbHandler(FilterActivity.this);
         mFilterValueData = new HashMap<>();
         mFilterValueAdapterData = new ArrayList<>();
-        getData();
         RecyclerView filterNameView = (RecyclerView) findViewById(R.id.filter_name);
         final ArrayList<FilterModel> filterNameData = new ArrayList<>();
         for (String i : filterName) {
@@ -60,14 +63,14 @@ public class FilterActivity extends AppCompatActivity {
             fm.setName(i);
             filterNameData.add(fm);
         }
-        final FilterNameAdapter filterNameAdapter = new FilterNameAdapter(filterNameData);
+        filterNameAdapter = new FilterNameAdapter(filterNameData);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(FilterActivity.this);
         filterNameView.setLayoutManager(layoutManager);
         filterNameView.setItemAnimator(new DefaultItemAnimator());
         filterNameView.setAdapter(filterNameAdapter);
 
         RecyclerView filterValueView = (RecyclerView) findViewById(R.id.filter_value);
-        final FilterValueAdapter filterValueAdapter = new FilterValueAdapter(mFilterValueAdapterData);
+        filterValueAdapter = new FilterValueAdapter(mFilterValueAdapterData);
         RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(FilterActivity.this);
         filterValueView.setLayoutManager(layoutManager1);
         filterValueView.setItemAnimator(new DefaultItemAnimator());
@@ -161,6 +164,21 @@ public class FilterActivity extends AppCompatActivity {
                 returnFilter();
             }
         });
+
+        Button clearAll = (Button) findViewById(R.id.clearAll);
+        clearAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSelectedFilterValue.clear();
+                mSelectedFilterValue.put("Category", new ArrayList<Integer>());
+                mSelectedFilterValue.put("Item", new ArrayList<Integer>());
+                mFilterValueData.clear();
+                getData();
+                //filterValueAdapter.notifyDataSetChanged();
+            }
+        });
+
+        getData();
     }
 
     @Override
@@ -176,6 +194,8 @@ public class FilterActivity extends AppCompatActivity {
         }
         return true;
     }
+
+
 
     private void returnFilter(){
         String query ="";
@@ -201,6 +221,10 @@ public class FilterActivity extends AppCompatActivity {
     }
 
     private void getData() {
+        mProgressDialog = new ProgressDialog(FilterActivity.this);
+        mProgressDialog.setMessage("Fetching data...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
         if (mSelectedFilterValue.isEmpty()) {
             ArrayList<FilterModel> categoryArrayList = new ArrayList<>();
             List<Category> categoryList = mDbHandler.getAllcategorys();
@@ -258,5 +282,12 @@ public class FilterActivity extends AppCompatActivity {
             }
             mFilterValueData.put("Item", itemArrayList);
         }
+
+        mFilterValueAdapterData.clear();
+        mSelectedFilterPosition = 0;
+        mFilterValueAdapterData.addAll(mFilterValueData.get("Category"));
+        filterNameAdapter.setSelected(0);
+        filterValueAdapter.notifyDataSetChanged();
+        mProgressDialog.cancel();
     }
 }
