@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Selection;
@@ -230,11 +231,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-                if (mEditSpinner.getText().toString().equals("Cash")) {
+           /*     if (mEditSpinner.getText().toString().equals("Cash")) {
                     et_result = cCash;
                 } else {
                     et_result = cDiscount;
-                }
+                }*/
                 return true;
             }
         });
@@ -369,7 +370,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cSave = (Button) findViewById(R.id.cSave);
         cCancel = (Button) findViewById(R.id.cCancel);
         cPrint.setEnabled(false);
-        cPrint.setBackgroundColor(getResources().getColor(R.color.light_grey));
+        cPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.light_grey));
         btn_one.setOnClickListener(this);
         btn_two.setOnClickListener(this);
         btn_three.setOnClickListener(this);
@@ -389,133 +390,136 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_one:
-                String one = et_result.getText().toString() + btn_one.getText().toString();
-                et_result.setText(one);
-                break;
+        if (et_result != null) {
+            switch (view.getId()) {
+                case R.id.btn_one:
+                    String one = et_result.getText().toString() + btn_one.getText().toString();
+                    et_result.setText(one);
+                    break;
 
-            case R.id.btn_two:
-                String two = et_result.getText().toString() + btn_two.getText().toString();
-                et_result.setText(two);
-                break;
+                case R.id.btn_two:
+                    String two = et_result.getText().toString() + btn_two.getText().toString();
+                    et_result.setText(two);
+                    break;
 
-            case R.id.btn_three:
-                String three = et_result.getText().toString() + btn_three.getText().toString();
-                et_result.setText(three);
-                break;
+                case R.id.btn_three:
+                    String three = et_result.getText().toString() + btn_three.getText().toString();
+                    et_result.setText(three);
+                    break;
 
-            case R.id.btn_four:
-                String four = et_result.getText().toString() + btn_four.getText().toString();
-                et_result.setText(four);
-                break;
+                case R.id.btn_four:
+                    String four = et_result.getText().toString() + btn_four.getText().toString();
+                    et_result.setText(four);
+                    break;
 
-            case R.id.btn_five:
-                String five = et_result.getText().toString() + btn_five.getText().toString();
-                et_result.setText(five);
-                break;
+                case R.id.btn_five:
+                    String five = et_result.getText().toString() + btn_five.getText().toString();
+                    et_result.setText(five);
+                    break;
 
-            case R.id.btn_six:
-                String six = et_result.getText().toString() + btn_six.getText().toString();
-                et_result.setText(six);
-                break;
+                case R.id.btn_six:
+                    String six = et_result.getText().toString() + btn_six.getText().toString();
+                    et_result.setText(six);
+                    break;
 
-            case R.id.btn_seven:
-                String seven = et_result.getText().toString() + btn_seven.getText().toString();
-                et_result.setText(seven);
-                break;
+                case R.id.btn_seven:
+                    String seven = et_result.getText().toString() + btn_seven.getText().toString();
+                    et_result.setText(seven);
+                    break;
 
-            case R.id.btn_eight:
-                String eight = et_result.getText().toString() + btn_eight.getText().toString();
-                et_result.setText(eight);
-                break;
+                case R.id.btn_eight:
+                    String eight = et_result.getText().toString() + btn_eight.getText().toString();
+                    et_result.setText(eight);
+                    break;
 
-            case R.id.btn_nine:
-                String nine = et_result.getText().toString() + btn_nine.getText().toString();
-                et_result.setText(nine);
-                break;
+                case R.id.btn_nine:
+                    String nine = et_result.getText().toString() + btn_nine.getText().toString();
+                    et_result.setText(nine);
+                    break;
 
-            case R.id.btn_zero:
-                String zero = et_result.getText().toString() + btn_zero.getText().toString();
-                et_result.setText(zero);
-                break;
+                case R.id.btn_zero:
+                    String zero = et_result.getText().toString() + btn_zero.getText().toString();
+                    et_result.setText(zero);
+                    break;
 
-            case R.id.btn_point:
-                String point = et_result.getText().toString() + btn_point.getText().toString();
-                et_result.setText(point);
-                break;
+                case R.id.btn_point:
+                    String point = et_result.getText().toString() + btn_point.getText().toString();
+                    et_result.setText(point);
+                    break;
 
-            case R.id.btn_clear:
-                et_result.setText("");
-                break;
-            case R.id.cCancel:
+                case R.id.btn_clear:
+                    et_result.setText("");
+                    break;
+                case R.id.cCancel:
 
-                if (cCancel.getText().toString().equals("NEXT BILL")) {
+                    if (cCancel.getText().toString().equals("NEXT BILL")) {
+                        Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    } else {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(CheckoutActivity.this);
+                        builder.setTitle("Are you sure you want to cancel the bill?");
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                finish();
+                            }
+                        });
+
+                        builder.show();
+                    }
+                    break;
+
+                case R.id.cSave:
+                    saveBill();
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    if (sharedPreferences.getBoolean("isFirstTym", false)) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isFirstTym", false);
+                        editor.apply();
+                        mPrinter.showDeviceList(CheckoutActivity.this);
+                    }
+                    break;
+                case R.id.cPrint:
+
+                    String printSize = getSettings.getPrintingPaperSize();
+
+
+                    String pBillno;
+                    if (sm.getPrefix().isEmpty()) {
+                        pBillno = String.valueOf(sm.getBillNO());
+                    } else {
+                        pBillno = sm.getPrefix() + String.valueOf(sm.getBillNO());
+                    }
+                    if (printSize.equals("1")) {
+                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+                    } else {
+                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+                    }
                     Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
-                } else {
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(CheckoutActivity.this);
-                    builder.setTitle("Are you sure you want to cancel the bill?");
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.cancel();
-                        }
-                    });
-
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
-
-                    builder.show();
-                }
-                break;
-
-            case R.id.cSave:
-                saveBill();
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                if (sharedPreferences.getBoolean("isFirstTym", false)) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("isFirstTym", false);
-                    editor.apply();
-                    mPrinter.showDeviceList(CheckoutActivity.this);
-                }
-                break;
-            case R.id.cPrint:
-
-                String printSize = getSettings.getPrintingPaperSize();
-
-
-                String pBillno;
-                if (sm.getPrefix().isEmpty()) {
-                    pBillno = String.valueOf(sm.getBillNO());
-                } else {
-                    pBillno = sm.getPrefix() + String.valueOf(sm.getBillNO());
-                }
-                if (printSize.equals("1")) {
-                    billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
-                } else {
-                    billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
-                }
-                Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-                break;
+                    break;
+            }
         }
     }
 
     public void saveBill() {
-        long detInserted = 0, mstInserted ;
+        long detInserted = 0, mstInserted;
         int bNo = bSeries.getCurrentBillNo();
         dbHandler.updateBillNo(++bNo);
         int quantity = 0;
@@ -553,11 +557,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mstInserted = dbHandler.addSalesMst(sm);
         if (detInserted != -1 && mstInserted != -1) {
             cPrint.setEnabled(true);
-            cPrint.setBackgroundColor(getResources().getColor(R.color.green));
+            cPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this,R.color.green));
             cSave.setEnabled(false);
-            cSave.setBackgroundColor(getResources().getColor(R.color.light_grey));
+            cSave.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this,R.color.light_grey));
             cCancel.setVisibility(View.VISIBLE);
-            cCancel.setText("NEXT BILL");
+            String nextBill = "NEXT BILL";
+            cCancel.setText(nextBill);
             Toast.makeText(CheckoutActivity.this, "Bill Saved!", Toast.LENGTH_SHORT).show();
 
         } else {
@@ -578,12 +583,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 cCash.setFocusable(true);
                 cCash.setFocusableInTouchMode(true);
                 cCash.setClickable(true);
-
+                et_result = cCash;
             } else {
                 tCash.setText("Amount (" + rs + ")");
                 cCash.setText(df.format(netAmt));
                 cCash.setFocusable(false);
                 cCash.setClickable(false);
+                et_result = null;
             }
         }
 
@@ -662,7 +668,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     cDiscountValue = df.format(Double.parseDouble(s.toString().substring(1)));
                 } else {
                     String disPrice = s.toString().substring(1);
-                    double discount = (Double.parseDouble(disPrice.toString()) / 100.0) * Double.parseDouble(totalPrice);
+                    double discount = (Double.parseDouble(disPrice) / 100.0) * Double.parseDouble(totalPrice);
                     cDiscountValue = df.format(discount);
                     netAmt = Double.parseDouble(totalPrice) - discount;
                 }
@@ -675,7 +681,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(netAmt));
                 tCash.setText("Cash (" + rs + ")");
                 cCash.setText(String.valueOf(netAmt));
-                mEditSpinner.setText("CASH");
+                String cash = "CASH";
+                mEditSpinner.setText(cash);
             }
         }
 
