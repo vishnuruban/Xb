@@ -5,6 +5,23 @@
         android:key="key_settings_print"
         android:title="Print Settings">
 
+        <ListPreference
+            android:dialogTitle="Choose Printer Type"
+            android:summary="%s"
+            android:entries="@array/printer_type_name"
+            android:entryValues="@array/printer_type_values"
+            android:key="key_settings_printer_printer_type"
+            android:title="Printer Type" />
+
+        <ListPreference
+            android:dialogTitle="Choose Printer name"
+            android:summary="%s"
+            android:entries="@array/printer_brand_name"
+            android:entryValues="@array/printer_brand_values"
+            android:key="key_settings_printer_printer_name"
+            android:title="Printer Name" />
+
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="key_settings_printer_bluetooth"
@@ -15,6 +32,12 @@
             android:summary="%s"
             android:key="key_settings_printer_paired_device"
             android:title="Paired Device" />
+
+        <Preference
+            android:key="key_settings_printer_usb"
+            android:title="USB">
+        </Preference>
+
 
         <ListPreference
             android:dialogTitle="select size"

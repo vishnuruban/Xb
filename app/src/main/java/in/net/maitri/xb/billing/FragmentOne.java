@@ -127,7 +127,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 customerDetails = (Customer) customerAdapter.getItem(position);
                 autoCustomer.setText(customerDetails.getName());
                 customerId = customerDetails.getId();
-                System.out.println("CUSTID " + customerId);
                 customer.setId(customerId);
                 customer.setName(customerDetails.getName());
                 customer.setMobileno(customerDetails.getMobileno());
@@ -181,8 +180,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                     }
                     Intent intent = new Intent(getActivity(), CheckoutActivity.class);
                     intent.putExtras(bundle);
-                    Log.i("CustomerName", autoCustomer.getText().toString());
-                    Log.i("CustomerId", String.valueOf(customer.getId()));
                     intent.putExtra("customer", customer);
                     startActivity(intent);
                 }
@@ -196,44 +193,38 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
                 if (billList.size() == 0) {
                     Toast.makeText(getActivity(), "No Bills Found!", Toast.LENGTH_SHORT).show();
-                    return;
+                } else {
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+                    dialog.setTitle("Are you sure you want to clear the bill?");
+                    dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            billList.clear();
+                            bTotalProducts.setText("");
+                            bTotalPrice.setText("");
+                            billListAdapter.notifyDataSetChanged();
+
+                        }
+                    });
+                    dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    dialog.show();
                 }
-
-
-                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                dialog.setTitle("Are you sure you want to clear the bill?");
-                dialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        billList.clear();
-                        bTotalProducts.setText("");
-                        bTotalPrice.setText("");
-                        billListAdapter.notifyDataSetChanged();
-
-                    }
-                });
-                dialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                dialog.show();
             }
         });
+
         return view;
     }
 
 
     public static void populateList(BillItems be) {
-
         if (billList.size() != 0) {
-
-
             for (int i = 0; i < billList.size(); i++) {
                 BillItems bItm = billList.get(i);
-
                 if (bItm.getDesc().equals(be.getDesc()) && bItm.getRate() == be.getRate()) {
                     System.out.println("Items Equalled");
                     int qty = bItm.getQty() + be.getQty();
@@ -241,9 +232,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                     billList.remove(bItm);
                     be.setQty(qty);
                     be.setAmount(amt);
-
                 }
-
             }
             billList.add(be);
             billListAdapter.notifyDataSetChanged();
@@ -263,7 +252,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
             byte[] utf8 = rs.getBytes("UTF-8");
             rs = new String(utf8, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            rs = "RS.";
         }
         bTotalProducts.setText("");
         bTotalProducts.setText("Products   " + billList.size());
@@ -510,18 +499,6 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     }
 
 
-  /*  private class DoneOnEditorActionListener implements TextView.OnEditorActionListener {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            customerId = 0;
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                return true;
-            }
-            return true;
-        }
-    }*/
     public static void hideKeyboard(Activity activity) {
         View v = activity.getWindow().getCurrentFocus();
         if (v != null) {

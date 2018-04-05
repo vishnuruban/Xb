@@ -2,12 +2,15 @@ package in.net.maitri.xb.settings;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
+import android.widget.EditText;
 import android.widget.Toast;
 import android.content.SharedPreferences;
 import android.preference.EditTextPreference;
@@ -16,19 +19,31 @@ import android.preference.PreferenceCategory;
 import java.util.Set;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.printing.epson.DiscoveryActivity;
+
+import static android.app.Activity.RESULT_OK;
 
 
-public class PrinterSettings extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class PrinterSettings extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private CharSequence[] mPairedDeviceEntries;
-    private CharSequence[] mPairedDeviceEntryValues;
     private BluetoothAdapter mBluetoothAdapter;
     private ListPreference mPairedDevices;
+    private Preference usb;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_printer);
+
+        usb = findPreference("key_settings_printer_usb");
+        usb.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(getActivity(), DiscoveryActivity.class);
+                startActivityForResult(intent, 0);
+                return true;
+            }
+        });
 
         SwitchPreference bluetooth = (SwitchPreference) findPreference("key_settings_printer_bluetooth");
         mPairedDevices = (ListPreference) findPreference("key_settings_printer_paired_device");
@@ -50,13 +65,13 @@ public class PrinterSettings extends PreferenceFragment implements SharedPrefere
         bluetooth.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
-                boolean selected =   Boolean.parseBoolean(o.toString());
-                if (selected){
+                boolean selected = Boolean.parseBoolean(o.toString());
+                if (selected) {
                     if (mBluetoothAdapter != null) {
                         mBluetoothAdapter.enable();
                         mPairedDevices.setEnabled(true);
                     }
-                }else {
+                } else {
                     if (mBluetoothAdapter != null) {
                         mBluetoothAdapter.disable();
                         mPairedDevices.setEnabled(false);
@@ -74,6 +89,23 @@ public class PrinterSettings extends PreferenceFragment implements SharedPrefere
             }
         });
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, final int resultCode, final Intent data) {
+        if (data != null && resultCode == RESULT_OK) {
+            String target = data.getStringExtra("PrinterName") + "\n" + data.getStringExtra(getString(R.string.title_target));
+            if (target != null) {
+                usb.setSummary(target);
+                SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
+                prefs.putString(data.getStringExtra(getString(R.string.title_target)), "");
+                prefs.apply();
+            } else {
+                usb.setSummary("No printer selected");
+            }
+        }
     }
 
 
@@ -108,11 +140,11 @@ public class PrinterSettings extends PreferenceFragment implements SharedPrefere
 
     }
 
-    private void getPairedDevises(){
+    private void getPairedDevises() {
         if (mBluetoothAdapter != null) {
             Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-            mPairedDeviceEntries = new CharSequence[pairedDevices.size()];
-            mPairedDeviceEntryValues = new CharSequence[pairedDevices.size()];
+            CharSequence[] mPairedDeviceEntries = new CharSequence[pairedDevices.size()];
+            CharSequence[] mPairedDeviceEntryValues = new CharSequence[pairedDevices.size()];
             int i = 0;
             for (BluetoothDevice dev : pairedDevices) {
                 mPairedDeviceEntries[i] = dev.getName();
@@ -122,7 +154,7 @@ public class PrinterSettings extends PreferenceFragment implements SharedPrefere
             }
             mPairedDevices.setEntries(mPairedDeviceEntries);
             mPairedDevices.setEntryValues(mPairedDeviceEntryValues);
-        }else {
+        } else {
             Toast.makeText(getActivity(), "Device does not support bluetooth", Toast.LENGTH_SHORT).show();
         }
     }

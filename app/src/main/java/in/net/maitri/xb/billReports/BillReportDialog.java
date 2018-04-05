@@ -24,46 +24,34 @@ import java.util.List;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billing.BillItems;
 import in.net.maitri.xb.billing.BillListAdapter;
-import in.net.maitri.xb.billing.BillPrint;
-import in.net.maitri.xb.billing.CheckoutActivity;
-import in.net.maitri.xb.billing.FragmentOne;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesDet;
+import in.net.maitri.xb.printing.CieBluetooth.BillPrint;
 import in.net.maitri.xb.settings.GetSettings;
 
 
-/**
- * Created by SYSRAJ4 on 29/11/2017.
- */
-
 public class BillReportDialog extends Dialog implements DialogInterface.OnClickListener{
 
-    TextView selectedBill,selectedBillDate,dSubTotal,dDiscount,dNetAmt,customerName,cashierName;
 
-    Context context;
-    int fromDate=0;int toDate=0;
-    DbHandler dbHandler;
-    private List<SalesDet> mGetBillDetails;
-    int billNo;
-    String dateTime;
-    ProgressDialog mDialog;
-    BillListAdapter billListAdapter;
+    private Context context;
+    private int fromDate=0;
+    private int toDate=0;
+    private DbHandler dbHandler;
+    private int billNo;
+    private String dateTime;
+    private ProgressDialog mDialog;
     private ListView billListView;
-    Button closeDialog;
-    Button printBill;
-    double netAmt;
-     String discount,subTotal;
-    BillPrint billPrint;
-    GetSettings getSettings;
-    ArrayList<BillItems> billItems;
-    double dQty;
-    String rs;
-    DecimalFormat df;
-    int internalBillNo;
-    String custName;
-    String cashName;
-    Messenger messenger;
-    CieBluetoothPrinter bluetoothPrinter;
+    private double netAmt;
+    private  String discount,subTotal;
+    private BillPrint billPrint;
+    private GetSettings getSettings;
+    private ArrayList<BillItems> billItems;
+    private double dQty;
+    private int internalBillNo;
+    private String custName;
+    private String cashName;
+    private Messenger messenger;
+    private CieBluetoothPrinter bluetoothPrinter;
 
 
     BillReportDialog(Context context, int fromDate, int toDate, int billNo,String dateTime, ProgressDialog mDialog,String discount,double netAmt,String subTotal,double dQty,int internalBillNo,String custName,String cashName)
@@ -126,7 +114,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         //un comment the line below to debug the print service
         //mPrinter.setDebugService(BuildConfig.DEBUG);
 
-        rs = "\u20B9";
+        String rs = "\u20B9";
         try{
             byte[] utf8 = rs.getBytes("UTF-8");
 
@@ -136,23 +124,23 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         {
             e.printStackTrace();
         }
-        df = new DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("0.00");
 
         dbHandler = new DbHandler(context);
-        selectedBill = (TextView) findViewById(R.id.selected_bill);
-        selectedBillDate = (TextView)findViewById(R.id.selected_bill_date);
-       dSubTotal =(TextView)findViewById(R.id.dSubTotal);
-        dDiscount =(TextView)findViewById(R.id.dSubDiscount);
-        dNetAmt =(TextView)findViewById(R.id.dNetAmt);
-        customerName =(TextView)findViewById(R.id.custName);
-        cashierName = (TextView)findViewById(R.id.cashName);
+        TextView selectedBill = (TextView) findViewById(R.id.selected_bill);
+        TextView selectedBillDate = (TextView) findViewById(R.id.selected_bill_date);
+        TextView dSubTotal = (TextView) findViewById(R.id.dSubTotal);
+        TextView dDiscount = (TextView) findViewById(R.id.dSubDiscount);
+        TextView dNetAmt = (TextView) findViewById(R.id.dNetAmt);
+        TextView customerName = (TextView) findViewById(R.id.custName);
+        TextView cashierName = (TextView) findViewById(R.id.cashName);
         billListView = (ListView) findViewById(R.id.bill_lv);
-        closeDialog =(Button)findViewById(R.id.closeDialog);
-        printBill = (Button) findViewById(R.id.printBill);
+        Button closeDialog = (Button) findViewById(R.id.closeDialog);
+        Button printBill = (Button) findViewById(R.id.printBill);
         billPrint = new BillPrint(context);
-        dDiscount.setText("Discount:  "+rs+ discount);
-        dNetAmt.setText("Net Amount:  "+rs+ df.format(netAmt));
-        dSubTotal.setText("Subtotal:  "+rs+ subTotal);
+        dDiscount.setText("Discount:  "+ rs + discount);
+        dNetAmt.setText("Net Amount:  "+ rs + df.format(netAmt));
+        dSubTotal.setText("Subtotal:  "+ rs + subTotal);
         getSettings = new GetSettings(context);
         customerName.setText("Customer Name : "+custName);
         cashierName.setText("Cashier Name : "+cashName);
@@ -195,16 +183,16 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
 
     void getBillDetails(int billNo,int fromDate,int toDate,String billDateTime) {
 
-        mGetBillDetails = dbHandler.getBillDetails(billNo,fromDate,toDate,billDateTime);
+        List<SalesDet> mGetBillDetails = dbHandler.getBillDetails(billNo, fromDate, toDate, billDateTime);
         int quantity = 0;
         int items = 0;
 
         billItems = new ArrayList<>();
 
 
-        for(int i =0;i<mGetBillDetails.size();i++)
+        for(int i = 0; i< mGetBillDetails.size(); i++)
         {
-            SalesDet sd =mGetBillDetails.get(i);
+            SalesDet sd = mGetBillDetails.get(i);
 
             billItems.add(sd.billItems);
 
@@ -223,8 +211,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
         }
 
 
-
-        billListAdapter = new BillListAdapter(context,billItems);
+        BillListAdapter billListAdapter = new BillListAdapter(context, billItems);
         billListView.setAdapter(billListAdapter);
 
 

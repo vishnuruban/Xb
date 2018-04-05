@@ -241,7 +241,6 @@ public class BillReportActivity extends AppCompatActivity {
 
             }
         }));
-
     }
 
 

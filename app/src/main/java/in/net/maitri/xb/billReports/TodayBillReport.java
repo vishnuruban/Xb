@@ -2,7 +2,6 @@ package in.net.maitri.xb.billReports;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
@@ -23,8 +22,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,14 +35,11 @@ import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
 import in.net.maitri.xb.R;
-import in.net.maitri.xb.billing.BillListAdapter;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesMst;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
@@ -59,38 +53,18 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 
-/**
- * Created by SYSRAJ4 on 28/12/2017.
- */
-
 public class TodayBillReport extends AppCompatActivity {
 
-
-    BillReportDialog brd;
-
-    RecyclerView billView, billDetailsView;
-    TextView noBills,noBillDetails,customerName;
-    TextView selectedBill,selectedBillDate,tItems,tQty,tDiscount,tNetAmount,tPaymentStatus,tBillCount;
-    BillMasterAdapter billMasterAdapter;
-    private EditText mFromDate, mToDate;
-    private int mYear, mMonth, mDay, mMinYear, mMinMonth, mMinDay;
-    private String thisDate, mDate, mGetToDate = "", mGetFromDate = "";
-    private String[] mDayOfWeak = {"Monday", "Tuesday", "Wednesday", "Thursday",
-            "Friday", "Saturday", "Sunday"};
-    DbHandler dbHandler;
-    ProgressDialog mProgressDialog;
-    LinearLayout summaryLayout;
-    LinearLayout dateLayout;
+    private BillReportDialog brd;
+    private BillMasterAdapter billMasterAdapter;
+    private String mGetToDate = "", mGetFromDate = "";
+    private DbHandler dbHandler;
+    private ProgressDialog mProgressDialog;
     private List<SalesMst> mGetBillMaster;
     byte[] excelReport;
-    BillListAdapter billListAdapter;
-    DecimalFormat df;
-    SimpleDateFormat dateFormat;
-    String formattedDate;
-    String rs;
+    private DecimalFormat df;
+    private String rs;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
-
-
 
 
     @Override
@@ -100,11 +74,10 @@ public class TodayBillReport extends AppCompatActivity {
         mGetBillMaster = new ArrayList<>();
 
         rs = "\u20B9";
-        try{
+        try {
             byte[] utf8 = rs.getBytes("UTF-8");
-            rs = new String(utf8, "UTF-8");}
-        catch (UnsupportedEncodingException e)
-        {
+            rs = new String(utf8, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
@@ -113,34 +86,32 @@ public class TodayBillReport extends AppCompatActivity {
             Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
             finish();
         }
-        //un comment the line below to debug the print service
-        //mPrinter.setDebugService(BuildConfig.DEBUG);
         try {
             mPrinter.initService(TodayBillReport.this, mMessenger);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        billView = (RecyclerView) findViewById(R.id.bill_view);
-        tItems = (TextView)findViewById(R.id.tItems);
-        tQty =(TextView)findViewById(R.id.tqty);
-        tDiscount= (TextView) findViewById(R.id.tDiscount);
-        tNetAmount=(TextView) findViewById(R.id.tNetAmt);
-        tBillCount = (TextView)findViewById(R.id.tBills);
+        RecyclerView billView = (RecyclerView) findViewById(R.id.bill_view);
+        TextView tItems = (TextView) findViewById(R.id.tItems);
+        TextView tQty = (TextView) findViewById(R.id.tqty);
+        TextView tDiscount = (TextView) findViewById(R.id.tDiscount);
+        TextView tNetAmount = (TextView) findViewById(R.id.tNetAmt);
+        TextView tBillCount = (TextView) findViewById(R.id.tBills);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         dbHandler = new DbHandler(TodayBillReport.this);
-        summaryLayout = (LinearLayout) findViewById(R.id.summaryLayout);
+        LinearLayout summaryLayout = (LinearLayout) findViewById(R.id.summaryLayout);
         summaryLayout.setVisibility(View.GONE);
-        dateLayout = (LinearLayout) findViewById(R.id.datelayout);
+        LinearLayout dateLayout = (LinearLayout) findViewById(R.id.datelayout);
         dateLayout.setVisibility(View.GONE);
-        dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        customerName =(TextView)findViewById(R.id.custName);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        TextView customerName = (TextView) findViewById(R.id.custName);
 
-        formattedDate = dateFormat.format(new Date()).toString();
-        Log.i("Formatted Date ",formattedDate);
+        String formattedDate = dateFormat.format(new Date()).toString();
+        Log.i("Formatted Date ", formattedDate);
         int dateCount = dbHandler.getDateCount(formattedDate);
 
-        Log.i("dateCount ",String.valueOf(dateCount));
+        Log.i("dateCount ", String.valueOf(dateCount));
 
         mProgressDialog = new ProgressDialog(TodayBillReport.this);
         mProgressDialog.setMessage("Getting Data...");
@@ -150,43 +121,39 @@ public class TodayBillReport extends AppCompatActivity {
         mGetBillMaster.clear();
         df = new DecimalFormat("0.00");
 
-        mGetBillMaster = dbHandler.getAllBills(dateCount,dateCount);
+        mGetBillMaster = dbHandler.getAllBills(dateCount, dateCount);
 
-        if(mGetBillMaster.size()==0)
-        {
-            Toast.makeText(TodayBillReport.this,"No Bills found",Toast.LENGTH_SHORT).show();
+        if (mGetBillMaster.size() == 0) {
+            Toast.makeText(TodayBillReport.this, "No Bills found", Toast.LENGTH_SHORT).show();
             mProgressDialog.dismiss();
             return;
         }
 
         summaryLayout.setVisibility(View.VISIBLE);
-        int items = 0,qty=0;
+        int items = 0, qty = 0;
         double discount = 0;
-        double netAm=0;
+        double netAm = 0;
         mProgressDialog.dismiss();
-        for(int i =0;i<mGetBillMaster.size();i++)
-        {
-            SalesMst bm  = mGetBillMaster.get(i);
+        for (int i = 0; i < mGetBillMaster.size(); i++) {
+            SalesMst bm = mGetBillMaster.get(i);
             items = items + bm.getItems();
-            qty = qty +(int) bm.getQty();
-            discount = discount+ bm.getDiscount();
-            netAm = netAm +bm.getNetAmt();
+            qty = qty + (int) bm.getQty();
+            discount = discount + bm.getDiscount();
+            netAm = netAm + bm.getNetAmt();
         }
         billMasterAdapter = new BillMasterAdapter(TodayBillReport.this, mGetBillMaster);
         billView.setAdapter(billMasterAdapter);
-        tBillCount.setText("Bills:  "+String.valueOf(mGetBillMaster.size()));
-        tDiscount.setText("Discount:  "+rs+ df.format(discount));
-        tNetAmount.setText("Net Amount:  "+rs+ df.format(netAm));
-        tItems.setText("Items:  "+String.valueOf(items));
-        tQty.setText("Qty:  "+String.valueOf(qty));
+        tBillCount.setText("Bills:  " + String.valueOf(mGetBillMaster.size()));
+        tDiscount.setText("Discount:  " + rs + df.format(discount));
+        tNetAmount.setText("Net Amount:  " + rs + df.format(netAm));
+        tItems.setText("Items:  " + String.valueOf(items));
+        tQty.setText("Qty:  " + String.valueOf(qty));
 
         isStoragePermissionGranted(TodayBillReport.this);
-        excelReport = convertToExcel(df.format(discount),df.format(netAm),String.valueOf(items),String.valueOf(qty));
+        excelReport = convertToExcel(df.format(discount), df.format(netAm), String.valueOf(items), String.valueOf(qty));
 
-        //  setHeader();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(TodayBillReport.this);
         billView.setLayoutManager(linearLayoutManager);
-//        mGetBillMaster.get(0).setSelected(true);
 
         billView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), billView, new RecyclerTouchListener.ClickListener() {
             @Override
@@ -195,32 +162,16 @@ public class TodayBillReport extends AppCompatActivity {
                 SalesMst mst = mGetBillMaster.get(position);
                 mProgressDialog.show();
                 int billNo = mst.getBillNO();
-                String billDateTime =mst.getDateTime();
+                String billDateTime = mst.getDateTime();
                 int internalBillNo = mst.getInternalBillNo();
                 double discount = mst.getDiscount();
                 double netAmt = mst.getNetAmt();
                 double subTotal = discount + netAmt;
                 String custName = mst.getCustName();
                 String cashName = mst.getCashName();
-                double qty =mst.getQty();
-                brd = new BillReportDialog(TodayBillReport.this,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate),billNo,billDateTime,mProgressDialog,df.format(discount),netAmt,df.format(subTotal),qty,internalBillNo,custName,cashName,mMessenger,mPrinter);
+                double qty = mst.getQty();
+                brd = new BillReportDialog(TodayBillReport.this, dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate), billNo, billDateTime, mProgressDialog, df.format(discount), netAmt, df.format(subTotal), qty, internalBillNo, custName, cashName, mMessenger, mPrinter);
                 brd.show();
-
-                //   selectedBill.setText("Bill No:"+String.valueOf(billNo));
-                //   selectedBillDate.setText(billDateTime);
-                //   tDiscount.setText("Discount: "+rs+ df.format(mst.getDiscount()));
-                //  tNetAmount.setText("Net Amount: "+rs+ df.format(mst.getNetAmt()));
-                //  tPaymentStatus.setText("Payment mode : "+mst.getPaymentMode());
-
-/*
-                getBillDetails(billNo,dbHandler.getDateCount(mGetFromDate),dbHandler.getDateCount(mGetToDate));
-
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("billDate", billDateTime);
-                editor.putInt("billNo", billNo);
-                editor.apply();
-*/
             }
 
             @Override
@@ -228,26 +179,19 @@ public class TodayBillReport extends AppCompatActivity {
 
             }
         }));
-
     }
-
 
 
     public static boolean isStoragePermissionGranted(Activity activity) {
         if (Build.VERSION.SDK_INT >= 23) {
-            if (ContextCompat.checkSelfPermission(activity ,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED){
-                //Log.v(TAG, "Permission is granted");
+            if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
                 return true;
             } else {
-                //Toast.makeText(getApplicationContext(), "Permission is revoked",Toast.LENGTH_SHORT).show();
-                //Log.v(TAG, "Permission is revoked");
                 ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 return false;
             }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            //Toast.makeText(getApplicationContext(), "Permission is revoked",Toast.LENGTH_SHORT).show();
-            //Log.v(TAG, "Permission is granted");
+        } else {
             return true;
         }
     }
@@ -264,32 +208,20 @@ public class TodayBillReport extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            //   FilterActivity.fad.clear();
             finish();
         }
 
-        if(item.getItemId() == R.id.action_excel)
-        {
+        if (item.getItemId() == R.id.action_excel) {
 
-
-            if(excelReport == null)
-            {
-                Toast.makeText(TodayBillReport.this,"Can't create Excel. No Reports found.",Toast.LENGTH_SHORT).show();
-            }
-            else {
-
+            if (excelReport == null) {
+                Toast.makeText(TodayBillReport.this, "Can't create Excel. No Reports found.", Toast.LENGTH_SHORT).show();
+            } else {
                 isStoragePermissionGranted(TodayBillReport.this);
-
-                new AskPath(TodayBillReport.this,excelReport).show();
-
-                Log.i("Success ", "yes");
+                new AskPath(TodayBillReport.this, excelReport).show();
             }
         }
         return super.onOptionsItemSelected(item);
-
-
     }
-
 
 
     @Override
@@ -301,7 +233,6 @@ public class TodayBillReport extends AppCompatActivity {
     @Override
     protected void onResume() {
         mPrinter.onActivityResume();
-        //  printerSelection();
         super.onResume();
     }
 
@@ -334,13 +265,13 @@ public class TodayBillReport extends AppCompatActivity {
                     switch (msg.arg1) {
                         case CieBluetoothPrinter.STATE_CONNECTED:
                             //  setStatusMsg("Printer Status :"+title_connected_to + mConnectedDeviceName);
-                            Toast.makeText(TodayBillReport.this,title_connected_to + mConnectedDeviceName,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TodayBillReport.this, title_connected_to + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                             //    tbPrinter.setText("ON");
                             //  tbPrinter.setChecked(true);
                             break;
                         case CieBluetoothPrinter.STATE_CONNECTING:
                             //  setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
-                            Toast.makeText(TodayBillReport.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(TodayBillReport.this, title_connected_to + title_connecting, Toast.LENGTH_SHORT).show();
                             try {
                                 //    tbPrinter.setText("...");
                                 //   tbPrinter.setChecked(false);
@@ -370,21 +301,21 @@ public class TodayBillReport extends AppCompatActivity {
                     break;
                 case CieBluetoothPrinter.MESSAGE_STATUS:
                     DebugLog.logTrace("Message Status Received");
-                    Toast.makeText(TodayBillReport.this,msg.getData().getString(
-                            CieBluetoothPrinter.STATUS_TEXT),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TodayBillReport.this, msg.getData().getString(
+                            CieBluetoothPrinter.STATUS_TEXT), Toast.LENGTH_SHORT).show();
                     //   setStatusMsg(msg.getData().getString(CieBluetoothPrinter.STATUS_TEXT));
                     break;
                 case CieBluetoothPrinter.PRINT_COMPLETE:
-                    Toast.makeText(TodayBillReport.this,"PRINT OK",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TodayBillReport.this, "PRINT OK", Toast.LENGTH_SHORT).show();
                     //setStatusMsg("PRINT OK");
                     break;
                 case CieBluetoothPrinter.PRINTER_CONNECTION_CLOSED:
                     // setStatusMsg("PRINT CONN CLOSED");
-                    Toast.makeText(TodayBillReport.this,"PRINT CONN CLOSED",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TodayBillReport.this, "PRINT CONN CLOSED", Toast.LENGTH_SHORT).show();
                     break;
                 case CieBluetoothPrinter.PRINTER_DISCONNECTED:
                     //  setStatusMsg("PRINT CONN FAILED");
-                    Toast.makeText(TodayBillReport.this,"PRINT CONN FAILED",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TodayBillReport.this, "PRINT CONN FAILED", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     DebugLog.logTrace("Some un handled message : " + msg.what);
@@ -394,10 +325,7 @@ public class TodayBillReport extends AppCompatActivity {
     }
 
 
-
-
-
-    public byte[] convertToExcel(String dis,String netAmt,String items,String qty) {
+    public byte[] convertToExcel(String dis, String netAmt, String items, String qty) {
         String[] headerColumns = {"SNo", "Bill No", "Date", "Items", "Qty", "Discount(" + rs + ")", "Net Amount(" + rs + ")", "Pay mode", "Customer Name", "Cashier Name"};
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         String[] summaryColumns = {"From Date", "To Date", "Total bills", "Total Items", "Total Qty", "Total Discount", "Total NetAmt"};
@@ -410,7 +338,7 @@ public class TodayBillReport extends AppCompatActivity {
             WorkbookSettings wbSettings = new WorkbookSettings();
             wbSettings.setLocale(new Locale("en", "EN"));
             WritableWorkbook workbook;
-            workbook = Workbook.createWorkbook(baos,wbSettings);
+            workbook = Workbook.createWorkbook(baos, wbSettings);
             //Excel sheet name. 0 represents first sheet
             WritableSheet sheet = workbook.createSheet("Bill Report", 0);
             WritableSheet sheet1 = workbook.createSheet("Summary", 1);
@@ -438,8 +366,7 @@ public class TodayBillReport extends AppCompatActivity {
             cFormat.setAlignment(Alignment.RIGHT);
 
 
-            for (int j = 0; j < mGetBillMaster.size(); j++)
-            {
+            for (int j = 0; j < mGetBillMaster.size(); j++) {
                 SalesMst mst = mGetBillMaster.get(j);
                 int k = j + 1;
                 sheet.addCell(new Label(0, k, String.valueOf(k)));

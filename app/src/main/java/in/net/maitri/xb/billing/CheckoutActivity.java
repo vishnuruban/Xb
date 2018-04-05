@@ -47,7 +47,9 @@ import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesDet;
 import in.net.maitri.xb.db.SalesMst;
 import in.net.maitri.xb.printing.AppConsts;
+import in.net.maitri.xb.printing.CieBluetooth.BillPrint;
 import in.net.maitri.xb.printing.FragmentMessageListener;
+import in.net.maitri.xb.printing.epson.EpsonBillPrint;
 import in.net.maitri.xb.settings.GetSettings;
 
 public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener, FragmentMessageListener {
@@ -218,7 +220,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-                et_result = cDiscount;
+                //et_result = cDiscount;
                 return true;
             }
         });
@@ -495,23 +497,43 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 case R.id.cPrint:
 
                     String printSize = getSettings.getPrintingPaperSize();
-
-
                     String pBillno;
                     if (sm.getPrefix().isEmpty()) {
                         pBillno = String.valueOf(sm.getBillNO());
                     } else {
                         pBillno = sm.getPrefix() + String.valueOf(sm.getBillNO());
                     }
-                    if (printSize.equals("1")) {
-                        billPrint.printTwoInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
-                    } else {
-                        billPrint.printThreeInch(mPrinter, FragmentOne.billList, sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+
+                    switch (getSettings.getPrinterName()) {
+
+                        case "1":
+                            if (getSettings.getPrinterType().equals("1")) {
+                                if (printSize.equals("1")) {
+                                    billPrint.printTwoInch(mPrinter, FragmentOne.billList,
+                                            sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
+                                            sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+                                } else {
+                                    billPrint.printThreeInch(mPrinter, FragmentOne.billList,
+                                            sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
+                                            sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+                                }
+                            }
+                            break;
+
+                        case "2":
+                            if (getSettings.getPrinterType().equals("2")) {
+                                if (printSize.equals("2")) {
+                                    new EpsonBillPrint(CheckoutActivity.this, FragmentOne.billList, sm.getNetAmt(),
+                                            pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
+                                            sm.getDateTime(), sm.getCashName(), tCustName).runPrintReceiptSequence();
+                                    Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                            break;
                     }
-                    Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
 
                     break;
             }
@@ -557,9 +579,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mstInserted = dbHandler.addSalesMst(sm);
         if (detInserted != -1 && mstInserted != -1) {
             cPrint.setEnabled(true);
-            cPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this,R.color.green));
+            cPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.green));
             cSave.setEnabled(false);
-            cSave.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this,R.color.light_grey));
+            cSave.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.light_grey));
             cCancel.setVisibility(View.VISIBLE);
             String nextBill = "NEXT BILL";
             cCancel.setText(nextBill);

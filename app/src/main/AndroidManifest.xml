@@ -49,14 +49,19 @@
         </activity>
         <activity android:name="customer.CustomerDetail" />
         <activity android:name=".reports.TotalSales" />
-        <activity android:name=".billReports.BillReportActivity"
-            android:label="Sales Report"/>
-        <activity android:name=".billReports.ItemReportActivity"
-            android:label="Item wise Sales Report"/>
-        <activity android:name=".billReports.CustomerReportActivity"
-            android:label="Customer wise Sales Report"/>/>
-        <activity android:name=".billReports.TodayBillReport"
-            android:label="Today's Sale Report"/>
+        <activity
+            android:name=".billReports.BillReportActivity"
+            android:label="Sales Report" />
+        <activity
+            android:name=".billReports.ItemReportActivity"
+            android:label="Item wise Sales Report" />
+        <activity
+            android:name=".billReports.CustomerReportActivity"
+            android:label="Customer wise Sales Report" />
+        />
+        <activity
+            android:name=".billReports.TodayBillReport"
+            android:label="Today&apos;s Sale Report" />
         <activity android:name=".billing.BillSeriesActivity">
             <intent-filter>
                 <action android:name="in.net.maitri.xb.billing.BillSeriesActivity" />
@@ -89,8 +94,11 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".billReports.FilterActivity"
-            android:label="Filter"/>
+        <activity
+            android:name=".billReports.FilterActivity"
+            android:label="Filter" />
+        <activity android:name=".util.GetUsbDevise" />
+        <activity android:name=".printing.epson.DiscoveryActivity"></activity>
     </application>
 
 </manifest>

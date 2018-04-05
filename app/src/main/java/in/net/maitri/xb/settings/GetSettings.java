@@ -101,6 +101,16 @@ public class GetSettings {
     public String getFooterText4(){
         return getSharedPreferences().getString("key_settings_print_footer_text4","");
     }
+    public String getUsb(){
+        return getSharedPreferences().getString("key_settings_print_usb","");
+    }
 
+    public String getPrinterType(){
+        return getSharedPreferences().getString("key_settings_printer_printer_type","");
+    }
+
+    public String getPrinterName(){
+        return getSharedPreferences().getString("key_settings_printer_printer_name","");
+    }
 
 }
