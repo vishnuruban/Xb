@@ -2,13 +2,8 @@ package in.net.maitri.xb.settings;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-
-import com.cie.btp.CieBluetoothPrinter;
-
 import java.util.List;
-
 import in.net.maitri.xb.R;
-import in.net.maitri.xb.db.BackUpAndRestoreDb;
 
 
 public class SettingsActivity extends AppCompatPreferenceActivity {

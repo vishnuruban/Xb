@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.cie.btp.CieBluetoothPrinter;
 import com.cie.btp.DebugLog;
+import com.epson.epos2.printer.Printer;
 import com.reginald.editspinner.EditSpinner;
 
 import java.io.UnsupportedEncodingException;
@@ -50,6 +51,7 @@ import in.net.maitri.xb.printing.AppConsts;
 import in.net.maitri.xb.printing.CieBluetooth.BillPrint;
 import in.net.maitri.xb.printing.FragmentMessageListener;
 import in.net.maitri.xb.printing.epson.EpsonBillPrint;
+import in.net.maitri.xb.printing.epson.ShowMsg;
 import in.net.maitri.xb.settings.GetSettings;
 
 public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener, FragmentMessageListener {
@@ -142,17 +144,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             cBillNum.setText(bPrefix + String.valueOf(bSeries.getCurrentBillNo()));
         }
 
-        BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mAdapter == null) {
-            Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
-        try {
-            mPrinter.initService(CheckoutActivity.this, mMessenger);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
             byte[] utf8 = rs.getBytes("UTF-8");
@@ -306,7 +298,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
     }
 
-    class PrintSrvMsgHandler extends Handler {
+   private class PrintSrvMsgHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -347,6 +339,15 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     DebugLog.logTrace("Some un handled message : " + msg.what);
                     super.handleMessage(msg);
             }
+        }
+    }
+
+    private void initializeEpson() {
+        try {
+            mPrinter = new Printer(Printer.TM_T81, Printer.MODEL_SOUTHASIA, CheckoutActivity.this);
+        } catch (Exception e) {
+            ShowMsg.showException(e, "Printer", CheckoutActivity.this);
+
         }
     }
 
@@ -508,14 +509,26 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
                         case "1":
                             if (getSettings.getPrinterType().equals("1")) {
-                                if (printSize.equals("1")) {
-                                    billPrint.printTwoInch(mPrinter, FragmentOne.billList,
-                                            sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
-                                            sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
-                                } else {
-                                    billPrint.printThreeInch(mPrinter, FragmentOne.billList,
-                                            sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
-                                            sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+                                BluetoothAdapter mAdapter = BluetoothAdapter.getDefaultAdapter();
+                                if (mAdapter == null) {
+                                    Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }else {
+
+                                    try {
+                                        mPrinter.initService(CheckoutActivity.this, mMessenger);
+                                        if (printSize.equals("1")) {
+                                            billPrint.printTwoInch(mPrinter, FragmentOne.billList,
+                                                    sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
+                                                    sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+                                        } else {
+                                            billPrint.printThreeInch(mPrinter, FragmentOne.billList,
+                                                    sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
+                                                    sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             break;

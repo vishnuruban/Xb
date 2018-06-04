@@ -75,7 +75,6 @@
             android:key="key_settings_company_pan_no"
             android:summary="Enter your pan no"
             android:title="PAN No" />
-
         <EditTextPreference
             android:key="key_settings_company_cin_no"
             android:summary="Enter your cin no"

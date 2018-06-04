@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <header
-        android:fragment="in.net.maitri.xb.settings.CompanySettings"
-        android:title="Company"
-        android:summary="Company details"/>
+<header
+    android:fragment="in.net.maitri.xb.settings.CompanySettings"
+    android:title="Company"
+    android:summary="Company details"/>
 
-    <header
-        android:fragment="in.net.maitri.xb.settings.BillSettings"
-        android:title="Bill"
-        android:summary="Bill details" />
+<header
+    android:fragment="in.net.maitri.xb.settings.BillSettings"
+    android:title="Bill"
+    android:summary="Bill details" />
 
-       <header
-        android:fragment="in.net.maitri.xb.settings.PrinterSettings"
-        android:title="Printer"
-        android:summary="Printer details" />
+<header
+    android:fragment="in.net.maitri.xb.settings.PrinterSettings"
+    android:title="Printer"
+    android:summary="Printer details" />
 
-    <header
-        android:fragment="in.net.maitri.xb.settings.UserSettings"
-        android:title="User"
-        android:summary="User details" />
+<header
+    android:fragment="in.net.maitri.xb.settings.UserSettings"
+    android:title="User"
+    android:summary="User details" />
 
-    <header
-        android:fragment="in.net.maitri.xb.settings.BackupAndRestore"
-        android:title="Backup &amp; Restore"
-        android:summary="" />
+<header
+    android:fragment="in.net.maitri.xb.settings.BackupAndRestore"
+    android:title="Backup &amp; Restore"
+    android:summary="" />
 
 
 </preference-headers>

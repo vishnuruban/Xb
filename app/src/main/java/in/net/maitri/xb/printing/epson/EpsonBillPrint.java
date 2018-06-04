@@ -27,6 +27,10 @@ public class EpsonBillPrint {
     private Printer mPrinter;
     private DecimalFormat df = new DecimalFormat("0.00");
 
+    public EpsonBillPrint(Context mContext) {
+        this.mContext = mContext;
+    }
+
     public EpsonBillPrint(Context mContext, ArrayList<BillItems> mBillItems,
                           double mNetAmount, String mBillNo, String mTotalPrice, String mTotalDiscount,
                           double mTotalQty, String mBillDate, String mCashierName, String mCustomerName) {
@@ -122,9 +126,9 @@ public class EpsonBillPrint {
     }
 
     public boolean runPrintReceiptSequence() {
-        if (!initializeObject()) {
+       /* if (!initializeObject()) {
             return false;
-        }
+        }*/
 
         if (!epsonThreeInch()) {
             finalizeObject();
@@ -177,18 +181,7 @@ public class EpsonBillPrint {
         return true;
     }
 
-    private boolean initializeObject() {
-        try {
-            mPrinter = new Printer(Printer.TM_T81, Printer.MODEL_SOUTHASIA, mContext);
-        } catch (Exception e) {
-            ShowMsg.showException(e, "Printer", mContext);
-            return false;
-        }
 
-//        mPrinter.setReceiveEventListener(mContext);
-
-        return true;
-    }
 
     private void finalizeObject() {
         if (mPrinter == null) {
