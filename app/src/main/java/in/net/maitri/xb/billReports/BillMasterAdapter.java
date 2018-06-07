@@ -36,7 +36,7 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
     private Context mContext;
     private List<SalesMst> mAllBills;
 
-    BillMasterAdapter(Context context,List<SalesMst> mAllBills){
+    BillMasterAdapter(Context context, List<SalesMst> mAllBills) {
         mContext = context;
         this.mAllBills = mAllBills;
 
@@ -44,37 +44,29 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
     }
 
 
-
-
-
-
-
-
-
-
     class MyViewHolder extends RecyclerView.ViewHolder {
 
 
-        TextView rBillNo,rQty,rItems,rDiscount,rNetAmt,rPayment,rSno,rDate,rCustomer,rCashier,rCustomerNumber;
+        TextView rBillNo, rQty, rItems, rDiscount, rNetAmt, rPayment, rSno, rDate, rCustomer, rCashier, rCustomerNumber;
         TextView rBillDate;
         CardView cardView;
 
         MyViewHolder(View itemView) {
             super(itemView);
 
-           rBillNo = (TextView) itemView.findViewById(R.id.reBillno);
+            rBillNo = (TextView) itemView.findViewById(R.id.reBillno);
             rQty = (TextView) itemView.findViewById(R.id.reQty);
             rItems = (TextView) itemView.findViewById(R.id.reItems);
             rDiscount = (TextView) itemView.findViewById(R.id.reDiscount);
-           rNetAmt = (TextView) itemView.findViewById(R.id.reNetAmt);
+            rNetAmt = (TextView) itemView.findViewById(R.id.reNetAmt);
             rPayment = (TextView) itemView.findViewById(R.id.rePayment);
-            rSno =(TextView) itemView.findViewById(R.id.reSno);
+            rSno = (TextView) itemView.findViewById(R.id.reSno);
             rDate = (TextView) itemView.findViewById(R.id.reDate);
-            rCustomer =(TextView) itemView.findViewById(R.id.reCustName);
-            rCashier =(TextView) itemView.findViewById(R.id.reCashName);
+            rCustomer = (TextView) itemView.findViewById(R.id.reCustName);
+            rCashier = (TextView) itemView.findViewById(R.id.reCashName);
             rBillDate = (TextView) itemView.findViewById(R.id.reDate);
-            cardView  = (CardView) itemView.findViewById(R.id.card_view);
-            rCustomerNumber =(TextView) itemView.findViewById(R.id.reCustNumber);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
+            rCustomerNumber = (TextView) itemView.findViewById(R.id.reCustNumber);
         }
     }
 
@@ -89,15 +81,15 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
     public void onBindViewHolder(BillMasterAdapter.MyViewHolder holder, int position) {
 
         SalesMst billDetails = mAllBills.get(position);
-      //  Category categoryDetails = mAllCategories.get(position);
+        //  Category categoryDetails = mAllCategories.get(position);
 
         DecimalFormat df = new DecimalFormat("0.00");
 
-        System.out.println("BILL NO "+billDetails.getBillNO());
-        holder.rSno.setText(String.valueOf(position+1));
+        System.out.println("BILL NO " + billDetails.getBillNO());
+        holder.rSno.setText(String.valueOf(position + 1));
         holder.rBillDate.setText(billDetails.getDateTime());
         holder.rBillNo.setText(String.valueOf(billDetails.getBillNO()));
-        holder.rQty.setText(String.valueOf((int)billDetails.getQty()));
+        holder.rQty.setText(String.valueOf((int) billDetails.getQty()));
         holder.rDiscount.setText(df.format(billDetails.getDiscount()));
         holder.rNetAmt.setText(df.format(billDetails.getNetAmt()));
         holder.rItems.setText(String.valueOf(billDetails.getItems()));
@@ -105,17 +97,17 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
         holder.rCustomer.setText(billDetails.getCustName());
         holder.rCustomerNumber.setText(billDetails.getCustomerNumber());
         holder.rCashier.setText(billDetails.getCashName());
-      //  holder.rBillDate.setText("Date  : "+String.valueOf(billDetails.getDateTime()));
+        //  holder.rBillDate.setText("Date  : "+String.valueOf(billDetails.getDateTime()));
 
         if (billDetails.isSelected()) {
             holder.cardView.setBackgroundColor(Color.parseColor("#80CBC4"));
-           holder.rBillNo.setTextColor(Color.parseColor("#000000"));
+            holder.rBillNo.setTextColor(Color.parseColor("#000000"));
             holder.rQty.setTextColor(Color.parseColor("#000000"));
             holder.rDiscount.setTextColor(Color.parseColor("#000000"));
             holder.rNetAmt.setTextColor(Color.parseColor("#000000"));
             holder.rItems.setTextColor(Color.parseColor("#000000"));
             holder.rPayment.setTextColor(Color.parseColor("#000000"));
-           // holder.rBillDate.setTextColor(Color.parseColor("#ffffff"));
+            // holder.rBillDate.setTextColor(Color.parseColor("#ffffff"));
             billDetails.setSelected(false);
 
         } else {
@@ -126,7 +118,7 @@ public class BillMasterAdapter extends RecyclerView.Adapter<BillMasterAdapter.My
             holder.rNetAmt.setTextColor(Color.parseColor("#000000"));
             holder.rItems.setTextColor(Color.parseColor("#000000"));
             holder.rPayment.setTextColor(Color.parseColor("#000000"));
-         //   holder.rBillDate.setTextColor(Color.parseColor("#000000"));
+            //   holder.rBillDate.setTextColor(Color.parseColor("#000000"));
         }
 
     }

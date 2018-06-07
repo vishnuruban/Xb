@@ -34,6 +34,7 @@
             android:title="Paired Device" />
 
         <Preference
+            android:summary="%s"
             android:key="key_settings_printer_usb"
             android:title="USB">
         </Preference>

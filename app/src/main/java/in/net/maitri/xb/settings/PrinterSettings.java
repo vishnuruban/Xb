@@ -100,8 +100,9 @@ public class PrinterSettings extends PreferenceFragment implements SharedPrefere
             if (target != null) {
                 usb.setSummary(target);
                 SharedPreferences.Editor prefs = PreferenceManager.getDefaultSharedPreferences(getActivity()).edit();
-                prefs.putString(data.getStringExtra(getString(R.string.title_target)), "");
+                prefs.putString("key_settings_printer_usb", data.getStringExtra(getString(R.string.title_target)));
                 prefs.apply();
+                Toast.makeText(getActivity(),data.getStringExtra(getString(R.string.title_target)),Toast.LENGTH_SHORT).show();
             } else {
                 usb.setSummary("No printer selected");
             }

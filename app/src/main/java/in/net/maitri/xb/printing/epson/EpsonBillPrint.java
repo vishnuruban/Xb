@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import in.net.maitri.xb.billing.BillItems;
+import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.billing.FragmentOne;
 import in.net.maitri.xb.settings.GetSettings;
 
@@ -126,9 +127,9 @@ public class EpsonBillPrint {
     }
 
     public boolean runPrintReceiptSequence() {
-       /* if (!initializeObject()) {
+        if (!initializeObject()) {
             return false;
-        }*/
+        }
 
         if (!epsonThreeInch()) {
             finalizeObject();
@@ -141,6 +142,16 @@ public class EpsonBillPrint {
         }
 
         return true;
+    }
+
+    private boolean initializeObject() {
+        try {
+            mPrinter = new Printer(Printer.TM_T81, Printer.MODEL_SOUTHASIA, mContext);
+            return true;
+        } catch (Exception e) {
+            ShowMsg.showException(e, "Printer", mContext);
+            return false;
+        }
     }
 
     private boolean printData() {
@@ -182,7 +193,6 @@ public class EpsonBillPrint {
     }
 
 
-
     private void finalizeObject() {
         if (mPrinter == null) {
             return;
@@ -202,6 +212,7 @@ public class EpsonBillPrint {
 
         try {
             Log.d("Usb Path", getSettings.getUsb());
+            Toast.makeText(mContext, getSettings.getUsb(), Toast.LENGTH_SHORT).show();
             mPrinter.connect("USB:/dev/bus/usb/001/002", Printer.PARAM_DEFAULT);
         } catch (Exception e) {
             ShowMsg.showException(e, "connect", mContext);

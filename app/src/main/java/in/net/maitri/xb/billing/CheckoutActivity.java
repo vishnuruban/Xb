@@ -1,5 +1,6 @@
 package in.net.maitri.xb.billing;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -83,6 +84,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
             btn_eight, btn_nine, btn_zero, btn_point, btn_clear, cPrint, cSave, cCancel;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -212,7 +214,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-                //et_result = cDiscount;
+
+                et_result = cDiscount;
                 return true;
             }
         });
@@ -339,15 +342,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     DebugLog.logTrace("Some un handled message : " + msg.what);
                     super.handleMessage(msg);
             }
-        }
-    }
-
-    private void initializeEpson() {
-        try {
-            mPrinter = new Printer(Printer.TM_T81, Printer.MODEL_SOUTHASIA, CheckoutActivity.this);
-        } catch (Exception e) {
-            ShowMsg.showException(e, "Printer", CheckoutActivity.this);
-
         }
     }
 
@@ -618,13 +612,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 cCash.setFocusable(true);
                 cCash.setFocusableInTouchMode(true);
                 cCash.setClickable(true);
-                et_result = cCash;
+//                et_result = cCash;
             } else {
                 tCash.setText("Amount (" + rs + ")");
                 cCash.setText(df.format(netAmt));
                 cCash.setFocusable(false);
                 cCash.setClickable(false);
-                et_result = null;
+//                et_result = null;
             }
         }
 
