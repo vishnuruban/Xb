@@ -76,12 +76,12 @@ public class EpsonBillPrint {
             textData.append("  ----------------------------------------------\n");
             for (int i = 0; i < mBillItems.size(); i++) {
                 BillItems billItems = mBillItems.get(i);
-//                if (billItems.getDesc().length() > 14){
-                textData.append("  ").append(billItems.getDesc()).append("\n");
-                s = String.format("%-17s%6s%11s%13s\n", "", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
-                /*}else {
+                if (billItems.getDesc().length() > 14) {
+                    textData.append("  ").append(billItems.getDesc()).append("\n");
+                    s = String.format("%-17s%6s%11s%13s\n", "", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+                } else {
                     s = String.format("%-17s%6s%11s%13s\n", "  " + billItems.getDesc(), billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
-                }*/
+                }
                 textData.append(s);
             }
             textData.append("  ----------------------------------------------\n");
