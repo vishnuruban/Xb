@@ -56,7 +56,9 @@ public class EpsonBillPrint {
             mPrinter.addText(getCompanyName() + "\n");
 
             for (int i = 0; i < getCompanyHeaders().length; i++) {
-                textData.append(getCompanyHeaders()[i]).append("\n");
+                if(!getCompanyHeaders()[i].isEmpty()) {
+                    textData.append(getCompanyHeaders()[i]).append("\n");
+                }
             }
             mPrinter.addTextSize(1, 1);
             mPrinter.addText(textData.toString());
