@@ -213,9 +213,9 @@ public class EpsonBillPrint {
         try {
             Log.d("Usb Path", getSettings.getUsb());
             Toast.makeText(mContext, getSettings.getUsb(), Toast.LENGTH_SHORT).show();
-            mPrinter.connect("USB:/dev/bus/usb/001/002", Printer.PARAM_DEFAULT);
+            mPrinter.connect(getSettings.getUsb(), Printer.PARAM_DEFAULT);
         } catch (Exception e) {
-            ShowMsg.showException(e, "connect", mContext);
+            //ShowMsg.showException(e, "connect", mContext);
             return false;
         }
 

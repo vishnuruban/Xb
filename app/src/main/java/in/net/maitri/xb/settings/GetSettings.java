@@ -102,7 +102,7 @@ public class GetSettings {
         return getSharedPreferences().getString("key_settings_print_footer_text4","");
     }
     public String getUsb(){
-        return getSharedPreferences().getString("key_settings_print_usb","");
+        return getSharedPreferences().getString("key_settings_print_usb","USB:/dev/bus/usb/001/002");
     }
 
     public String getPrinterType(){
