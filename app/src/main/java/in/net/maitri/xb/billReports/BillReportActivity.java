@@ -42,10 +42,12 @@ import java.util.List;
 import java.util.Locale;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesMst;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
 
+import in.net.maitri.xb.settings.GetSettings;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.format.Alignment;
@@ -55,6 +57,8 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+
+import static in.net.maitri.xb.printing.epson.EpsonConnection.initializeEpson;
 
 public class BillReportActivity extends AppCompatActivity {
 
@@ -76,6 +80,11 @@ public class BillReportActivity extends AppCompatActivity {
     private DecimalFormat df;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
     private String rs;
+    private Messenger mMessenger;
+    private String mConnectedDeviceName = "";
+    public static final String title_connecting = "connecting...";
+    public static final String title_connected_to = "connected: ";
+    public static final String title_not_connected = "not connected";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,26 +113,23 @@ public class BillReportActivity extends AppCompatActivity {
             finish();
         }
 
-        try {
-            mPrinter.initService(BillReportActivity.this, mMessenger);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        billView = (RecyclerView) findViewById(R.id.bill_view);
-        tItems = (TextView) findViewById(R.id.tItems);
-        tQty = (TextView) findViewById(R.id.tqty);
-        tDiscount = (TextView) findViewById(R.id.tDiscount);
-        tNetAmount = (TextView) findViewById(R.id.tNetAmt);
+        initializePrinter();
+
+        billView = findViewById(R.id.bill_view);
+        tItems = findViewById(R.id.tItems);
+        tQty = findViewById(R.id.tqty);
+        tDiscount = findViewById(R.id.tDiscount);
+        tNetAmount = findViewById(R.id.tNetAmt);
         // tPaymentStatus = (TextView)findViewById(R.id.t);
-        tBillCount = (TextView) findViewById(R.id.tBills);
-        summaryLayout = (LinearLayout) findViewById(R.id.summaryLayout);
+        tBillCount = findViewById(R.id.tBills);
+        summaryLayout = findViewById(R.id.summaryLayout);
         summaryLayout.setVisibility(View.GONE);
-        LinearLayout mShowReport = (LinearLayout) findViewById(R.id.showReport);
-        LinearLayout mFromDateLayout = (LinearLayout) findViewById(R.id.from_date_layout);
-        LinearLayout mToDateLayout = (LinearLayout) findViewById(R.id.to_date_layout);
-        mFromDate = (EditText) findViewById(R.id.from_date);
-        mToDate = (EditText) findViewById(R.id.to_date);
+        LinearLayout mShowReport = findViewById(R.id.showReport);
+        LinearLayout mFromDateLayout = findViewById(R.id.from_date_layout);
+        LinearLayout mToDateLayout = findViewById(R.id.to_date_layout);
+        mFromDate = findViewById(R.id.from_date);
+        mToDate = findViewById(R.id.to_date);
         mFromDate.setClickable(true);
         mFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -323,6 +329,29 @@ public class BillReportActivity extends AppCompatActivity {
         dpd.show();
     }
 
+    private void initializePrinter() {
+        GetSettings getSettings = new GetSettings(BillReportActivity.this);
+        switch (getSettings.getPrinterName()) {
+            case "1":
+                if (getSettings.getPrinterType().equals("1")) {
+                    mMessenger = new Messenger(new BillReportActivity.PrintSrvMsgHandler());
+                }
+                try {
+                    mPrinter.initService(BillReportActivity.this, mMessenger);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case "2":
+                if (getSettings.getPrinterType().equals("2")) {
+                    initializeEpson();
+                }
+                break;
+        }
+
+    }
+
 
     public void dismissDialog() {
         brd.dismiss();
@@ -378,11 +407,6 @@ public class BillReportActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    final Messenger mMessenger = new Messenger(new PrintSrvMsgHandler());
-    private String mConnectedDeviceName = "";
-    public static final String title_connecting = "connecting...";
-    public static final String title_connected_to = "connected: ";
-    public static final String title_not_connected = "not connected";
 
     class PrintSrvMsgHandler extends Handler {
         @Override
@@ -391,57 +415,36 @@ public class BillReportActivity extends AppCompatActivity {
                 case CieBluetoothPrinter.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case CieBluetoothPrinter.STATE_CONNECTED:
-                            //  setStatusMsg("Printer Status :"+title_connected_to + mConnectedDeviceName);
-                            Toast.makeText(BillReportActivity.this, title_connected_to + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
-                            //    tbPrinter.setText("ON");
-                            //  tbPrinter.setChecked(true);
+
+                            Toast.makeText(BillReportActivity.this,
+                                    title_connected_to + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
                             break;
                         case CieBluetoothPrinter.STATE_CONNECTING:
-                            //  setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
-                            Toast.makeText(BillReportActivity.this, title_connected_to + title_connecting, Toast.LENGTH_SHORT).show();
-                            try {
-                                //    tbPrinter.setText("...");
-                                //   tbPrinter.setChecked(false);
-                            } catch (NullPointerException e) {
-                                DebugLog.logTrace("Fragment creating");
-                            }
+                            Toast.makeText(BillReportActivity.this,
+                                    title_connected_to + title_connecting, Toast.LENGTH_SHORT).show();
                             break;
                         case CieBluetoothPrinter.STATE_LISTEN:
-                            // setStatusMsg("Printer Status :"+title_connected_to + title_connecting);
-                            //  Toast.makeText(CheckoutActivity.this,title_connected_to + title_connecting,Toast.LENGTH_SHORT).show();
+                            break;
 
                         case CieBluetoothPrinter.STATE_NONE:
-                            //    setStatusMsg("Printer Status :"+title_not_connected);
-                            //   Toast.makeText(CheckoutActivity.this, title_not_connected, Toast.LENGTH_SHORT).show();
-                            try {
-                                // tbPrinter.setText("OFF");
-                                // tbPrinter.setChecked(false);
-                            } catch (NullPointerException n) {
-                                DebugLog.logTrace("Fragment creating");
-                            }
                             break;
                     }
                     break;
                 case CieBluetoothPrinter.MESSAGE_DEVICE_NAME:
-                    //  mConnectedDeviceName = msg.getData().getString(
-                    //    CieBluetoothPrinter.DEVICE_NAME);
+
                     break;
                 case CieBluetoothPrinter.MESSAGE_STATUS:
                     DebugLog.logTrace("Message Status Received");
                     Toast.makeText(BillReportActivity.this, msg.getData().getString(
                             CieBluetoothPrinter.STATUS_TEXT), Toast.LENGTH_SHORT).show();
-                    //   setStatusMsg(msg.getData().getString(CieBluetoothPrinter.STATUS_TEXT));
                     break;
                 case CieBluetoothPrinter.PRINT_COMPLETE:
                     Toast.makeText(BillReportActivity.this, "PRINT OK", Toast.LENGTH_SHORT).show();
-                    //setStatusMsg("PRINT OK");
                     break;
                 case CieBluetoothPrinter.PRINTER_CONNECTION_CLOSED:
-                    // setStatusMsg("PRINT CONN CLOSED");
                     Toast.makeText(BillReportActivity.this, "PRINT CONN CLOSED", Toast.LENGTH_SHORT).show();
                     break;
                 case CieBluetoothPrinter.PRINTER_DISCONNECTED:
-                    //  setStatusMsg("PRINT CONN FAILED");
                     Toast.makeText(BillReportActivity.this, "PRINT CONN FAILED", Toast.LENGTH_SHORT).show();
                     break;
                 default:
@@ -453,9 +456,11 @@ public class BillReportActivity extends AppCompatActivity {
 
 
     public byte[] convertToExcel(String dis, String netAmt, String items, String qty) {
-        String[] headerColumns = {"SNo", "Bill No", "Date", "Items", "Qty", "Discount(" + rs + ")", "Net Amount(" + rs + ")", "Pay mode", "Customer Name", "Cashier Name"};
+        String[] headerColumns = {"SNo", "Bill No", "Date", "Items", "Qty", "Discount(" + rs + ")",
+                "Net Amount(" + rs + ")", "Pay mode", "Customer Name", "Cashier Name"};
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        String[] summaryColumns = {"From Date", "To Date", "Total bills", "Total Items", "Total Qty", "Total Discount", "Total NetAmt"};
+        String[] summaryColumns = {"From Date", "To Date", "Total bills", "Total Items", "Total Qty",
+                "Total Discount", "Total NetAmt"};
         File sd = Environment.getExternalStorageDirectory();
         //  String csvFile = "v1.xls";
         File directory = new File(sd.getAbsolutePath());

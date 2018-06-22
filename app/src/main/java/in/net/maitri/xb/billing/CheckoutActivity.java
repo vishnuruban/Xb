@@ -55,6 +55,8 @@ import in.net.maitri.xb.printing.epson.EpsonBillPrint;
 import in.net.maitri.xb.printing.epson.ShowMsg;
 import in.net.maitri.xb.settings.GetSettings;
 
+import static in.net.maitri.xb.printing.epson.EpsonConnection.initializeEpson;
+
 public class CheckoutActivity extends AppCompatActivity implements View.OnClickListener, FragmentMessageListener {
 
     private TextView cNetAmount;
@@ -65,7 +67,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private String selectedButton;
     private double netAmt = 0;
     private String rs = "\u20B9";
-    private TextView cPrintStatus;
+    private static TextView mPrinterStatusText;
     private EditText et_result, cCash, cDiscount, cCashierName;
     private EditSpinner mEditSpinner;
     private String cDiscountValue = "";
@@ -76,13 +78,20 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private SalesMst sm;
     private BillPrint billPrint;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
+    private static  Printer mEpsonConnection;
 
     public static final String mypreference = "mypref";
     public static final String billNo = "billNo";
     private BillSeries bSeries;
     private Customer chkCustomer;
-    private Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven,
-            btn_eight, btn_nine, btn_zero, btn_point, btn_clear, cPrint, cSave, cCancel;
+    private Button mButtonOne, mButtonTwo, mButtonThree, mButtonFour, mButtonFive, mButtonSix, mButtonSeven,
+            mButtonEight, mButtonNine, mButtonZero, mButtonPoint, mButtonClear, mButtonPrint, mButtonSave, mButtonCancel;
+
+    Messenger mMessenger;
+    private static String mConnectedDeviceName = "";
+    public static final String title_connecting = "connecting...";
+    public static final String title_connected_to = "connected: ";
+    public static final String title_not_connected = "not connected";
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -93,34 +102,35 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        cDiscount = (EditText) findViewById(R.id.cDiscount);
+        cDiscount = findViewById(R.id.cDiscount);
         df = new DecimalFormat("0.00");
-        cNetAmount = (TextView) findViewById(R.id.cNetamount);
-        ListView listView = (ListView) findViewById(R.id.listview);
+        cNetAmount = findViewById(R.id.cNetamount);
+        ListView listView = findViewById(R.id.listview);
 
-        TextView cPrice = (TextView) findViewById(R.id.cTotalPrice);
-        TextView cProducts = (TextView) findViewById(R.id.cTotalProducts);
-        final TextView cDate = (TextView) findViewById(R.id.date);
-        TextView cCustName = (TextView) findViewById(R.id.cCustname);
-        cCashierName = (EditText) findViewById(R.id.cCashiername);
+        TextView cPrice = findViewById(R.id.cTotalPrice);
+        TextView cProducts = findViewById(R.id.cTotalProducts);
+        final TextView cDate = findViewById(R.id.date);
+        TextView cCustName = findViewById(R.id.cCustname);
+        cCashierName = findViewById(R.id.cCashiername);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         cCashierName.setText(sharedPreferences.getString("current_user", ""));
-        TextView cBillNum = (TextView) findViewById(R.id.cBillNo);
-        tCash = (TextView) findViewById(R.id.tCash);
-        cCash = (EditText) findViewById(R.id.cCash);
-        tBalance = (TextView) findViewById(R.id.cBalance);
-        cPrintStatus = (TextView) findViewById(R.id.cPrintstatus);
+        TextView cBillNum = findViewById(R.id.cBillNo);
+        tCash = findViewById(R.id.tCash);
+        cCash = findViewById(R.id.cCash);
+        tBalance = findViewById(R.id.cBalance);
+        mPrinterStatusText = findViewById(R.id.cPrintstatus);
         tBalance.setVisibility(View.INVISIBLE);
         mPrinter.connectToPrinter();
-        cDiscountType = (RadioGroup) findViewById(R.id.discount_toggle);
-        cCancel = (Button) findViewById(R.id.cCancel);
+        cDiscountType =  findViewById(R.id.discount_toggle);
+        mButtonCancel = findViewById(R.id.cCancel);
         billPrint = new BillPrint(CheckoutActivity.this);
-        LinearLayout cashierNameLayout = (LinearLayout) findViewById(R.id.cashierLayout);
+        LinearLayout cashierNameLayout = findViewById(R.id.cashierLayout);
 
         dateFormat = new SimpleDateFormat("dd/MM/yy hh.mm a");
 
-        mEditSpinner = (EditSpinner) findViewById(R.id.cPaymentMode);
-        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.payment));
+        mEditSpinner = findViewById(R.id.cPaymentMode);
+        ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item,
+                getResources().getStringArray(R.array.payment));
         mEditSpinner.setAdapter(adapter);
         mEditSpinner.setEditable(false);
         mEditSpinner.setText("CASH");
@@ -145,7 +155,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         } else {
             cBillNum.setText(bPrefix + String.valueOf(bSeries.getCurrentBillNo()));
         }
-
 
 
         try {
@@ -228,11 +237,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
-           /*     if (mEditSpinner.getText().toString().equals("Cash")) {
-                    et_result = cCash;
-                } else {
-                    et_result = cDiscount;
-                }*/
                 return true;
             }
         });
@@ -243,6 +247,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             editor.putInt(billNo, 0);
             editor.apply();
         }
+        initializePrinter();
     }
 
 
@@ -270,119 +275,45 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.onActivityDestroy();
         super.onDestroy();
     }
+    
 
-
-    final Messenger mMessenger = new Messenger(new PrintSrvMsgHandler());
-    private String mConnectedDeviceName = "";
-    public static final String title_connecting = "connecting...";
-    public static final String title_connected_to = "connected: ";
-    public static final String title_not_connected = "not connected";
-
-    @Override
-    public void onAppSignal(int iAppSignal) {
-        switch (iAppSignal) {
-            case AppConsts.CLEAR_PREFERRED_PRINTER:
-                mPrinter.clearPreferredPrinter();
-                break;
-
-        }
-    }
-
-    @Override
-    public void onAppSignal(int iAppSignal, String data) {
-    }
-
-    @Override
-    public void onAppSignal(int iAppSignal, boolean data) {
-    }
-
-    @Override
-    public void onAppSignal(int iAppSignal, byte[] data) {
-
-    }
-
-   private class PrintSrvMsgHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case CieBluetoothPrinter.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case CieBluetoothPrinter.STATE_CONNECTED:
-                            setStatusMsg("Printer Status :" + title_connected_to + mConnectedDeviceName);
-                            break;
-                        case CieBluetoothPrinter.STATE_CONNECTING:
-                            setStatusMsg("Printer Status :" + title_connected_to + title_connecting);
-                            break;
-                        case CieBluetoothPrinter.STATE_LISTEN:
-                            setStatusMsg("Printer Status :" + title_connected_to + title_connecting);
-
-                        case CieBluetoothPrinter.STATE_NONE:
-                            setStatusMsg("Printer Status :" + title_not_connected);
-                    }
-                    break;
-                case CieBluetoothPrinter.MESSAGE_DEVICE_NAME:
-                    mConnectedDeviceName = msg.getData().getString(
-                            CieBluetoothPrinter.DEVICE_NAME);
-                    break;
-                case CieBluetoothPrinter.MESSAGE_STATUS:
-                    DebugLog.logTrace("Message Status Received");
-                    setStatusMsg(msg.getData().getString(
-                            CieBluetoothPrinter.STATUS_TEXT));
-                    break;
-                case CieBluetoothPrinter.PRINT_COMPLETE:
-                    setStatusMsg("PRINT OK");
-                    break;
-                case CieBluetoothPrinter.PRINTER_CONNECTION_CLOSED:
-                    setStatusMsg("PRINT CONN CLOSED");
-                    break;
-                case CieBluetoothPrinter.PRINTER_DISCONNECTED:
-                    setStatusMsg("PRINT CONN FAILED");
-                    break;
-                default:
-                    DebugLog.logTrace("Some un handled message : " + msg.what);
-                    super.handleMessage(msg);
-            }
-        }
-    }
-
-
-    public void setStatusMsg(String msg) {
-        cPrintStatus.setText(msg);
+    public static void setStatusMsg(String msg) {
+        mPrinterStatusText.setText(msg);
     }
 
     public void initializeVars() {
-        btn_one = (Button) findViewById(R.id.btn_one);
-        btn_two = (Button) findViewById(R.id.btn_two);
-        btn_three = (Button) findViewById(R.id.btn_three);
-        btn_four = (Button) findViewById(R.id.btn_four);
-        btn_five = (Button) findViewById(R.id.btn_five);
-        btn_six = (Button) findViewById(R.id.btn_six);
-        btn_seven = (Button) findViewById(R.id.btn_seven);
-        btn_eight = (Button) findViewById(R.id.btn_eight);
-        btn_nine = (Button) findViewById(R.id.btn_nine);
-        btn_zero = (Button) findViewById(R.id.btn_zero);
-        btn_point = (Button) findViewById(R.id.btn_point);
-        btn_clear = (Button) findViewById(R.id.btn_clear);
-        cPrint = (Button) findViewById(R.id.cPrint);
-        cSave = (Button) findViewById(R.id.cSave);
-        cCancel = (Button) findViewById(R.id.cCancel);
-        cPrint.setEnabled(false);
-        cPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.light_grey));
-        btn_one.setOnClickListener(this);
-        btn_two.setOnClickListener(this);
-        btn_three.setOnClickListener(this);
-        btn_four.setOnClickListener(this);
-        btn_five.setOnClickListener(this);
-        btn_six.setOnClickListener(this);
-        btn_seven.setOnClickListener(this);
-        btn_eight.setOnClickListener(this);
-        btn_nine.setOnClickListener(this);
-        btn_zero.setOnClickListener(this);
-        btn_point.setOnClickListener(this);
-        btn_clear.setOnClickListener(this);
-        cPrint.setOnClickListener(this);
-        cSave.setOnClickListener(this);
-        cCancel.setOnClickListener(this);
+        mButtonOne = findViewById(R.id.btn_one);
+        mButtonTwo = findViewById(R.id.btn_two);
+        mButtonThree = findViewById(R.id.btn_three);
+        mButtonFour = findViewById(R.id.btn_four);
+        mButtonFive = findViewById(R.id.btn_five);
+        mButtonSix = findViewById(R.id.btn_six);
+        mButtonSeven = findViewById(R.id.btn_seven);
+        mButtonEight = findViewById(R.id.btn_eight);
+        mButtonNine = findViewById(R.id.btn_nine);
+        mButtonZero = findViewById(R.id.btn_zero);
+        mButtonPoint = findViewById(R.id.btn_point);
+        mButtonClear = findViewById(R.id.btn_clear);
+        mButtonPrint = findViewById(R.id.cPrint);
+        mButtonSave = findViewById(R.id.cSave);
+        mButtonCancel = findViewById(R.id.cCancel);
+        mButtonPrint.setEnabled(false);
+        mButtonPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.light_grey));
+        mButtonOne.setOnClickListener(this);
+        mButtonTwo.setOnClickListener(this);
+        mButtonThree.setOnClickListener(this);
+        mButtonFour.setOnClickListener(this);
+        mButtonFive.setOnClickListener(this);
+        mButtonSix.setOnClickListener(this);
+        mButtonSeven.setOnClickListener(this);
+        mButtonEight.setOnClickListener(this);
+        mButtonNine.setOnClickListener(this);
+        mButtonZero.setOnClickListener(this);
+        mButtonPoint.setOnClickListener(this);
+        mButtonClear.setOnClickListener(this);
+        mButtonPrint.setOnClickListener(this);
+        mButtonSave.setOnClickListener(this);
+        mButtonCancel.setOnClickListener(this);
     }
 
     @Override
@@ -390,57 +321,57 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (et_result != null) {
             switch (view.getId()) {
                 case R.id.btn_one:
-                    String one = et_result.getText().toString() + btn_one.getText().toString();
+                    String one = et_result.getText().toString() + mButtonOne.getText().toString();
                     et_result.setText(one);
                     break;
 
                 case R.id.btn_two:
-                    String two = et_result.getText().toString() + btn_two.getText().toString();
+                    String two = et_result.getText().toString() + mButtonTwo.getText().toString();
                     et_result.setText(two);
                     break;
 
                 case R.id.btn_three:
-                    String three = et_result.getText().toString() + btn_three.getText().toString();
+                    String three = et_result.getText().toString() + mButtonThree.getText().toString();
                     et_result.setText(three);
                     break;
 
                 case R.id.btn_four:
-                    String four = et_result.getText().toString() + btn_four.getText().toString();
+                    String four = et_result.getText().toString() + mButtonFour.getText().toString();
                     et_result.setText(four);
                     break;
 
                 case R.id.btn_five:
-                    String five = et_result.getText().toString() + btn_five.getText().toString();
+                    String five = et_result.getText().toString() + mButtonFive.getText().toString();
                     et_result.setText(five);
                     break;
 
                 case R.id.btn_six:
-                    String six = et_result.getText().toString() + btn_six.getText().toString();
+                    String six = et_result.getText().toString() + mButtonSix.getText().toString();
                     et_result.setText(six);
                     break;
 
                 case R.id.btn_seven:
-                    String seven = et_result.getText().toString() + btn_seven.getText().toString();
+                    String seven = et_result.getText().toString() + mButtonSeven.getText().toString();
                     et_result.setText(seven);
                     break;
 
                 case R.id.btn_eight:
-                    String eight = et_result.getText().toString() + btn_eight.getText().toString();
+                    String eight = et_result.getText().toString() + mButtonEight.getText().toString();
                     et_result.setText(eight);
                     break;
 
                 case R.id.btn_nine:
-                    String nine = et_result.getText().toString() + btn_nine.getText().toString();
+                    String nine = et_result.getText().toString() + mButtonNine.getText().toString();
                     et_result.setText(nine);
                     break;
 
                 case R.id.btn_zero:
-                    String zero = et_result.getText().toString() + btn_zero.getText().toString();
+                    String zero = et_result.getText().toString() + mButtonZero.getText().toString();
                     et_result.setText(zero);
                     break;
 
                 case R.id.btn_point:
-                    String point = et_result.getText().toString() + btn_point.getText().toString();
+                    String point = et_result.getText().toString() + mButtonPoint.getText().toString();
                     et_result.setText(point);
                     break;
 
@@ -449,7 +380,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     break;
                 case R.id.cCancel:
 
-                    if (cCancel.getText().toString().equals("NEXT BILL")) {
+                    if (mButtonCancel.getText().toString().equals("NEXT BILL")) {
                         Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -507,7 +438,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                 if (mAdapter == null) {
                                     Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
                                     finish();
-                                }else {
+                                } else {
 
                                     try {
                                         mPrinter.initService(CheckoutActivity.this, mMessenger);
@@ -533,10 +464,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                     new EpsonBillPrint(CheckoutActivity.this, FragmentOne.billList, sm.getNetAmt(),
                                             pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
                                             sm.getDateTime(), sm.getCashName(), tCustName).runPrintReceiptSequence();
-                                    Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
+                                  /*  Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(intent);
-                                    finish();
+                                    finish();*/
                                 }
                             }
                             break;
@@ -545,6 +476,25 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     break;
             }
         }
+    }
+
+    private void initializePrinter() {
+        setStatusMsg("Connecting printer...");
+        switch (getSettings.getPrinterName()) {
+            case "1":
+                if (getSettings.getPrinterType().equals("1")) {
+                    mMessenger = new Messenger(new PrintSrvMsgHandler());
+                }
+                break;
+
+            case "2":
+                if (getSettings.getPrinterType().equals("2")) {
+                  mEpsonConnection = initializeEpson();
+                    setStatusMsg("Printer connected");
+                }
+                break;
+        }
+
     }
 
     public void saveBill() {
@@ -585,13 +535,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setCustomerId(chkCustomer.getId());
         mstInserted = dbHandler.addSalesMst(sm);
         if (detInserted != -1 && mstInserted != -1) {
-            cPrint.setEnabled(true);
-            cPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.green));
-            cSave.setEnabled(false);
-            cSave.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.light_grey));
-            cCancel.setVisibility(View.VISIBLE);
+            mButtonPrint.setEnabled(true);
+            mButtonPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.green));
+            mButtonSave.setEnabled(false);
+            mButtonSave.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.light_grey));
+            mButtonCancel.setVisibility(View.VISIBLE);
             String nextBill = "NEXT BILL";
-            cCancel.setText(nextBill);
+            mButtonCancel.setText(nextBill);
             Toast.makeText(CheckoutActivity.this, "Bill Saved!", Toast.LENGTH_SHORT).show();
 
         } else {
@@ -733,4 +683,76 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         }
         return true;
     }
+
+   
+
+    @Override
+    public void onAppSignal(int iAppSignal) {
+        switch (iAppSignal) {
+            case AppConsts.CLEAR_PREFERRED_PRINTER:
+                mPrinter.clearPreferredPrinter();
+                break;
+
+        }
+    }
+
+    @Override
+    public void onAppSignal(int iAppSignal, String data) {
+    }
+
+    @Override
+    public void onAppSignal(int iAppSignal, boolean data) {
+    }
+
+    @Override
+    public void onAppSignal(int iAppSignal, byte[] data) {
+
+    }
+
+    private static class PrintSrvMsgHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case CieBluetoothPrinter.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case CieBluetoothPrinter.STATE_CONNECTED:
+                            setStatusMsg("Printer Status :" + title_connected_to + mConnectedDeviceName);
+                            break;
+                        case CieBluetoothPrinter.STATE_CONNECTING:
+                            setStatusMsg("Printer Status :" + title_connected_to + title_connecting);
+                            break;
+                        case CieBluetoothPrinter.STATE_LISTEN:
+                            setStatusMsg("Printer Status :" + title_connected_to + title_connecting);
+
+                        case CieBluetoothPrinter.STATE_NONE:
+                            setStatusMsg("Printer Status :" + title_not_connected);
+                    }
+                    break;
+                case CieBluetoothPrinter.MESSAGE_DEVICE_NAME:
+                    mConnectedDeviceName = msg.getData().getString(
+                            CieBluetoothPrinter.DEVICE_NAME);
+                    break;
+                case CieBluetoothPrinter.MESSAGE_STATUS:
+                    DebugLog.logTrace("Message Status Received");
+                    setStatusMsg(msg.getData().getString(
+                            CieBluetoothPrinter.STATUS_TEXT));
+                    break;
+                case CieBluetoothPrinter.PRINT_COMPLETE:
+                    setStatusMsg("PRINT OK");
+                    break;
+                case CieBluetoothPrinter.PRINTER_CONNECTION_CLOSED:
+                    setStatusMsg("PRINT CONN CLOSED");
+                    break;
+                case CieBluetoothPrinter.PRINTER_DISCONNECTED:
+                    setStatusMsg("PRINT CONN FAILED");
+                    break;
+                default:
+                    DebugLog.logTrace("Some un handled message : " + msg.what);
+                    super.handleMessage(msg);
+            }
+        }
+    }
+
+
+
 }

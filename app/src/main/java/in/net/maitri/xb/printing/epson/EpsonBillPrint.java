@@ -18,6 +18,8 @@ import in.net.maitri.xb.billing.CheckoutActivity;
 import in.net.maitri.xb.billing.FragmentOne;
 import in.net.maitri.xb.settings.GetSettings;
 
+import static in.net.maitri.xb.printing.epson.EpsonConnection.initializeEpson;
+
 public class EpsonBillPrint {
 
     private GetSettings getSettings;
@@ -28,9 +30,6 @@ public class EpsonBillPrint {
     private Printer mPrinter;
     private DecimalFormat df = new DecimalFormat("0.00");
 
-    public EpsonBillPrint(Context mContext) {
-        this.mContext = mContext;
-    }
 
     public EpsonBillPrint(Context mContext, ArrayList<BillItems> mBillItems,
                           double mNetAmount, String mBillNo, String mTotalPrice, String mTotalDiscount,
@@ -48,6 +47,7 @@ public class EpsonBillPrint {
     }
 
     private boolean epsonThreeInch() {
+        /*mPrinter = initializeEpson();*/
         NumberFormat nf = new DecimalFormat("##.##");
         StringBuilder textData = new StringBuilder();
         try {
@@ -60,7 +60,7 @@ public class EpsonBillPrint {
                     textData.append(getCompanyHeaders()[i]).append("\n");
                 }
             }
-            mPrinter.addTextSize(1, 1);
+       /*     mPrinter.addTextSize(1, 1);
             mPrinter.addText(textData.toString());
             textData.delete(0, textData.length());
             mPrinter.addTextSize(2, 1);
@@ -116,7 +116,7 @@ public class EpsonBillPrint {
             mPrinter.addTextSize(1, 1);
             mPrinter.addText(textData.toString());
             textData.delete(0, textData.length());
-            mPrinter.addFeedLine(2);
+            mPrinter.addFeedLine(2);*/
 
             mPrinter.addCut(Printer.CUT_FEED);
         } catch (Epos2Exception e) {
@@ -129,7 +129,7 @@ public class EpsonBillPrint {
     }
 
     public boolean runPrintReceiptSequence() {
-        if (!initializeObject()) {
+       if (!initializeObject()) {
             return false;
         }
 
@@ -146,15 +146,17 @@ public class EpsonBillPrint {
         return true;
     }
 
-    private boolean initializeObject() {
+    private boolean initializeObject(){
         try {
             mPrinter = new Printer(Printer.TM_T81, Printer.MODEL_SOUTHASIA, mContext);
-            return true;
-        } catch (Exception e) {
-            ShowMsg.showException(e, "Printer", mContext);
+            return  true;
+        } catch (Epos2Exception e) {
+            Toast.makeText(mContext, "Printer connection failed.", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
+
+
 
     private boolean printData() {
         if (mPrinter == null) {
@@ -214,7 +216,6 @@ public class EpsonBillPrint {
 
         try {
             Log.d("Usb Path", getSettings.getUsb());
-            Toast.makeText(mContext, getSettings.getUsb(), Toast.LENGTH_SHORT).show();
             mPrinter.connect(getSettings.getUsb(), Printer.PARAM_DEFAULT);
         } catch (Exception e) {
             //ShowMsg.showException(e, "connect", mContext);

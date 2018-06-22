@@ -43,6 +43,7 @@ import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.SalesMst;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
+import in.net.maitri.xb.settings.GetSettings;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.format.Alignment;
@@ -52,6 +53,8 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
+
+import static in.net.maitri.xb.printing.epson.EpsonConnection.initializeEpson;
 
 public class TodayBillReport extends AppCompatActivity {
 
@@ -65,6 +68,11 @@ public class TodayBillReport extends AppCompatActivity {
     private DecimalFormat df;
     private String rs;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
+    private Messenger mMessenger;
+    private String mConnectedDeviceName = "";
+    public static final String title_connecting = "connecting...";
+    public static final String title_connected_to = "connected: ";
+    public static final String title_not_connected = "not connected";
 
 
     @Override
@@ -86,11 +94,7 @@ public class TodayBillReport extends AppCompatActivity {
             Toast.makeText(this, "Bluetooth not connected", Toast.LENGTH_SHORT).show();
             finish();
         }
-        try {
-            mPrinter.initService(TodayBillReport.this, mMessenger);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        initializePrinter();
         RecyclerView billView = (RecyclerView) findViewById(R.id.bill_view);
         TextView tItems = (TextView) findViewById(R.id.tItems);
         TextView tQty = (TextView) findViewById(R.id.tqty);
@@ -249,12 +253,28 @@ public class TodayBillReport extends AppCompatActivity {
         super.onDestroy();
     }
 
+    private void initializePrinter() {
+        GetSettings getSettings = new GetSettings(TodayBillReport.this);
+        switch (getSettings.getPrinterName()) {
+            case "1":
+                if (getSettings.getPrinterType().equals("1")) {
+                    mMessenger = new Messenger(new TodayBillReport.PrintSrvMsgHandler());
+                }
+                try {
+                    mPrinter.initService(TodayBillReport.this, mMessenger);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
 
-    final Messenger mMessenger = new Messenger(new PrintSrvMsgHandler());
-    private String mConnectedDeviceName = "";
-    public static final String title_connecting = "connecting...";
-    public static final String title_connected_to = "connected: ";
-    public static final String title_not_connected = "not connected";
+            case "2":
+                if (getSettings.getPrinterType().equals("2")) {
+                    initializeEpson();
+                }
+                break;
+        }
+
+    }
 
 
     class PrintSrvMsgHandler extends Handler {
