@@ -21,7 +21,8 @@ import com.epson.epos2.Epos2Exception;
 
 import in.net.maitri.xb.R;
 
-public class DiscoveryActivity extends Activity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class DiscoveryActivity extends Activity
+        implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private Context mContext = null;
     private ArrayList<HashMap<String, String>> mPrinterList = null;
@@ -35,14 +36,14 @@ public class DiscoveryActivity extends Activity implements View.OnClickListener,
 
         mContext = this;
 
-        Button button = (Button)findViewById(R.id.btnRestart);
+        Button button = findViewById(R.id.btnRestart);
         button.setOnClickListener(this);
 
         mPrinterList = new ArrayList<>();
         mPrinterListAdapter = new SimpleAdapter(this, mPrinterList, R.layout.list_at,
                 new String[] { "PrinterName", "Target" },
                 new int[] { R.id.PrinterName, R.id.Target });
-        ListView list = (ListView)findViewById(R.id.lstReceiveData);
+        ListView list = findViewById(R.id.lstReceiveData);
         list.setAdapter(mPrinterListAdapter);
         list.setOnItemClickListener(this);
 
@@ -84,7 +85,6 @@ public class DiscoveryActivity extends Activity implements View.OnClickListener,
                 break;
 
             default:
-                // Do nothing
                 break;
         }
     }

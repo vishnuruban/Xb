@@ -752,7 +752,4 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             }
         }
     }
-
-
-
 }

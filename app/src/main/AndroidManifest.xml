@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <uses-feature android:name="android.hardware.usb.host" />
+
     <application
         android:name=".printing.epson.EpsonConnection"
         android:allowBackup="true"
@@ -26,11 +28,17 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".settings.SettingsActivity" />
+        <activity android:name=".settings.SettingsActivity">
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/settings_printer" />
+        </activity>
         <activity
             android:name=".billing.CheckoutActivity"
             android:label="CHECKOUT"
@@ -58,7 +66,7 @@
         <activity
             android:name=".billReports.CustomerReportActivity"
             android:label="Customer wise Sales Report" />
-        />
+
         <activity
             android:name=".billReports.TodayBillReport"
             android:label="Today&apos;s Sale Report" />
@@ -98,7 +106,7 @@
             android:name=".billReports.FilterActivity"
             android:label="Filter" />
         <activity android:name=".util.GetUsbDevise" />
-        <activity android:name=".printing.epson.DiscoveryActivity"></activity>
+        <activity android:name=".printing.epson.DiscoveryActivity" />
     </application>
 
 </manifest>
