@@ -44,9 +44,9 @@ public class PrinterSettings extends PreferenceFragment
         usb.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-               /* Intent intent = new Intent(getActivity(), DiscoveryActivity.class);
-                startActivityForResult(intent, 0);*/
-               getUsbDeviceList();
+                Intent intent = new Intent(getActivity(), DiscoveryActivity.class);
+                startActivityForResult(intent, 0);
+              /* getUsbDeviceList();*/
                 return true;
             }
         });

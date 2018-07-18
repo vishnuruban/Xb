@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+
+        <!-- FOOTER -->
+
+        <LinearLayout
+            android:id="@+id/bottom_menu"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_edittext1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:textColor="#fff"
+                    android:padding="15dp"
+                    android:textSize="15dp"
+                    android:text="Products" />
+
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:padding="15dp"
+                    android:textSize="15dp"
+                    android:text="Price(\u20B9)"
+                    android:textColor="#fff" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#fff" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/mClearBill"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15dp"
+                    android:textColor="#fff"
+                    android:text="CLEAR BILL"
+                    android:drawableLeft="@mipmap/ic_clear_white_24dp"
+                    android:background="@drawable/bg_edittext1"
+                    android:padding="16dp"
+                    />
+                <Button
+                    android:id="@+id/mCheckout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="15dp"
+                    android:textColor="#fff"
+                    android:text="CHECKOUT"
+                    android:drawableLeft="@mipmap/ic_add_shopping_cart_white_24dp"
+                    android:background="@drawable/bg_edittext1"
+                    android:padding="16dp"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/bottom_menu"
+            android:layout_gravity="right"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/colorCell2"
+            android:src="@android:drawable/ic_input_add"
+            app:fabSize="auto" />
+
+
+
+
+        <LinearLayout
+            android:id="@+id/l1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/bottom_menu"
+            android:layout_margin="5dp"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/customerscrren"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:weightSum="1">
+
+
+                <EditText
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.8"
+                    android:background="@drawable/bg_edittext1"
+                    android:drawableLeft="@mipmap/ic_account_box_white_24dp"
+                    android:drawablePadding="15dp"
+                    android:hint="Customer Name"
+                    android:padding="16dp"
+                    android:textColorHint="#F6F6F6" />
+
+
+                <ImageButton
+                    android:id="@+id/imageButton1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.2"
+                    android:background="@drawable/bg_edittext1"
+                    android:drawablePadding="15dp"
+                    android:padding="16dp"
+                    android:src="@mipmap/ic_person_add_white_24dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearL2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bgedittext2">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.75"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Desc"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Qty"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Rate"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.25"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Amount"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/darkskyBlue" />
+            </LinearLayout>
+
+
+            <ListView
+                android:id="@+id/listview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

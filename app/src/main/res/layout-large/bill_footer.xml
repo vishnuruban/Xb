@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+
+
+    <!-- FOOTER -->
+
+    <LinearLayout
+        android:id="@+id/bottom_menu"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#CD96CD"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Products" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#CD96CD"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Price(\u20B9)" />
+        </LinearLayout>
+
+        <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#fff" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#CD96CD"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="3" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#CD96CD"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="\u20B9500" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/l1"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_margin="5dp"
+        android:layout_above="@id/bottom_menu"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:id = "@+id/customerscrren"
+            android:layout_width = "fill_parent"
+            android:layout_height = "wrap_content"
+            android:layout_margin="5dp"
+            android:weightSum="1"
+            >
+
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_edittext"
+                android:drawableLeft="@mipmap/ic_account_box_white_24dp"
+                android:drawablePadding="15dp"
+                android:hint="Customer Name"
+                android:layout_weight="0.8"
+                android:textColorHint="#F6F6F6"
+                android:padding="16dp" />
+
+
+            <ImageButton
+                android:id="@+id/imageButton1"
+                android:layout_width="0dp"
+                android:layout_weight="0.2"
+                android:layout_height="wrap_content"
+                android:drawablePadding="15dp"
+                android:background="@drawable/bg_edittext"
+                android:padding="16dp"
+                android:src="@mipmap/ic_person_add_white_24dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id = "@+id/linearL2"
+            android:layout_width = "fill_parent"
+            android:layout_height = "wrap_content"
+            android:layout_margin="5dp"
+            android:background = "@color/colorCell" >
+
+            <TextView
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "1.75"
+                android:gravity = "center"
+                android:padding = "10dp"
+                android:text = "Desc"
+                android:textColor = "#ffffff" />
+
+            <TextView
+                android:layout_width = "0dp"
+                android:layout_height = "wrap_content"
+                android:layout_weight = "1"
+                android:gravity = "center"
+                android:padding = "10dp"
+                android:text = "Qty"
+                android:textColor = "#ffffff" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Rate"
+                android:textColor="#ffffff" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.25"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Amount"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <ListView
+            android:id = "@+id/listview"
+            android:layout_width = "match_parent"
+            android:layout_height = "wrap_content"
+            android:divider = "@null"/>
+
+    </LinearLayout>
+</RelativeLayout>

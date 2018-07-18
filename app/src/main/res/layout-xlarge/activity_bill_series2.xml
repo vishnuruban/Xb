@@ -1,0 +1,128 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#EFF0EF"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="Modify Bill Settings"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_menu_close_clear_cancel" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#EFF0EF">
+
+
+        <LinearLayout
+            android:id="@+id/item_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#EFF0EF"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/billName"
+                    android:text="Bill Name" />
+
+                <EditText
+                    android:id="@+id/billName"
+                    style="@style/add_customer_edit_text" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/billNumber"
+                    android:text="Current Bill Number" />
+
+                <EditText
+                    android:id="@+id/billNumber"
+                    style="@style/add_customer_edit_text"
+                    android:digits="0123456789"
+                    android:inputType="number" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/billPrefix"
+                    android:text="Bill Prefix" />
+
+                <EditText
+                    android:id="@+id/billPrefix"
+                    style="@style/add_customer_edit_text"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/billCustSelection"
+                    android:text="Customer Selection" />
+                <com.reginald.editspinner.EditSpinner
+                    android:id="@+id/billCustSelection"
+                    style="@style/add_customer_edit_text"
+                    android:inputType="text" />
+            </LinearLayout>
+
+
+            <LinearLayout style="@style/horizontal_linear_layout">
+                <TextView
+                    style="@style/add_customer_text_view"
+                    android:labelFor="@+id/billCashSelection"
+                    android:text="Cashier Selection" />
+                <com.reginald.editspinner.EditSpinner
+                    android:id="@+id/billCashSelection"
+                    style="@style/add_customer_edit_text"
+                    android:inputType="text" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout style="@style/horizontal_linear_layout">
+        <Button
+            android:id="@+id/save"
+            style="@style/add_customer_edit_text"
+            android:background="@color/green"
+            android:text="SAVE"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+
+
+</LinearLayout>
+
+
+

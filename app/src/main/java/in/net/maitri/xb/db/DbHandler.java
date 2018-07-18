@@ -154,8 +154,8 @@ public class DbHandler extends SQLiteOpenHelper {
         String CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS " + CATEGORY_TABLE_NAME + "("
                 + KEY_CAT_ID + " INTEGER PRIMARY KEY,"
                 + KEY_CAT_NAME + " TEXT,"
-                + KEY_CAT_IMAGE_PATH + " TEXT"
-                + KEY_CAT_IS_ACTIVE + " INTEGER "
+                + KEY_CAT_IMAGE_PATH + " TEXT,"
+                + KEY_CAT_IS_ACTIVE + " INTEGER, "
                 + KEY_CAT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_CATEGORY_TABLE);
 

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout1"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="5dp"
+        card_view:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="SNo"
+                android:id="@+id/reSno"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Bill No"
+                android:id="@+id/reBillno"
+                android:textColor="#000" />
+
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.5"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Date"
+                android:id="@+id/reDate"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.75"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Items"
+                android:id="@+id/reItems"
+                android:textColor="#000" />
+
+            <TextView
+
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.75"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Qty"
+                android:id="@+id/reQty"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:id="@+id/reDiscount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:padding="10dp"
+                android:text="Discount(\u20B9)"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/reNetAmt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.25"
+                android:gravity="right"
+                android:padding="10dp"
+                android:text=" Net Amount(\u20B9)"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:id="@+id/rePayment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text=" Pay mode"
+                android:textColor="#000" />
+
+
+            <TextView
+                android:id="@+id/reCustName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.25"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Customer Name"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/reCustNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.25"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Customer Name"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/reCashName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.25"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Cashier Name"
+                android:textColor="#000" />
+        </LinearLayout>
+</android.support.v7.widget.CardView>
+</LinearLayout>

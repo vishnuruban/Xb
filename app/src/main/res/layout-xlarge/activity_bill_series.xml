@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="in.net.maitri.xb.itemdetails.AddItemCategory">
+
+
+    <LinearLayout
+        android:id="@+id/date_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+            <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorAccent" />
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:fillViewport="true"
+        android:id="@+id/billLayout"
+        android:weightSum="1">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#F3F7F9">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="#006064">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:text="SNo"
+                        android:gravity="center"
+                        android:textColor="#ffffff" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:text="Name"
+                        android:gravity="center"
+                        android:textColor="#ffffff" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:text="Short Name"
+                        android:gravity="center"
+                        android:textColor="#ffffff" />
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:text="Seed"
+                        android:textColor="#ffffff" />
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:text="Current Bill No."
+                        android:textColor="#ffffff" />
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:text="Prefix"
+                        android:textColor="#ffffff" />
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:text="Reset type"
+                        android:textColor="#ffffff" />
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:text="Customer Selection"
+                        android:textColor="#ffffff" />
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.25"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:text="Round Off"
+                        android:textColor="#ffffff" />
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/bill_series_view"
+                    android:layout_width="1300dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true" />
+            </LinearLayout>
+        </RelativeLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>
+</LinearLayout>
