@@ -28,6 +28,7 @@ import in.net.maitri.xb.billing.BillingActivity;
 import in.net.maitri.xb.db.Category;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.util.CheckDeviceType;
 import in.net.maitri.xb.util.Permissions;
 
 public class AddItemCategory extends AppCompatActivity {
@@ -307,7 +308,14 @@ public class AddItemCategory extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(AddItemCategory.this);
+            LinearLayoutManager linearLayoutManager;
+            if (new CheckDeviceType(AddItemCategory.this).isTablet()) {
+                linearLayoutManager = new LinearLayoutManager(AddItemCategory.this,
+                        LinearLayoutManager.VERTICAL, false);
+            } else {
+                linearLayoutManager = new LinearLayoutManager(AddItemCategory.this,
+                        LinearLayoutManager.HORIZONTAL, false);
+            }
             categoryView.setLayoutManager(linearLayoutManager);
             mCategoryAdapter = new CategoryAdapter(AddItemCategory.this, mGetAllCategories);
             categoryView.setAdapter(mCategoryAdapter);
@@ -323,8 +331,12 @@ public class AddItemCategory extends AppCompatActivity {
                 mGetAllCategories.get(0).setSelected(true);
             }
             int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(AddItemCategory.this);
-
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
+            GridLayoutManager gridLayoutManager;
+            if (new CheckDeviceType(AddItemCategory.this).isTablet()) {
+                gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns);
+            } else {
+                gridLayoutManager = new GridLayoutManager(AddItemCategory.this, columns + 1);
+            }
             itemView.setLayoutManager(gridLayoutManager);
             new GetItems().execute();
         }
