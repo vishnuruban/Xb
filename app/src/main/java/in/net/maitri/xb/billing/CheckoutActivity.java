@@ -53,6 +53,9 @@ import in.net.maitri.xb.printing.CieBluetooth.BillPrint;
 import in.net.maitri.xb.printing.FragmentMessageListener;
 import in.net.maitri.xb.printing.epson.EpsonBillPrint;
 import in.net.maitri.xb.printing.epson.ShowMsg;
+import in.net.maitri.xb.printing.sunmi.Bluetooth;
+import in.net.maitri.xb.printing.sunmi.BluetoothService;
+import in.net.maitri.xb.printing.sunmi.SunmiPrint;
 import in.net.maitri.xb.settings.GetSettings;
 
 import static in.net.maitri.xb.printing.epson.EpsonConnection.initializeEpson;
@@ -78,7 +81,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private SalesMst sm;
     private BillPrint billPrint;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
-    private static  Printer mEpsonConnection;
+    private static Printer mEpsonConnection;
 
     public static final String mypreference = "mypref";
     public static final String billNo = "billNo";
@@ -102,6 +105,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        getSettings = new GetSettings(CheckoutActivity.this);
+        mPrinterStatusText = findViewById(R.id.cPrintstatus);
         cDiscount = findViewById(R.id.cDiscount);
         df = new DecimalFormat("0.00");
         cNetAmount = findViewById(R.id.cNetamount);
@@ -118,10 +123,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         tCash = findViewById(R.id.tCash);
         cCash = findViewById(R.id.cCash);
         tBalance = findViewById(R.id.cBalance);
-        mPrinterStatusText = findViewById(R.id.cPrintstatus);
         tBalance.setVisibility(View.INVISIBLE);
         mPrinter.connectToPrinter();
-        cDiscountType =  findViewById(R.id.discount_toggle);
+        cDiscountType = findViewById(R.id.discount_toggle);
         mButtonCancel = findViewById(R.id.cCancel);
         billPrint = new BillPrint(CheckoutActivity.this);
         LinearLayout cashierNameLayout = findViewById(R.id.cashierLayout);
@@ -137,7 +141,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         SharedPreferences sharedpreferences = getSharedPreferences(mypreference,
                 Context.MODE_PRIVATE);
 
-        getSettings = new GetSettings(CheckoutActivity.this);
+
         dbHandler = new DbHandler(CheckoutActivity.this);
 
         bSeries = dbHandler.getBillSeries(1);
@@ -247,7 +251,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             editor.putInt(billNo, 0);
             editor.apply();
         }
+
         initializePrinter();
+
     }
 
 
@@ -275,7 +281,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mPrinter.onActivityDestroy();
         super.onDestroy();
     }
-    
+
 
     public static void setStatusMsg(String msg) {
         mPrinterStatusText.setText(msg);
@@ -417,7 +423,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean("isFirstTym", false);
                         editor.apply();
-                        mPrinter.showDeviceList(CheckoutActivity.this);
+//                        mPrinter.showDeviceList(CheckoutActivity.this);
                     }
                     break;
                 case R.id.cPrint:
@@ -471,6 +477,29 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                 }
                             }
                             break;
+
+                        case "3":
+                            if (getSettings.getPrinterType().equals("1")) {
+                                if (printSize.equals("1")) {
+                                    if (Bluetooth.isPrinterConnected(CheckoutActivity.this, CheckoutActivity.this)) {
+                                        BluetoothService mService = Bluetooth.getServiceInstance();
+                                        if (!mService.isAvailable()) {
+                                            Toast.makeText(CheckoutActivity.this, "Unable to connect printer", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
+                                            new SunmiPrint(CheckoutActivity.this, mService, FragmentOne.billList, sm.getNetAmt(),
+                                                    pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
+                                                    sm.getDateTime(), sm.getCashName(), tCustName).doPrint();
+                                        }
+
+                                    } else {
+//            Bluetooth.connectPrinter(getApplicationContext(), MainActivity.this);
+                                        Toast.makeText(CheckoutActivity.this, "No printer found. Add printer in settings.", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                }
+                            }
+                            break;
                     }
 
                     break;
@@ -489,9 +518,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
             case "2":
                 if (getSettings.getPrinterType().equals("2")) {
-                  mEpsonConnection = initializeEpson();
+                    mEpsonConnection = initializeEpson();
                     setStatusMsg("Printer connected");
                 }
+                break;
+            case "3":
+               checkPrinter();
                 break;
         }
 
@@ -684,7 +716,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         return true;
     }
 
-   
 
     @Override
     public void onAppSignal(int iAppSignal) {
@@ -751,5 +782,45 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     super.handleMessage(msg);
             }
         }
+    }
+
+    private void checkPrinter() {
+        GetSettings mGetSettings = new GetSettings(CheckoutActivity.this);
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            setStatusMsg("Device does not support bluetooth");
+        } else {
+            if (mBluetoothAdapter.isEnabled()) {
+                if (!mGetSettings.getBluetoothPairedDevice().isEmpty()) {
+                    Bluetooth.pairedPrinterAddress(getApplicationContext(), CheckoutActivity.this, mGetSettings.getBluetoothPairedDevice());
+                    setStatusMsg("Printer connected.");
+                } else {
+                    setStatusMsg("No printer found. Add printer in settings.");
+                }
+            } else {
+                switchBluetooth(mBluetoothAdapter);
+            }
+        }
+    }
+
+    private void switchBluetooth(final BluetoothAdapter mBluetoothAdapter) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CheckoutActivity.this);
+        builder.setMessage("Appplication need to turn on Bluetooth?");
+        builder.setCancelable(false);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mBluetoothAdapter.enable();
+                checkPrinter();
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
     }
 }

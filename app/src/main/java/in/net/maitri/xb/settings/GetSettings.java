@@ -113,4 +113,8 @@ public class GetSettings {
         return getSharedPreferences().getString("key_settings_printer_printer_name","");
     }
 
+    public String getBluetoothPairedDevice() {
+        return getSharedPreferences().getString("key_settings_printer_paired_device", "");
+    }
+
 }

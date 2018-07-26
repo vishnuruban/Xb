@@ -29,7 +29,6 @@
         android:textSize="15sp"
         android:paddingEnd="5dp"
         android:text="TEST2"
-
         android:textColor="@color/grey"
         android:layout_weight="0.7"
         />

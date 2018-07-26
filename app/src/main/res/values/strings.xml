@@ -95,10 +95,12 @@
     <string-array name="printer_brand_name">
         <item>CieBluetoothPrinter</item>
         <item>Epson</item>
+        <item>Sunmi</item>
     </string-array>
     <string-array name="printer_brand_values">
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
 
     <string name="title_activity_login">Sign in</string>
