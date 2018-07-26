@@ -3,6 +3,7 @@ package in.net.maitri.xb.printing.sunmi;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -46,85 +47,92 @@ public class SunmiPrint {
 
 
     public void doPrint() {
-        int effectivePrintWidth = 48;
-        int minChars = 4;//this defines minimum characters per column; since you can
-        // create multiple rows, this value will define how many columns you want per row
+
+        String companyName = new GetSettings(mContext).getCompanyLegalName();
+        if (companyName.isEmpty()){
+            Toast.makeText(mContext, "Company legal name not found. Enter details in settings."
+                    , Toast.LENGTH_SHORT).show();
+        }else {
+            int effectivePrintWidth = 48;
+            int minChars = 4;//this defines minimum characters per column; since you can
+            // create multiple rows, this value will define how many columns you want per row
    /*     int totalNoOfColumns = 2;//no of columns
         boolean doubleWidthColumnExists = true;//this is true if you want a column with double space than other others
         int doubleWidthColRank = 0;//this is the rank of column which will have double space than other columns; starts from 0
         int rightAlignColRank = 3;//this is the rank of column whose content is right aligned; starts from 0*/
 
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mm a");
-        String formattedDate = dateFormat.format(new Date());
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mm a");
+            String formattedDate = dateFormat.format(new Date());
 
-        //mService.printBitmap(new PrintPic().printDraw(bmp));
-        String item = String.format("%-25s%5s\n", "Item", "");
-        String s = String.format("%-6s%-12s%12s\n", "Qty", "Price", "Amount");
-        String total = String.format("%5s%26s\n", "Total", mTotalPrice);
-        String dash = "--------------------------------";
+            //mService.printBitmap(new PrintPic().printDraw(bmp));
+            String item = String.format("%-25s%5s\n", "Item", "");
+            String s = String.format("%6s%12s%12s\n", "Qty", "Price", "Amount");
+            String total = String.format("%5s%26s\n", "Total", mTotalPrice);
+            String dash = "--------------------------------";
 
    /*     String salesManText = String.format("%-10s%-20s\n", "Salesman:", salesman);
         String commentText = String.format("%-10s%-20s\n", "Comment:", comment);
 
-        String companyName = new GetSettings(mContext).getCompanyName();*/
+        */
 
-
-        PlainPrint pp = new PlainPrint(mContext, effectivePrintWidth, minChars);
-        byte[] normalText = {27, 33, 0};
-        byte[] boldText = {27, 33, 0};
-        boldText[2] = ((byte) (0x8 | normalText[2]));
-        byte[] tail = new byte[]{10, 13, 0};
-        pp.startAddingContent4printFields();
-        for (int i = 0; i < getCompanyHeaders().length; i++) {
-            if (!getCompanyHeaders()[i].isEmpty()) {
-                pp.addTextCenterAlign(getCompanyHeaders()[i], true);
+            PlainPrint pp = new PlainPrint(mContext, effectivePrintWidth, minChars);
+            byte[] normalText = {27, 33, 0};
+            byte[] boldText = {27, 33, 0};
+            boldText[2] = ((byte) (0x8 | normalText[2]));
+            byte[] tail = new byte[]{10, 13, 0};
+            pp.startAddingContent4printFields();
+            pp.addTextCenterAlign(companyName, true);
+            for (int i = 0; i < getCompanyHeaders().length; i++) {
+                if (!getCompanyHeaders()[i].isEmpty()) {
+                    pp.addTextCenterAlign(getCompanyHeaders()[i], true);
+                }
             }
-        }
-        mService.write(boldText);
-        mService.sendMessage(pp.getContent4PrintFields(), "");
-        mService.write(tail);
-        pp.startAddingContent4printFields();
-        pp.addTextCenterAlign("Bill No : " + mBillNo, true);
-        pp.addTextCenterAlign("Date : " + formattedDate, true);
-        pp.addStarsFullLine();
-        mService.write(normalText);
-        mService.sendMessage(pp.getContent4PrintFields(), "");
-        mService.write(tail);
-        pp.startAddingContent4printFields();
-        mService.write(boldText);
-        mService.sendMessage(item, "");
-        mService.sendMessage(s, "");
-        mService.write(normalText);
-        mService.sendMessage(dash, "");
-
-        for (int i = 0; i < mBillItems.size(); i++) {
-            BillItems billItems = mBillItems.get(i);
-            item = String.format("%-25s%5s\n", billItems.getDesc(), "");
+            mService.write(boldText);
+            mService.sendMessage(pp.getContent4PrintFields(), "");
+            mService.write(tail);
+            pp.startAddingContent4printFields();
+            pp.addTextCenterAlign("Bill No : " + mBillNo, true);
+            pp.addTextCenterAlign("Date : " + formattedDate, true);
+            pp.addStarsFullLine();
+            mService.write(normalText);
+            mService.sendMessage(pp.getContent4PrintFields(), "");
+            mService.write(tail);
+            pp.startAddingContent4printFields();
+            mService.write(boldText);
             mService.sendMessage(item, "");
-            String value = String.format("%-7s%12s%12s\n", billItems.getQty(),  df.format(billItems.getRate()), df.format(billItems.getAmount()));
-            mService.sendMessage(value, "");
-        }
+            mService.sendMessage(s, "");
+            mService.write(normalText);
+            mService.sendMessage(dash, "");
 
-        mService.sendMessage(dash, "");
-        mService.write(boldText);
-        mService.sendMessage(total, "");
-        mService.write(normalText);
-        mService.sendMessage(dash, "");
-        pp.startAddingContent4printFields();
-        GetSettings getSettings = new GetSettings(mContext);
-        String[] footerArray = {getSettings.getFooterText1(), getSettings.getFooterText2(),
-                getSettings.getFooterText3(), getSettings.getFooterText4()};
-        for (String aFooterArray : footerArray) {
-            if (!aFooterArray.isEmpty()) {
-                pp.addTextCenterAlign(aFooterArray, true);
+            for (int i = 0; i < mBillItems.size(); i++) {
+                BillItems billItems = mBillItems.get(i);
+                item = String.format("%-25s%5s\n", billItems.getDesc(), "");
+                mService.sendMessage(item, "");
+                String value = String.format("%7s%12s%12s\n", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+                mService.sendMessage(value, "");
             }
+
+            mService.sendMessage(dash, "");
+            mService.write(boldText);
+            mService.sendMessage(total, "");
+            mService.write(normalText);
+            mService.sendMessage(dash, "");
+            pp.startAddingContent4printFields();
+            GetSettings getSettings = new GetSettings(mContext);
+            String[] footerArray = {getSettings.getFooterText1(), getSettings.getFooterText2(),
+                    getSettings.getFooterText3(), getSettings.getFooterText4()};
+            for (String aFooterArray : footerArray) {
+                if (!aFooterArray.isEmpty()) {
+                    pp.addTextCenterAlign(aFooterArray, true);
+                }
+            }
+            pp.addNewLine();
+            pp.addNewLine();
+            pp.addNewLine();
+            pp.addNewLine();
+            pp.addNewLine();
+            mService.sendMessage(pp.getContent4PrintFields(), "");
         }
-        pp.addNewLine();
-        pp.addNewLine();
-        pp.addNewLine();
-        pp.addNewLine();
-        pp.addNewLine();
-        mService.sendMessage(pp.getContent4PrintFields(), "");
     }
 
     private String[] getCompanyHeaders() {

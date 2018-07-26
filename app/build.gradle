@@ -33,7 +33,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.clough.android.androiddbviewer:androiddbviewer:1.0.0'
     implementation 'com.mcxiaoke.volley:library-aar:1.0.0'
-    implementation 'com.github.Mariovc:ImagePicker:1.2.0'
+    implementation 'com.github.Mariovc:ImagePicker:1.2.2'
     implementation 'com.reginald:editspinner:1.0.0'
     implementation 'commons-io:commons-io:2.6'
     testImplementation 'junit:junit:4.12'
