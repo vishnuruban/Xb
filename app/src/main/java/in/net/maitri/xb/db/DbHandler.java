@@ -24,7 +24,7 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -48,6 +48,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_ITEM_IS_ACTIVE = "item_is_active";
     private static final String KEY_CATE_ID = "category_id";
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
+    private static final String KEY_ITEM_BARCODE = "item_barcode";
     // customer table name
     private static final String CUSTOMER_TABLE_NAME = "CustomerMst1";
     // customer table column names
@@ -264,6 +265,9 @@ public class DbHandler extends SQLiteOpenHelper {
         cv1.put(KEY_UM_PASSWORD, "admin");
         cv1.put(KEY_UM_IS_ADMIN, 1);
         db.insert(USER_MST_TABLE_NAME, null, cv1);
+        String addBarcodeInItemMst= "ALTER TABLE " + ITEM_TABLE_NAME +
+                " ADD COLUMN " + KEY_ITEM_BARCODE + " TEXT ";;
+        db.execSQL(addBarcodeInItemMst);
 
     }
 
@@ -373,6 +377,10 @@ public class DbHandler extends SQLiteOpenHelper {
             case 14:
                 String updateCustomer1 = "update salesmst set sm_customer_name = '' where sm_customer_name like '% '";
                 db.execSQL(updateCustomer1);
+            case 15:
+                String addBarcodeInItemMst= "ALTER TABLE " + ITEM_TABLE_NAME +
+                        " ADD COLUMN " + KEY_ITEM_BARCODE + " TEXT ";;
+                db.execSQL(addBarcodeInItemMst);
                 break;
         }
     }
@@ -537,6 +545,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_ITEM_HSN, item.getItemHSNcode());
             cv.put(KEY_ITEM_GST, item.getItemGST());
             cv.put(KEY_CATE_ID, item.getCategoryId());
+            cv.put(KEY_ITEM_BARCODE,item.getBarcode());
             db.insert(ITEM_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
@@ -562,6 +571,7 @@ public class DbHandler extends SQLiteOpenHelper {
             item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
             item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
             item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+            item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
             c.close();
             return item;
         } catch (SQLException e) {
@@ -591,6 +601,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     item.setItemGST(c.getDouble(c.getColumnIndex(KEY_ITEM_GST)));
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+                    item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
                     // Adding item to list
                     itemList.add(item);
                 } while (c.moveToNext());
@@ -622,6 +633,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+                    item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
                     // Adding item to list
                     itemList.add(item);
                 } while (c.moveToNext());
@@ -654,6 +666,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
+                    item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
                     // Adding item to list
                     itemList.add(item);
                 } while (c.moveToNext());
@@ -678,6 +691,7 @@ public class DbHandler extends SQLiteOpenHelper {
         values.put(KEY_ITEM_UOM, item.getItemUOM());
         values.put(KEY_ITEM_HSN, item.getItemHSNcode());
         values.put(KEY_CATE_ID, item.getCategoryId());
+        values.put(KEY_ITEM_BARCODE,item.getBarcode());
         // updating row
         return db.update(ITEM_TABLE_NAME, values, KEY_ITEM_ID + " = ?",
                 new String[]{String.valueOf(item.getId())});

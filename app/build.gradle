@@ -7,8 +7,8 @@ android {
         applicationId "in.net.maitri.xb"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 6
-        versionName "1.5"
+        versionCode 7
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,5 +36,7 @@ dependencies {
     implementation 'com.github.Mariovc:ImagePicker:1.2.2'
     implementation 'com.reginald:editspinner:1.0.0'
     implementation 'commons-io:commons-io:2.6'
+    implementation 'com.google.android.gms:play-services-vision:15.0.2'
+    implementation 'info.androidhive:barcode-reader:1.1.5'
     testImplementation 'junit:junit:4.12'
 }

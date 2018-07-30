@@ -533,7 +533,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         long detInserted = 0, mstInserted;
         int bNo = bSeries.getCurrentBillNo();
         dbHandler.updateBillNo(++bNo);
-        int quantity = 0;
+        double quantity = 0;
         String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         String formattedDate = dateFormat.format(new Date()).toString();
         int dateCount = dbHandler.getDateCount(date);

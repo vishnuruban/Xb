@@ -180,7 +180,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     void getBillDetails(int billNo, int fromDate, int toDate, String billDateTime) {
 
         List<SalesDet> mGetBillDetails = dbHandler.getBillDetails(billNo, fromDate, toDate, billDateTime);
-        int quantity = 0;
+        double quantity = 0;
         int items = 0;
         billItems = new ArrayList<>();
         for (int i = 0; i < mGetBillDetails.size(); i++) {

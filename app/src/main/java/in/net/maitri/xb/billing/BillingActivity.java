@@ -1,6 +1,8 @@
 package in.net.maitri.xb.billing;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
@@ -15,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billReports.BillReportActivity;
@@ -24,6 +27,7 @@ import in.net.maitri.xb.billReports.TodayBillReport;
 import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
 import in.net.maitri.xb.reports.TotalSales;
+import in.net.maitri.xb.scan.ScanActivity;
 import in.net.maitri.xb.settings.SettingsActivity;
 import in.net.maitri.xb.util.CheckDeviceType;
 
@@ -103,36 +107,49 @@ public class BillingActivity extends AppCompatActivity {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    item.setVisibility(View.GONE);
-                    cart.setVisibility(View.VISIBLE);
-                    fl1.setVisibility(View.GONE);
-                    fl2.setVisibility(View.VISIBLE);
+                    String[] list = {"Camera", "Item list"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(BillingActivity.this);
+                    builder.setTitle("Pick item using")
+                            .setItems(list, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which){
+                                        case 0:
+                                            startActivityForResult(new Intent(BillingActivity.this,
+                                                    ScanActivity.class), 1);
+                                            break;
+                                        case 1:
+                                            item.setVisibility(View.GONE);
+                                            cart.setVisibility(View.VISIBLE);
+                                            fl1.setVisibility(View.GONE);
+                                            fl2.setVisibility(View.VISIBLE);
+                                            break;
+                                    }
+                                }
+                            });
+                    builder.create();
                 }
             });
         }
     }
 
-/*
-    private void showFrag1(){
-        FragmentManager fm = getFragmentManager();
-        ft = fm.beginTransaction();
-        ft.detach(filterThirdFragment);
-        ft.attach(filterFirstFragment);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
-        getSupportFragmentManager().executePendingTransactions();
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK){
+                String result=data.getStringExtra("code");
+                Toast.makeText(BillingActivity.this, result, Toast.LENGTH_LONG).show();
+                //getUnitCodeDetails(result);
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                String result=data.getStringExtra("code");
+                if (!result.isEmpty())
+                    Toast.makeText(BillingActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
-    private void showFrag3(){
-        FragmentManager fm = getFragmentManager();
-        ft = fm.beginTransaction();
-        ft.detach(filterFirstFragment);
-        ft.attach(filterThirdFragment);
-        ft.addToBackStack(null);
-        ft.commitAllowingStateLoss();
-        getSupportFragmentManager().executePendingTransactions();
-    }
-*/
 
 
     @Override

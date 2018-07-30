@@ -28,6 +28,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,7 +37,8 @@
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
             </intent-filter>
 
-            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/settings_printer" />
         </activity>
         <activity
@@ -66,7 +68,6 @@
         <activity
             android:name=".billReports.CustomerReportActivity"
             android:label="Customer wise Sales Report" />
-
         <activity
             android:name=".billReports.TodayBillReport"
             android:label="Today&apos;s Sale Report" />
@@ -107,6 +108,9 @@
             android:label="Filter" />
         <activity android:name=".util.GetUsbDevise" />
         <activity android:name=".printing.epson.DiscoveryActivity" />
+        <activity android:name=".scan.ScanActivity"
+            android:label="Scan Barcode"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -145,10 +145,16 @@ public class EditItem extends DialogFragment {
                 mItemImage.setImageBitmap(myBitmap);
             }
         }
+        final EditText barcode = view.findViewById(R.id.barcode);
+        barcode.setText(item.getBarcode());
 
         if (registrationType.equals("3")) {
             hsnCodeField.setVisibility(View.GONE);
             gstField.setVisibility(View.GONE);
+            uomField.setVisibility(View.GONE);
+            newUomField.setVisibility(View.GONE);
+            decimalAllowed.setVisibility(View.GONE);
+            barcode.setVisibility(View.GONE);
         }
 
         Button addDetails = (Button) view.findViewById(R.id.add_details);
@@ -168,6 +174,10 @@ public class EditItem extends DialogFragment {
                 }
                 String gsT = gstField.getText().toString();
                 String hsn = hsnCodeField.getText().toString();
+                String getBarCode =  barcode.getText().toString();
+                if (getBarCode.isEmpty()){
+                    getBarCode = "";
+                }
 
 
                 if (!registrationType.equals("3") && ( iteName.isEmpty()
@@ -217,6 +227,7 @@ public class EditItem extends DialogFragment {
                     Log.d("UOM", uoM);
                     item1.setItemHSNcode(hsn);
                     item1.setItemGST(Double.valueOf(gsT));
+                    item1.setBarcode(getBarCode);
                     editItem(item1);
                     mAddItemCategory.updateItem(item.getCategoryId());
                 }

@@ -16,7 +16,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
 
     @Override
     protected boolean isValidFragment(String fragmentName) {
-        return CompanySettings.class.getName().equals(fragmentName) ||
+        return GeneralSettings.class.getName().equals(fragmentName) ||
+                CompanySettings.class.getName().equals(fragmentName) ||
                 BillSettings.class.getName().equals(fragmentName) ||
                 PrinterSettings.class.getName().equals(fragmentName) ||
                 UserSettings.class.getName().equals(fragmentName) ||

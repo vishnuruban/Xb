@@ -68,17 +68,17 @@ public class AddItem extends DialogFragment {
         final String registrationType = new GetSettings(mAddItemCategory).getCompanyRegistrationType();
         final String selectedCategoryName = sharedPreferences.getString("catName", "");
         final int selectedCategoryId = sharedPreferences.getInt("catId", 0);
-        TextView dialogHeader = (TextView) view.findViewById(R.id.dialog_header);
+        TextView dialogHeader = view.findViewById(R.id.dialog_header);
         String headerText = "Add Item to " + selectedCategoryName;
         dialogHeader.setText(headerText);
 
-        final LinearLayout newUomLayout = (LinearLayout) view.findViewById(R.id.new_uom_layout);
+        final LinearLayout newUomLayout = view.findViewById(R.id.new_uom_layout);
 
-        LinearLayout itemLayout = (LinearLayout) view.findViewById(R.id.item_layout);
+        LinearLayout itemLayout = view.findViewById(R.id.item_layout);
         itemLayout.setVisibility(View.VISIBLE);
         dbHandler = new DbHandler(getActivity());
-        mItemImage = (ImageView) view.findViewById(R.id.item_image);
-        ImageView close = (ImageView) view.findViewById(R.id.close);
+        mItemImage = view.findViewById(R.id.item_image);
+        ImageView close = view.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,7 +86,7 @@ public class AddItem extends DialogFragment {
             }
         });
 
-        Button browseImage = (Button) view.findViewById(R.id.browse_image);
+        Button browseImage = view.findViewById(R.id.browse_image);
         browseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -97,18 +97,23 @@ public class AddItem extends DialogFragment {
        // final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
         //categoryNameField.setText(selectedCategoryName);
        // categoryNameField.setEnabled(false);
-        final EditText itemNameField = (EditText) view.findViewById(R.id.item_name);
-        final EditText costPriceField = (EditText) view.findViewById(R.id.cp);
-        final EditText sellingPriceField = (EditText) view.findViewById(R.id.sp);
-        final EditText hsnCodeField = (EditText) view.findViewById(R.id.hsn_code);
-        final EditText gstField = (EditText) view.findViewById(R.id.gst);
-        final EditText newUomField = (EditText) view.findViewById(R.id.new_uom);
-        final Spinner uomField = (Spinner) view.findViewById(R.id.uom);
-        final Switch decimalAllowed = (Switch) view.findViewById(R.id.decimal_allowed);
+        final EditText itemNameField = view.findViewById(R.id.item_name);
+        final EditText costPriceField = view.findViewById(R.id.cp);
+        final EditText sellingPriceField = view.findViewById(R.id.sp);
+        final EditText hsnCodeField = view.findViewById(R.id.hsn_code);
+        final EditText gstField = view.findViewById(R.id.gst);
+        final EditText newUomField = view.findViewById(R.id.new_uom);
+        final Spinner uomField = view.findViewById(R.id.uom);
+        final Switch decimalAllowed = view.findViewById(R.id.decimal_allowed);
+        final EditText barcode = view.findViewById(R.id.barcode);
 
         if (registrationType.equals("3")) {
             hsnCodeField.setVisibility(View.GONE);
             gstField.setVisibility(View.GONE);
+            uomField.setVisibility(View.GONE);
+            newUomField.setVisibility(View.GONE);
+            decimalAllowed.setVisibility(View.GONE);
+            barcode.setVisibility(View.GONE);
         }
 
         List<Unit> unitList = dbHandler.getAllUnit();
@@ -120,7 +125,7 @@ public class AddItem extends DialogFragment {
         uomAdapter.add("Enter new UOM");
         uomField.setAdapter(createAdapter(uomAdapter));
 
-        Button addDetails = (Button) view.findViewById(R.id.add_details);
+        Button addDetails = view.findViewById(R.id.add_details);
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -137,6 +142,10 @@ public class AddItem extends DialogFragment {
                 }
                 String gsT = gstField.getText().toString();
                 String hsn = hsnCodeField.getText().toString();
+                String getBarCode =  barcode.getText().toString();
+                if (getBarCode.isEmpty()){
+                    getBarCode = "";
+                }
 
                 if (!registrationType.equals("3") && ( iteName.isEmpty()
                         || cp.isEmpty()
@@ -167,7 +176,8 @@ public class AddItem extends DialogFragment {
                         uomValue = String.valueOf(dbHandler.getUomId(uoM));
                     }
                     copyImage();
-                    addItem(iteName, uomValue, Double.valueOf(cp), Double.valueOf(sp), hsn, Double.valueOf(gsT), selectedCategoryId);
+                    addItem(iteName, uomValue, Double.valueOf(cp), Double.valueOf(sp),
+                            hsn, Double.valueOf(gsT), selectedCategoryId,getBarCode);
                     mAddItemCategory.updateItem(selectedCategoryId);
                 }
             }
@@ -244,8 +254,10 @@ public class AddItem extends DialogFragment {
     }
 
 
-    private void addItem(String itemName, String itemUOM, double itemCP, double itemSP, String itemHSNcode, double itemGST, int categoryId) {
-        Item item = new Item(itemName, itemUOM, itemCP, itemSP, itemHSNcode, itemGST, categoryId, mImagePath);
+    private void addItem(String itemName, String itemUOM, double itemCP, double itemSP,
+                         String itemHSNcode, double itemGST, int categoryId, String barcode) {
+        Item item = new Item(itemName, itemUOM, itemCP, itemSP,
+                itemHSNcode, itemGST, categoryId, mImagePath,barcode);
         dbHandler.addItem(item);
         dismiss();
     }

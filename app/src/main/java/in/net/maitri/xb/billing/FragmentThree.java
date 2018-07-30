@@ -59,9 +59,9 @@ public class FragmentThree extends Fragment {
 
     private TextInputEditText searchItems;
     static KeypadDialog kpd;
-    RecyclerView categoryView;
-    RecyclerView itemView;
-    AppCompatTextView searchResults;
+    private RecyclerView categoryView;
+    private RecyclerView itemView;
+    private AppCompatTextView searchResults;
 
 
     @Override

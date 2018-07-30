@@ -138,9 +138,19 @@ public class SunmiPrint {
     private String[] getCompanyHeaders() {
         GetSettings getSettings = new GetSettings(mContext);
         String cityPin = getSettings.getCompanyCity() + "-" + getSettings.getCompanyPincode();
-        String phNumber = "Ph:" + getSettings.getCompanyPhoneNo();
+        String phNumber, gst;
+        if (getSettings.getCompanyPhoneNo().isEmpty()){
+            phNumber = "";
+        } else {
+            phNumber = "Ph:" + getSettings.getCompanyPhoneNo();
+        }
+        if (getSettings.getCompanyGstNo().isEmpty()){
+            gst = "";
+        } else {
+            gst = "GSTIN:" + getSettings.getCompanyGstNo();
+        }
         return new String[]{getSettings.getCompanyAddressLine1(),
                 getSettings.getCompanyAddressLine2(), getSettings.getCompanyAddressLine3(),
-                cityPin, phNumber, getSettings.getCompanyGstNo()};
+                cityPin, phNumber, gst};
     }
 }

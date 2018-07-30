@@ -13,6 +13,16 @@ public class Item implements Serializable {
     private double itemSP;
     private double itemNetSP;
 
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    private String barcode;
+
     public double getItemNetSP() {
         return itemNetSP;
     }
@@ -110,7 +120,7 @@ public class Item implements Serializable {
     }
 
     public Item(String itemName, String itemUOM, double itemCP, double itemSP, String itemHSNcode,
-                double itemGST, int categoryId, String itemImage) {
+                double itemGST, int categoryId, String itemImage, String barcode) {
         this.itemName = itemName;
         this.itemImage = itemImage;
         this.itemUOM = itemUOM;
@@ -120,5 +130,6 @@ public class Item implements Serializable {
         this.itemHSNcode = itemHSNcode;
         this.itemGST = itemGST;
         this.categoryId = categoryId;
+        this.barcode = barcode;
     }
 }

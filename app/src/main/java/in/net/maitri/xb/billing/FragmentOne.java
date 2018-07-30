@@ -14,7 +14,6 @@ import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,44 +44,37 @@ import in.net.maitri.xb.db.DbHandler;
 public class FragmentOne extends Fragment implements View.OnClickListener {
 
 
-    Button mCheckout, mclearBill;
     public static ArrayList<BillItems> billList;
-    private ListView billListView;
     private static BillListAdapter billListAdapter;
     private static TextView bTotalProducts, bTotalPrice;
     static DecimalFormat df, df1;
-    ImageButton imgCustomer;
-
     public static AutoCompleteTextView autoCustomer;
-    CustomerAdapter customerAdapter;
-    DbHandler dbHandler;
-    LinearLayout custScreen;
-    Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six, btn_seven, btn_eight, btn_nine, btn_zero, btn_point, btn_clear;
-    TextInputEditText eQty;
-    ArrayList<Customer> customerArrayList;
+    private CustomerAdapter customerAdapter;
+    private Button btn_one, btn_two, btn_three, btn_four, btn_five, btn_six,
+            btn_seven, btn_eight, btn_nine, btn_zero, btn_point, btn_clear;
+    private TextInputEditText eQty;
+    private ArrayList<Customer> customerArrayList;
     public static Customer customerDetails;
     static double a = 0;
-    Customer customer;
+    private Customer customer;
     int customerId = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        billList = new ArrayList<BillItems>();
+        billList = new ArrayList<>();
         View view = inflater.inflate(R.layout.fragment_one, container, false);
-
-        bTotalProducts = (TextView) view.findViewById(R.id.bTotalProducts);
-        bTotalPrice = (TextView) view.findViewById(R.id.bTotalPrice);
-        custScreen = (LinearLayout) view.findViewById(R.id.customerscrren);
-        dbHandler = new DbHandler(getActivity());
-        mCheckout = (Button) view.findViewById(R.id.mCheckout);
-        mclearBill = (Button) view.findViewById(R.id.mClearBill);
-        billListView = (ListView) view.findViewById(R.id.bill_lv);
-        imgCustomer = (ImageButton) view.findViewById(R.id.selectCustomer);
+        bTotalProducts = view.findViewById(R.id.bTotalProducts);
+        bTotalPrice = view.findViewById(R.id.bTotalPrice);
+        DbHandler dbHandler = new DbHandler(getActivity());
+        Button mCheckout = view.findViewById(R.id.mCheckout);
+        Button mclearBill = view.findViewById(R.id.mClearBill);
+        ListView billListView = view.findViewById(R.id.bill_lv);
+        ImageButton imgCustomer = view.findViewById(R.id.selectCustomer);
         billListAdapter = new BillListAdapter(getActivity(), billList);
         billListView.setAdapter(billListAdapter);
-        autoCustomer = (AutoCompleteTextView) view.findViewById(R.id.autoSearch);
+        autoCustomer = view.findViewById(R.id.autoSearch);
         // populateList();
         customerArrayList = new ArrayList<>();
         customerArrayList = dbHandler.getAllCustomer();
@@ -227,7 +219,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 BillItems bItm = billList.get(i);
                 if (bItm.getDesc().equals(be.getDesc()) && bItm.getRate() == be.getRate()) {
                     System.out.println("Items Equalled");
-                    int qty = bItm.getQty() + be.getQty();
+                    double qty = bItm.getQty() + be.getQty();
                     double amt = bItm.getAmount() + be.getAmount();
                     billList.remove(bItm);
                     be.setQty(qty);
@@ -287,9 +279,9 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 null, false);
 
         // You have to list down your form elements
-        final RadioGroup billModifyGroup = (RadioGroup) formElementsView.findViewById(R.id.billModifyGroup);
-        final LinearLayout lGrid = (LinearLayout) formElementsView.findViewById(R.id.grid);
-        eQty = (TextInputEditText) formElementsView.findViewById(R.id.eQty);
+        final RadioGroup billModifyGroup = formElementsView.findViewById(R.id.billModifyGroup);
+        final LinearLayout lGrid = formElementsView.findViewById(R.id.grid);
+        eQty = formElementsView.findViewById(R.id.eQty);
         eQty.setInputType(InputType.TYPE_NULL);
 
 
@@ -298,18 +290,18 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         eQty.addTextChangedListener(watch);
         eQty.selectAll();
 
-        btn_one = (Button) formElementsView.findViewById(R.id.btn_one);
-        btn_two = (Button) formElementsView.findViewById(R.id.btn_two);
-        btn_three = (Button) formElementsView.findViewById(R.id.btn_three);
-        btn_four = (Button) formElementsView.findViewById(R.id.btn_four);
-        btn_five = (Button) formElementsView.findViewById(R.id.btn_five);
-        btn_six = (Button) formElementsView.findViewById(R.id.btn_six);
-        btn_seven = (Button) formElementsView.findViewById(R.id.btn_seven);
-        btn_eight = (Button) formElementsView.findViewById(R.id.btn_eight);
-        btn_nine = (Button) formElementsView.findViewById(R.id.btn_nine);
-        btn_zero = (Button) formElementsView.findViewById(R.id.btn_zero);
-        btn_point = (Button) formElementsView.findViewById(R.id.btn_point);
-        btn_clear = (Button) formElementsView.findViewById(R.id.btn_clear);
+        btn_one = formElementsView.findViewById(R.id.btn_one);
+        btn_two = formElementsView.findViewById(R.id.btn_two);
+        btn_three = formElementsView.findViewById(R.id.btn_three);
+        btn_four = formElementsView.findViewById(R.id.btn_four);
+        btn_five =  formElementsView.findViewById(R.id.btn_five);
+        btn_six = formElementsView.findViewById(R.id.btn_six);
+        btn_seven = formElementsView.findViewById(R.id.btn_seven);
+        btn_eight = formElementsView.findViewById(R.id.btn_eight);
+        btn_nine = formElementsView.findViewById(R.id.btn_nine);
+        btn_zero = formElementsView.findViewById(R.id.btn_zero);
+        btn_point = formElementsView.findViewById(R.id.btn_point);
+        btn_clear = formElementsView.findViewById(R.id.btn_clear);
 
         btn_one.setOnClickListener(this);
         btn_two.setOnClickListener(this);
@@ -322,7 +314,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
         btn_nine.setOnClickListener(this);
         btn_zero.setOnClickListener(this);
         btn_point.setOnClickListener(this);
-        btn_point.setEnabled(false);
+        btn_point.setOnClickListener(this);
         btn_clear.setOnClickListener(this);
         billModifyGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -350,7 +342,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
                 String qtyString = eQty.getText().toString();
                 int selectedId = billModifyGroup.getCheckedRadioButtonId();
-                RadioButton selectedRadioButton = (RadioButton) formElementsView
+                RadioButton selectedRadioButton = formElementsView
                         .findViewById(selectedId);
                 String selectedButton = selectedRadioButton.getText().toString();
                 if (selectedButton.equals("Delete Item")) {
@@ -368,12 +360,12 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                         dialog.cancel();
                         modifyItem(bi, billListAdapter);
                     } else {
-                        if (Integer.parseInt(qtyString) != bi.getQty()) {
-                            double a = Integer.parseInt(qtyString) * bi.getRate();
+                        if (Double.parseDouble(qtyString) != bi.getQty()) {
+                            double a = Double.parseDouble(qtyString) * bi.getRate();
                             bi.setAmount(a);
-                            bi.setQty(Integer.parseInt(qtyString));
+                            bi.setQty(Double.parseDouble(qtyString));
                         } else {
-                            bi.setQty(Integer.parseInt(qtyString));
+                            bi.setQty(Double.parseDouble(qtyString));
                         }
                         UpdateProdPriceList();
                         billListAdapter.notifyDataSetChanged();

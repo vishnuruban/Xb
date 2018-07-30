@@ -13,10 +13,15 @@ public class GetSettings {
         mContext = context;
     }
 
-    //Company Settings
+
     private SharedPreferences getSharedPreferences(){
         return PreferenceManager.getDefaultSharedPreferences(mContext);
     }
+    //General Settings
+    public String getItemSelectionType(){
+        return getSharedPreferences().getString("key_settings_general_item_selection","1");
+    }
+    //Company Settings
     public String getCompanyLegalName(){
         return getSharedPreferences().getString("key_settings_company_legal_name","");
     }

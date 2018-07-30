@@ -36,6 +36,14 @@
     <string name="new_user_name">New User Name (Optional)</string>
 
 
+    <string-array name="item_selection_name">
+        <item>Rate change</item>
+        <item>Qty change</item>
+    </string-array>
+    <string-array name="item_selection_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
     <string-array name="registration_name">
         <item>Regular</item>
         <item>Composite</item>

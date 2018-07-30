@@ -27,15 +27,24 @@ public class BillItems {
         this.item_id = item_id;
     }
 
-    private int qty;
     private double rate;
+
+    public double getQty() {
+        return qty;
+    }
+
+    public void setQty(double qty) {
+        this.qty = qty;
+    }
+
+    private double qty;
 
     public BillItems ()
     {
 
     }
 
-    public BillItems( int cat_id, int item_id,String desc, int qty,double net_rate, double rate, double amount) {
+    public BillItems( int cat_id, int item_id,String desc, double qty,double net_rate, double rate, double amount) {
         this.desc = desc;
         this.qty = qty;
         this.rate = rate;
@@ -73,13 +82,6 @@ public class BillItems {
         this.desc = desc;
     }
 
-    public int getQty() {
-        return qty;
-    }
-
-    public void setQty(int qty) {
-        this.qty = qty;
-    }
 
     public double getRate() {
         return rate;
