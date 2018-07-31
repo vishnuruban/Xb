@@ -25,6 +25,8 @@ import in.net.maitri.xb.billReports.CustomerReportActivity;
 import in.net.maitri.xb.billReports.ItemReportActivity;
 import in.net.maitri.xb.billReports.TodayBillReport;
 import in.net.maitri.xb.customer.CustomerDetail;
+import in.net.maitri.xb.db.DbHandler;
+import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
 import in.net.maitri.xb.reports.TotalSales;
 import in.net.maitri.xb.scan.ScanActivity;
@@ -126,7 +128,7 @@ public class BillingActivity extends AppCompatActivity {
                                     }
                                 }
                             });
-                    builder.create();
+                    builder.create().show();
                 }
             });
         }
@@ -140,7 +142,15 @@ public class BillingActivity extends AppCompatActivity {
             if(resultCode == Activity.RESULT_OK){
                 String result=data.getStringExtra("code");
                 Toast.makeText(BillingActivity.this, result, Toast.LENGTH_LONG).show();
-                //getUnitCodeDetails(result);
+                Item bItem = new DbHandler(BillingActivity.this).getItemUsingBarCode(result);
+                if (!bItem.getItemName().isEmpty()) {
+                    BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
+                            bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP());
+                    FragmentOne.populateList(billItems);
+                } else {
+                    Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
+                }
+
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 String result=data.getStringExtra("code");
