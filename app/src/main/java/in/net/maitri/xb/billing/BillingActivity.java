@@ -141,9 +141,8 @@ public class BillingActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
                 String result=data.getStringExtra("code");
-                Toast.makeText(BillingActivity.this, result, Toast.LENGTH_LONG).show();
                 Item bItem = new DbHandler(BillingActivity.this).getItemUsingBarCode(result);
-                if (!bItem.getItemName().isEmpty()) {
+                if (bItem.getItemName() != null) {
                     BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
                             bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP());
                     FragmentOne.populateList(billItems);

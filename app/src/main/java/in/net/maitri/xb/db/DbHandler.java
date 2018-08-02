@@ -587,8 +587,8 @@ public class DbHandler extends SQLiteOpenHelper {
                     + KEY_ITEM_BARCODE + " = " + barcode;
             Cursor c = db.rawQuery(selectQuery, null);
 
-            if (c!=null) {
-                c.moveToFirst();
+            if (c!=null && c.moveToFirst()) {
+
                 Item item = new Item();
                 item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
                 item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));

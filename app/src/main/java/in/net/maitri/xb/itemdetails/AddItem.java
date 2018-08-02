@@ -222,7 +222,7 @@ public class AddItem extends DialogFragment {
     }
 
     public void onPickImage() {
-        ImagePicker.pickImage(this, "Select your image:");
+        ImagePicker.pickImage(AddItem.this, "Select your image:");
     }
 
     private void copyImage() {
