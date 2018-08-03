@@ -3,9 +3,28 @@ package in.net.maitri.xb.db;
 public class TaxMst {
 
     private String taxType;
-    private String taxIgstCode;
+
+    public int getTaxIgstCode() {
+        return taxIgstCode;
+    }
+
+    public void setTaxIgstCode(int taxIgstCode) {
+        this.taxIgstCode = taxIgstCode;
+    }
+
+    private int taxIgstCode;
     private int taxCode;
     private float taxRate;
+
+    public int getTaxIsActive() {
+        return taxIsActive;
+    }
+
+    public void setTaxIsActive(int taxIsActive) {
+        this.taxIsActive = taxIsActive;
+    }
+
+    private int taxIsActive;
 
     public String getTaxType() {
         return taxType;
@@ -15,13 +34,7 @@ public class TaxMst {
         this.taxType = taxType;
     }
 
-    public String getTaxIgstCode() {
-        return taxIgstCode;
-    }
 
-    public void setTaxIgstCode(String taxIgstCode) {
-        this.taxIgstCode = taxIgstCode;
-    }
 
     public int getTaxCode() {
         return taxCode;

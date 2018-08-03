@@ -24,7 +24,10 @@ public class DbHandler extends SQLiteOpenHelper {
         mContext = context;
     }
 
-    private static final int DATABASE_VERSION = 15;
+    private ArrayList<TaxMst> mTaxList = new ArrayList<>();
+    private ArrayList<HsnMst> mHsnList = new ArrayList<>();
+
+    private static final int DATABASE_VERSION = 17;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -49,6 +52,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_CATE_ID = "category_id";
     private static final String KEY_ITEM_CREATED_AT = "item_createdAt";
     private static final String KEY_ITEM_BARCODE = "item_barcode";
+    private static final String KEY_ITEM_GST_ID = "item_gst_id";
     // customer table name
     private static final String CUSTOMER_TABLE_NAME = "CustomerMst1";
     // customer table column names
@@ -147,6 +151,26 @@ public class DbHandler extends SQLiteOpenHelper {
     private List<ReportData> totalReport1 = new ArrayList<>();
     private List<CustomerReport> customerReport = new ArrayList<>();
     private ArrayList<BillSeries> billListSeries = new ArrayList<>();
+
+    //Hsn Master Table Name
+    private static final String HSN_MST_TABLE_NAME = "hsnmst";
+    //Hsn Master Column Names
+    private static final String KEY_HSN_ID = "hsn_id";
+    private static final String KEY_HSN_CODE = "hsn_code";
+    private static final String KEY_HSN_DESC = "hsn_desc";
+    private static final String KEY_HSN_IS_ACTIVE = "hsn_is_active";
+    private static final String KEY_HSN_CREATED_AT = "hsn_createdAt";
+
+    // Tax Master Table Name
+    private static final String TAX_MST_TABLE_NAME = "taxmst";
+    // Tax Master Column Name
+    private static final String KEY_TAXM_CODE = "tax_code";
+    private static final String KEY_TAXM_TYPE = "tax_type";
+    private static final String KEY_TAXM_RATE = "tax_rate";
+    private static final String KEY_TAXM_IS_ACTIVE = "taxm_is_active";
+    private static final String KEY_TAXM_IGSTCODE = "tax_igstcode";
+    private static final String KEY_TAXM_CREATED_AT = "tax_createdAt";
+
 
     // Creating Tables
     @Override
@@ -265,11 +289,32 @@ public class DbHandler extends SQLiteOpenHelper {
         cv1.put(KEY_UM_PASSWORD, "admin");
         cv1.put(KEY_UM_IS_ADMIN, 1);
         db.insert(USER_MST_TABLE_NAME, null, cv1);
-        String addBarcodeInItemMst= "ALTER TABLE " + ITEM_TABLE_NAME +
-                " ADD COLUMN " + KEY_ITEM_BARCODE + " TEXT ";;
+        String addBarcodeInItemMst = "ALTER TABLE " + ITEM_TABLE_NAME +
+                " ADD COLUMN " + KEY_ITEM_BARCODE + " TEXT ";
         db.execSQL(addBarcodeInItemMst);
 
+        String CREATE_HSN_MST_TABLE = "CREATE TABLE IF NOT EXISTS " + HSN_MST_TABLE_NAME + "("
+                + KEY_HSN_ID + " INTEGER PRIMARY KEY,"
+                + KEY_HSN_CODE + " INTEGER,"
+                + KEY_HSN_DESC + " TEXT,"
+                + KEY_HSN_IS_ACTIVE + " INTEGER,"
+                + KEY_HSN_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_HSN_MST_TABLE);
+
+        String CREATE_TAX_MST_TABLE = "CREATE TABLE IF NOT EXISTS " + TAX_MST_TABLE_NAME + "("
+                + KEY_TAXM_CODE + " INTEGER PRIMARY KEY,"
+                + KEY_TAXM_TYPE + " TEXT,"
+                + KEY_TAXM_RATE + " FLOAT,"
+                + KEY_TAXM_IS_ACTIVE + " INTEGER,"
+                + KEY_TAXM_IGSTCODE + " INTEGER,"
+                + KEY_TAXM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+        db.execSQL(CREATE_TAX_MST_TABLE);
+        insertIntoTaxMst(db);
+        String addGstIdItemMst = "ALTER TABLE " + ITEM_TABLE_NAME +
+                " ADD COLUMN " + KEY_ITEM_GST_ID + " INTEGER ";
+        db.execSQL(addGstIdItemMst);
     }
+
 
     // Upgrading database
     @Override
@@ -378,11 +423,189 @@ public class DbHandler extends SQLiteOpenHelper {
                 String updateCustomer1 = "update salesmst set sm_customer_name = '' where sm_customer_name like '% '";
                 db.execSQL(updateCustomer1);
             case 15:
-                String addBarcodeInItemMst= "ALTER TABLE " + ITEM_TABLE_NAME +
-                        " ADD COLUMN " + KEY_ITEM_BARCODE + " TEXT ";;
+                String addBarcodeInItemMst = "ALTER TABLE " + ITEM_TABLE_NAME +
+                        " ADD COLUMN " + KEY_ITEM_BARCODE + " TEXT ";
+                ;
                 db.execSQL(addBarcodeInItemMst);
+            case 16:
+                String CREATE_HSN_MST_TABLE = "CREATE TABLE IF NOT EXISTS " + HSN_MST_TABLE_NAME + "("
+                        + KEY_HSN_ID + " INTEGER PRIMARY KEY,"
+                        + KEY_HSN_CODE + " INTEGER,"
+                        + KEY_HSN_DESC + " TEXT,"
+                        + KEY_HSN_IS_ACTIVE + " INTEGER,"
+                        + KEY_HSN_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                db.execSQL(CREATE_HSN_MST_TABLE);
+
+                String CREATE_TAX_MST_TABLE = "CREATE TABLE IF NOT EXISTS " + TAX_MST_TABLE_NAME + "("
+                        + KEY_TAXM_CODE + " INTEGER PRIMARY KEY,"
+                        + KEY_TAXM_TYPE + " TEXT,"
+                        + KEY_TAXM_RATE + " FLOAT,"
+                        + KEY_TAXM_IS_ACTIVE + " INTEGER,"
+                        + KEY_TAXM_IGSTCODE + " INTEGER,"
+                        + KEY_TAXM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                db.execSQL(CREATE_TAX_MST_TABLE);
+                insertIntoTaxMst(db);
+                String addGstIdItemMst = "ALTER TABLE " + ITEM_TABLE_NAME +
+                        " ADD COLUMN " + KEY_ITEM_GST_ID + " INTEGER ";
+                db.execSQL(addGstIdItemMst);
+
+            case 17:
+                db.execSQL("DROP TABLE " + UNIT_TABLE_NAME);
+                String CREATE_UNIT_TABLE = "CREATE TABLE IF NOT EXISTS " + UNIT_TABLE_NAME + "("
+                        + KEY_UNIT_ID + " INTEGER PRIMARY KEY,"
+                        + KEY_UNIT_DESC + " TEXT,"
+                        + KEY_UNIT_DECIMAL_ALLOWED + " INTEGER,"
+                        + KEY_UNIT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
+                db.execSQL(CREATE_UNIT_TABLE);
+
                 break;
         }
+    }
+
+    private void insertIntoTaxMst(SQLiteDatabase db) {
+        ContentValues txm = new ContentValues();
+        txm.put(KEY_TAXM_CODE, 1);
+        txm.put(KEY_TAXM_TYPE, "CGST");
+        txm.put(KEY_TAXM_RATE, 0);
+        txm.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm.put(KEY_TAXM_IGSTCODE, 3);
+        db.insert(TAX_MST_TABLE_NAME, null, txm);
+
+        ContentValues txm1 = new ContentValues();
+        txm1.put(KEY_TAXM_CODE, 2);
+        txm1.put(KEY_TAXM_TYPE, "SGST");
+        txm1.put(KEY_TAXM_RATE, 0);
+        txm1.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm1.put(KEY_TAXM_IGSTCODE, 3);
+        db.insert(TAX_MST_TABLE_NAME, null, txm1);
+
+        ContentValues txm2 = new ContentValues();
+        txm2.put(KEY_TAXM_CODE, 3);
+        txm2.put(KEY_TAXM_TYPE, "IGST");
+        txm2.put(KEY_TAXM_RATE, 0);
+        txm2.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm2.put(KEY_TAXM_IGSTCODE, 3);
+        db.insert(TAX_MST_TABLE_NAME, null, txm2);
+
+        ContentValues txm3 = new ContentValues();
+        txm3.put(KEY_TAXM_CODE, 4);
+        txm3.put(KEY_TAXM_TYPE, "CGST");
+        txm3.put(KEY_TAXM_RATE, 1.5);
+        txm3.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm3.put(KEY_TAXM_IGSTCODE, 6);
+        db.insert(TAX_MST_TABLE_NAME, null, txm3);
+
+        ContentValues txm4 = new ContentValues();
+        txm4.put(KEY_TAXM_CODE, 5);
+        txm4.put(KEY_TAXM_TYPE, "SGST");
+        txm4.put(KEY_TAXM_RATE, 1.5);
+        txm4.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm4.put(KEY_TAXM_IGSTCODE, 6);
+        db.insert(TAX_MST_TABLE_NAME, null, txm4);
+
+        ContentValues txm5 = new ContentValues();
+        txm5.put(KEY_TAXM_CODE, 6);
+        txm5.put(KEY_TAXM_TYPE, "IGST");
+        txm5.put(KEY_TAXM_RATE, 3);
+        txm5.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm5.put(KEY_TAXM_IGSTCODE, 6);
+        db.insert(TAX_MST_TABLE_NAME, null, txm5);
+
+        ContentValues txm6 = new ContentValues();
+        txm6.put(KEY_TAXM_CODE, 7);
+        txm6.put(KEY_TAXM_TYPE, "CGST");
+        txm6.put(KEY_TAXM_RATE, 2.5);
+        txm6.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm6.put(KEY_TAXM_IGSTCODE, 9);
+        db.insert(TAX_MST_TABLE_NAME, null, txm6);
+
+        ContentValues txm7 = new ContentValues();
+        txm7.put(KEY_TAXM_CODE, 8);
+        txm7.put(KEY_TAXM_TYPE, "SGST");
+        txm7.put(KEY_TAXM_RATE, 2.5);
+        txm7.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm7.put(KEY_TAXM_IGSTCODE, 9);
+        db.insert(TAX_MST_TABLE_NAME, null, txm7);
+
+        ContentValues txm8 = new ContentValues();
+        txm8.put(KEY_TAXM_CODE, 9);
+        txm8.put(KEY_TAXM_TYPE, "IGST");
+        txm8.put(KEY_TAXM_RATE, 5);
+        txm8.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm8.put(KEY_TAXM_IGSTCODE, 9);
+        db.insert(TAX_MST_TABLE_NAME, null, txm8);
+
+        ContentValues txm9 = new ContentValues();
+        txm9.put(KEY_TAXM_CODE, 10);
+        txm9.put(KEY_TAXM_TYPE, "CGST");
+        txm9.put(KEY_TAXM_RATE, 6);
+        txm9.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm9.put(KEY_TAXM_IGSTCODE, 12);
+        db.insert(TAX_MST_TABLE_NAME, null, txm9);
+
+        ContentValues txm10 = new ContentValues();
+        txm10.put(KEY_TAXM_CODE, 11);
+        txm10.put(KEY_TAXM_TYPE, "SGST");
+        txm10.put(KEY_TAXM_RATE, 6);
+        txm10.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm10.put(KEY_TAXM_IGSTCODE, 12);
+        db.insert(TAX_MST_TABLE_NAME, null, txm10);
+
+        ContentValues txm11 = new ContentValues();
+        txm11.put(KEY_TAXM_CODE, 12);
+        txm11.put(KEY_TAXM_TYPE, "IGST");
+        txm11.put(KEY_TAXM_RATE, 12);
+        txm11.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm11.put(KEY_TAXM_IGSTCODE, 12);
+        db.insert(TAX_MST_TABLE_NAME, null, txm11);
+
+        ContentValues txm12 = new ContentValues();
+        txm12.put(KEY_TAXM_CODE, 13);
+        txm12.put(KEY_TAXM_TYPE, "CGST");
+        txm12.put(KEY_TAXM_RATE, 9);
+        txm12.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm12.put(KEY_TAXM_IGSTCODE, 15);
+        db.insert(TAX_MST_TABLE_NAME, null, txm12);
+
+        ContentValues txm13 = new ContentValues();
+        txm13.put(KEY_TAXM_CODE, 14);
+        txm13.put(KEY_TAXM_TYPE, "SGST");
+        txm13.put(KEY_TAXM_RATE, 9);
+        txm13.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm13.put(KEY_TAXM_IGSTCODE, 15);
+        db.insert(TAX_MST_TABLE_NAME, null, txm13);
+
+        ContentValues txm14 = new ContentValues();
+        txm14.put(KEY_TAXM_CODE, 15);
+        txm14.put(KEY_TAXM_TYPE, "IGST");
+        txm14.put(KEY_TAXM_RATE, 18);
+        txm14.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm14.put(KEY_TAXM_IGSTCODE, 15);
+        db.insert(TAX_MST_TABLE_NAME, null, txm14);
+
+        ContentValues txm15 = new ContentValues();
+        txm15.put(KEY_TAXM_CODE, 16);
+        txm15.put(KEY_TAXM_TYPE, "CGST");
+        txm15.put(KEY_TAXM_RATE, 14);
+        txm15.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm15.put(KEY_TAXM_IGSTCODE, 18);
+        db.insert(TAX_MST_TABLE_NAME, null, txm15);
+
+        ContentValues txm16 = new ContentValues();
+        txm16.put(KEY_TAXM_CODE, 17);
+        txm16.put(KEY_TAXM_TYPE, "SGST");
+        txm16.put(KEY_TAXM_RATE, 14);
+        txm16.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm16.put(KEY_TAXM_IGSTCODE, 18);
+        db.insert(TAX_MST_TABLE_NAME, null, txm16);
+
+        ContentValues txm17 = new ContentValues();
+        txm17.put(KEY_TAXM_CODE, 18);
+        txm17.put(KEY_TAXM_TYPE, "IGST");
+        txm17.put(KEY_TAXM_RATE, 28);
+        txm17.put(KEY_TAXM_IS_ACTIVE, 1);
+        txm17.put(KEY_TAXM_IGSTCODE, 18);
+        db.insert(TAX_MST_TABLE_NAME, null, txm17);
     }
 
     public void addCategory(Category category) {
@@ -419,6 +642,7 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return new Category();
     }
+
 
     // Getting All categorys
     public List<Category> getAllcategorys() {
@@ -545,7 +769,8 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_ITEM_HSN, item.getItemHSNcode());
             cv.put(KEY_ITEM_GST, item.getItemGST());
             cv.put(KEY_CATE_ID, item.getCategoryId());
-            cv.put(KEY_ITEM_BARCODE,item.getBarcode());
+            cv.put(KEY_ITEM_BARCODE, item.getBarcode());
+            cv.put(KEY_ITEM_GST_ID, item.getGstId());
             db.insert(ITEM_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
@@ -572,6 +797,7 @@ public class DbHandler extends SQLiteOpenHelper {
             item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
             item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
             item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
+            item.setGstId(c.getInt(c.getColumnIndex(KEY_ITEM_GST_ID)));
             c.close();
             return item;
         } catch (SQLException e) {
@@ -587,7 +813,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     + KEY_ITEM_BARCODE + " = " + barcode;
             Cursor c = db.rawQuery(selectQuery, null);
 
-            if (c!=null && c.moveToFirst()) {
+            if (c != null && c.moveToFirst()) {
 
                 Item item = new Item();
                 item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
@@ -600,6 +826,7 @@ public class DbHandler extends SQLiteOpenHelper {
                 item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                 item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
                 item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
+                item.setGstId(c.getInt(c.getColumnIndex(KEY_ITEM_GST_ID)));
                 c.close();
                 return item;
             }
@@ -608,6 +835,7 @@ public class DbHandler extends SQLiteOpenHelper {
         }
         return new Item();
     }
+
     // Getting All item
     public List<Item> getAllitems(int categoryId) {
         itemList.clear();
@@ -630,6 +858,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
                     item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
+                    item.setGstId(c.getInt(c.getColumnIndex(KEY_ITEM_GST_ID)));
                     // Adding item to list
                     itemList.add(item);
                 } while (c.moveToNext());
@@ -662,6 +891,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
                     item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
+                    item.setGstId(c.getInt(c.getColumnIndex(KEY_ITEM_GST_ID)));
                     // Adding item to list
                     itemList.add(item);
                 } while (c.moveToNext());
@@ -695,6 +925,7 @@ public class DbHandler extends SQLiteOpenHelper {
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
                     item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
+                    item.setGstId(c.getInt(c.getColumnIndex(KEY_ITEM_GST_ID)));
                     // Adding item to list
                     itemList.add(item);
                 } while (c.moveToNext());
@@ -719,7 +950,9 @@ public class DbHandler extends SQLiteOpenHelper {
         values.put(KEY_ITEM_UOM, item.getItemUOM());
         values.put(KEY_ITEM_HSN, item.getItemHSNcode());
         values.put(KEY_CATE_ID, item.getCategoryId());
-        values.put(KEY_ITEM_BARCODE,item.getBarcode());
+        values.put(KEY_ITEM_BARCODE, item.getBarcode());
+        values.put(KEY_ITEM_GST_ID, item.getGstId());
+
         // updating row
         return db.update(ITEM_TABLE_NAME, values, KEY_ITEM_ID + " = ?",
                 new String[]{String.valueOf(item.getId())});
@@ -1503,6 +1736,65 @@ public class DbHandler extends SQLiteOpenHelper {
             return false;
         }
     }
+
+    public List<TaxMst> getAllTaxRates() {
+//        categoryList.clear();
+        mTaxList.clear();
+
+        String selectQuery = "SELECT  * FROM " + TAX_MST_TABLE_NAME + " WHERE " + KEY_TAXM_TYPE + " = 'IGST' ";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                TaxMst tm = new TaxMst();
+                tm.setTaxCode(cursor.getInt(cursor.getColumnIndex(KEY_TAXM_CODE)));
+                tm.setTaxType(cursor.getString(cursor.getColumnIndex(KEY_TAXM_TYPE)));
+                tm.setTaxRate(cursor.getFloat(cursor.getColumnIndex(KEY_TAXM_RATE)));
+                tm.setTaxIgstCode(cursor.getInt(cursor.getColumnIndex(KEY_TAXM_IGSTCODE)));
+                tm.setTaxIsActive(cursor.getInt(cursor.getColumnIndex(KEY_TAXM_IS_ACTIVE)));
+
+                // Adding category to list
+                mTaxList.add(tm);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+      /*  Collections.sort(categoryList, new Category.OrderByCatName());
+        categoryList1.addAll(categoryList);*/
+        // return category list
+        return mTaxList;
+    }
+
+    public List<HsnMst> getAllHsn() {
+        mHsnList.clear();
+        String selectQuery = "SELECT  * FROM " + HSN_MST_TABLE_NAME;
+        ;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                HsnMst hm = new HsnMst();
+                hm.setHsnId(cursor.getInt(cursor.getColumnIndex(KEY_HSN_ID)));
+                hm.setHsnCode(cursor.getInt(cursor.getColumnIndex(KEY_HSN_CODE)));
+                hm.setHsnDesc(cursor.getString(cursor.getColumnIndex(KEY_HSN_DESC)));
+                hm.setHsnIsActive(cursor.getInt(cursor.getColumnIndex(KEY_HSN_IS_ACTIVE)));
+
+                // Adding category to list
+                mHsnList.add(hm);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+      /*  Collections.sort(categoryList, new Category.OrderByCatName());
+        categoryList1.addAll(categoryList);*/
+        // return category list
+        return mHsnList;
+    }
+
 
     public void resetData() {
         SQLiteDatabase db = this.getWritableDatabase();

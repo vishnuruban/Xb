@@ -36,12 +36,15 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.DbHandler;
+import in.net.maitri.xb.db.HsnMst;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.db.TaxMst;
 import in.net.maitri.xb.db.Unit;
 import in.net.maitri.xb.settings.GetSettings;
 
@@ -94,18 +97,19 @@ public class AddItem extends DialogFragment {
             }
         });
 
-       // final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
+        // final EditText categoryNameField = (EditText) view.findViewById(R.id.category_name);
         //categoryNameField.setText(selectedCategoryName);
-       // categoryNameField.setEnabled(false);
+        // categoryNameField.setEnabled(false);
         final EditText itemNameField = view.findViewById(R.id.item_name);
         final EditText costPriceField = view.findViewById(R.id.cp);
         final EditText sellingPriceField = view.findViewById(R.id.sp);
-        final EditText hsnCodeField = view.findViewById(R.id.hsn_code);
-        final EditText gstField = view.findViewById(R.id.gst);
+        final Spinner hsnCodeField = view.findViewById(R.id.hsn_code);
+        final Spinner gstField = view.findViewById(R.id.gst);
         final EditText newUomField = view.findViewById(R.id.new_uom);
         final Spinner uomField = view.findViewById(R.id.uom);
         final Switch decimalAllowed = view.findViewById(R.id.decimal_allowed);
         final EditText barcode = view.findViewById(R.id.barcode);
+        final EditText newHsnField = view.findViewById(R.id.new_hsn);
 
         if (registrationType.equals("3")) {
             hsnCodeField.setVisibility(View.GONE);
@@ -125,6 +129,26 @@ public class AddItem extends DialogFragment {
         uomAdapter.add("Enter new UOM");
         uomField.setAdapter(createAdapter(uomAdapter));
 
+        List<TaxMst> taxList = dbHandler.getAllTaxRates();
+        final ArrayList<String> taxAdapter = new ArrayList<>();
+        final HashMap<String, Integer> gstMap = new HashMap<>();
+        taxAdapter.add("--Select Tax--");
+        for (int i = 0; i < taxList.size(); i++) {
+            taxAdapter.add(String.valueOf(taxList.get(i).getTaxRate()));
+            gstMap.put(String.valueOf(taxList.get(i).getTaxRate()), taxList.get(i).getTaxCode());
+        }
+        gstField.setAdapter(createAdapter(taxAdapter));
+
+        List<HsnMst> hsnList = dbHandler.getAllHsn();
+        final ArrayList<String> hsnAdapter = new ArrayList<>();
+        hsnAdapter.add("--Select Hsn--");
+        for (int i = 0; i < hsnList.size(); i++) {
+            hsnAdapter.add(String.valueOf(hsnList.get(i).getHsnCode()));
+        }
+        hsnAdapter.add("Enter new HSN");
+        hsnCodeField.setAdapter(createAdapter(hsnAdapter));
+
+
         Button addDetails = view.findViewById(R.id.add_details);
         addDetails.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,29 +158,63 @@ public class AddItem extends DialogFragment {
                 String iteName = itemNameField.getText().toString();
                 String cp = costPriceField.getText().toString();
                 String sp = sellingPriceField.getText().toString();
-                String uoM ;
+                String uoM;
                 if (newUomField.isEnabled()) {
                     uoM = newUomField.getText().toString();
                 } else {
                     uoM = uomField.getSelectedItem().toString();
                 }
-                String gsT = gstField.getText().toString();
-                String hsn = hsnCodeField.getText().toString();
-                String getBarCode =  barcode.getText().toString();
-                if (getBarCode.isEmpty()){
+                String gsT = gstField.getSelectedItem().toString();
+                String hsn;
+                if (newHsnField.isEnabled()) {
+                    hsn = newHsnField.getText().toString();
+                } else {
+                    hsn = hsnCodeField.getSelectedItem().toString();
+                }
+
+                String getBarCode = barcode.getText().toString();
+                if (getBarCode.isEmpty()) {
                     getBarCode = "";
                 }
 
-                if (!registrationType.equals("3") && ( iteName.isEmpty()
-                        || cp.isEmpty()
-                        || sp.isEmpty())) {
-                    Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                } else if ((registrationType.equals("3") && ( iteName.isEmpty()
-                        || cp.isEmpty()
-                        || sp.isEmpty()))) {
-                    Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                }  else if (Double.valueOf(cp) > Double.valueOf(sp)) {
+                if (iteName.isEmpty()) {
+                    Toast.makeText(getActivity(), "Item name can't be empty.", Toast.LENGTH_SHORT).show();
+                } else if (cp.isEmpty()) {
+                    Toast.makeText(getActivity(), "Cost price can't be empty.", Toast.LENGTH_SHORT).show();
+                } else if (sp.isEmpty()) {
+                    Toast.makeText(getActivity(), "Selling price can't be empty.", Toast.LENGTH_SHORT).show();
+                } else if (Double.valueOf(cp) > Double.valueOf(sp)) {
                     Toast.makeText(getActivity(), "Cost Price can't be greater than selling price.", Toast.LENGTH_SHORT).show();
+                } else if (!registrationType.equals("3")) {
+                    if (uoM.isEmpty()) {
+                        Toast.makeText(getActivity(), "UOM can't be empty.", Toast.LENGTH_SHORT).show();
+                    } else if (hsn.isEmpty()) {
+                        Toast.makeText(getActivity(), "HSN can't be empty.", Toast.LENGTH_SHORT).show();
+                    } else if (gsT.isEmpty()) {
+                        Toast.makeText(getActivity(), "GST can't be empty.", Toast.LENGTH_SHORT).show();
+                    }else {
+                        if (newUomField.isEnabled()) {
+                            Unit unit = new Unit();
+                            unit.setDesc(uoM);
+                            if (decimalAllowed.isChecked()) {
+                                unit.setDecimalAllowed(1);
+                            } else {
+                                unit.setDecimalAllowed(0);
+                            }
+                            addUom(unit);
+                        }
+                        if (gsT.isEmpty()) {
+                            gsT = "0.0";
+                        }
+                        String uomValue = "0";
+                        if (!uoM.equals("--Select Uom--")) {
+                            uomValue = String.valueOf(dbHandler.getUomId(uoM));
+                        }
+                        copyImage();
+                        addItem(iteName, uomValue, Double.valueOf(cp), Double.valueOf(sp),
+                                hsn, Double.valueOf(gsT), selectedCategoryId, getBarCode, gstMap.get(gsT));
+                        mAddItemCategory.updateItem(selectedCategoryId);
+                    }
                 } else {
                     if (newUomField.isEnabled()) {
                         Unit unit = new Unit();
@@ -168,16 +226,16 @@ public class AddItem extends DialogFragment {
                         }
                         addUom(unit);
                     }
-                    if (gsT.isEmpty()){
-                        gsT = "0";
+                    if (gsT.isEmpty()) {
+                        gsT = "0.0";
                     }
                     String uomValue = "0";
-                    if (!uoM.equals("--Select Uom--")){
+                    if (!uoM.equals("--Select Uom--")) {
                         uomValue = String.valueOf(dbHandler.getUomId(uoM));
                     }
                     copyImage();
                     addItem(iteName, uomValue, Double.valueOf(cp), Double.valueOf(sp),
-                            hsn, Double.valueOf(gsT), selectedCategoryId,getBarCode);
+                            hsn, Double.valueOf(gsT), selectedCategoryId, getBarCode, gstMap.get(gsT));
                     mAddItemCategory.updateItem(selectedCategoryId);
                 }
             }
@@ -186,13 +244,34 @@ public class AddItem extends DialogFragment {
         uomField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (uomAdapter.get(position).equals("Enter new UOM")){
+                if (uomAdapter.get(position).equals("Enter new UOM")) {
                     newUomField.setEnabled(true);
                     newUomField.requestFocus();
                     newUomLayout.setVisibility(View.VISIBLE);
                 } else {
                     newUomLayout.setVisibility(View.GONE);
                     newUomField.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        final LinearLayout newHsnLayout = view.findViewById(R.id.new_hsn_layout);
+
+        hsnCodeField.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                if (hsnAdapter.get(position).equals("Enter new HSN")) {
+                    newHsnLayout.setVisibility(View.VISIBLE);
+                    newHsnField.setEnabled(true);
+                    newHsnField.requestFocus();
+                } else {
+                    newHsnLayout.setVisibility(View.GONE);
+                    newHsnField.setEnabled(false);
                 }
             }
 
@@ -255,9 +334,9 @@ public class AddItem extends DialogFragment {
 
 
     private void addItem(String itemName, String itemUOM, double itemCP, double itemSP,
-                         String itemHSNcode, double itemGST, int categoryId, String barcode) {
-        Item item = new Item(itemName, itemUOM, itemCP, itemSP,
-                itemHSNcode, itemGST, categoryId, mImagePath,barcode);
+                         String itemHSNcode, double itemGST, int categoryId, String barcode, int gstId) {
+        Item item = new Item(itemName, itemUOM, itemCP, itemSP, itemHSNcode, itemGST, categoryId,
+                mImagePath, barcode, gstId);
         dbHandler.addItem(item);
         dismiss();
     }

@@ -28,4 +28,13 @@ public class HsnMst {
 
     private int hsnId, hsnCode;
     private String hsnDesc;
+    private int hsnIsActive;
+
+    public int getHsnIsActive() {
+        return hsnIsActive;
+    }
+
+    public void setHsnIsActive(int hsnIsActive) {
+        this.hsnIsActive = hsnIsActive;
+    }
 }

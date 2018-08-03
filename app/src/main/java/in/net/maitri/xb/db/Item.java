@@ -6,6 +6,16 @@ import java.io.Serializable;
 public class Item implements Serializable {
 
     private int id;
+
+    public int getGstId() {
+        return gstId;
+    }
+
+    public void setGstId(int gstId) {
+        this.gstId = gstId;
+    }
+
+    private int gstId;
     private String itemName;
     private String itemImage;
     private String itemUOM;
@@ -120,7 +130,7 @@ public class Item implements Serializable {
     }
 
     public Item(String itemName, String itemUOM, double itemCP, double itemSP, String itemHSNcode,
-                double itemGST, int categoryId, String itemImage, String barcode) {
+                double itemGST, int categoryId, String itemImage, String barcode, int gstId) {
         this.itemName = itemName;
         this.itemImage = itemImage;
         this.itemUOM = itemUOM;
@@ -131,5 +141,6 @@ public class Item implements Serializable {
         this.itemGST = itemGST;
         this.categoryId = categoryId;
         this.barcode = barcode;
+        this.gstId = gstId;
     }
 }
