@@ -150,10 +150,16 @@ public class BillingActivity extends AppCompatActivity {
                 switch (regdType){
                     case "1":
                         if (bItem.getItemName() != null) {
-                            double gst = bItem.getItemGST();
-                            BigDecimal gstSaleAmt = BigDecimal.valueOf((bItem.getItemSP()*100)/(100+gst));
+                            float gst = (float)bItem.getItemGST();
+                            BigDecimal gstTaxAmt = BigDecimal.valueOf((bItem.getItemSP()*gst)/(100+gst));
+                            gstTaxAmt = gstTaxAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                            float tax = gstTaxAmt.floatValue();
+                            float cgst = tax/2;
+                            float sgst = tax-cgst;
+                            float gstSaleAmt = (float) bItem.getItemSP() - tax;
                             BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
-                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP());
+                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP(),
+                                    gst/2, gst/2, cgst, sgst,gstSaleAmt);
                             FragmentOne.populateList(billItems);
                         } else {
                             Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
