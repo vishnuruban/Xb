@@ -158,7 +158,7 @@ public class SunmiPrint {
 
             //mService.printBitmap(new PrintPic().printDraw(bmp));
             String gstBreakupHeader = String.format("%4s%5s%8s%7s%7s\n", "HSN", "GST%", "Basic", "CGST", "SGST");
-            String item = String.format("%-25s%5s\n", "Item", "");
+            String item = String.format("%-25s%5s\n", "HSN-Item", "");
             String s = String.format("%6s%12s%12s\n", "Qty", "Price", "Amount");
             String total = String.format("%5s%26s\n", "Total", mTotalPrice);
             String dash = "--------------------------------";
@@ -199,9 +199,10 @@ public class SunmiPrint {
 
             for (int i = 0; i < mBillItems.size(); i++) {
                 BillItems billItems = mBillItems.get(i);
-                item = String.format("%-25s%5s\n", billItems.getDesc(), "");
+                item = String.format("%-25s%5s\n", billItems.getHsn() + billItems.getDesc(), "");
                 mService.sendMessage(item, "");
-                String value = String.format("%7s%12s%12s\n", billItems.getQty(), df.format(billItems.getRate()), df.format(billItems.getAmount()));
+                String value = String.format("%7s%12s%12s\n", billItems.getQty(), df.format(billItems.getRate()),
+                        df.format(billItems.getAmount()));
                 mService.sendMessage(value, "");
             }
 
@@ -219,7 +220,8 @@ public class SunmiPrint {
             pp.startAddingContent4printFields();
             for (int i = 0; i< listBreakUp.size(); i++){
                 GstBreakup gb = listBreakUp.get(i);
-                String value = String.format("%4s%1s%5s%8s%7s%7s\n", gb.getHsn(), " ",gb.getGst(), gb.getTaxNetAmr(), gb.getCgst(), gb.getSgst());
+                String value = String.format("%4s%1s%5s%8s%7s%7s\n", gb.getHsn(), " ",gb.getGst(),
+                        df.format(gb.getTaxNetAmr()), df.format(gb.getCgst()), df.format(gb.getSgst()));
                 mService.sendMessage(value, "");
             }
             mService.sendMessage(dash, "");
