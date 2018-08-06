@@ -90,6 +90,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_CASHIER_NAME = "sm_cashier_name";
     private static final String KEY_SM_SALESMAN = "sm_salesman";
     private static final String KEY_SM_ITEM = "sm_item";
+    private static final String KEY_SM_TAX_TYPE = "sm_TaxType";
     private static final String KEY_SM_CREATED_AT = "sm_createdAt";
     private static final String KEY_SM_DATETIME = "sm_datetime";
     // sales mst table name
@@ -103,6 +104,13 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SD_NET_RATE = "sd_net_rate";
     private static final String KEY_SD_RATE = "sd_rate";
     private static final String KEY_SD_AMOUNT = "sd_amount";
+    private static final String KEY_SD_TAX_CODE1 = "sd_TaxCode1";
+    private static final String KEY_SD_TAX_RATE1 = "sd_TaxRate1";
+    private static final String KEY_SD_TAX_AMT1 = "sd_TaxAmt1";
+    private static final String KEY_SD_TAX_CODE2 = "sd_TaxCode2";
+    private static final String KEY_SD_TAX_RATE2 = "sd_TaxRate2";
+    private static final String KEY_SD_TAX_AMT2 = "sd_TaxAmt2";
+    private static final String KEY_SD_GST_SALE_AMT = "sd_GstSaleAmt";
     private static final String KEY_SD_DATETIME = "sd_datetime";
     private static final String KEY_SD_CREATED_AT = "sd_createdAt";
     // sales mst table name
@@ -310,9 +318,35 @@ public class DbHandler extends SQLiteOpenHelper {
                 + KEY_TAXM_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
         db.execSQL(CREATE_TAX_MST_TABLE);
         insertIntoTaxMst(db);
+
         String addGstIdItemMst = "ALTER TABLE " + ITEM_TABLE_NAME +
                 " ADD COLUMN " + KEY_ITEM_GST_ID + " INTEGER ";
         db.execSQL(addGstIdItemMst);
+
+        String addTaxTypeToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_TAX_TYPE + " TEXT ";
+        db.execSQL(addTaxTypeToSalesMst);
+        String addTaxCode1SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_TAX_CODE1 + " INTEGER ";
+        db.execSQL(addTaxCode1SalesDet);
+        String addTaxRate1SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_TAX_RATE1 + " FLOAT ";
+        db.execSQL(addTaxRate1SalesDet);
+        String addTaxAmt1SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_TAX_AMT1 + " FLOAT ";
+        db.execSQL(addTaxAmt1SalesDet);
+        String addTaxCode2SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_TAX_CODE2 + " INTEGER ";
+        db.execSQL(addTaxCode2SalesDet);
+        String addTaxRate2SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_TAX_RATE2 + " FLOAT ";
+        db.execSQL(addTaxRate2SalesDet);
+        String addTaxAmt2SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_TAX_AMT2 + " FLOAT ";
+        db.execSQL(addTaxAmt2SalesDet);
+        String addGstSaleAmtSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_GST_SALE_AMT + " FLOAT ";
+        db.execSQL(addGstSaleAmtSalesDet);
     }
 
 
@@ -457,6 +491,32 @@ public class DbHandler extends SQLiteOpenHelper {
                         + KEY_UNIT_DECIMAL_ALLOWED + " INTEGER,"
                         + KEY_UNIT_CREATED_AT + " DATETIME DEFAULT CURRENT_TIMESTAMP" + ")";
                 db.execSQL(CREATE_UNIT_TABLE);
+
+            case 18:
+                String addTaxTypeToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_TAX_TYPE + " TEXT ";
+                db.execSQL(addTaxTypeToSalesMst);
+                String addTaxCode1SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_TAX_CODE1 + " INTEGER ";
+                db.execSQL(addTaxCode1SalesDet);
+                String addTaxRate1SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_TAX_RATE1 + " FLOAT ";
+                db.execSQL(addTaxRate1SalesDet);
+                String addTaxAmt1SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_TAX_AMT1 + " FLOAT ";
+                db.execSQL(addTaxAmt1SalesDet);
+                String addTaxCode2SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_TAX_CODE2 + " INTEGER ";
+                db.execSQL(addTaxCode2SalesDet);
+                String addTaxRate2SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_TAX_RATE2 + " FLOAT ";
+                db.execSQL(addTaxRate2SalesDet);
+                String addTaxAmt2SalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_TAX_AMT2 + " FLOAT ";
+                db.execSQL(addTaxAmt2SalesDet);
+                String addGstSaleAmtSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_GST_SALE_AMT + " FLOAT ";
+                db.execSQL(addGstSaleAmtSalesDet);
 
                 break;
         }

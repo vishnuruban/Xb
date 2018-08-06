@@ -19,6 +19,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
+
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billReports.BillReportActivity;
 import in.net.maitri.xb.billReports.CustomerReportActivity;
@@ -30,14 +32,13 @@ import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
 import in.net.maitri.xb.reports.TotalSales;
 import in.net.maitri.xb.scan.ScanActivity;
+import in.net.maitri.xb.settings.GetSettings;
 import in.net.maitri.xb.settings.SettingsActivity;
 import in.net.maitri.xb.util.CheckDeviceType;
 
 public class BillingActivity extends AppCompatActivity {
 
-    private FragmentTransaction ft;
-    private FragmentOne filterFirstFragment;
-    private FragmentThree filterThirdFragment;
+    private GetSettings mGetSettings = new GetSettings(BillingActivity.this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,9 @@ public class BillingActivity extends AppCompatActivity {
         }
         */
 
+        FragmentTransaction ft;
+        FragmentOne filterFirstFragment;
+        FragmentThree filterThirdFragment;
         if (new CheckDeviceType(BillingActivity.this).isTablet()) {
 
             if (savedInstanceState == null) {
@@ -141,15 +145,32 @@ public class BillingActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
                 String result=data.getStringExtra("code");
+                String regdType = mGetSettings.getCompanyRegistrationType();
                 Item bItem = new DbHandler(BillingActivity.this).getItemUsingBarCode(result);
-                if (bItem.getItemName() != null) {
-                    BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
-                            bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP());
-                    FragmentOne.populateList(billItems);
-                } else {
-                    Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
+                switch (regdType){
+                    case "1":
+                        if (bItem.getItemName() != null) {
+                            double gst = bItem.getItemGST();
+                            BigDecimal gstSaleAmt = BigDecimal.valueOf((bItem.getItemSP()*100)/(100+gst));
+                            BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
+                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP());
+                            FragmentOne.populateList(billItems);
+                        } else {
+                            Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        if (bItem.getItemName() != null) {
+                            BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
+                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP());
+                            FragmentOne.populateList(billItems);
+                        } else {
+                            Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
+                        }
+                        break;
                 }
-
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 String result=data.getStringExtra("code");
