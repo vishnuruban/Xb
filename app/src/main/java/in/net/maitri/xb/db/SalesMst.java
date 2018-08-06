@@ -53,7 +53,7 @@ public class SalesMst {
     }
 
     private String prefix;
-    private double qty;
+    private float qty;
     private int  items;
 
     public int getInternalBillNo() {
@@ -66,7 +66,7 @@ public class SalesMst {
 
     private int internalBillNo;
 
-    public SalesMst(int billNO, int date, int customerId, String salesPerson, String paymentMode, String paymentDet, String status, double qty, int items, int internalBillNo, double netAmt, boolean selected, double discount, String dateTime) {
+    public SalesMst(int billNO, int date, int customerId, String salesPerson, String paymentMode, String paymentDet, String status, float qty, int items, int internalBillNo, float netAmt, boolean selected, float discount, String dateTime) {
         this.billNO = billNO;
         this.date = date;
         this.customerId = customerId;
@@ -86,10 +86,10 @@ public class SalesMst {
 
 
 
-    private double netAmt;
+    private float netAmt;
     private int saleBillNo;
 
-    public SalesMst(int billNO, int date, int customerId, String salesPerson, String paymentMode, String paymentDet, String status, double qty, int items, double netAmt, double discount, String dateTime) {
+    public SalesMst(int billNO, int date, int customerId, String salesPerson, String paymentMode, String paymentDet, String status, float qty, int items, float netAmt, float discount, String dateTime) {
         this.billNO = billNO;
         this.date = date;
         this.customerId = customerId;
@@ -130,14 +130,14 @@ public class SalesMst {
         this.dateTime = dateTime;
     }
 
-    private double discount;
+    private float discount;
     private String dateTime;
 
     public SalesMst() {
     }
 
-    public SalesMst(int date, int customerId, double qty,
-                    double netAmt, double discount, String salesPerson, String paymentMode,
+    public SalesMst(int date, int customerId, float qty,
+                    float netAmt, float discount, String salesPerson, String paymentMode,
                     String paymentDet, String status) {
 
         this.date = date;
@@ -151,8 +151,8 @@ public class SalesMst {
         this.status = status;
     }
 
-    public SalesMst(int billNO, int date, int customerId, double qty,
-                    double netAmt, double discount, String salesPerson, String paymentMode,
+    public SalesMst(int billNO, int date, int customerId, float qty,
+                    float netAmt, float discount, String salesPerson, String paymentMode,
                     String paymentDet, String status) {
         this.billNO = billNO;
         this.date = date;
@@ -207,27 +207,27 @@ public class SalesMst {
         this.paymentMode = paymentMode;
     }
 
-    public double getQty() {
+    public float getQty() {
         return qty;
     }
 
-    public void setQty(double qty) {
+    public void setQty(float qty) {
         this.qty = qty;
     }
 
-    public double getNetAmt() {
+    public float getNetAmt() {
         return netAmt;
     }
 
-    public void setNetAmt(double netAmt) {
+    public void setNetAmt(float netAmt) {
         this.netAmt = netAmt;
     }
 
-    public double getDiscount() {
+    public float getDiscount() {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(float discount) {
         this.discount = discount;
     }
 

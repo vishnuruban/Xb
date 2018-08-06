@@ -183,7 +183,7 @@ public class AddItem extends DialogFragment {
                     Toast.makeText(getActivity(), "Cost price can't be empty.", Toast.LENGTH_SHORT).show();
                 } else if (sp.isEmpty()) {
                     Toast.makeText(getActivity(), "Selling price can't be empty.", Toast.LENGTH_SHORT).show();
-                } else if (Double.valueOf(cp) > Double.valueOf(sp)) {
+                } else if (Float.valueOf(cp) > Float.valueOf(sp)) {
                     Toast.makeText(getActivity(), "Cost Price can't be greater than selling price.", Toast.LENGTH_SHORT).show();
                 } else if (!registrationType.equals("3")) {
                     if (uoM.isEmpty()) {
@@ -211,8 +211,8 @@ public class AddItem extends DialogFragment {
                             uomValue = String.valueOf(dbHandler.getUomId(uoM));
                         }
                         copyImage();
-                        addItem(iteName, uomValue, Double.valueOf(cp), Double.valueOf(sp),
-                                hsn, Double.valueOf(gsT), selectedCategoryId, getBarCode, gstMap.get(gsT));
+                        addItem(iteName, uomValue, Float.valueOf(cp), Float.valueOf(sp),
+                                hsn, Float.valueOf(gsT), selectedCategoryId, getBarCode, gstMap.get(gsT));
                         mAddItemCategory.updateItem(selectedCategoryId);
                     }
                 } else {
@@ -234,8 +234,8 @@ public class AddItem extends DialogFragment {
                         uomValue = String.valueOf(dbHandler.getUomId(uoM));
                     }
                     copyImage();
-                    addItem(iteName, uomValue, Double.valueOf(cp), Double.valueOf(sp),
-                            hsn, Double.valueOf(gsT), selectedCategoryId, getBarCode, gstMap.get(gsT));
+                    addItem(iteName, uomValue, Float.valueOf(cp), Float.valueOf(sp),
+                            hsn, Float.valueOf(gsT), selectedCategoryId, getBarCode, gstMap.get(gsT));
                     mAddItemCategory.updateItem(selectedCategoryId);
                 }
             }
@@ -333,8 +333,8 @@ public class AddItem extends DialogFragment {
     }
 
 
-    private void addItem(String itemName, String itemUOM, double itemCP, double itemSP,
-                         String itemHSNcode, double itemGST, int categoryId, String barcode, int gstId) {
+    private void addItem(String itemName, String itemUOM, float itemCP, float itemSP,
+                         String itemHSNcode, float itemGST, int categoryId, String barcode, int gstId) {
         Item item = new Item(itemName, itemUOM, itemCP, itemSP, itemHSNcode, itemGST, categoryId,
                 mImagePath, barcode, gstId);
         dbHandler.addItem(item);

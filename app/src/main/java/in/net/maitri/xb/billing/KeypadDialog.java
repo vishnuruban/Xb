@@ -21,8 +21,10 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 
 import in.net.maitri.xb.R;
+import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.settings.GetSettings;
+import in.net.maitri.xb.util.Calculation;
 
 /**
  * Created by SYSRAJ4 on 18/11/2017.
@@ -304,37 +306,62 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
             case R.id.btn_ok:
 
-                BillItems billItems;
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
-                    if (et_result.getText().toString().isEmpty() || et_result.getText().toString().startsWith(".")) {
-                        Toast.makeText(c, "Please enter valid price", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                String regdType = new GetSettings(c).getCompanyRegistrationType();
+                switch (regdType){
+                    case "1":
+                        if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                            if (bItem.getItemName() != null) {
+                                FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, 1, 0));
+                            } else {
+                                Toast.makeText(c, "Barcode not found.", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            String getQty = qty.getText().toString();
+                            if (bItem.getItemName() != null) {
+                                FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, Float.parseFloat(getQty), 0));
+                                FragmentThree.dismissDialog();
+                            } else {
+                                Toast.makeText(c, "Barcode not found.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        BillItems billItems;
+                        if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                            if (et_result.getText().toString().isEmpty() || et_result.getText().toString().startsWith(".")) {
+                                Toast.makeText(c, "Please enter valid price", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
 
-                    double price = Double.parseDouble(
-                            et_result.getText().toString());
+                            float price = Float.parseFloat(
+                                    et_result.getText().toString());
 
-                    if (price == 0) {
-                        Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    billItems = new BillItems(bItem.getCategoryId(), bItem.getId(), bItem.getItemName(), 1, bItem.getItemSP(), price, price);
-                } else {
-                    String getQty = qty.getText().toString();
-                    if (getQty.isEmpty()) {
-                        Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else if (Double.parseDouble(getQty) == 0) {
-                        Toast.makeText(c, "Qty can't be zero.", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        billItems = new BillItems(bItem.getCategoryId(), bItem.getId(), bItem.getItemName(),
-                                Double.parseDouble(getQty), bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP() * Double.parseDouble(getQty));
-                    }
+                            if (price == 0) {
+                                Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            billItems = new BillItems(bItem.getCategoryId(), bItem.getId(), bItem.getItemName(), 1, bItem.getItemSP(), price, price);
+                        } else {
+                            String getQty = qty.getText().toString();
+                            if (getQty.isEmpty()) {
+                                Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else if (Float.parseFloat(getQty) == 0) {
+                                Toast.makeText(c, "Qty can't be zero.", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else {
+                                billItems = new BillItems(bItem.getCategoryId(), bItem.getId(), bItem.getItemName(),
+                                        Float.parseFloat(getQty), bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP() * Float.parseFloat(getQty));
+                            }
+                        }
+                        Toast.makeText(c, et_result.getText().toString(), Toast.LENGTH_SHORT).show();
+                        FragmentOne.populateList(billItems);
+                        FragmentThree.dismissDialog();
+                        break;
                 }
-                Toast.makeText(c, et_result.getText().toString(), Toast.LENGTH_SHORT).show();
-                FragmentOne.populateList(billItems);
-                FragmentThree.dismissDialog();
+
                 break;
 
             case R.id.btn_cancel:

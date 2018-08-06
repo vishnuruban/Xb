@@ -19,8 +19,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import java.math.BigDecimal;
-
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.billReports.BillReportActivity;
 import in.net.maitri.xb.billReports.CustomerReportActivity;
@@ -30,11 +28,11 @@ import in.net.maitri.xb.customer.CustomerDetail;
 import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.itemdetails.AddItemCategory;
-import in.net.maitri.xb.reports.TotalSales;
 import in.net.maitri.xb.scan.ScanActivity;
 import in.net.maitri.xb.settings.GetSettings;
 import in.net.maitri.xb.settings.SettingsActivity;
 import in.net.maitri.xb.util.CheckDeviceType;
+import in.net.maitri.xb.util.Calculation;
 
 public class BillingActivity extends AppCompatActivity {
 
@@ -145,22 +143,12 @@ public class BillingActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if(resultCode == Activity.RESULT_OK){
                 String result=data.getStringExtra("code");
-                String regdType = mGetSettings.getCompanyRegistrationType();
                 Item bItem = new DbHandler(BillingActivity.this).getItemUsingBarCode(result);
+                String regdType = mGetSettings.getCompanyRegistrationType();
                 switch (regdType){
                     case "1":
                         if (bItem.getItemName() != null) {
-                            float gst = (float)bItem.getItemGST();
-                            BigDecimal gstTaxAmt = BigDecimal.valueOf((bItem.getItemSP()*gst)/(100+gst));
-                            gstTaxAmt = gstTaxAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-                            float tax = gstTaxAmt.floatValue();
-                            float cgst = tax/2;
-                            float sgst = tax-cgst;
-                            float gstSaleAmt = (float) bItem.getItemSP() - tax;
-                            BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
-                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP(),
-                                    gst/2, gst/2, cgst, sgst,gstSaleAmt);
-                            FragmentOne.populateList(billItems);
+                            FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem,1,0));
                         } else {
                             Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
                         }

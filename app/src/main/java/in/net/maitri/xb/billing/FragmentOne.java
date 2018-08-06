@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Customer;
 import in.net.maitri.xb.db.DbHandler;
+import in.net.maitri.xb.settings.GetSettings;
+import in.net.maitri.xb.util.Calculation;
 
 
 public class FragmentOne extends Fragment implements View.OnClickListener {
@@ -55,7 +57,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     private TextInputEditText eQty;
     private ArrayList<Customer> customerArrayList;
     public static Customer customerDetails;
-    static double a = 0;
+    static float a = 0;
     private Customer customer;
     int customerId = 0;
 
@@ -219,8 +221,8 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                 BillItems bItm = billList.get(i);
                 if (bItm.getDesc().equals(be.getDesc()) && bItm.getRate() == be.getRate()) {
                     System.out.println("Items Equalled");
-                    double qty = bItm.getQty() + be.getQty();
-                    double amt = bItm.getAmount() + be.getAmount();
+                    float qty = bItm.getQty() + be.getQty();
+                    float amt = bItm.getAmount() + be.getAmount();
                     billList.remove(bItm);
                     be.setQty(qty);
                     be.setAmount(amt);
@@ -238,7 +240,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
 
 
     private static void UpdateProdPriceList() {
-        double b = 0;
+        float b = 0;
         String rs = "\u20B9";
         try {
             byte[] utf8 = rs.getBytes("UTF-8");
@@ -262,7 +264,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     }
 
 
-    public static String commaSeperated(double s) {
+    public static String commaSeperated(float s) {
         DecimalFormat formatter = new DecimalFormat("#,###.00");
         return formatter.format(s);
     }
@@ -360,13 +362,33 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                         dialog.cancel();
                         modifyItem(bi, billListAdapter);
                     } else {
-                        if (Double.parseDouble(qtyString) != bi.getQty()) {
-                            double a = Double.parseDouble(qtyString) * bi.getRate();
-                            bi.setAmount(a);
-                            bi.setQty(Double.parseDouble(qtyString));
-                        } else {
-                            bi.setQty(Double.parseDouble(qtyString));
+                        String regdType = new GetSettings(getActivity()).getCompanyRegistrationType();
+                        switch (regdType){
+                            case "1":
+                                if (Float.parseFloat(qtyString) != bi.getQty()) {
+                                    float a = Float.parseFloat(qtyString) * bi.getRate();
+                                    bi.setAmount(a);
+                                    bi.setQty(Float.parseFloat(qtyString));
+                                    bi.setTaxAmt1(Float.parseFloat(qtyString) * bi.getTaxAmt1());
+                                    bi.setTaxAmt2(Float.parseFloat(qtyString) * bi.getTaxAmt2());
+                                    bi.setTaxSaleAmt(Float.parseFloat(qtyString) * bi.getTaxSaleAmt());
+                                } else {
+                                    bi.setQty(Float.parseFloat(qtyString));
+                                }
+                                break;
+                            case "2":
+                                break;
+                            case "3":
+                                if (Float.parseFloat(qtyString) != bi.getQty()) {
+                                    float a = Float.parseFloat(qtyString) * bi.getRate();
+                                    bi.setAmount(a);
+                                    bi.setQty(Float.parseFloat(qtyString));
+                                } else {
+                                    bi.setQty(Float.parseFloat(qtyString));
+                                }
+                                break;
                         }
+
                         UpdateProdPriceList();
                         billListAdapter.notifyDataSetChanged();
                         dialog.cancel();

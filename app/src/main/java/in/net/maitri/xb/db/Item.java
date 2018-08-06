@@ -19,9 +19,9 @@ public class Item implements Serializable {
     private String itemName;
     private String itemImage;
     private String itemUOM;
-    private double itemCP;
-    private double itemSP;
-    private double itemNetSP;
+    private float itemCP;
+    private float itemSP;
+    private float itemNetSP;
 
     public String getBarcode() {
         return barcode;
@@ -33,16 +33,16 @@ public class Item implements Serializable {
 
     private String barcode;
 
-    public double getItemNetSP() {
+    public float getItemNetSP() {
         return itemNetSP;
     }
 
-    public void setItemNetSP(double itemNetSP) {
+    public void setItemNetSP(float itemNetSP) {
         this.itemNetSP = itemNetSP;
     }
 
     private String itemHSNcode;
-    private double itemGST;
+    private float itemGST;
 
     public int getId() {
         return id;
@@ -54,7 +54,7 @@ public class Item implements Serializable {
 
     private int categoryId;
 
-    public Item(String itemName, String itemImage, double itemSP) {
+    public Item(String itemName, String itemImage, float itemSP) {
         this.itemName = itemName;
         this.itemImage = itemImage;
         this.itemSP = itemSP;
@@ -81,19 +81,19 @@ public class Item implements Serializable {
         this.itemUOM = itemUOM;
     }
 
-    public double getItemCP() {
+    public float getItemCP() {
         return itemCP;
     }
 
-    public void setItemCP(double itemCP) {
+    public void setItemCP(float itemCP) {
         this.itemCP = itemCP;
     }
 
-    public double getItemSP() {
+    public float getItemSP() {
         return itemSP;
     }
 
-    public void setItemSP(double itemSP) {
+    public void setItemSP(float itemSP) {
         this.itemSP = itemSP;
     }
 
@@ -113,11 +113,11 @@ public class Item implements Serializable {
         this.itemHSNcode = itemHSNcode;
     }
 
-    public double getItemGST() {
+    public float getItemGST() {
         return itemGST;
     }
 
-    public void setItemGST(double itemGST) {
+    public void setItemGST(float itemGST) {
         this.itemGST = itemGST;
     }
 
@@ -129,8 +129,8 @@ public class Item implements Serializable {
         this.categoryId = categoryId;
     }
 
-    public Item(String itemName, String itemUOM, double itemCP, double itemSP, String itemHSNcode,
-                double itemGST, int categoryId, String itemImage, String barcode, int gstId) {
+    public Item(String itemName, String itemUOM, float itemCP, float itemSP, String itemHSNcode,
+                float itemGST, int categoryId, String itemImage, String barcode, int gstId) {
         this.itemName = itemName;
         this.itemImage = itemImage;
         this.itemUOM = itemUOM;

@@ -7,30 +7,40 @@ package in.net.maitri.xb.billing;
 
 public class BillItems {
 
-    private double qty;
+    private float qty;
     private String desc;
     private int cat_id;
     private int item_id;
-    private double net_rate;
-    private double rate;
+    private float net_rate;
+    private float rate;
     private float taxRate1;
     private float taxRate2;
     private float taxAmt1;
     private float taxAmt2;
     private float taxSaleAmt;
 
+    public String getHsn() {
+        return hsn;
+    }
+
+    public void setHsn(String hsn) {
+        this.hsn = hsn;
+    }
+
+    private String hsn;
+
 
     public BillItems () {}
 
-    public BillItems(String desc, int qty, double rate, double amount) {
+    public BillItems(String desc, int qty, float rate, float amount) {
         this.desc = desc;
         this.qty = qty;
         this.rate = rate;
         this.amount = amount;
     }
 
-    public BillItems( int cat_id, int item_id,String desc, double qty,double net_rate,
-                      double rate, double amount) {
+    public BillItems( int cat_id, int item_id,String desc, float qty,float net_rate,
+                      float rate, float amount) {
         this.desc = desc;
         this.qty = qty;
         this.rate = rate;
@@ -40,15 +50,16 @@ public class BillItems {
         this.net_rate = net_rate;
     }
 
-    public BillItems( int cat_id, int item_id,String desc, double qty,double net_rate,
-                      double rate, double amount, float taxRate1, float taxRate2,
-                      float taxAmt1, float taxAmt2, float taxSaleAmt) {
+    public BillItems( int cat_id, int item_id,String desc, float qty,float net_rate,
+                      float rate, float amount, float taxRate1, float taxRate2,
+                      float taxAmt1, float taxAmt2, float taxSaleAmt, String hsn) {
         this(cat_id, item_id, desc, qty,net_rate, rate, amount);
         this.taxAmt1 = taxAmt1;
         this.taxRate1 = taxRate1;
         this.taxAmt2 = taxAmt2;
         this.taxRate2 = taxRate2;
         this.taxSaleAmt = taxSaleAmt;
+        this.hsn = hsn;
     }
 
 
@@ -108,23 +119,23 @@ public class BillItems {
         this.item_id = item_id;
     }
 
-    public double getQty() {
+    public float getQty() {
         return qty;
     }
 
-    public void setQty(double qty) {
+    public void setQty(float qty) {
         this.qty = qty;
     }
 
-    public double getNet_rate() {
+    public float getNet_rate() {
         return net_rate;
     }
 
-    public void setNet_rate(double net_rate) {
+    public void setNet_rate(float net_rate) {
         this.net_rate = net_rate;
     }
 
-    private double amount;
+    private float amount;
 
     public String getDesc() {
         return desc;
@@ -134,19 +145,19 @@ public class BillItems {
         this.desc = desc;
     }
 
-    public double getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate(double rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 
-    public double getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
     }
 }

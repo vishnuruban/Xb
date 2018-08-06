@@ -23,12 +23,12 @@ public class BillPrint {
     }
 
     public void printThreeInch(CieBluetoothPrinter mPrinter, ArrayList<BillItems> bItems,
-                               double netAmount, String BillNo, String tPrice, String tDiscount,
-                               double tQty, String formattedDate, String cashierName, String customerName) {
+                               float netAmount, String BillNo, String tPrice, String tDiscount,
+                               float tQty, String formattedDate, String cashierName, String customerName) {
 
         df = new DecimalFormat("0.00");
         NumberFormat nf = new DecimalFormat("##.##");
-        double quantity = 0;
+        float quantity = 0;
         mPrinter.setPrintMode(BtpConsts.PRINT_IN_BATCH);
         mPrinter.resetPrinter();
         mPrinter.setPrinterWidth(PrinterWidth.PRINT_WIDTH_72MM);
@@ -136,10 +136,10 @@ public class BillPrint {
 
 
 
-    public void printTwoInch(CieBluetoothPrinter mPrinter, ArrayList<BillItems> bItems, double netAmount, String BillNo, String tPrice, String tDiscount, double tQty, String formattedDate, String cashierName, String customerName) {
+    public void printTwoInch(CieBluetoothPrinter mPrinter, ArrayList<BillItems> bItems, float netAmount, String BillNo, String tPrice, String tDiscount, float tQty, String formattedDate, String cashierName, String customerName) {
         NumberFormat nf = new DecimalFormat("##.##");
         df = new DecimalFormat("0.00");
-        double quantity = 0;
+        float quantity = 0;
         getSettings = new GetSettings(context);
         String clName = getSettings.getCompanyLegalName();
         String ctName = getSettings.getCompanyTradeName();

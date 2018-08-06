@@ -57,6 +57,7 @@ import in.net.maitri.xb.printing.sunmi.Bluetooth;
 import in.net.maitri.xb.printing.sunmi.BluetoothService;
 import in.net.maitri.xb.printing.sunmi.SunmiPrint;
 import in.net.maitri.xb.settings.GetSettings;
+import in.net.maitri.xb.util.Calculation;
 
 import static in.net.maitri.xb.printing.epson.EpsonConnection.initializeEpson;
 
@@ -68,7 +69,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private String totalProducts, totalPrice, tCustName;
     private RadioGroup cDiscountType;
     private String selectedButton;
-    private double netAmt = 0;
+    private float netAmt = 0;
     private String rs = "\u20B9";
     private static TextView mPrinterStatusText;
     private EditText et_result, cCash, cDiscount, cCashierName;
@@ -194,13 +195,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             cCustName.setText(tCustName);
         }
 
-        netAmt = Double.parseDouble(totalPrice);
+        netAmt = Float.parseFloat(totalPrice);
         mEditSpinner.addTextChangedListener(paymentMode);
         cDiscount.addTextChangedListener(watch);
         cCash.addTextChangedListener(cash);
         cProducts.setText(totalProducts);
-        cPrice.setText(FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-        cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
+        cPrice.setText(FragmentOne.commaSeperated(Float.parseFloat(totalPrice)));
+        cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Float.parseFloat(totalPrice)));
         cCash.setText(df.format(netAmt));
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -479,26 +480,56 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                             break;
 
                         case "3":
-                            if (getSettings.getPrinterType().equals("1")) {
-                                if (printSize.equals("1")) {
-                                    if (Bluetooth.isPrinterConnected(CheckoutActivity.this, CheckoutActivity.this)) {
-                                        BluetoothService mService = Bluetooth.getServiceInstance();
-                                        if (!mService.isAvailable()) {
-                                            Toast.makeText(CheckoutActivity.this, "Unable to connect printer", Toast.LENGTH_SHORT).show();
-                                        } else {
-                                            Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
-                                            new SunmiPrint(CheckoutActivity.this, mService, FragmentOne.billList, sm.getNetAmt(),
-                                                    pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
-                                                    sm.getDateTime(), sm.getCashName(), tCustName).doPrint();
-                                        }
+                            String regdType = new GetSettings(CheckoutActivity.this).getCompanyRegistrationType();
+                            switch (regdType){
+                                case "1":
+                                    if (getSettings.getPrinterType().equals("1")) {
+                                        if (printSize.equals("1")) {
+                                            if (Bluetooth.isPrinterConnected(CheckoutActivity.this, CheckoutActivity.this)) {
+                                                BluetoothService mService = Bluetooth.getServiceInstance();
+                                                if (!mService.isAvailable()) {
+                                                    Toast.makeText(CheckoutActivity.this, "Unable to connect printer", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
+                                                    new SunmiPrint(CheckoutActivity.this, mService, FragmentOne.billList, sm.getNetAmt(),
+                                                            pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
+                                                            sm.getDateTime(), sm.getCashName(), tCustName).doPrintForInclusiveGst();
+                                                }
 
-                                    } else {
+                                            } else {
 //            Bluetooth.connectPrinter(getApplicationContext(), MainActivity.this);
-                                        Toast.makeText(CheckoutActivity.this, "No printer found. Add printer in settings.", Toast.LENGTH_SHORT).show();
-                                    }
+                                                Toast.makeText(CheckoutActivity.this, "No printer found. Add printer in settings.", Toast.LENGTH_SHORT).show();
+                                            }
 
-                                }
+                                        }
+                                    }
+                                    break;
+                                case "2":
+                                    break;
+                                case "3":
+                                    if (getSettings.getPrinterType().equals("1")) {
+                                        if (printSize.equals("1")) {
+                                            if (Bluetooth.isPrinterConnected(CheckoutActivity.this, CheckoutActivity.this)) {
+                                                BluetoothService mService = Bluetooth.getServiceInstance();
+                                                if (!mService.isAvailable()) {
+                                                    Toast.makeText(CheckoutActivity.this, "Unable to connect printer", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
+                                                    new SunmiPrint(CheckoutActivity.this, mService, FragmentOne.billList, sm.getNetAmt(),
+                                                            pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
+                                                            sm.getDateTime(), sm.getCashName(), tCustName).doPrint();
+                                                }
+
+                                            } else {
+//            Bluetooth.connectPrinter(getApplicationContext(), MainActivity.this);
+                                                Toast.makeText(CheckoutActivity.this, "No printer found. Add printer in settings.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    }
+                                    break;
                             }
+
                             break;
                     }
 
@@ -533,7 +564,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         long detInserted = 0, mstInserted;
         int bNo = bSeries.getCurrentBillNo();
         dbHandler.updateBillNo(++bNo);
-        double quantity = 0;
+        float quantity = 0;
         String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         String formattedDate = dateFormat.format(new Date()).toString();
         int dateCount = dbHandler.getDateCount(date);
@@ -553,7 +584,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (cDiscountValue.isEmpty())
             sm.setDiscount(0);
         else
-            sm.setDiscount(Double.parseDouble(cDiscountValue));
+            sm.setDiscount(Float.parseFloat(cDiscountValue));
         sm.setPaymentMode(mEditSpinner.getText().toString());
         sm.setPaymentDet("");
         sm.setCashName(cCashierName.getText().toString());
@@ -625,9 +656,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 tBalance.setVisibility(View.INVISIBLE);
             } else {
                 if (mEditSpinner.getText().toString().equals("CASH")) {
-                    if (Double.parseDouble(s.toString()) > netAmt) {
+                    if (Float.parseFloat(s.toString()) > netAmt) {
                         tBalance.setVisibility(View.VISIBLE);
-                        double balance = Double.parseDouble(s.toString()) - netAmt;
+                        float balance = Float.parseFloat(s.toString()) - netAmt;
                         tBalance.setText("Balance  " + rs + " " + FragmentOne.commaSeperated(balance));
                     } else {
                         tBalance.setVisibility(View.INVISIBLE);
@@ -661,8 +692,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 cDiscountValue = "";
             }
             if (s.toString().equals("") || s.toString().equals(rs) || s.toString().equals("%")) {
-                cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Double.parseDouble(totalPrice)));
-                netAmt = Double.parseDouble(totalPrice);
+                cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Float.parseFloat(totalPrice)));
+                netAmt = Float.parseFloat(totalPrice);
                 cCash.setText(String.valueOf(netAmt));
                 cDiscountValue = "";
             } else {
@@ -675,13 +706,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                         return;
                     }
                     System.out.println("SS " + s.toString().substring(1));
-                    netAmt = Double.parseDouble(totalPrice) - Double.parseDouble(s.toString().substring(1));
-                    cDiscountValue = df.format(Double.parseDouble(s.toString().substring(1)));
+                    netAmt = Float.parseFloat(totalPrice) - Float.parseFloat(s.toString().substring(1));
+                    cDiscountValue = df.format(Float.parseFloat(s.toString().substring(1)));
                 } else {
                     String disPrice = s.toString().substring(1);
-                    double discount = (Double.parseDouble(disPrice) / 100.0) * Double.parseDouble(totalPrice);
+                    float discount = (float)(Float.parseFloat(disPrice) / 100.0) * Float.parseFloat(totalPrice);
                     cDiscountValue = df.format(discount);
-                    netAmt = Double.parseDouble(totalPrice) - discount;
+                    netAmt = Float.parseFloat(totalPrice) - discount;
                 }
                 if (netAmt <= 0) {
                     Toast.makeText(CheckoutActivity.this, "Please enter valid discount", Toast.LENGTH_SHORT).show();

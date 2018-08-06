@@ -909,12 +909,12 @@ public class DbHandler extends SQLiteOpenHelper {
                 do {
                     Item item = new Item();
                     item.setCategoryId(c.getInt(c.getColumnIndex(KEY_CATE_ID)));
-                    item.setItemCP(c.getDouble(c.getColumnIndex(KEY_ITEM_CP)));
-                    item.setItemSP(c.getDouble(c.getColumnIndex(KEY_ITEM_SP)));
+                    item.setItemCP(c.getFloat(c.getColumnIndex(KEY_ITEM_CP)));
+                    item.setItemSP(c.getFloat(c.getColumnIndex(KEY_ITEM_SP)));
                     item.setItemName(c.getString(c.getColumnIndex(KEY_ITEM_NAME)));
                     item.setItemImage(c.getString(c.getColumnIndex(KEY_IMAGE_PATH)));
                     item.setItemUOM(c.getString(c.getColumnIndex(KEY_ITEM_UOM)));
-                    item.setItemGST(c.getDouble(c.getColumnIndex(KEY_ITEM_GST)));
+                    item.setItemGST(c.getFloat(c.getColumnIndex(KEY_ITEM_GST)));
                     item.setItemHSNcode(c.getString(c.getColumnIndex(KEY_ITEM_HSN)));
                     item.setId(c.getInt(c.getColumnIndex(KEY_ITEM_ID)));
                     item.setBarcode(c.getString(c.getColumnIndex(KEY_ITEM_BARCODE)));
@@ -1151,9 +1151,9 @@ public class DbHandler extends SQLiteOpenHelper {
 
                     BillItems bm = new BillItems();
                     // sd.setBillNo(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)));
-                    bm.setRate(c.getDouble(c.getColumnIndex(KEY_SD_RATE)));
+                    bm.setRate(c.getFloat(c.getColumnIndex(KEY_SD_RATE)));
                     bm.setQty(c.getInt(c.getColumnIndex(KEY_SD_QTY)));
-                    bm.setAmount(c.getDouble(c.getColumnIndex(KEY_SD_AMOUNT)));
+                    bm.setAmount(c.getFloat(c.getColumnIndex(KEY_SD_AMOUNT)));
                     bm.setDesc(c.getString(c.getColumnIndex("itm_name")));
 
                     System.out.println("DBDESC " + c.getString(c.getColumnIndex("itm_name")));
@@ -1249,8 +1249,8 @@ public class DbHandler extends SQLiteOpenHelper {
                     mst.setInternalBillNo(c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
                     mst.setBillNO(c.getInt(c.getColumnIndex(KEY_SM_SALE_BILL_NO)));
                     mst.setDateTime(c.getString(c.getColumnIndex(KEY_SM_DATETIME)));
-                    mst.setNetAmt(c.getDouble(c.getColumnIndex(KEY_SM_NET_AMT)));
-                    mst.setDiscount(c.getDouble(c.getColumnIndex(KEY_SM_DISCOUNT)));
+                    mst.setNetAmt(c.getFloat(c.getColumnIndex(KEY_SM_NET_AMT)));
+                    mst.setDiscount(c.getFloat(c.getColumnIndex(KEY_SM_DISCOUNT)));
                     mst.setPaymentMode(c.getString(c.getColumnIndex(KEY_SM_PAYMENT_MODE)));
                     mst.setQty(c.getInt(c.getColumnIndex(KEY_SM_QTY)));
                     mst.setItems(c.getInt(c.getColumnIndex(KEY_SM_ITEM)));

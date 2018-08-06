@@ -135,8 +135,8 @@ public class TodayBillReport extends AppCompatActivity {
 
         summaryLayout.setVisibility(View.VISIBLE);
         int items = 0, qty = 0;
-        double discount = 0;
-        double netAm = 0;
+        float discount = 0;
+        float netAm = 0;
         mProgressDialog.dismiss();
         for (int i = 0; i < mGetBillMaster.size(); i++) {
             SalesMst bm = mGetBillMaster.get(i);
@@ -168,12 +168,12 @@ public class TodayBillReport extends AppCompatActivity {
                 int billNo = mst.getBillNO();
                 String billDateTime = mst.getDateTime();
                 int internalBillNo = mst.getInternalBillNo();
-                double discount = mst.getDiscount();
-                double netAmt = mst.getNetAmt();
-                double subTotal = discount + netAmt;
+                float discount = mst.getDiscount();
+                float netAmt = mst.getNetAmt();
+                float subTotal = discount + netAmt;
                 String custName = mst.getCustName();
                 String cashName = mst.getCashName();
-                double qty = mst.getQty();
+                float qty = mst.getQty();
                 brd = new BillReportDialog(TodayBillReport.this, dbHandler.getDateCount(mGetFromDate), dbHandler.getDateCount(mGetToDate), billNo, billDateTime, mProgressDialog, df.format(discount), netAmt, df.format(subTotal), qty, internalBillNo, custName, cashName, mMessenger, mPrinter);
                 brd.show();
             }

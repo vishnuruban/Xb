@@ -188,7 +188,7 @@ public class EditItem extends DialogFragment {
                         || cp.isEmpty()
                         || sp.isEmpty())){
                     Toast.makeText(getActivity(), "Enter all the fields.", Toast.LENGTH_SHORT).show();
-                } else if (Double.valueOf(cp) > Double.valueOf(sp)) {
+                } else if (Float.valueOf(cp) > Float.valueOf(sp)) {
                     Toast.makeText(getActivity(), "Cost Price can't be greater than selling price.", Toast.LENGTH_SHORT).show();
                 } else{
                     if (mSelectedImage != null) {
@@ -221,12 +221,12 @@ public class EditItem extends DialogFragment {
                     item1.setCategoryId(getCategoryId(catName));
                     item1.setItemImage(mImagePath);
                     item1.setItemName(iteName);
-                    item1.setItemCP(Double.valueOf(cp));
-                    item1.setItemSP(Double.valueOf(sp));
+                    item1.setItemCP(Float.valueOf(cp));
+                    item1.setItemSP(Float.valueOf(sp));
                     item1.setItemUOM(uomValue);
                     Log.d("UOM", uoM);
                     item1.setItemHSNcode(hsn);
-                    item1.setItemGST(Double.valueOf(gsT));
+                    item1.setItemGST(Float.valueOf(gsT));
                     item1.setBarcode(getBarCode);
                     editItem(item1);
                     mAddItemCategory.updateItem(item.getCategoryId());

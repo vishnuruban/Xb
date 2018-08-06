@@ -41,12 +41,12 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     private String dateTime;
     private ProgressDialog mDialog;
     private ListView billListView;
-    private double netAmt;
+    private float netAmt;
     private String discount, subTotal;
     private BillPrint billPrint;
     private GetSettings getSettings;
     private ArrayList<BillItems> billItems;
-    private double dQty;
+    private float dQty;
     private int internalBillNo;
     private String custName;
     private String cashName;
@@ -55,8 +55,8 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
 
 
     BillReportDialog(Context context, int fromDate, int toDate, int billNo, String dateTime,
-                     ProgressDialog mDialog, String discount, double netAmt, String subTotal,
-                     double dQty, int internalBillNo, String custName, String cashName,
+                     ProgressDialog mDialog, String discount, float netAmt, String subTotal,
+                     float dQty, int internalBillNo, String custName, String cashName,
                      Messenger messenger, CieBluetoothPrinter bluetoothPrinter) {
         super(context);
         this.context = context;
@@ -180,7 +180,7 @@ public class BillReportDialog extends Dialog implements DialogInterface.OnClickL
     void getBillDetails(int billNo, int fromDate, int toDate, String billDateTime) {
 
         List<SalesDet> mGetBillDetails = dbHandler.getBillDetails(billNo, fromDate, toDate, billDateTime);
-        double quantity = 0;
+        float quantity = 0;
         int items = 0;
         billItems = new ArrayList<>();
         for (int i = 0; i < mGetBillDetails.size(); i++) {
