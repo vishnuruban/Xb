@@ -53,7 +53,7 @@ public class GetSettings {
         return getSharedPreferences().getString("key_settings_company_email","");
     }
     public String getCompanyRegistrationType(){
-        return getSharedPreferences().getString("key_settings_company_registration_type","");
+        return getSharedPreferences().getString("key_settings_company_registration_type","3");
     }
     public String getCompanyGstNo(){
         return getSharedPreferences().getString("key_settings_company_gst_no","");

@@ -40,6 +40,7 @@ import in.net.maitri.xb.itemdetails.AddItemCategory;
 import in.net.maitri.xb.itemdetails.CalculateNoOfColumnsAccScreenSize;
 import in.net.maitri.xb.itemdetails.RecyclerTouchListener;
 import in.net.maitri.xb.registration.Registration;
+import in.net.maitri.xb.util.CheckDeviceType;
 
 
 public class FragmentThree extends Fragment {
@@ -143,7 +144,12 @@ public class FragmentThree extends Fragment {
             }));
 
             //  int columns = CalculateNoOfColumnsAccScreenSize.calculateNoOfColumns(getActivity());
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 5);
+            GridLayoutManager gridLayoutManager;
+            if (new CheckDeviceType(getActivity()).isTablet()) {
+                gridLayoutManager = new GridLayoutManager(getActivity(), 5);
+            }else{
+                gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+            }
             itemView.setLayoutManager(gridLayoutManager);
             //   mGetAllItems = new ArrayList<Item>();
 

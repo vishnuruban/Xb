@@ -199,7 +199,7 @@ public class SunmiPrint {
 
             for (int i = 0; i < mBillItems.size(); i++) {
                 BillItems billItems = mBillItems.get(i);
-                item = String.format("%-25s%5s\n", billItems.getHsn() + billItems.getDesc(), "");
+                item = String.format("%-31s\n", billItems.getHsn() + "-" + billItems.getDesc());
                 mService.sendMessage(item, "");
                 String value = String.format("%7s%12s%12s\n", billItems.getQty(), df.format(billItems.getRate()),
                         df.format(billItems.getAmount()));

@@ -24,6 +24,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -81,8 +82,10 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private SimpleDateFormat dateFormat;
     private SalesMst sm;
     private BillPrint billPrint;
+    private GridLayout mKeyPad;
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
     private static Printer mEpsonConnection;
+    private boolean isBillSaved = false;
 
     public static final String mypreference = "mypref";
     public static final String billNo = "billNo";
@@ -112,7 +115,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         df = new DecimalFormat("0.00");
         cNetAmount = findViewById(R.id.cNetamount);
         ListView listView = findViewById(R.id.listview);
-
+        mKeyPad = findViewById(R.id.keypad);
         TextView cPrice = findViewById(R.id.cTotalPrice);
         TextView cProducts = findViewById(R.id.cTotalProducts);
         final TextView cDate = findViewById(R.id.date);
@@ -141,7 +144,6 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         mEditSpinner.setText("CASH");
         SharedPreferences sharedpreferences = getSharedPreferences(mypreference,
                 Context.MODE_PRIVATE);
-
 
         dbHandler = new DbHandler(CheckoutActivity.this);
 
@@ -242,6 +244,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
+                et_result = cCash;
                 return true;
             }
         });
@@ -426,6 +429,12 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                         editor.apply();
 //                        mPrinter.showDeviceList(CheckoutActivity.this);
                     }
+                    isBillSaved = true;
+                    mEditSpinner.setEnabled(false);
+                    mEditSpinner.setClickable(false);
+                    mKeyPad.setVisibility(View.GONE);
+                    cDiscount.setEnabled(false);
+                    cDiscount.setClickable(false);
                     break;
                 case R.id.cPrint:
 
@@ -481,7 +490,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
 
                         case "3":
                             String regdType = new GetSettings(CheckoutActivity.this).getCompanyRegistrationType();
-                            switch (regdType){
+                            switch (regdType) {
                                 case "1":
                                     if (getSettings.getPrinterType().equals("1")) {
                                         if (printSize.equals("1")) {
@@ -497,10 +506,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                                 }
 
                                             } else {
-//            Bluetooth.connectPrinter(getApplicationContext(), MainActivity.this);
                                                 Toast.makeText(CheckoutActivity.this, "No printer found. Add printer in settings.", Toast.LENGTH_SHORT).show();
                                             }
-
                                         }
                                     }
                                     break;
@@ -521,10 +528,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                                 }
 
                                             } else {
-//            Bluetooth.connectPrinter(getApplicationContext(), MainActivity.this);
                                                 Toast.makeText(CheckoutActivity.this, "No printer found. Add printer in settings.", Toast.LENGTH_SHORT).show();
                                             }
-
                                         }
                                     }
                                     break;
@@ -554,7 +559,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                 }
                 break;
             case "3":
-               checkPrinter();
+                checkPrinter();
                 break;
         }
 
@@ -710,7 +715,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     cDiscountValue = df.format(Float.parseFloat(s.toString().substring(1)));
                 } else {
                     String disPrice = s.toString().substring(1);
-                    float discount = (float)(Float.parseFloat(disPrice) / 100.0) * Float.parseFloat(totalPrice);
+                    float discount = (float) (Float.parseFloat(disPrice) / 100.0) * Float.parseFloat(totalPrice);
                     cDiscountValue = df.format(discount);
                     netAmt = Float.parseFloat(totalPrice) - discount;
                 }
@@ -742,11 +747,19 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            if (!isBillSaved) {
+                finish();
+            }
         }
         return true;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (!isBillSaved) {
+            finish();
+        }
+    }
 
     @Override
     public void onAppSignal(int iAppSignal) {

@@ -8,7 +8,7 @@ public class SalesDet {
     private float qty;
     private String dateTime;
 
-    public SalesDet(int billNo, BillItems billItems,String dateTime) {
+    public SalesDet(int billNo, BillItems billItems, String dateTime) {
         this.billNo = billNo;
         this.dateTime = dateTime;
         this.billItems = billItems;
@@ -25,13 +25,14 @@ public class SalesDet {
     public BillItems billItems;
 
 
-
     private String itemName;
- public SalesDet()
-{
 
-}
-    public SalesDet(int billNo, int category, int item){}
+    public SalesDet() {
+
+    }
+
+    public SalesDet(int billNo, int category, int item) {
+    }
 
     public SalesDet(int billNo, BillItems billItems) {
         this.billNo = billNo;

@@ -215,7 +215,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
     }
 
 
-    public static void populateList(BillItems be) {
+    public static void populateList(BillItems be, boolean isGst) {
         if (billList.size() != 0) {
             for (int i = 0; i < billList.size(); i++) {
                 BillItems bItm = billList.get(i);
@@ -223,9 +223,15 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                     System.out.println("Items Equalled");
                     float qty = bItm.getQty() + be.getQty();
                     float amt = bItm.getAmount() + be.getAmount();
+                    if (isGst){
+                        be.setTaxAmt1(bItm.getTaxAmt1() + be.getTaxAmt1());
+                        be.setTaxAmt2(bItm.getTaxAmt2() + be.getTaxAmt2());
+                        be.setTaxSaleAmt(bItm.getTaxSaleAmt() + be.getTaxSaleAmt());
+                    }
                     billList.remove(bItm);
                     be.setQty(qty);
                     be.setAmount(amt);
+
                 }
             }
             billList.add(be);
@@ -366,12 +372,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                         switch (regdType){
                             case "1":
                                 if (Float.parseFloat(qtyString) != bi.getQty()) {
-                                    float a = Float.parseFloat(qtyString) * bi.getRate();
-                                    bi.setAmount(a);
-                                    bi.setQty(Float.parseFloat(qtyString));
-                                    bi.setTaxAmt1(Float.parseFloat(qtyString) * bi.getTaxAmt1());
-                                    bi.setTaxAmt2(Float.parseFloat(qtyString) * bi.getTaxAmt2());
-                                    bi.setTaxSaleAmt(Float.parseFloat(qtyString) * bi.getTaxSaleAmt());
+                                    new Calculation().calculateInclusiveGst(bi, Float.parseFloat(qtyString),0);
                                 } else {
                                     bi.setQty(Float.parseFloat(qtyString));
                                 }

@@ -19,6 +19,16 @@ public class BillItems {
     private float taxAmt2;
     private float taxSaleAmt;
 
+    public float getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(float discount) {
+        this.discount = discount;
+    }
+
+    private float discount;
+
     public String getHsn() {
         return hsn;
     }

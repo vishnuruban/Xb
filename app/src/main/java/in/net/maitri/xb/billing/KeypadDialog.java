@@ -311,15 +311,36 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                     case "1":
                         if (new GetSettings(c).getItemSelectionType().equals("1")) {
                             if (bItem.getItemName() != null) {
-                                FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, 1, 0));
+                                if (et_result.getText().toString().isEmpty() || et_result.getText().toString().startsWith(".")) {
+                                    Toast.makeText(c, "Please enter valid price", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                float price = Float.parseFloat(
+                                        et_result.getText().toString());
+
+                                if (price == 0) {
+                                    Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, 1, 0, price), true);
+                                FragmentThree.dismissDialog();
                             } else {
                                 Toast.makeText(c, "Barcode not found.", Toast.LENGTH_LONG).show();
                             }
                         } else {
                             String getQty = qty.getText().toString();
                             if (bItem.getItemName() != null) {
-                                FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, Float.parseFloat(getQty), 0));
-                                FragmentThree.dismissDialog();
+                                if (getQty.isEmpty()) {
+                                    Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
+                                    return;
+                                } else if (Float.parseFloat(getQty) == 0) {
+                                    Toast.makeText(c, "Qty can't be zero.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                } else {
+                                    FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, Float.parseFloat(getQty), 0),true);
+                                    FragmentThree.dismissDialog();
+                                }
                             } else {
                                 Toast.makeText(c, "Barcode not found.", Toast.LENGTH_LONG).show();
                             }
@@ -342,7 +363,8 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                                 Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                            billItems = new BillItems(bItem.getCategoryId(), bItem.getId(), bItem.getItemName(), 1, bItem.getItemSP(), price, price);
+                            billItems = new BillItems(bItem.getCategoryId(), bItem.getId(), bItem.getItemName(),
+                                    1, bItem.getItemSP(), price, price,0,0,0,0,0,"");
                         } else {
                             String getQty = qty.getText().toString();
                             if (getQty.isEmpty()) {
@@ -353,11 +375,12 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                                 return;
                             } else {
                                 billItems = new BillItems(bItem.getCategoryId(), bItem.getId(), bItem.getItemName(),
-                                        Float.parseFloat(getQty), bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP() * Float.parseFloat(getQty));
+                                        Float.parseFloat(getQty), bItem.getItemSP(), bItem.getItemSP(),
+                                        bItem.getItemSP() * Float.parseFloat(getQty),0,0,0,0,0,"");
                             }
                         }
                         Toast.makeText(c, et_result.getText().toString(), Toast.LENGTH_SHORT).show();
-                        FragmentOne.populateList(billItems);
+                        FragmentOne.populateList(billItems,false);
                         FragmentThree.dismissDialog();
                         break;
                 }

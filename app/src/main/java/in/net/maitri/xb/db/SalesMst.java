@@ -10,6 +10,16 @@ public class SalesMst {
     private String cashName;
     private String customerNumber;
 
+    public String getTaxType() {
+        return taxType;
+    }
+
+    public void setTaxType(String taxType) {
+        this.taxType = taxType;
+    }
+
+    private String taxType;
+
     public String getCustomerNumber() {
         return customerNumber;
     }

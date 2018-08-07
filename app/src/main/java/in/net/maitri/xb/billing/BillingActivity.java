@@ -148,7 +148,7 @@ public class BillingActivity extends AppCompatActivity {
                 switch (regdType){
                     case "1":
                         if (bItem.getItemName() != null) {
-                            FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem,1,0));
+                            FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem,1,0),true);
                         } else {
                             Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
                         }
@@ -158,8 +158,8 @@ public class BillingActivity extends AppCompatActivity {
                     case "3":
                         if (bItem.getItemName() != null) {
                             BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
-                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP());
-                            FragmentOne.populateList(billItems);
+                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP(),0,0,0,0,0,"");
+                            FragmentOne.populateList(billItems, false);
                         } else {
                             Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
                         }

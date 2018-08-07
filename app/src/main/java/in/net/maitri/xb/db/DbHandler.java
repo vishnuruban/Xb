@@ -27,7 +27,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private ArrayList<TaxMst> mTaxList = new ArrayList<>();
     private ArrayList<HsnMst> mHsnList = new ArrayList<>();
 
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 18;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -111,6 +111,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SD_TAX_RATE2 = "sd_TaxRate2";
     private static final String KEY_SD_TAX_AMT2 = "sd_TaxAmt2";
     private static final String KEY_SD_GST_SALE_AMT = "sd_GstSaleAmt";
+    private static final String KEY_SD_DISCOUNT = "sd_Discount";
     private static final String KEY_SD_DATETIME = "sd_datetime";
     private static final String KEY_SD_CREATED_AT = "sd_createdAt";
     // sales mst table name
@@ -347,6 +348,9 @@ public class DbHandler extends SQLiteOpenHelper {
         String addGstSaleAmtSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
                 " ADD COLUMN " + KEY_SD_GST_SALE_AMT + " FLOAT ";
         db.execSQL(addGstSaleAmtSalesDet);
+        String addDiscountSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                " ADD COLUMN " + KEY_SD_DISCOUNT + " FLOAT ";
+        db.execSQL(addDiscountSalesDet);
     }
 
 
@@ -517,6 +521,9 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addGstSaleAmtSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
                         " ADD COLUMN " + KEY_SD_GST_SALE_AMT + " FLOAT ";
                 db.execSQL(addGstSaleAmtSalesDet);
+                String addDiscountSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SD_DISCOUNT + " FLOAT ";
+                db.execSQL(addDiscountSalesDet);
 
                 break;
         }
@@ -1292,6 +1299,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_STATUS, salesMst.getStatus());
             cv.put(KEY_SM_CASHIER_NAME, salesMst.getCashName());
             cv.put(KEY_SM_CUSTOMER_NAME, salesMst.getCustName());
+            cv.put(KEY_SM_TAX_TYPE, salesMst.getTaxType());
             result = db.insert(SALES_MST_TABLE_NAME, null, cv);
             db.close();
             return result;
@@ -1316,6 +1324,11 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SD_NET_RATE, salesDet.billItems.getNet_rate());
             cv.put(KEY_SD_AMOUNT, salesDet.billItems.getAmount());
             cv.put(KEY_SD_DATETIME, salesDet.getDateTime());
+            cv.put(KEY_SD_TAX_RATE1, salesDet.billItems.getTaxRate1());
+            cv.put(KEY_SD_TAX_AMT1, salesDet.billItems.getTaxAmt1());
+            cv.put(KEY_SD_TAX_RATE2, salesDet.billItems.getTaxRate2());
+            cv.put(KEY_SD_TAX_AMT2, salesDet.billItems.getTaxAmt2());
+            cv.put(KEY_SD_GST_SALE_AMT, salesDet.billItems.getTaxSaleAmt());
             result = db.insert(SALES_DET_TABLE_NAME, null, cv);
             db.close();
         } catch (SQLException e) {
