@@ -41,6 +41,7 @@ import com.reginald.editspinner.EditSpinner;
 import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -86,6 +87,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     public static CieBluetoothPrinter mPrinter = CieBluetoothPrinter.INSTANCE;
     private static Printer mEpsonConnection;
     private boolean isBillSaved = false;
+    private ArrayList<BillItems> billList;
 
     public static final String mypreference = "mypref";
     public static final String billNo = "billNo";
@@ -109,6 +111,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        billList = FragmentOne.billList;
         getSettings = new GetSettings(CheckoutActivity.this);
         mPrinterStatusText = findViewById(R.id.cPrintstatus);
         cDiscount = findViewById(R.id.cDiscount);
@@ -177,7 +180,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         cDiscount.setText(selectedButton);
         Selection.setSelection(cDiscount.getText(), cDiscount.getText().length());
 
-        BillListAdapter badapter = new BillListAdapter(CheckoutActivity.this, FragmentOne.billList);
+        BillListAdapter badapter = new BillListAdapter(CheckoutActivity.this, billList);
         listView.setAdapter(badapter);
 
         String date = new SimpleDateFormat("dd-MM-yyyy").format(Calendar.getInstance().getTime());
@@ -421,7 +424,16 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     break;
 
                 case R.id.cSave:
-                    saveBill();
+                    if (cDiscountValue.isEmpty()) {
+                        saveBill();
+                    } else {
+                        Float discountPerUnit = Float.parseFloat(cDiscountValue)/Float.parseFloat(totalPrice);
+                        for (int i = 0; i < billList.size(); i++) {
+                            BillItems billItems = billList.get(i);
+                           new Calculation().calculateInclusiveGst(billItems, billItems.getQty(), discountPerUnit);
+                        }
+                        saveBill();
+                    }
                     SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     if (sharedPreferences.getBoolean("isFirstTym", false)) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -429,6 +441,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                         editor.apply();
 //                        mPrinter.showDeviceList(CheckoutActivity.this);
                     }
+                    
                     isBillSaved = true;
                     mEditSpinner.setEnabled(false);
                     mEditSpinner.setClickable(false);
@@ -459,11 +472,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                     try {
                                         mPrinter.initService(CheckoutActivity.this, mMessenger);
                                         if (printSize.equals("1")) {
-                                            billPrint.printTwoInch(mPrinter, FragmentOne.billList,
+                                            billPrint.printTwoInch(mPrinter, billList,
                                                     sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
                                                     sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
                                         } else {
-                                            billPrint.printThreeInch(mPrinter, FragmentOne.billList,
+                                            billPrint.printThreeInch(mPrinter, billList,
                                                     sm.getNetAmt(), pBillno, totalPrice, df.format(sm.getDiscount()),
                                                     sm.getQty(), sm.getDateTime(), sm.getCashName(), tCustName);
                                         }
@@ -477,7 +490,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                         case "2":
                             if (getSettings.getPrinterType().equals("2")) {
                                 if (printSize.equals("2")) {
-                                    new EpsonBillPrint(CheckoutActivity.this, FragmentOne.billList, sm.getNetAmt(),
+                                    new EpsonBillPrint(CheckoutActivity.this, billList, sm.getNetAmt(),
                                             pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
                                             sm.getDateTime(), sm.getCashName(), tCustName).runPrintReceiptSequence();
                                   /*  Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);
@@ -500,7 +513,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                                     Toast.makeText(CheckoutActivity.this, "Unable to connect printer", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
-                                                    new SunmiPrint(CheckoutActivity.this, mService, FragmentOne.billList, sm.getNetAmt(),
+                                                    new SunmiPrint(CheckoutActivity.this, mService, billList, sm.getNetAmt(),
                                                             pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
                                                             sm.getDateTime(), sm.getCashName(), tCustName).doPrintForInclusiveGst();
                                                 }
@@ -522,7 +535,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                                     Toast.makeText(CheckoutActivity.this, "Unable to connect printer", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
-                                                    new SunmiPrint(CheckoutActivity.this, mService, FragmentOne.billList, sm.getNetAmt(),
+                                                    new SunmiPrint(CheckoutActivity.this, mService, billList, sm.getNetAmt(),
                                                             pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
                                                             sm.getDateTime(), sm.getCashName(), tCustName).doPrint();
                                                 }
@@ -573,8 +586,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         String formattedDate = dateFormat.format(new Date()).toString();
         int dateCount = dbHandler.getDateCount(date);
-        for (int i = 0; i < FragmentOne.billList.size(); i++) {
-            BillItems billItems = FragmentOne.billList.get(i);
+        for (int i = 0; i < billList.size(); i++) {
+            BillItems billItems = billList.get(i);
             quantity = quantity + billItems.getQty();
             SalesDet sd = new SalesDet(bSeries.getCurrentBillNo(), billItems);
             sd.setDateTime(formattedDate);
@@ -598,9 +611,20 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setPrefix(bSeries.getPrefix());
         sm.setDate(dateCount);
         sm.setDateTime(formattedDate);
-        sm.setItems(FragmentOne.billList.size());
+        sm.setItems(billList.size());
         sm.setCustName(tCustName);
         sm.setCustomerId(chkCustomer.getId());
+        String regdType = new GetSettings(CheckoutActivity.this).getCompanyRegistrationType();
+        switch (regdType){
+            case "1":
+                sm.setTaxType("GS");
+                break;
+            case "2":
+                break;
+            case "3":
+                sm.setTaxType("");
+                break;
+        }
         mstInserted = dbHandler.addSalesMst(sm);
         if (detInserted != -1 && mstInserted != -1) {
             mButtonPrint.setEnabled(true);
@@ -713,11 +737,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     System.out.println("SS " + s.toString().substring(1));
                     netAmt = Float.parseFloat(totalPrice) - Float.parseFloat(s.toString().substring(1));
                     cDiscountValue = df.format(Float.parseFloat(s.toString().substring(1)));
+                    
                 } else {
                     String disPrice = s.toString().substring(1);
                     float discount = (float) (Float.parseFloat(disPrice) / 100.0) * Float.parseFloat(totalPrice);
                     cDiscountValue = df.format(discount);
                     netAmt = Float.parseFloat(totalPrice) - discount;
+                    
                 }
                 if (netAmt <= 0) {
                     Toast.makeText(CheckoutActivity.this, "Please enter valid discount", Toast.LENGTH_SHORT).show();

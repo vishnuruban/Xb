@@ -153,14 +153,17 @@ public class SunmiPrint {
         int doubleWidthColRank = 0;//this is the rank of column which will have double space than other columns; starts from 0
         int rightAlignColRank = 3;//this is the rank of column whose content is right aligned; starts from 0*/
 
-            @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy hh:mm a");
+            @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yy");
             String formattedDate = dateFormat.format(new Date());
 
             //mService.printBitmap(new PrintPic().printDraw(bmp));
             String gstBreakupHeader = String.format("%4s%5s%8s%7s%7s\n", "HSN", "GST%", "Basic", "CGST", "SGST");
             String item = String.format("%-25s%5s\n", "HSN-Item", "");
-            String s = String.format("%6s%12s%12s\n", "Qty", "Price", "Amount");
-            String total = String.format("%5s%26s\n", "Total", mTotalPrice);
+            String s = String.format("%5s%10s%5s%10s\n", "Qty", "Rate", "GST%", "Amount");
+            String total = String.format("%5s%12s%14s\n", mTotalQty, "Sub Total", mTotalPrice);
+            String discount =  String.format("%-8s%23s\n", "Discount", "-" + mTotalDiscount);
+            String grandTotal =  String.format("%-15s%16s\n", "Grand Total", df.format(mNetAmount));
+            String billDate = String.format("%-14s%-15s\n", "Bill No:" + mBillNo, "Date:" + formattedDate);
             String dash = "--------------------------------";
 
    /*     String salesManText = String.format("%-10s%-20s\n", "Salesman:", salesman);
@@ -183,9 +186,8 @@ public class SunmiPrint {
             mService.write(boldText);
             mService.sendMessage(pp.getContent4PrintFields(), "");
             mService.write(tail);
+            mService.sendMessage(billDate, "");
             pp.startAddingContent4printFields();
-            pp.addTextCenterAlign("Bill No : " + mBillNo, true);
-            pp.addTextCenterAlign("Date : " + formattedDate, true);
             pp.addStarsFullLine();
             mService.write(normalText);
             mService.sendMessage(pp.getContent4PrintFields(), "");
@@ -201,22 +203,31 @@ public class SunmiPrint {
                 BillItems billItems = mBillItems.get(i);
                 item = String.format("%-31s\n", billItems.getHsn() + "-" + billItems.getDesc());
                 mService.sendMessage(item, "");
-                String value = String.format("%7s%12s%12s\n", billItems.getQty(), df.format(billItems.getRate()),
-                        df.format(billItems.getAmount()));
+                String value = String.format("%5s%10s%5s%10s\n", billItems.getQty(),df.format(billItems.getRate()),
+                        billItems.getTaxRate1() + billItems.getTaxRate2(), df.format(billItems.getAmount()));
                 mService.sendMessage(value, "");
+            }
+            if (Float.valueOf(mTotalDiscount) != 0) {
+                mService.sendMessage(dash, "");
+                mService.write(boldText);
+                mService.sendMessage(total, "");
+                mService.write(normalText);
+                mService.sendMessage(discount, "");
             }
 
             mService.sendMessage(dash, "");
             mService.write(boldText);
-            mService.sendMessage(total, "");
+            mService.sendMessage(grandTotal, "");
             mService.write(normalText);
             mService.sendMessage(dash, "");
             pp.startAddingContent4printFields();
 
             pp.addNewLine();
+            pp.addNewLine();
             mService.sendMessage(pp.getContent4PrintFields(), "");
+            mService.write(boldText);
             mService.sendMessage(gstBreakupHeader, "");
-            mService.sendMessage(dash, "");
+            mService.write(normalText);
             pp.startAddingContent4printFields();
             for (int i = 0; i< listBreakUp.size(); i++){
                 GstBreakup gb = listBreakUp.get(i);
