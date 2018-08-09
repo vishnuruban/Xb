@@ -98,6 +98,9 @@ public class BillingActivity extends AppCompatActivity {
             cart.setVisibility(View.GONE);
             fl2.setVisibility(View.GONE);
 
+
+
+
             cart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -120,6 +123,7 @@ public class BillingActivity extends AppCompatActivity {
                                         case 0:
                                             startActivityForResult(new Intent(BillingActivity.this,
                                                     ScanActivity.class), 1);
+
                                             break;
                                         case 1:
                                             item.setVisibility(View.GONE);

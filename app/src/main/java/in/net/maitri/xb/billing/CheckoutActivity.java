@@ -629,12 +629,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         if (detInserted != -1 && mstInserted != -1) {
             mButtonPrint.setEnabled(true);
             mButtonPrint.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.green));
-            mButtonSave.setEnabled(false);
+            mButtonSave.setVisibility(View.GONE);
             mButtonSave.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.light_grey));
             mButtonCancel.setVisibility(View.VISIBLE);
+            mButtonCancel.setBackgroundColor(ContextCompat.getColor(CheckoutActivity.this, R.color.colorPrimary));
             String nextBill = "NEXT BILL";
             mButtonCancel.setText(nextBill);
-            Toast.makeText(CheckoutActivity.this, "Bill Saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CheckoutActivity.this, "Bill Saved Successfully", Toast.LENGTH_SHORT).show();
 
         } else {
             Intent intent = new Intent(CheckoutActivity.this, BillingActivity.class);

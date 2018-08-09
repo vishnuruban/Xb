@@ -139,10 +139,12 @@ public class EditItem extends DialogFragment {
         }
         if (item != null) {
             mImagePath = item.getItemImage();
-            File imgFile = new File(mImagePath);
-            if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                mItemImage.setImageBitmap(myBitmap);
+            if (mImagePath != null){
+                File imgFile = new File(mImagePath);
+                if (imgFile.exists()) {
+                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    mItemImage.setImageBitmap(myBitmap);
+                }
             }
         }
         final EditText barcode = view.findViewById(R.id.barcode);

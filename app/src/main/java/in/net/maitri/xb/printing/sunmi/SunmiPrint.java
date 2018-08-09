@@ -8,6 +8,8 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -161,7 +163,7 @@ public class SunmiPrint {
             String item = String.format("%-25s%5s\n", "HSN-Item", "");
             String s = String.format("%5s%10s%5s%10s\n", "Qty", "Rate", "GST%", "Amount");
             String total = String.format("%5s%12s%14s\n", mTotalQty, "Sub Total", mTotalPrice);
-            String discount =  String.format("%-8s%23s\n", "Discount", "-" + mTotalDiscount);
+            String discount =  String.format("%17s%14s\n", "Discount", "-" + mTotalDiscount);
             String grandTotal =  String.format("%-15s%16s\n", "Grand Total", df.format(mNetAmount));
             String billDate = String.format("%-14s%-15s\n", "Bill No:" + mBillNo, "Date:" + formattedDate);
             String dash = "--------------------------------";
@@ -283,6 +285,7 @@ public class SunmiPrint {
             GstBreakup gb = hsnValue.get(hsnList.get(i));
             list.add(gb);
         }
+        Collections.sort(list);
         return list;
     }
 

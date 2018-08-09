@@ -42,6 +42,7 @@
                 android:resource="@xml/settings_printer" />
         </activity>
         <activity
+            android:theme="@style/AppTheme.NoActionBar"
             android:name=".billing.CheckoutActivity"
             android:label="CHECKOUT"
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" />

@@ -107,10 +107,12 @@ public class BillItemAdapter  extends RecyclerView.Adapter<BillItemAdapter.MyVie
         holder.itemSp.setText(sp);
 
         String imagePath = item.getItemImage();
-        File imgFile = new File(imagePath);
-        if (imgFile.exists()) {
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            holder.itemImage.setImageBitmap(myBitmap);
+        if (imagePath != null) {
+            File imgFile = new File(imagePath);
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                holder.itemImage.setImageBitmap(myBitmap);
+            }
         }
     }
     @Override

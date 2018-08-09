@@ -70,10 +70,12 @@ public class EditCatrgory extends DialogFragment {
         dialogHeader.setText(R.string.edit_category);
 
         mItemImage = (ImageView) view.findViewById(R.id.item_image);
-        File imgFile = new File(mImagePath);
-        if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            mItemImage.setImageBitmap(myBitmap);
+        if (mImagePath != null) {
+            File imgFile = new File(mImagePath);
+            if (imgFile.exists()) {
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                mItemImage.setImageBitmap(myBitmap);
+            }
         }
         ImageView close = (ImageView) view.findViewById(R.id.close);
         close.setOnClickListener(new View.OnClickListener() {

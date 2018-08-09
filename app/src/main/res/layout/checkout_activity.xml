@@ -33,7 +33,7 @@
                     android:id="@+id/customerscrren"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="8dp"
+                    android:paddingBottom="4dp"
                     android:paddingTop="4dp"
                     android:weightSum="1">
 
@@ -43,7 +43,7 @@
                         android:layout_weight="0.35"
                         android:text="Bill Number :"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
 
@@ -65,7 +65,7 @@
                         android:gravity="center"
                         android:text="Date :"
                         android:textColor="@color/black"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
 
@@ -180,8 +180,7 @@
                         android:padding="15dp"
                         android:text="Products"
                         android:textColor="#000"
-                        android:textSize="20dp" />
-
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/cTotalPrice"
@@ -192,7 +191,7 @@
                         android:padding="15dp"
                         android:text="Price(\u20B9)"
                         android:textColor="#000"
-                        android:textSize="20dp"
+                        android:textSize="20sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -200,28 +199,27 @@
 
 
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="5dp">
+                android:paddingBottom="4dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="15dp"
+                    android:layout_weight="1.25"
+                    android:padding="6dp"
                     android:text="Discount"
+                    android:textStyle="bold"
                     android:textColor="@color/colorCell"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
                 <RadioGroup
                     android:id="@+id/discount_toggle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
                     android:background="@drawable/toggle_outline"
                     android:checkedButton="@+id/rupees"
@@ -231,34 +229,28 @@
                         android:id="@+id/rupees"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="1dp"
-                        android:layout_marginLeft="1dp"
-                        android:layout_marginTop="1dp"
                         android:layout_weight="1"
                         android:background="@drawable/toggle_widget_background"
                         android:button="@null"
                         android:checked="true"
                         android:gravity="center"
-                        android:padding="5dp"
+                        android:padding="4dp"
                         android:text="\u20B9"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="12sp" />
 
                     <RadioButton
                         android:id="@+id/percentage"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginBottom="1dp"
-                        android:layout_marginRight="1dp"
-                        android:layout_marginTop="1dp"
                         android:layout_weight="1"
                         android:background="@drawable/toggle_widget_background"
                         android:button="@null"
                         android:gravity="center"
-                        android:padding="5dp"
+                        android:padding="4dp"
                         android:text="%"
                         android:textColor="@color/black"
-                        android:textSize="15dp" />
+                        android:textSize="12sp" />
                 </RadioGroup>
 
                 <EditText
@@ -267,15 +259,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/checkout_edittext"
-                    android:padding="15dp"
+                    android:padding="8dp"
                     android:textColor="#000"
-                    android:textSize="15dp" />
+                    android:textSize="12sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
+                android:layout_height="2dp"
                 android:background="#000" />
 
 
@@ -289,11 +281,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
                     android:orientation="horizontal"
                     android:weightSum="1">
-
 
 
                     <TextView
@@ -302,8 +291,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="0.5"
-                        android:padding="8dp"
-                        android:text="Grand Total(\u20B9)"
+                        android:padding="4dp"
+                        android:text="Grand Total"
                         android:textColor="#000"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -315,7 +304,7 @@
                         android:layout_gravity="center"
                         android:layout_weight="0.5"
                         android:gravity="end"
-                        android:padding="8dp"
+                        android:padding="4dp"
                         android:text=" "
                         android:textColor="#000"
                         android:textSize="18sp"
@@ -327,15 +316,13 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="3dp"
+                android:layout_height="2dp"
                 android:background="#000" />
-
-
 
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="2dp" />
 
 
             <LinearLayout
@@ -347,11 +334,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-
-                    android:padding="12dp"
+                    android:padding="4dp"
                     android:text="Customer Name"
                     android:textColor="@color/colorCell"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
 
                 <TextView
@@ -360,14 +346,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/checkout_edittext"
-                    android:padding="12dp"
+                    android:padding="4dp"
                     android:textColor="#000"
                     android:textSize="15sp" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="3dp" />
 
 
             <LinearLayout
@@ -380,7 +366,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="12dp"
+                    android:padding="4dp"
                     android:text="Cashier Name"
                     android:textColor="@color/colorCell"
                     android:textSize="15sp" />
@@ -394,7 +380,7 @@
                     android:background="@drawable/checkout_edittext"
                     android:imeOptions="actionDone"
                     android:inputType="textCapWords"
-                    android:padding="12dp"
+                    android:padding="4dp"
                     android:singleLine="true"
                     android:textColor="#000"
                     android:textSize="15sp" />
@@ -402,7 +388,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="3dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -413,7 +399,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="12dp"
+                    android:padding="4dp"
                     android:text="Payment mode"
                     android:textColor="@color/colorCell"
                     android:textSize="15sp" />
@@ -425,14 +411,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/checkout_edittext"
-                    android:padding="12dp"
+                    android:padding="4dp"
                     android:textColor="#000"
                     android:textSize="15sp" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="5dp" />
+                android:layout_height="3dp" />
 
 
             <LinearLayout
@@ -445,7 +431,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="15dp"
+                    android:padding="4dp"
                     android:text="Cash(\u20B9)"
                     android:textColor="@color/colorCell"
                     android:textSize="15sp" />
@@ -458,7 +444,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/checkout_edittext"
                     android:maxLength="12"
-                    android:padding="12dp"
+                    android:padding="4dp"
                     android:text=''
                     android:textColor="#000"
                     android:textSize="15sp" />
@@ -474,26 +460,28 @@
                 android:id="@+id/layoutBalance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="2dp"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/cPrintstatus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start" />
 
                 <TextView
                     android:id="@+id/cBalance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:padding="4dp"
                     android:text="Balance "
                     android:textColor="@color/dark_orange"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
 
-            <TextView
-                android:id="@+id/cPrintstatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="end" />
 
             <GridLayout
                 android:id="@+id/keypad"
@@ -506,115 +494,127 @@
                 <Button
                     android:id="@+id/btn_one"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="1"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_two"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="2"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_three"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="3"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
 
                 <Button
                     android:id="@+id/btn_four"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="4"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_five"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="5"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_six"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="6"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
 
                 <Button
                     android:id="@+id/btn_seven"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="7"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_eight"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="8"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_nine"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="9"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
 
                 <Button
                     android:id="@+id/btn_zero"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="0"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
 
                 <Button
                     android:id="@+id/btn_point"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="."
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
 
                 <Button
                     android:id="@+id/btn_clear"
                     android:layout_columnSpan="1"
-                    android:layout_margin="4dp"
+                    android:layout_margin="1dp"
                     android:background="@color/keypad_colour"
                     android:text="C"
+                    android:textStyle="bold"
                     android:textColor="#fff"
-                    android:textSize="30sp" />
+                    android:textSize="12sp" />
 
 
             </GridLayout>
@@ -625,10 +625,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_margin="4dp"
-                android:background="@color/ltSkyBlue"
+                android:background="@color/ok"
                 android:gravity="center"
                 android:text="SAVE BILL"
-                android:textColor="#000"
+                android:textColor="#fff"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

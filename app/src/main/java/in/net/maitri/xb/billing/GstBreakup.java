@@ -1,6 +1,8 @@
 package in.net.maitri.xb.billing;
 
-public class GstBreakup {
+import android.support.annotation.NonNull;
+
+public class GstBreakup implements Comparable<GstBreakup> {
 
     private String hsn, gst;
 
@@ -46,4 +48,9 @@ public class GstBreakup {
 
     private float cgst,sgst,taxNetAmr;
 
+
+    @Override
+    public int compareTo(@NonNull GstBreakup o) {
+        return Integer.parseInt(this.getHsn()) - Integer.parseInt(o.getHsn());
+    }
 }
