@@ -8,12 +8,10 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.InputType;
-import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +19,6 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 
 import in.net.maitri.xb.R;
-import in.net.maitri.xb.db.DbHandler;
 import in.net.maitri.xb.db.Item;
 import in.net.maitri.xb.settings.GetSettings;
 import in.net.maitri.xb.util.Calculation;
@@ -31,8 +28,6 @@ import in.net.maitri.xb.util.Calculation;
  */
 
 public class KeypadDialog extends Dialog implements DialogInterface.OnClickListener, View.OnClickListener {
-
-
     public Activity c;
     private TextInputEditText et_result, qty;
     private TextView tv_itemName;
@@ -73,7 +68,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         disableSoftInputFromAppearing(et_result);
         DecimalFormat df = new DecimalFormat("0.00");
         tv_itemName.setText(bItem.getItemName());
-        if (new GetSettings(c).getItemSelectionType().equals("1")) {
+        if (new GetSettings(c).getItemListSelectionType().equals("1")) {
             et_result.setText(df.format(bItem.getItemSP()));
             et_result.addTextChangedListener(watch);
             et_result.selectAll();
@@ -93,21 +88,21 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         tv_itemName = (TextView) findViewById(R.id.tv_itemName);
         et_result = (TextInputEditText) findViewById(R.id.et_result);
         qty = findViewById(R.id.qty);
-        btn_one = (Button) findViewById(R.id.btn_one);
-        btn_two = (Button) findViewById(R.id.btn_two);
-        btn_three = (Button) findViewById(R.id.btn_three);
-        btn_four = (Button) findViewById(R.id.btn_four);
-        btn_five = (Button) findViewById(R.id.btn_five);
-        btn_six = (Button) findViewById(R.id.btn_six);
-        btn_seven = (Button) findViewById(R.id.btn_seven);
-        btn_eight = (Button) findViewById(R.id.btn_eight);
-        btn_nine = (Button) findViewById(R.id.btn_nine);
-        btn_zero = (Button) findViewById(R.id.btn_zero);
-        btn_point = (Button) findViewById(R.id.btn_point);
-        btn_ok = (Button) findViewById(R.id.btn_ok);
-        btn_cancel = (Button) findViewById(R.id.btn_cancel);
-        btn_clear = (Button) findViewById(R.id.btn_clear);
-        et_edit = (ImageButton) findViewById(R.id.et_edit);
+        btn_one = findViewById(R.id.btn_one);
+        btn_two = findViewById(R.id.btn_two);
+        btn_three =  findViewById(R.id.btn_three);
+        btn_four =  findViewById(R.id.btn_four);
+        btn_five =  findViewById(R.id.btn_five);
+        btn_six =  findViewById(R.id.btn_six);
+        btn_seven =  findViewById(R.id.btn_seven);
+        btn_eight =  findViewById(R.id.btn_eight);
+        btn_nine =  findViewById(R.id.btn_nine);
+        btn_zero =  findViewById(R.id.btn_zero);
+        btn_point =  findViewById(R.id.btn_point);
+        btn_ok =  findViewById(R.id.btn_ok);
+        btn_cancel =  findViewById(R.id.btn_cancel);
+        btn_clear =  findViewById(R.id.btn_clear);
+        et_edit =  findViewById(R.id.et_edit);
         //et_result.set
         btn_one.setOnClickListener(this);
         btn_two.setOnClickListener(this);
@@ -135,7 +130,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
         switch (view.getId()) {
 
             case R.id.btn_one:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
                     et_result.setText(et_result.getText().toString() + btn_one.getText().toString());
@@ -147,7 +142,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_two:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -160,7 +155,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_three:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
                     et_result.setText(et_result.getText().toString() + btn_three.getText().toString());
@@ -172,7 +167,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_four:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -185,7 +180,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_five:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -198,7 +193,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_six:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -211,7 +206,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_seven:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -224,7 +219,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_eight:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -237,7 +232,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_nine:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -250,7 +245,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_zero:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
 
@@ -263,7 +258,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 break;
 
             case R.id.btn_point:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     if (!getSelectedText().isEmpty())
                         et_result.setText("");
                     et_result.setText(et_result.getText().toString() + btn_point.getText().toString());
@@ -291,7 +286,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 //  et_result.selectAll();
                 break;
             case R.id.btn_clear:
-                if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                     int length = et_result.getText().length();
                     if (length > 0) {
                         et_result.getText().delete(length - 1, length);
@@ -309,7 +304,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                 String regdType = new GetSettings(c).getCompanyRegistrationType();
                 switch (regdType){
                     case "1":
-                        if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                        if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                             if (bItem.getItemName() != null) {
                                 if (et_result.getText().toString().isEmpty() || et_result.getText().toString().startsWith(".")) {
                                     Toast.makeText(c, "Please enter valid price", Toast.LENGTH_SHORT).show();
@@ -323,7 +318,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                                     Toast.makeText(c, "Please enter valid quantity", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, 1, 0, price), true);
+                                FragmentOne.populateList(new Calculation(c).calculateInclusiveGst(bItem, 1, 0, price), true);
                                 FragmentThree.dismissDialog();
                             } else {
                                 Toast.makeText(c, "Barcode not found.", Toast.LENGTH_LONG).show();
@@ -338,7 +333,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                                     Toast.makeText(c, "Qty can't be zero.", Toast.LENGTH_SHORT).show();
                                     return;
                                 } else {
-                                    FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem, Float.parseFloat(getQty), 0),true);
+                                    FragmentOne.populateList(new Calculation(c).calculateInclusiveGst(bItem, Float.parseFloat(getQty), 0),true);
                                     FragmentThree.dismissDialog();
                                 }
                             } else {
@@ -350,7 +345,7 @@ public class KeypadDialog extends Dialog implements DialogInterface.OnClickListe
                         break;
                     case "3":
                         BillItems billItems;
-                        if (new GetSettings(c).getItemSelectionType().equals("1")) {
+                        if (new GetSettings(c).getItemListSelectionType().equals("1")) {
                             if (et_result.getText().toString().isEmpty() || et_result.getText().toString().startsWith(".")) {
                                 Toast.makeText(c, "Please enter valid price", Toast.LENGTH_SHORT).show();
                                 return;

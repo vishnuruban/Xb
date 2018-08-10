@@ -7,10 +7,31 @@
         <ListPreference
             android:key="key_settings_general_item_selection"
             android:summary="%s"
-            android:defaultValue="1"
+            android:defaultValue="3"
             android:title="Item selection type"
             android:entries="@array/item_selection_name"
             android:entryValues="@array/item_selection_values" />
+
+        <ListPreference
+            android:key="key_settings_general_item_list_selection"
+            android:summary="%s"
+            android:defaultValue="1"
+            android:title="Item list selection type"
+            android:entries="@array/item_list_selection_name"
+            android:entryValues="@array/item_list_selection_values" />
+
+        <ListPreference
+            android:key="key_settings_general_rounding_direction"
+            android:summary="%s"
+            android:defaultValue="3"
+            android:title="Rounding direction"
+            android:entries="@array/rounding_direction_name"
+            android:entryValues="@array/rounding_direction_values" />
+
+        <EditTextPreference
+            android:key="key_settings_company_legal_name"
+            android:summary="Round off value in paisa"
+            android:title="Round off upto" />
 
     </PreferenceCategory>
 

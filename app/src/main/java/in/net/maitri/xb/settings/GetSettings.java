@@ -18,8 +18,17 @@ public class GetSettings {
         return PreferenceManager.getDefaultSharedPreferences(mContext);
     }
     //General Settings
+    public String getItemListSelectionType(){
+        return getSharedPreferences().getString("key_settings_general_item_list_selection","1");
+    }
     public String getItemSelectionType(){
-        return getSharedPreferences().getString("key_settings_general_item_selection","1");
+        return getSharedPreferences().getString("key_settings_general_item_selection","3");
+    }
+    public String getRoundOffDirection(){
+        return getSharedPreferences().getString("key_settings_general_rounding_direction","3");
+    }
+    public String getRoundOffUpto(){
+        return getSharedPreferences().getString("key_settings_company_legal_name","0");
     }
     //Company Settings
     public String getCompanyLegalName(){

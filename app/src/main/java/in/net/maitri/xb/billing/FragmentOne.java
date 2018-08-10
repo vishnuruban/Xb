@@ -372,7 +372,7 @@ public class FragmentOne extends Fragment implements View.OnClickListener {
                         switch (regdType){
                             case "1":
                                 if (Float.parseFloat(qtyString) != bi.getQty()) {
-                                    new Calculation().calculateInclusiveGst(bi, Float.parseFloat(qtyString),0);
+                                    new Calculation(getActivity()).calculateInclusiveGst(bi, Float.parseFloat(qtyString),0);
                                 } else {
                                     bi.setQty(Float.parseFloat(qtyString));
                                 }

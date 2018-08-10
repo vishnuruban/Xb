@@ -35,15 +35,37 @@
     <string name="conform_new_password">Confirm Password<font fgcolor="red"> *</font></string>
     <string name="new_user_name">New User Name (Optional)</string>
 
+    <string-array name="rounding_direction_name">
+        <item>Up</item>
+        <item>Down</item>
+        <item>Off</item>
+    </string-array>
+    <string-array name="rounding_direction_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
     <string-array name="item_selection_name">
-        <item>Rate change</item>
-        <item>Qty change</item>
+        <item>Camera</item>
+        <item>Item List</item>
+        <item>Ask every time</item>
     </string-array>
     <string-array name="item_selection_values">
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
+
+    <string-array name="item_list_selection_name">
+        <item>Rate change</item>
+        <item>Qty change</item>
+    </string-array>
+    <string-array name="item_list_selection_values">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
     <string-array name="registration_name">
         <item>Regular</item>
         <item>Composite</item>

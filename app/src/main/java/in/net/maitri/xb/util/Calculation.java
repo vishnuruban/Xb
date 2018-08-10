@@ -1,13 +1,24 @@
 package in.net.maitri.xb.util;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import java.math.BigDecimal;
 
 import in.net.maitri.xb.billing.BillItems;
 import in.net.maitri.xb.db.Item;
+import in.net.maitri.xb.db.TaxMst;
+import in.net.maitri.xb.settings.GetSettings;
 
 public class Calculation {
+
+    private Context mContext;
+
+    public  Calculation(Context mContext){
+        this.mContext = mContext;
+    }
 
     public BillItems calculateInclusiveGst(Item bItem, float qty, float discount){
         float gst = bItem.getItemGST();
@@ -87,4 +98,22 @@ public class Calculation {
             Log.d("GSTSaleAmt", String.valueOf(gstSaleAmt));
         }
     }
+
+    public void roundUpCalculation(float netAmount){
+        GetSettings mGetSettings = new GetSettings(mContext);
+        int roundOffUpto = Integer.parseInt(mGetSettings.getRoundOffUpto());
+        if (roundOffUpto == 0) {
+            Toast.makeText(mContext, "Roundoff amt can't be zero. " +
+                    "Please change value in settings", Toast.LENGTH_SHORT).show();
+        } else {
+            float roundOffInRupees = BigDecimal.valueOf(roundOffUpto/100)
+                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
+            float extraAmt = BigDecimal.valueOf(netAmount%roundOffInRupees)
+                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
+            switch (mGetSettings.getRoundOffDirection()){
+
+            }
+        }
+    }
+
 }

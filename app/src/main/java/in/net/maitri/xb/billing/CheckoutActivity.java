@@ -430,7 +430,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                         Float discountPerUnit = Float.parseFloat(cDiscountValue)/Float.parseFloat(totalPrice);
                         for (int i = 0; i < billList.size(); i++) {
                             BillItems billItems = billList.get(i);
-                           new Calculation().calculateInclusiveGst(billItems, billItems.getQty(), discountPerUnit);
+                           new Calculation(CheckoutActivity.this).calculateInclusiveGst(billItems, billItems.getQty(), discountPerUnit);
                         }
                         saveBill();
                     }

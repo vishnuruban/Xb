@@ -99,8 +99,6 @@ public class BillingActivity extends AppCompatActivity {
             fl2.setVisibility(View.GONE);
 
 
-
-
             cart.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -114,27 +112,43 @@ public class BillingActivity extends AppCompatActivity {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String[] list = {"Camera", "Item list"};
-                    AlertDialog.Builder builder = new AlertDialog.Builder(BillingActivity.this);
-                    builder.setTitle("Pick item using")
-                            .setItems(list, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    switch (which){
-                                        case 0:
-                                            startActivityForResult(new Intent(BillingActivity.this,
-                                                    ScanActivity.class), 1);
+                    switch (mGetSettings.getItemSelectionType()) {
+                        case "1":
+                            startActivityForResult(new Intent(BillingActivity.this,
+                                    ScanActivity.class), 1);
+                            break;
 
-                                            break;
-                                        case 1:
-                                            item.setVisibility(View.GONE);
-                                            cart.setVisibility(View.VISIBLE);
-                                            fl1.setVisibility(View.GONE);
-                                            fl2.setVisibility(View.VISIBLE);
-                                            break;
-                                    }
-                                }
-                            });
-                    builder.create().show();
+                        case "2":
+                            item.setVisibility(View.GONE);
+                            cart.setVisibility(View.VISIBLE);
+                            fl1.setVisibility(View.GONE);
+                            fl2.setVisibility(View.VISIBLE);
+                            break;
+
+                        case "3":
+                            String[] list = {"Camera", "Item list"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(BillingActivity.this);
+                            builder.setTitle("Pick item using")
+                                    .setItems(list, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            switch (which) {
+                                                case 0:
+                                                    startActivityForResult(new Intent(BillingActivity.this,
+                                                            ScanActivity.class), 1);
+                                                    break;
+                                                case 1:
+                                                    item.setVisibility(View.GONE);
+                                                    cart.setVisibility(View.VISIBLE);
+                                                    fl1.setVisibility(View.GONE);
+                                                    fl2.setVisibility(View.VISIBLE);
+                                                    break;
+                                            }
+                                        }
+                                    });
+                            builder.create().show();
+                            break;
+                    }
+
                 }
             });
         }
@@ -145,14 +159,14 @@ public class BillingActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                String result=data.getStringExtra("code");
+            if (resultCode == Activity.RESULT_OK) {
+                String result = data.getStringExtra("code");
                 Item bItem = new DbHandler(BillingActivity.this).getItemUsingBarCode(result);
                 String regdType = mGetSettings.getCompanyRegistrationType();
-                switch (regdType){
+                switch (regdType) {
                     case "1":
                         if (bItem.getItemName() != null) {
-                            FragmentOne.populateList(new Calculation().calculateInclusiveGst(bItem,1,0),true);
+                            FragmentOne.populateList(new Calculation(BillingActivity.this).calculateInclusiveGst(bItem, 1, 0), true);
                         } else {
                             Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
                         }
@@ -162,7 +176,7 @@ public class BillingActivity extends AppCompatActivity {
                     case "3":
                         if (bItem.getItemName() != null) {
                             BillItems billItems = new BillItems(bItem.getCategoryId(), bItem.getId(),
-                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP(),0,0,0,0,0,"");
+                                    bItem.getItemName(), 1, bItem.getItemSP(), bItem.getItemSP(), bItem.getItemSP(), 0, 0, 0, 0, 0, "");
                             FragmentOne.populateList(billItems, false);
                         } else {
                             Toast.makeText(BillingActivity.this, "Barcode not found.", Toast.LENGTH_LONG).show();
@@ -171,13 +185,12 @@ public class BillingActivity extends AppCompatActivity {
                 }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
-                String result=data.getStringExtra("code");
+                String result = data.getStringExtra("code");
                 if (!result.isEmpty())
                     Toast.makeText(BillingActivity.this, result, Toast.LENGTH_LONG).show();
             }
         }
     }
-
 
 
     @Override
