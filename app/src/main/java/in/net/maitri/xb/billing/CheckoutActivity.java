@@ -39,6 +39,7 @@ import com.epson.epos2.printer.Printer;
 import com.reginald.editspinner.EditSpinner;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,7 +72,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private String totalProducts, totalPrice, tCustName;
     private RadioGroup cDiscountType;
     private String selectedButton;
-    private float netAmt = 0;
+    private float netAmt = 0, mRoundOffAmt = 0;
     private String rs = "\u20B9";
     private static TextView mPrinterStatusText;
     private EditText et_result, cCash, cDiscount, cCashierName;
@@ -614,6 +615,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setItems(billList.size());
         sm.setCustName(tCustName);
         sm.setCustomerId(chkCustomer.getId());
+        sm.setRoundOff(mRoundOffAmt);
         String regdType = new GetSettings(CheckoutActivity.this).getCompanyRegistrationType();
         switch (regdType){
             case "1":
@@ -709,6 +711,30 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         }
     };
 
+    public void roundOffCalculation(){
+        GetSettings mGetSettings = new GetSettings(CheckoutActivity.this);
+        int roundOffUpto = Integer.parseInt(mGetSettings.getRoundOffUpto());
+        if (roundOffUpto == 0) {
+            Toast.makeText(CheckoutActivity.this, "Roundoff amt can't be zero. " +
+                    "Please change value in settings", Toast.LENGTH_SHORT).show();
+        } else {
+            float roundOffInRupees = BigDecimal.valueOf(roundOffUpto/100)
+                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
+            float extraAmt = BigDecimal.valueOf(netAmt%roundOffInRupees)
+                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
+            switch (mGetSettings.getRoundOffDirection()){
+                case "1":
+                    float amountToBeAdd = roundOffInRupees - extraAmt;
+                    netAmt += amountToBeAdd;
+                    mRoundOffAmt = amountToBeAdd;
+                    break;
+                case "2":
+                    netAmt -= extraAmt;
+                    mRoundOffAmt = 0 - extraAmt;
+                    break;
+            }
+        }
+    }
 
     TextWatcher watch = new TextWatcher() {
         @Override
@@ -752,6 +778,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     cDiscountValue = "";
                     return;
                 }
+                roundOffCalculation();
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(netAmt));
                 tCash.setText("Cash (" + rs + ")");
                 cCash.setText(String.valueOf(netAmt));

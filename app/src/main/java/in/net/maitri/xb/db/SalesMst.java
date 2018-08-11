@@ -9,6 +9,7 @@ public class SalesMst {
     private String custName;
     private String cashName;
     private String customerNumber;
+    private float roundOff;
 
     public String getTaxType() {
         return taxType;
@@ -258,4 +259,11 @@ public class SalesMst {
     }
 
 
+    public float getRoundOff() {
+        return roundOff;
+    }
+
+    public void setRoundOff(float roundOff) {
+        this.roundOff = roundOff;
+    }
 }

@@ -99,7 +99,7 @@ public class Calculation {
         }
     }
 
-    public void roundUpCalculation(float netAmount){
+    public void roundOffCalculation(float netAmount){
         GetSettings mGetSettings = new GetSettings(mContext);
         int roundOffUpto = Integer.parseInt(mGetSettings.getRoundOffUpto());
         if (roundOffUpto == 0) {
@@ -111,7 +111,13 @@ public class Calculation {
             float extraAmt = BigDecimal.valueOf(netAmount%roundOffInRupees)
                     .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
             switch (mGetSettings.getRoundOffDirection()){
-
+                case "1":
+                    float amountToBeAdd = roundOffInRupees - extraAmt;
+                    netAmount += amountToBeAdd;
+                    break;
+                case "2":
+                    netAmount -= extraAmt;
+                    break;
             }
         }
     }

@@ -27,7 +27,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private ArrayList<TaxMst> mTaxList = new ArrayList<>();
     private ArrayList<HsnMst> mHsnList = new ArrayList<>();
 
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -91,6 +91,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_SALESMAN = "sm_salesman";
     private static final String KEY_SM_ITEM = "sm_item";
     private static final String KEY_SM_TAX_TYPE = "sm_TaxType";
+    private static final String KEY_SM_ROUNDOFF = "sm_RoundOff";
     private static final String KEY_SM_CREATED_AT = "sm_createdAt";
     private static final String KEY_SM_DATETIME = "sm_datetime";
     // sales mst table name
@@ -351,6 +352,9 @@ public class DbHandler extends SQLiteOpenHelper {
         String addDiscountSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
                 " ADD COLUMN " + KEY_SD_DISCOUNT + " FLOAT ";
         db.execSQL(addDiscountSalesDet);
+        String addRoundOffToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_ROUNDOFF + " TEXT ";
+        db.execSQL(addRoundOffToSalesMst);
     }
 
 
@@ -524,6 +528,11 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addDiscountSalesDet = "ALTER TABLE " + SALES_DET_TABLE_NAME +
                         " ADD COLUMN " + KEY_SD_DISCOUNT + " FLOAT ";
                 db.execSQL(addDiscountSalesDet);
+
+            case 19:
+                String addRoundOffToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_ROUNDOFF + " TEXT ";
+                db.execSQL(addRoundOffToSalesMst);
 
                 break;
         }
@@ -1268,6 +1277,8 @@ public class DbHandler extends SQLiteOpenHelper {
                     if (custId != 0) {
                         mst.setCustomerNumber(getCustomer(custId));
                     }
+                    mst.setTaxType(c.getString(c.getColumnIndex(KEY_SM_TAX_TYPE)));
+                    mst.setRoundOff(c.getFloat(c.getColumnIndex(KEY_SM_ROUNDOFF)));
                     smList.add(mst);
                     System.out.println("dbBillNo " + c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
                 } while (c.moveToNext());
@@ -1300,6 +1311,7 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_CASHIER_NAME, salesMst.getCashName());
             cv.put(KEY_SM_CUSTOMER_NAME, salesMst.getCustName());
             cv.put(KEY_SM_TAX_TYPE, salesMst.getTaxType());
+            cv.put(KEY_SM_ROUNDOFF, salesMst.getRoundOff());
             result = db.insert(SALES_MST_TABLE_NAME, null, cv);
             db.close();
             return result;
@@ -1875,6 +1887,8 @@ public class DbHandler extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + ITEM_TABLE_NAME);
         db.execSQL("DELETE FROM " + SALES_MST_TABLE_NAME);
         db.execSQL("DELETE FROM " + SALES_DET_TABLE_NAME);
+        db.execSQL("DELETE FROM " + CUSTOMER_TABLE_NAME);
+        db.execSQL("DELETE FROM " + HSN_MST_TABLE_NAME);
         db.close();
     }
 
