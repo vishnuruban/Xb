@@ -164,6 +164,7 @@ public class SunmiPrint {
             String s = String.format("%5s%10s%5s%10s\n", "Qty", "Rate", "GST%", "Amount");
             String total = String.format("%5s%12s%14s\n", mTotalQty, "Sub Total", mTotalPrice);
             String discount =  String.format("%17s%14s\n", "Discount", "-" + mTotalDiscount);
+            String roundOff =  String.format("%17s%14s\n", "Discount", "-" + mTotalDiscount);
             String grandTotal =  String.format("%-15s%16s\n", "Grand Total", df.format(mNetAmount));
             String billDate = String.format("%-14s%-15s\n", "Bill No:" + mBillNo, "Date:" + formattedDate);
             String dash = "--------------------------------";

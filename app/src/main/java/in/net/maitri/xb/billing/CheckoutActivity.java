@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -69,6 +70,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private TextView cNetAmount;
     private TextView tCash;
     private TextView tBalance;
+    private TextView mRoundOffAmtView;
+    private LinearLayout mRoundOffLayout;
     private String totalProducts, totalPrice, tCustName;
     private RadioGroup cDiscountType;
     private String selectedButton;
@@ -112,6 +115,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        mRoundOffAmtView =  findViewById(R.id.roundOffValue);
+        mRoundOffLayout = findViewById(R.id.roundOffLayout);
         billList = FragmentOne.billList;
         getSettings = new GetSettings(CheckoutActivity.this);
         mPrinterStatusText = findViewById(R.id.cPrintstatus);
@@ -202,12 +207,13 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         }
 
         netAmt = Float.parseFloat(totalPrice);
+        roundOffCalculation();
         mEditSpinner.addTextChangedListener(paymentMode);
         cDiscount.addTextChangedListener(watch);
         cCash.addTextChangedListener(cash);
         cProducts.setText(totalProducts);
         cPrice.setText(FragmentOne.commaSeperated(Float.parseFloat(totalPrice)));
-        cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Float.parseFloat(totalPrice)));
+        cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(netAmt));
         cCash.setText(df.format(netAmt));
         cDiscountType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -714,25 +720,40 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     public void roundOffCalculation(){
         GetSettings mGetSettings = new GetSettings(CheckoutActivity.this);
         int roundOffUpto = Integer.parseInt(mGetSettings.getRoundOffUpto());
-        if (roundOffUpto == 0) {
-            Toast.makeText(CheckoutActivity.this, "Roundoff amt can't be zero. " +
-                    "Please change value in settings", Toast.LENGTH_SHORT).show();
-        } else {
-            float roundOffInRupees = BigDecimal.valueOf(roundOffUpto/100)
-                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
-            float extraAmt = BigDecimal.valueOf(netAmt%roundOffInRupees)
-                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
-            switch (mGetSettings.getRoundOffDirection()){
-                case "1":
-                    float amountToBeAdd = roundOffInRupees - extraAmt;
-                    netAmt += amountToBeAdd;
-                    mRoundOffAmt = amountToBeAdd;
-                    break;
-                case "2":
-                    netAmt -= extraAmt;
-                    mRoundOffAmt = 0 - extraAmt;
-                    break;
+        if (!mGetSettings.getRoundOffDirection().equals("3")) {
+            if (roundOffUpto != 0) {
+                float roundOffInRupees = BigDecimal.valueOf(roundOffUpto / 100)
+                        .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
+                Log.d("roundOffInRupees", String.valueOf(roundOffInRupees));
+                float extraAmt = BigDecimal.valueOf(netAmt % roundOffInRupees)
+                        .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
+                Log.d("extraAmt", String.valueOf(extraAmt));
+                switch (mGetSettings.getRoundOffDirection()) {
+                    case "1":
+                        if (extraAmt != 0) {
+                            float amountToBeAdd = BigDecimal.valueOf(roundOffInRupees - extraAmt)
+                                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
+                            netAmt += amountToBeAdd;
+                            mRoundOffAmt = amountToBeAdd;
+                        } else {
+                            mRoundOffAmt = 0;
+                        }
+                        break;
+                    case "2":
+                        netAmt -= extraAmt;
+                        mRoundOffAmt = 0 - extraAmt;
+                        break;
+                }
             }
+            if (mRoundOffAmt == 0) {
+                mRoundOffLayout.setVisibility(View.GONE);
+                mRoundOffAmtView.setText(String.valueOf(mRoundOffAmt));
+            } else {
+                mRoundOffLayout.setVisibility(View.VISIBLE);
+                mRoundOffAmtView.setText(String.valueOf(mRoundOffAmt));
+            }
+            String amtText = rs + " " + FragmentOne.commaSeperated(netAmt);
+            cNetAmount.setText(amtText);
         }
     }
 
@@ -750,6 +771,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             if (s.toString().equals("") || s.toString().equals(rs) || s.toString().equals("%")) {
                 cNetAmount.setText(rs + " " + FragmentOne.commaSeperated(Float.parseFloat(totalPrice)));
                 netAmt = Float.parseFloat(totalPrice);
+                roundOffCalculation();
                 cCash.setText(String.valueOf(netAmt));
                 cDiscountValue = "";
             } else {
@@ -767,7 +789,8 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     
                 } else {
                     String disPrice = s.toString().substring(1);
-                    float discount = (float) (Float.parseFloat(disPrice) / 100.0) * Float.parseFloat(totalPrice);
+                    float discount =  BigDecimal.valueOf((Float.parseFloat(disPrice) / 100.0) * Float.parseFloat(totalPrice))
+                                    .setScale(2, BigDecimal.ROUND_HALF_EVEN).floatValue();
                     cDiscountValue = df.format(discount);
                     netAmt = Float.parseFloat(totalPrice) - discount;
                     

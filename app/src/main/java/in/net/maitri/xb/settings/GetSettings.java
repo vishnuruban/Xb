@@ -28,7 +28,7 @@ public class GetSettings {
         return getSharedPreferences().getString("key_settings_general_rounding_direction","3");
     }
     public String getRoundOffUpto(){
-        return getSharedPreferences().getString("key_settings_company_legal_name","0");
+        return getSharedPreferences().getString("key_settings_general_rounding_value","0");
     }
     //Company Settings
     public String getCompanyLegalName(){

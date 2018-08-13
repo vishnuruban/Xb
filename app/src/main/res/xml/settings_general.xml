@@ -29,7 +29,9 @@
             android:entryValues="@array/rounding_direction_values" />
 
         <EditTextPreference
-            android:key="key_settings_company_legal_name"
+            android:defaultValue="0"
+            android:inputType="number"
+            android:key="key_settings_general_rounding_value"
             android:summary="Round off value in paisa"
             android:title="Round off upto" />
 
