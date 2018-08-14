@@ -62,6 +62,7 @@ import in.net.maitri.xb.printing.sunmi.BluetoothService;
 import in.net.maitri.xb.printing.sunmi.SunmiPrint;
 import in.net.maitri.xb.settings.GetSettings;
 import in.net.maitri.xb.util.Calculation;
+import in.net.maitri.xb.util.CheckDeviceType;
 
 import static in.net.maitri.xb.printing.epson.EpsonConnection.initializeEpson;
 
@@ -70,7 +71,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
     private TextView cNetAmount;
     private TextView tCash;
     private TextView tBalance;
-    private TextView mRoundOffAmtView;
+    private TextView mRoundOffAmtView, mDiscountText, mPaymentModeText, mTotalCashText;
     private LinearLayout mRoundOffLayout;
     private String totalProducts, totalPrice, tCustName;
     private RadioGroup cDiscountType;
@@ -115,8 +116,11 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+        mPaymentModeText = findViewById(R.id.cPaymentMode_text);
+        mTotalCashText = findViewById(R.id.cCash_text);
         mRoundOffAmtView =  findViewById(R.id.roundOffValue);
         mRoundOffLayout = findViewById(R.id.roundOffLayout);
+        mDiscountText = findViewById(R.id.discount_text);
         billList = FragmentOne.billList;
         getSettings = new GetSettings(CheckoutActivity.this);
         mPrinterStatusText = findViewById(R.id.cPrintstatus);
@@ -453,8 +457,25 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                     mEditSpinner.setEnabled(false);
                     mEditSpinner.setClickable(false);
                     mKeyPad.setVisibility(View.GONE);
-                    cDiscount.setEnabled(false);
-                    cDiscount.setClickable(false);
+                    cDiscountType.setVisibility(View.INVISIBLE);
+                    cDiscount.setVisibility(View.GONE);
+                    mDiscountText.setVisibility(View.VISIBLE);
+                    mDiscountText.setText("-" + df.format(sm.getDiscount()));
+                    cCash.setVisibility(View.GONE);
+                    mEditSpinner.setVisibility(View.GONE);
+                    mPaymentModeText.setVisibility(View.VISIBLE);
+                    mPaymentModeText.setText(mEditSpinner.getText().toString());
+                    mTotalCashText.setVisibility(View.VISIBLE);
+                    mTotalCashText.setText(cCash.getText().toString());
+                    if (sm.getDiscount() ==0){
+                        findViewById(R.id.discount_Layout).setVisibility(View.GONE);
+                    }
+                    if (!new CheckDeviceType(CheckoutActivity.this).isTablet()){
+                        findViewById(R.id.bill_list_card).setVisibility(View.VISIBLE);
+                        findViewById(R.id.linearL2).setVisibility(View.VISIBLE);
+                    }
+                   /* cDiscount.setEnabled(false);
+                    cDiscount.setClickable(false);*/
                     break;
                 case R.id.cPrint:
 
@@ -522,7 +543,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                                     Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
                                                     new SunmiPrint(CheckoutActivity.this, mService, billList, sm.getNetAmt(),
                                                             pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
-                                                            sm.getDateTime(), sm.getCashName(), tCustName).doPrintForInclusiveGst();
+                                                            sm.getDateTime(), sm.getCashName(), tCustName, mRoundOffAmt).doPrintForInclusiveGst();
                                                 }
 
                                             } else {
@@ -544,7 +565,7 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
                                                     Toast.makeText(CheckoutActivity.this, "Printing", Toast.LENGTH_SHORT).show();
                                                     new SunmiPrint(CheckoutActivity.this, mService, billList, sm.getNetAmt(),
                                                             pBillno, totalPrice, df.format(sm.getDiscount()), sm.getQty(),
-                                                            sm.getDateTime(), sm.getCashName(), tCustName).doPrint();
+                                                            sm.getDateTime(), sm.getCashName(), tCustName, mRoundOffAmt).doPrint();
                                                 }
 
                                             } else {
@@ -747,13 +768,16 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
             }
             if (mRoundOffAmt == 0) {
                 mRoundOffLayout.setVisibility(View.GONE);
-                mRoundOffAmtView.setText(String.valueOf(mRoundOffAmt));
+                mRoundOffAmtView.setText(String.valueOf(df.format(mRoundOffAmt)));
             } else {
                 mRoundOffLayout.setVisibility(View.VISIBLE);
-                mRoundOffAmtView.setText(String.valueOf(mRoundOffAmt));
+                mRoundOffAmtView.setText(String.valueOf(df.format(mRoundOffAmt)));
             }
             String amtText = rs + " " + FragmentOne.commaSeperated(netAmt);
             cNetAmount.setText(amtText);
+        } else {
+            mRoundOffLayout.setVisibility(View.GONE);
+            mRoundOffAmtView.setText(String.valueOf(df.format(mRoundOffAmt)));
         }
     }
 

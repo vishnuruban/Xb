@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,10 +33,12 @@ public class SunmiPrint {
     private String mBillDate;
     private String mCashierName;
     private String mCustomerName;
+    private float mRoundOff;
 
-    public SunmiPrint(Context mContext,BluetoothService mService, ArrayList<BillItems> mBillItems,
+    public SunmiPrint(Context mContext, BluetoothService mService, ArrayList<BillItems> mBillItems,
                       double mNetAmount, String mBillNo, String mTotalPrice, String mTotalDiscount,
-                      double mTotalQty, String mBillDate, String mCashierName, String mCustomerName) {
+                      double mTotalQty, String mBillDate, String mCashierName, String mCustomerName,
+                      float mRoundOff) {
 
         this.mContext = mContext;
         this.mBillItems = mBillItems;
@@ -48,16 +51,17 @@ public class SunmiPrint {
         this.mCashierName = mCashierName;
         this.mCustomerName = mCustomerName;
         this.mService = mService;
+        this.mRoundOff = mRoundOff;
     }
 
 
     public void doPrint() {
 
         String companyName = new GetSettings(mContext).getCompanyLegalName();
-        if (companyName.isEmpty()){
+        if (companyName.isEmpty()) {
             Toast.makeText(mContext, "Company legal name not found. Enter details in settings."
                     , Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             int effectivePrintWidth = 48;
             int minChars = 4;//this defines minimum characters per column; since you can
             // create multiple rows, this value will define how many columns you want per row
@@ -143,10 +147,10 @@ public class SunmiPrint {
     public void doPrintForInclusiveGst() {
 
         String companyName = new GetSettings(mContext).getCompanyLegalName();
-        if (companyName.isEmpty()){
+        if (companyName.isEmpty()) {
             Toast.makeText(mContext, "Company legal name not found. Enter details in settings."
                     , Toast.LENGTH_SHORT).show();
-        }else {
+        } else {
             int effectivePrintWidth = 48;
             int minChars = 4;//this defines minimum characters per column; since you can
             // create multiple rows, this value will define how many columns you want per row
@@ -163,9 +167,9 @@ public class SunmiPrint {
             String item = String.format("%-25s%5s\n", "HSN-Item", "");
             String s = String.format("%5s%10s%5s%10s\n", "Qty", "Rate", "GST%", "Amount");
             String total = String.format("%5s%12s%14s\n", mTotalQty, "Sub Total", mTotalPrice);
-            String discount =  String.format("%17s%14s\n", "Discount", "-" + mTotalDiscount);
-            String roundOff =  String.format("%17s%14s\n", "Discount", "-" + mTotalDiscount);
-            String grandTotal =  String.format("%-15s%16s\n", "Grand Total", df.format(mNetAmount));
+            String discount = String.format("%17s%14s\n", "Discount", "-" + mTotalDiscount);
+            String roundOff = String.format("%17s%14s\n", "Roundoff", df.format(mRoundOff));
+            String grandTotal = String.format("%-15s%16s\n", "Grand Total", df.format(mNetAmount));
             String billDate = String.format("%-14s%-15s\n", "Bill No:" + mBillNo, "Date:" + formattedDate);
             String dash = "--------------------------------";
 
@@ -173,7 +177,18 @@ public class SunmiPrint {
         String commentText = String.format("%-10s%-20s\n", "Comment:", comment);
 
         */
+            String totHsn = "";
+            BigDecimal totCgst = BigDecimal.valueOf(0), totSgst = BigDecimal.valueOf(0), totAmt = BigDecimal.valueOf(0);
             List<GstBreakup> listBreakUp = gstBreakupValues();
+            if (listBreakUp.size() > 1) {
+                for (int i = 0; i < listBreakUp.size(); i++) {
+                    GstBreakup gb = listBreakUp.get(i);
+                    totCgst = totCgst.add(BigDecimal.valueOf(gb.getCgst())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                    totSgst = totSgst.add(BigDecimal.valueOf(gb.getSgst())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                    totAmt = totAmt.add(BigDecimal.valueOf(gb.getTaxNetAmr())).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+                }
+                totHsn = String.format("%-6s%12s%7s%7s\n", "Total", totAmt, totCgst, totSgst);
+            }
             PlainPrint pp = new PlainPrint(mContext, effectivePrintWidth, minChars);
             byte[] normalText = {27, 33, 0};
             byte[] boldText = {27, 33, 0};
@@ -186,6 +201,7 @@ public class SunmiPrint {
                     pp.addTextCenterAlign(getCompanyHeaders()[i], true);
                 }
             }
+            pp.addNewLine();
             mService.write(boldText);
             mService.sendMessage(pp.getContent4PrintFields(), "");
             mService.write(tail);
@@ -206,7 +222,7 @@ public class SunmiPrint {
                 BillItems billItems = mBillItems.get(i);
                 item = String.format("%-31s\n", billItems.getHsn() + "-" + billItems.getDesc());
                 mService.sendMessage(item, "");
-                String value = String.format("%5s%10s%5s%10s\n", billItems.getQty(),df.format(billItems.getRate()),
+                String value = String.format("%5s%10s%5s%10s\n", billItems.getQty(), df.format(billItems.getRate()),
                         billItems.getTaxRate1() + billItems.getTaxRate2(), df.format(billItems.getAmount()));
                 mService.sendMessage(value, "");
             }
@@ -216,6 +232,17 @@ public class SunmiPrint {
                 mService.sendMessage(total, "");
                 mService.write(normalText);
                 mService.sendMessage(discount, "");
+                if (mRoundOff != 0) {
+                    mService.sendMessage(roundOff, "");
+                }
+            } else {
+                if (mRoundOff != 0) {
+                    mService.sendMessage(dash, "");
+                    mService.write(boldText);
+                    mService.sendMessage(total, "");
+                    mService.write(normalText);
+                    mService.sendMessage(roundOff, "");
+                }
             }
 
             mService.sendMessage(dash, "");
@@ -224,7 +251,7 @@ public class SunmiPrint {
             mService.write(normalText);
             mService.sendMessage(dash, "");
             pp.startAddingContent4printFields();
-
+            pp.addNewLine();
             pp.addNewLine();
             pp.addNewLine();
             mService.sendMessage(pp.getContent4PrintFields(), "");
@@ -232,15 +259,18 @@ public class SunmiPrint {
             mService.sendMessage(gstBreakupHeader, "");
             mService.write(normalText);
             pp.startAddingContent4printFields();
-            for (int i = 0; i< listBreakUp.size(); i++){
+            for (int i = 0; i < listBreakUp.size(); i++) {
                 GstBreakup gb = listBreakUp.get(i);
-                String value = String.format("%4s%1s%5s%8s%7s%7s\n", gb.getHsn(), " ",gb.getGst(),
+                String value = String.format("%4s%1s%5s%8s%7s%7s\n", gb.getHsn(), " ", gb.getGst(),
                         df.format(gb.getTaxNetAmr()), df.format(gb.getCgst()), df.format(gb.getSgst()));
                 mService.sendMessage(value, "");
             }
+            if (!totHsn.isEmpty()){
+                mService.write(boldText);
+                mService.sendMessage(totHsn, "");
+            }
+            mService.write(normalText);
             mService.sendMessage(dash, "");
-
-
             GetSettings getSettings = new GetSettings(mContext);
             String[] footerArray = {getSettings.getFooterText1(), getSettings.getFooterText2(),
                     getSettings.getFooterText3(), getSettings.getFooterText4()};
@@ -249,6 +279,7 @@ public class SunmiPrint {
                     pp.addTextCenterAlign(aFooterArray, true);
                 }
             }
+
             pp.addNewLine();
             pp.addNewLine();
             pp.addNewLine();
@@ -258,18 +289,18 @@ public class SunmiPrint {
         }
     }
 
-    private List<GstBreakup> gstBreakupValues(){
+    private List<GstBreakup> gstBreakupValues() {
         List<String> hsnList = new ArrayList<>();
         HashMap<String, GstBreakup> hsnValue = new HashMap<>();
-        for (int i = 0; i < mBillItems.size(); i++){
+        for (int i = 0; i < mBillItems.size(); i++) {
             BillItems bi = mBillItems.get(i);
             String hsnGst = bi.getHsn() + (bi.getTaxRate1() + bi.getTaxRate2());
-            if (hsnList.contains(hsnGst)){
+            if (hsnList.contains(hsnGst)) {
                 GstBreakup gb = hsnValue.get(hsnGst);
                 gb.setCgst(gb.getCgst() + bi.getTaxAmt1());
                 gb.setSgst(gb.getSgst() + bi.getTaxAmt2());
                 gb.setTaxNetAmr(gb.getTaxNetAmr() + bi.getTaxSaleAmt());
-                hsnValue.put(hsnGst,gb);
+                hsnValue.put(hsnGst, gb);
             } else {
                 hsnList.add(hsnGst);
                 GstBreakup gb = new GstBreakup();
@@ -278,11 +309,11 @@ public class SunmiPrint {
                 gb.setCgst(bi.getTaxAmt1());
                 gb.setSgst(bi.getTaxAmt2());
                 gb.setTaxNetAmr(bi.getTaxSaleAmt());
-                hsnValue.put(hsnGst,gb);
+                hsnValue.put(hsnGst, gb);
             }
         }
         List<GstBreakup> list = new ArrayList<>();
-        for (int i = 0; i< hsnList.size(); i++){
+        for (int i = 0; i < hsnList.size(); i++) {
             GstBreakup gb = hsnValue.get(hsnList.get(i));
             list.add(gb);
         }
@@ -294,12 +325,12 @@ public class SunmiPrint {
         GetSettings getSettings = new GetSettings(mContext);
         String cityPin = getSettings.getCompanyCity() + "-" + getSettings.getCompanyPincode();
         String phNumber, gst;
-        if (getSettings.getCompanyPhoneNo().isEmpty()){
+        if (getSettings.getCompanyPhoneNo().isEmpty()) {
             phNumber = "";
         } else {
             phNumber = "Ph:" + getSettings.getCompanyPhoneNo();
         }
-        if (getSettings.getCompanyGstNo().isEmpty()){
+        if (getSettings.getCompanyGstNo().isEmpty()) {
             gst = "";
         } else {
             gst = "GSTIN:" + getSettings.getCompanyGstNo();
