@@ -42,9 +42,9 @@
                 android:resource="@xml/settings_printer" />
         </activity>
         <activity
-            android:theme="@style/AppTheme.NoActionBar"
             android:name=".billing.CheckoutActivity"
             android:label="CHECKOUT"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan|adjustResize|stateHidden" />
         <activity
             android:name=".billing.BillingActivity"
@@ -109,9 +109,10 @@
             android:label="Filter" />
         <activity android:name=".util.GetUsbDevise" />
         <activity android:name=".printing.epson.DiscoveryActivity" />
-        <activity android:name=".scan.ScanActivity"
+        <activity
+            android:name=".scan.ScanActivity"
             android:label="Scan Barcode"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

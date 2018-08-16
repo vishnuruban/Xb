@@ -27,7 +27,7 @@ public class DbHandler extends SQLiteOpenHelper {
     private ArrayList<TaxMst> mTaxList = new ArrayList<>();
     private ArrayList<HsnMst> mHsnList = new ArrayList<>();
 
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
     private static final String DATABASE_NAME = "XposeBilling";
     // Category table name
     private static final String CATEGORY_TABLE_NAME = "CategoryMst";
@@ -94,6 +94,10 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_ROUNDOFF = "sm_RoundOff";
     private static final String KEY_SM_CREATED_AT = "sm_createdAt";
     private static final String KEY_SM_DATETIME = "sm_datetime";
+    private static final String KEY_SM_IS_CANCELLED = "sm_isCancelled";
+    private static final String KEY_SM_CANCEL_DATETIME = "sm_cancelDateTime";
+    private static final String KEY_SM_CANCEL_COMMENT = "sm_cancelComment";
+    private static final String KEY_SM_CANCEL_PERSON = "sm_cancelPerson";
     // sales mst table name
     private static final String SALES_DET_TABLE_NAME = "SalesDet";
     // sales mst table column names
@@ -355,6 +359,19 @@ public class DbHandler extends SQLiteOpenHelper {
         String addRoundOffToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                 " ADD COLUMN " + KEY_SM_ROUNDOFF + " TEXT ";
         db.execSQL(addRoundOffToSalesMst);
+
+        String addIsBillCancelledToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_IS_CANCELLED + " INTEGER DEFAULT 0";
+        db.execSQL(addIsBillCancelledToSalesMst);
+        String addBillCancelDateTimeSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_CANCEL_DATETIME + " DATETIME ";
+        db.execSQL(addBillCancelDateTimeSalesMst);
+        String addBillCancelCommentToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_CANCEL_COMMENT + " TEXT ";
+        db.execSQL(addBillCancelCommentToSalesMst);
+        String addBillCancelPersonToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_CANCEL_PERSON + " TEXT ";
+        db.execSQL(addBillCancelPersonToSalesMst);
     }
 
 
@@ -533,7 +550,19 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addRoundOffToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                         " ADD COLUMN " + KEY_SM_ROUNDOFF + " TEXT ";
                 db.execSQL(addRoundOffToSalesMst);
-
+            case 20:
+                String addIsBillCancelledToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_IS_CANCELLED + " INTEGER DEFAULT 0";
+                db.execSQL(addIsBillCancelledToSalesMst);
+                String addBillCancelDateTimeSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_CANCEL_DATETIME + " DATETIME ";
+                db.execSQL(addBillCancelDateTimeSalesMst);
+                String addBillCancelCommentToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_CANCEL_COMMENT + " TEXT ";
+                db.execSQL(addBillCancelCommentToSalesMst);
+                String addBillCancelPersonToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_CANCEL_PERSON + " TEXT ";
+                db.execSQL(addBillCancelPersonToSalesMst);
                 break;
         }
     }
@@ -1152,8 +1181,10 @@ public class DbHandler extends SQLiteOpenHelper {
         List<SalesDet> sdList = new ArrayList<SalesDet>();
         try {
 
-            String selectQuery = "select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
-                    "join SalesMst sm on sd.sd_billNo = sm.sm_sale_billNo and sd.sd_datetime = sm.sm_datetime where " + KEY_SM_BILL_NO + " = " + billNo + " and " + KEY_SD_DATETIME + "='" + dateTime + "'";
+            String selectQuery = "select sm.sm_date,sd.sd_item,sd.sd_billNo,sd.sd_rate,sd.sd_qty,sd.sd_amount,im.item_name as itm_name " +
+                    "from SalesDet sd JOIN ItemMst im on sd.sd_item = im.id " +
+                    "join SalesMst sm on sd.sd_billNo = sm.sm_sale_billNo and sd.sd_datetime = sm.sm_datetime " +
+                    "where " + KEY_SM_BILL_NO + " = " + billNo + " and " + KEY_SD_DATETIME + "='" + dateTime + "'";
 
             System.out.println(selectQuery);
 
@@ -1163,7 +1194,6 @@ public class DbHandler extends SQLiteOpenHelper {
             // looping through all rows and adding to list
             if (c.moveToFirst()) {
                 do {
-
 
                     BillItems bm = new BillItems();
                     // sd.setBillNo(c.getInt(c.getColumnIndex(KEY_SD_BILL_NO)));
@@ -1261,7 +1291,6 @@ public class DbHandler extends SQLiteOpenHelper {
             if (c.moveToFirst()) {
                 do {
                     SalesMst mst = new SalesMst();
-
                     mst.setInternalBillNo(c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
                     mst.setBillNO(c.getInt(c.getColumnIndex(KEY_SM_SALE_BILL_NO)));
                     mst.setDateTime(c.getString(c.getColumnIndex(KEY_SM_DATETIME)));

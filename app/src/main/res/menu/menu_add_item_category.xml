@@ -4,39 +4,42 @@
     <item
         android:id="@+id/add_item"
         android:orderInCategory="100"
-        android:title="Add Item" />
+        android:title="@string/add_item" />
 
     <item
         android:id="@+id/customers"
         android:visible="false"
         android:orderInCategory="101"
-        android:title="Customers" />
-
+        android:title="@string/customers" />
 
     <item
         android:id="@+id/bill_report"
         android:orderInCategory="102"
-        android:title="Sales Report"/>
+        android:title="@string/bill_report"/>
 
     <item
         android:id="@+id/today_bill_report"
         android:orderInCategory="103"
-        android:title="Today's Sales Report"/>
+        android:title="@string/todays_sale_report"/>
 
     <item
         android:id="@+id/bill_item_report"
-        android:orderInCategory="103"
-        android:title="Itemwise Sales Report"/>
+        android:orderInCategory="104"
+        android:title="@string/item_report"/>
 
     <item
         android:id="@+id/bill_customer_report"
-        android:orderInCategory="103"
-        android:title="Customerwise Sales Report"/>
-
+        android:orderInCategory="105"
+        android:title="@string/customer_report"/>
+    <item
+        android:id="@+id/billCancel"
+        android:visible="false"
+        android:orderInCategory="106"
+        android:title="@string/bill_cancel" />
 
     <item
         android:id="@+id/settings"
-        android:orderInCategory="104"
-        android:title="Settings" />
+        android:orderInCategory="107"
+        android:title="@string/settings" />
 
 </menu>

@@ -155,4 +155,20 @@
     <string name="title_msg_description">Description</string>
     <string name="title_target">Target</string>
 
+    <!--menu_add_item_category-->
+    <string name="add_item">Add Item</string>
+    <string name="customers">Customers</string>
+    <string name="bill_report">Bill Report</string>
+    <string name="todays_sale_report">Today\'s Sales Report</string>
+    <string name="item_report">Itemwise Sales Report</string>
+    <string name="customer_report">Customerwise Sales Report</string>
+    <string name="bill_cancel">Bill Cancel</string>
+    <string name="settings">Settings</string>
+    <string name="title_activity_gst_bill">GstBillActivity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
+    <string name="tab_text_3">Tab 3</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+
 </resources>
