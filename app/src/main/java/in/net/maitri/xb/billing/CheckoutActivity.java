@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import in.net.maitri.xb.R;
 import in.net.maitri.xb.db.Customer;
@@ -614,12 +615,19 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         String formattedDate = dateFormat.format(new Date()).toString();
         int dateCount = dbHandler.getDateCount(date);
+        BigDecimal totCgst = BigDecimal.valueOf(0), totSgst = BigDecimal.valueOf(0), totAmt = BigDecimal.valueOf(0);
         for (int i = 0; i < billList.size(); i++) {
             BillItems billItems = billList.get(i);
             quantity = quantity + billItems.getQty();
             SalesDet sd = new SalesDet(bSeries.getCurrentBillNo(), billItems);
             sd.setDateTime(formattedDate);
             detInserted = dbHandler.addSalesDet(sd);
+            totCgst = totCgst.add(BigDecimal.valueOf(billItems.getTaxAmt1()))
+                    .setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            totSgst = totSgst.add(BigDecimal.valueOf(billItems.getTaxAmt2()))
+                    .setScale(2, BigDecimal.ROUND_HALF_EVEN);
+            totAmt = totAmt.add(BigDecimal.valueOf(billItems.getTaxSaleAmt()))
+                    .setScale(2, BigDecimal.ROUND_HALF_EVEN);
         }
 
         sm = new SalesMst();
@@ -643,6 +651,9 @@ public class CheckoutActivity extends AppCompatActivity implements View.OnClickL
         sm.setCustName(tCustName);
         sm.setCustomerId(chkCustomer.getId());
         sm.setRoundOff(mRoundOffAmt);
+        sm.setTaxAmt1(totCgst.floatValue());
+        sm.setTaxAmt2(totSgst.floatValue());
+        sm.setGstNetAmt(totAmt.floatValue());
         String regdType = new GetSettings(CheckoutActivity.this).getCompanyRegistrationType();
         switch (regdType){
             case "1":

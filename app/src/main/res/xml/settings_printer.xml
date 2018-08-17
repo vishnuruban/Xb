@@ -33,12 +33,10 @@
             android:key="key_settings_printer_paired_device"
             android:title="Paired Device" />
 
-        <ListPreference
-            android:summary="%s"
+        <Preference
             android:key="key_settings_printer_usb"
             android:title="USB">
-        </ListPreference>
-
+        </Preference>
 
         <ListPreference
             android:dialogTitle="select size"

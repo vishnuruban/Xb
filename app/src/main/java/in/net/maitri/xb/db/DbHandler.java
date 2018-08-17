@@ -98,6 +98,9 @@ public class DbHandler extends SQLiteOpenHelper {
     private static final String KEY_SM_CANCEL_DATETIME = "sm_cancelDateTime";
     private static final String KEY_SM_CANCEL_COMMENT = "sm_cancelComment";
     private static final String KEY_SM_CANCEL_PERSON = "sm_cancelPerson";
+    private static final String KEY_SM_TAX_AMT1 = "sm_TaxAmt1";
+    private static final String KEY_SM_TAX_AMT2 = "sm_TaxAmt2";
+    private static final String KEY_SM_GST_SALE_AMT = "sm_GstSaleAmt";
     // sales mst table name
     private static final String SALES_DET_TABLE_NAME = "SalesDet";
     // sales mst table column names
@@ -372,6 +375,15 @@ public class DbHandler extends SQLiteOpenHelper {
         String addBillCancelPersonToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                 " ADD COLUMN " + KEY_SM_CANCEL_PERSON + " TEXT ";
         db.execSQL(addBillCancelPersonToSalesMst);
+        String addTaxAmt1ToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_TAX_AMT1 + " FLOAT ";
+        db.execSQL(addTaxAmt1ToSalesMst);
+        String addTaxAmt2ToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_TAX_AMT2 + " FLOAT ";
+        db.execSQL(addTaxAmt2ToSalesMst);
+        String addGstSaleAmtToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                " ADD COLUMN " + KEY_SM_GST_SALE_AMT + " FLOAT ";
+        db.execSQL(addGstSaleAmtToSalesMst);
     }
 
 
@@ -563,6 +575,15 @@ public class DbHandler extends SQLiteOpenHelper {
                 String addBillCancelPersonToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
                         " ADD COLUMN " + KEY_SM_CANCEL_PERSON + " TEXT ";
                 db.execSQL(addBillCancelPersonToSalesMst);
+                String addTaxAmt1ToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_TAX_AMT1 + " FLOAT ";
+                db.execSQL(addTaxAmt1ToSalesMst);
+                String addTaxAmt2ToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_TAX_AMT2 + " FLOAT ";
+                db.execSQL(addTaxAmt2ToSalesMst);
+                String addGstSaleAmtToSalesMst = "ALTER TABLE " + SALES_MST_TABLE_NAME +
+                        " ADD COLUMN " + KEY_SM_GST_SALE_AMT + " FLOAT ";
+                db.execSQL(addGstSaleAmtToSalesMst);
                 break;
         }
     }
@@ -1308,6 +1329,9 @@ public class DbHandler extends SQLiteOpenHelper {
                     }
                     mst.setTaxType(c.getString(c.getColumnIndex(KEY_SM_TAX_TYPE)));
                     mst.setRoundOff(c.getFloat(c.getColumnIndex(KEY_SM_ROUNDOFF)));
+                    mst.setTaxAmt1(c.getFloat(c.getColumnIndex(KEY_SM_TAX_AMT1)));
+                    mst.setTaxAmt2(c.getFloat(c.getColumnIndex(KEY_SM_TAX_AMT2)));
+                    mst.setGstNetAmt(c.getFloat(c.getColumnIndex(KEY_SM_GST_SALE_AMT)));
                     smList.add(mst);
                     System.out.println("dbBillNo " + c.getInt(c.getColumnIndex(KEY_SM_BILL_NO)));
                 } while (c.moveToNext());
@@ -1341,6 +1365,9 @@ public class DbHandler extends SQLiteOpenHelper {
             cv.put(KEY_SM_CUSTOMER_NAME, salesMst.getCustName());
             cv.put(KEY_SM_TAX_TYPE, salesMst.getTaxType());
             cv.put(KEY_SM_ROUNDOFF, salesMst.getRoundOff());
+            cv.put(KEY_SM_TAX_AMT1, salesMst.getTaxAmt1());
+            cv.put(KEY_SM_TAX_AMT2, salesMst.getTaxAmt2());
+            cv.put(KEY_SM_GST_SALE_AMT, salesMst.getGstNetAmt());
             result = db.insert(SALES_MST_TABLE_NAME, null, cv);
             db.close();
             return result;

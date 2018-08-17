@@ -11,6 +11,32 @@ public class SalesMst {
     private String customerNumber;
     private float roundOff;
 
+    public float getTaxAmt1() {
+        return taxAmt1;
+    }
+
+    public void setTaxAmt1(float taxAmt1) {
+        this.taxAmt1 = taxAmt1;
+    }
+
+    public float getTaxAmt2() {
+        return taxAmt2;
+    }
+
+    public void setTaxAmt2(float taxAmt2) {
+        this.taxAmt2 = taxAmt2;
+    }
+
+    public float getGstNetAmt() {
+        return gstNetAmt;
+    }
+
+    public void setGstNetAmt(float gstNetAmt) {
+        this.gstNetAmt = gstNetAmt;
+    }
+
+    private float taxAmt1, taxAmt2, gstNetAmt;
+
     public String getTaxType() {
         return taxType;
     }

@@ -33,14 +33,14 @@ public class PrinterSettings extends PreferenceFragment
 
     private BluetoothAdapter mBluetoothAdapter;
     private ListPreference mPairedDevices;
-    private ListPreference usb;
+    private Preference usb;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.settings_printer);
 
-        usb = (ListPreference) findPreference("key_settings_printer_usb");
+        usb =  findPreference("key_settings_printer_usb");
         usb.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -173,7 +173,7 @@ public class PrinterSettings extends PreferenceFragment
         }
     }
 
-    private void getUsbDeviceList() {
+  /*  private void getUsbDeviceList() {
         UsbManager manager = (UsbManager) getActivity().getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
         ArrayList<UsbDevice> deviceArrayList = new ArrayList<>(deviceList.values());
@@ -185,5 +185,5 @@ public class PrinterSettings extends PreferenceFragment
         }
         usb.setEntries(mUsbDeviceEntries);
         usb.setEntryValues(mUsbDeviceEntryValues);
-    }
+    }*/
 }
